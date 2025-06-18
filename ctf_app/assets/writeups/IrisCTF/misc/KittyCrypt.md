@@ -1,3 +1,15 @@
+---
+title: "KittyCrypt"
+date: "2025-06-18"
+ctf: "IrisCTF"
+category: "misc"
+difficulty: "Medium"
+points: 100
+tags: ["IrisCTF", "misc", "Medium"]
+author: "Tham Le"
+solved: true
+---
+
 # KittyCrypt Writeup
 
 ## Analysis

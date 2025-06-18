@@ -4,10 +4,9 @@
 
 ## 🏆 CTF Events
 
-- [IrisCTF](./IrisCTF/)
 
 ## 📊 Statistics
 
 - **Total CTF Events:** 1
 - **Total Writeups:** 4
-- **Last Updated:** 2025-06-18 17:37 UTC
+- **Last Updated:** 2025-06-18 17:53 UTC

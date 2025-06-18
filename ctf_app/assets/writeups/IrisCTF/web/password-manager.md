@@ -1,3 +1,15 @@
+---
+title: "Password Manager"
+date: "2025-06-18"
+ctf: "IrisCTF"
+category: "web"
+difficulty: "Medium"
+points: 100
+tags: ["IrisCTF", "web", "Medium"]
+author: "Tham Le"
+solved: true
+---
+
 # IrisCTF 2025 - Password Manager Challenge Writeup
 
 ## Challenge Description

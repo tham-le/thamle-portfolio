@@ -36,7 +36,7 @@ class CTFWriteupsApp extends StatelessWidget {
           surface: const Color(0xFFF8F4FF), // Very light lavender
           onSurface: const Color(0xFF2D2D2D), // Dark grey for text
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           elevation: 8,
           shadowColor: Colors.purple.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           child: Column(
                             children: [
                               Text(
-                                '🎮 THAM.EXE 🎮',
+                                '🎮 THAM 🎮',
                                 style: GoogleFonts.pressStart2p(
                                   fontSize: 14,
                                   color: const Color(0xFF6A4C93),

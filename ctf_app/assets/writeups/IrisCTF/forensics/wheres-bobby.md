@@ -1,3 +1,15 @@
+---
+title: "Wheres Bobby"
+date: "2025-06-18"
+ctf: "IrisCTF"
+category: "forensics"
+difficulty: "Medium"
+points: 100
+tags: ["IrisCTF", "forensics", "Medium"]
+author: "Tham Le"
+solved: true
+---
+
 # Where's Bobby (247 Points) - SOLVED
 
 **Category**: Medium
