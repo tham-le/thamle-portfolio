@@ -36,7 +36,7 @@ class CTFWriteupsApp extends StatelessWidget {
           surface: const Color(0xFFF8F4FF), // Very light lavender
           onSurface: const Color(0xFF2D2D2D), // Dark grey for text
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           elevation: 8,
           shadowColor: Colors.purple.withOpacity(0.3),
           shape: RoundedRectangleBorder(
