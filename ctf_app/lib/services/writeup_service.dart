@@ -1,13 +1,15 @@
 import 'package:flutter/services.dart';
-import 'models/ctf_writeup.dart';
+import '../models/ctf_writeup.dart';
 
 class WriteupService {
   static const String _basePath = 'assets/writeups/';
   
-  // List of all writeup files - this would be automatically generated in a real scenario
+  // Hardcoded list of available writeups from sync
   static const List<String> _writeupFiles = [
-    'sample-web-challenge.md',
-    // Add more files here as you create them
+    'IrisCTF/web/sqlate.md',
+    'IrisCTF/web/password-manager.md',
+    'IrisCTF/forensics/wheres-bobby.md',
+    'IrisCTF/misc/KittyCrypt.md',
   ];
 
   static Future<List<CTFWriteup>> loadAllWriteups() async {
@@ -20,6 +22,7 @@ class WriteupService {
         writeups.add(writeup);
       } catch (e) {
         print('Error loading writeup $filename: $e');
+        // Continue with other writeups even if one fails
       }
     }
     

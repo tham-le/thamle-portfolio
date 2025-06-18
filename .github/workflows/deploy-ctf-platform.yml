@@ -1,0 +1,52 @@
+name: Deploy CTF Platform
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_app/**'
+      - 'assets/writeups/**'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [new-writeup]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-ctf:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.19.3'
+        channel: 'stable'
+        
+    - name: Copy writeups to Flutter assets
+      run: |
+        mkdir -p ctf_app/assets/writeups
+        cp -r assets/writeups/* ctf_app/assets/writeups/ 2>/dev/null || true
+        echo "Copied writeups to Flutter assets"
+        ls -la ctf_app/assets/writeups/
+        
+    - name: Get Flutter dependencies
+      working-directory: ./ctf_app
+      run: flutter pub get
+      
+    - name: Build Flutter web app
+      working-directory: ./ctf_app
+      run: flutter build web --release --base-href /
+      
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
+        channelId: live
+        projectId: thamle-portfolio
+        entryPoint: ./ctf_app

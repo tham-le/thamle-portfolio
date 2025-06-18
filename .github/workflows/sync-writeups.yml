@@ -141,6 +141,11 @@ jobs:
         echo "- CTF Events: $total_ctfs"
         echo "- Total Writeups: $total_writeups"
         
+        # Copy writeups to Flutter app assets for deployment
+        echo "📱 Copying writeups to Flutter app assets..."
+        mkdir -p ctf_app/assets/writeups
+        cp -r assets/writeups/* ctf_app/assets/writeups/ 2>/dev/null || true
+        
     - name: Check for changes
       id: changes
       run: |
