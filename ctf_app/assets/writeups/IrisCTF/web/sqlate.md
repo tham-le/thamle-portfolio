@@ -1,11 +1,11 @@
 ---
 title: "Sqlate"
-date: "2025-06-18"
-ctf: "IrisCTF"
+date: "2025-01-12"
+ctf: "IrisCTF 2025"
 category: "web"
-difficulty: "Medium"
-points: 100
-tags: ["IrisCTF", "web", "Medium"]
+difficulty: "Easy"
+points: 50
+tags: ["web", "binary", "buffer-overflow"]
 author: "Tham Le"
 solved: true
 ---

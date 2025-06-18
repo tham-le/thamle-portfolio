@@ -1,11 +1,11 @@
 ---
 title: "Password Manager"
-date: "2025-06-18"
-ctf: "IrisCTF"
+date: "2025-01-12"
+ctf: "IrisCTF 2025"
 category: "web"
-difficulty: "Medium"
-points: 100
-tags: ["IrisCTF", "web", "Medium"]
+difficulty: "Easy"
+points: 50
+tags: ["web", "path-traversal", "baby"]
 author: "Tham Le"
 solved: true
 ---

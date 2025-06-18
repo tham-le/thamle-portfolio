@@ -1,11 +1,11 @@
 ---
-title: "Wheres Bobby"
-date: "2025-06-18"
-ctf: "IrisCTF"
+title: "Where's Bobby"
+date: "2025-01-12"
+ctf: "IrisCTF 2025"
 category: "forensics"
 difficulty: "Medium"
-points: 100
-tags: ["IrisCTF", "forensics", "Medium"]
+points: 247
+tags: ["forensics", "osint", "geography"]
 author: "Tham Le"
 solved: true
 ---
