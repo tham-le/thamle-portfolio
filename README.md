@@ -1,9 +1,4 @@
-# Tham Le P**Live Sites:**
-
-- **[thamle.live](https://thamle.live)** - Professional portfolio and resume
-- **[ctf.thamle.live](https://ctf.thamle.live)** - CTF writeups and cybersecurity research
-
-## 🔄 How It Workslio
+# Tham Le Portfolio
 
 > Professional portfolio website with automated CTF writeups synchronization
 
@@ -15,10 +10,11 @@
 A modern web portfolio showcasing my cybersecurity and software development expertise. Features an automated system that syncs CTF writeups from my separate research repository and organizes them by event and category.
 
 **Live Sites:**
+
 - **[thamle.live](https://thamle.live)** - Professional portfolio and resume
 - **[ctf.thamle.live](https://ctf.thamle.live)** - CTF writeups and cybersecurity research
 
-## � How It Works
+## 🔄 How It Works
 
 This portfolio automatically stays up-to-date with my latest work:
 
