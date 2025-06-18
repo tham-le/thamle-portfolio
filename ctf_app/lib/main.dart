@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
         child: FloatingActionButton.extended(
           onPressed: () async {
-            final url = Uri.parse('https://thamle.dev');
+            final url = Uri.parse('https://thamle.live');
             if (await canLaunchUrl(url)) {
               await launchUrl(url);
             }
