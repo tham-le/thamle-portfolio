@@ -86,14 +86,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/writeups/
-    - assets/writeups/IrisCTF/web/sqlate.md
-    - assets/writeups/IrisCTF/web/password-manager.md
-    - assets/writeups/IrisCTF/forensics/wheres-bobby.md
-    - assets/writeups/IrisCTF/misc/KittyCrypt.md
+    - assets/icons/
     - assets/writeups/index.md
     - assets/writeups/ctf-writeup-format.md
-    - assets/icons/
+    - assets/writeups/IrisCTF/README.md
+    - assets/writeups/IrisCTF/misc/KittyCrypt.md
+    - assets/writeups/IrisCTF/forensics/wheres-bobby.md
+    - assets/writeups/IrisCTF/web/password-manager.md
+    - assets/writeups/IrisCTF/web/sqlate.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
