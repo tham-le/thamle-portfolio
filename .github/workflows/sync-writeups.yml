@@ -7,6 +7,10 @@ on:
   repository_dispatch:
     types: [sync-writeups]
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   sync-writeups:
     runs-on: ubuntu-latest
@@ -16,6 +20,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+        persist-credentials: true
       
     - name: Checkout CTF writeups repository
       uses: actions/checkout@v4
@@ -154,6 +159,7 @@ jobs:
     - name: Push changes
       if: steps.changes.outputs.changes == 'true'
       run: |
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git push
         
     - name: Trigger CTF deployment
