@@ -1,0 +1,49 @@
+# Portfolio Project - Clean .gitignore
+
+# Firebase
+.firebase/
+firebase-debug.log*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+.npm
+.env
+.env.*
+
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+pubspec.lock
+coverage/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Operating Systems
+.DS_Store
+Thumbs.db
+*~
+
+# Logs & Debug
+*.log
+debug.log
+
+# Temporary & Backup files
+*.tmp
+*.bak
+*.backup
+*.swp
+*.swo
+
+# Project Specific
+ctf_app/assets/writeups/
+*.generated.*

@@ -2,7 +2,6 @@
 
 > Modern web portfolio with automated content management
 
-
 ## Key Features
 
 ### 🌐 Professional Portfolio Site
@@ -84,4 +83,3 @@
 📧 <thamle.work@gmail.com>  
 🔗 [LinkedIn](https://linkedin.com/in/tham42)  
 💻 [GitHub](https://github.com/tham-le)
-
