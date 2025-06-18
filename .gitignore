@@ -45,5 +45,4 @@ debug.log
 *.swo
 
 # Project Specific
-ctf_app/assets/writeups/
 *.generated.*
