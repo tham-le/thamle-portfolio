@@ -4,7 +4,7 @@ import '../models/ctf_writeup.dart';
 class WriteupService {
   static const String _basePath = 'assets/writeups/';  // Flutter assets path
   
-  // Hardcoded list of available writeups from sync
+  // Dynamically discovered writeup files from sync
   static const List<String> _writeupFiles = [
     'IrisCTF/web/sqlate.md',
     'IrisCTF/web/password-manager.md',
@@ -20,11 +20,14 @@ class WriteupService {
         final String markdown = await rootBundle.loadString('$_basePath$filename');
         final writeup = CTFWriteup.fromMarkdown(markdown, filename);
         writeups.add(writeup);
+        print('Successfully loaded writeup: $filename');
       } catch (e) {
         print('Error loading writeup $filename: $e');
         // Continue with other writeups even if one fails
       }
     }
+    
+    print('Total writeups loaded: ${writeups.length}');
     
     // Sort by date (newest first)
     writeups.sort((a, b) => b.date.compareTo(a.date));
