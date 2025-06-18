@@ -23,6 +23,7 @@ solved: true # or false
 ## Standard Structure
 
 ### 1. Challenge Title
+
 ```markdown
 # Challenge Name
 
@@ -33,6 +34,7 @@ solved: true # or false
 ```
 
 ### 2. Challenge Description
+
 ```markdown
 ## Challenge Description
 
@@ -42,6 +44,7 @@ solved: true # or false
 ```
 
 ### 3. Solution Structure
+
 ```markdown
 ## Initial Analysis
 
@@ -131,6 +134,7 @@ The server attempts to prevent path traversal by replacing "../" with "", but th
 ## File Naming Convention
 
 Use this naming pattern for consistency:
+
 - `ctf-year-event-category-challenge-name.md`
 - Example: `2025-irisctf-web-password-manager.md`
 
@@ -145,11 +149,15 @@ Use this naming pattern for consistency:
 Always specify the language for syntax highlighting:
 
 \`\`\`python
+
 # Python code
+
 \`\`\`
 
 \`\`\`bash
+
 # Shell commands
+
 \`\`\`
 
 \`\`\`c
