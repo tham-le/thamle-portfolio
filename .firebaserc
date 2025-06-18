@@ -1,18 +1,5 @@
 {
   "projects": {
     "default": "thamle-portfolio"
-  },
-  "targets": {
-    "thamle-portfolio": {
-      "hosting": {
-        "main": [
-          "thamle-portfolio"
-        ],
-        "ctf": [
-          "thamle-portfolio-ctf"
-        ]
-      }
-    }
-  },
-  "etags": {}
+  }
 }
