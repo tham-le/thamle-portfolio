@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+    <title>Tham Le | Software Engineer</title>
+    <meta name="description"
+        content="Software Engineer with skills in Python and C++, experienced in system programming, problem-solving, and with a background in computational science." />
+    <link rel="canonical" href="https://thamle.dev" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            margin: 5% auto;
+            background: #f5f5f5;
+            color: #333333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        h1 {
+            border-bottom: 2px solid #2c5282;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 2.4em;
+        }
+
+        h2 {
+            margin-top: 35px;
+            margin-bottom: 15px;
+            color: #2c5282;
+            font-size: 1.7em;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            color: #222;
+        }
+
+        code,
+        .inline-code {
+            background: #e8e8e8;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        a {
+            color: #2c5282;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #1e3a5f;
+            text-decoration: underline;
+        }
+
+        .contact-info {
+            margin-top: 10px;
+            margin-bottom: 25px;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .contact-info a {
+            margin: 0 10px;
+            font-weight: 500;
+            border-bottom: 1px dashed #2c5282;
+        }
+
+        .contact-info a:hover {
+            border-bottom: 1px solid #1e3a5f;
+            text-decoration: none;
+        }
+
+        .project {
+            margin: 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .project:last-child {
+            border-bottom: none;
+        }
+
+        .project p:first-of-type {
+            margin-bottom: 12px;
+        }
+
+        .tech-stack {
+            display: inline-block;
+            background: #e0eafc;
+            color: #1a237e;
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #c2410c;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .ctf-entry {
+            margin-top: 10px;
+            padding-left: 15px;
+        }
+
+        .ctf-entry ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .ctf-entry h3 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .experience-item {
+            margin: 25px 0;
+            padding-bottom: 10px;
+        }
+
+        .experience-item ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .experience-item ul li {
+            margin-bottom: 5px;
+        }
+
+        .job-title {
+            font-weight: bold;
+            color: #2c5282;
+            font-size: 1.15em;
+        }
+
+        .company {
+            font-style: italic;
+            color: #555;
+        }
+
+        .experience-item p em,
+        .education-item p em {
+            color: #777;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .testimonial {
+            background: #f9f9f9;
+            border-left: 4px solid #2c5282;
+            padding: 15px 20px;
+            margin: 25px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-radius: 3px;
+        }
+
+        .testimonial-quote {
+            font-style: italic;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .testimonial-translation {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #555;
+            margin-top: 8px;
+            padding-left: 12px;
+            border-left: 2px solid #e0e0e0;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            margin-top: 12px;
+            text-align: right;
+            color: #2c5282;
+            font-size: 0.95em;
+        }
+
+        .projects-button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .projects-button {
+            display: inline-block;
+            padding: 10px 22px;
+            background-color: #2c5282;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .projects-button:hover {
+            background-color: #1e3a5f;
+            color: white;
+            text-decoration: none;
+        }
+
+        .ctf-button {
+            background: linear-gradient(135deg, #d53e4f, #c51162);
+            box-shadow: 0 4px 15px rgba(213, 62, 79, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .ctf-button:hover {
+            background: linear-gradient(135deg, #c5344c, #b0103e);
+            box-shadow: 0 6px 20px rgba(213, 62, 79, 0.4);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        section ul {
+            padding-left: 20px;
+        }
+
+        section ul li {
+            margin-bottom: 6px;
+            /* Adjusted */
+        }
+
+        section>ul>li>ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            /* Adjusted */
+        }
+
+        .intro-paragraph {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 20px;
+            /* Adjusted */
+            font-size: 1.05em;
+            /* Adjusted */
+            color: #444;
+            line-height: 1.6;
+        }
+
+        #about p,
+        #why-software-dev p,
+        #cybersecurity-ctf p {
+            margin-bottom: 12px;
+            /* Ensure spacing for paragraphs in these sections */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Tham Le</h1>
+        <p><strong>Software Engineer | Python & C++ Developer | Problem Solver</strong></p>
+        <p class="intro-paragraph">A quick learner who enjoys new challenges; I rapidly pick up new skills to solve
+            problems and get great results in different tech roles.</p>
+        <div class="contact-info">
+            <a href="https://github.com/tham-le" target="_blank" rel="noopener noreferrer">GitHub</a> |
+            <a href="https://linkedin.com/in/tham42" target="_blank" rel="noopener noreferrer">LinkedIn</a> |
+            <a href="mailto:thamle.work@gmail.com">Email Me</a> |
+            <a href="ThamLE_resume.pdf" target="_blank" rel="noopener noreferrer">CV / Resume</a> |
+            <a href="https://ctf.thamle.live" target="_blank" rel="noopener noreferrer">CTF Write-ups</a> |
+            <a href="https://cv.42.fr/thi-le" target="_blank" rel="noopener noreferrer">42 Profile</a>
+        </div>
+    </header>
+
+    <section id="testimonial">
+        <h2>Testimonial</h2>
+        <div class="testimonial">
+            <p class="testimonial-quote">"Tham a été un excellent élément de notre équipe. Elle a fait preuve d'un
+                niveau technique et d'une capacité de communication au delà de nos attentes. Elle a montré sa capacité à
+                expérimenter et rechercher... Tham prouve qu'elle a le niveau nécessaire pour intégrer le monde du
+                travail comme ingénieure logiciel."</p>
+            <p class="testimonial-translation"><em>(English Translation: "Tham was an excellent team member,
+                    demonstrating technical and communication skills beyond our expectations. She showed a strong
+                    ability to experiment and research... Tham proves she has the necessary level to join the
+                    professional world as a software engineer.")</em></p>
+            <p class="testimonial-author">— Martin Parisot, Snowpack</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>As a Software Engineer, I bring a unique perspective from my background in <span
+                class="highlight">computational oceanography</span> and my training at 42 Paris. I enjoy working with
+            Python for its uses in data science and web development, and C++ for its power in high-performance computing
+            and system-level tasks. This background helps me think algorithmically and focus on optimization, whether
+            I'm building complex systems or working with data.</p>
+        <p>I'm always eager to learn new technologies and apply my skills to create solid, efficient solutions. I aim to
+            contribute to challenging projects where I can use my adaptability and technical skills.</p>
+    </section>
+    
+    <div class="projects-button-container">
+        <a href="https://ctf.thamle.live" class="projects-button ctf-button" target="_blank" rel="noopener noreferrer">🏴‍☠️ Explore My CTF Write-ups</a>
+    </div>
+
+    <section id="why-software-dev">
+        <h2>My Approach to Software Development</h2>
+        <p>My journey has given me a broad approach to engineering:</p>
+        <ul>
+            <li><strong>Analytical & Mathematical Skills:</strong> Good at solving complex problems using skills from
+                scientific modeling (Python, R, Fortran).</li>
+            <li><strong>Performance Focus:</strong> Experienced in making code (especially C++) run faster for large
+                datasets and heavy tasks.</li>
+            <li><strong>Adaptable Problem-Solving:</strong> Good at turning abstract ideas into working software, using
+                Python for quick tests or C++ for speed.</li>
+            <li><strong>Wide Range of Skills:</strong> Comfortable with low-level system programming (C/C++) and
+                high-level application development (Python, JavaScript).</li>
+        </ul>
+    </section>
+
+    <section id="technical-skills">
+        <h2>Technical Skills</h2>
+        <ul>
+            <li><strong>Languages:</strong> C++ (STL, Modern C++), Python (Scientific Stack, Web Frameworks), C,
+                JavaScript, Bash, SQL</li>
+            <li><strong>Frameworks & Libraries:</strong> Django, Three.js, React, Vue.js, (Pandas, NumPy - if relevant)
+            </li>
+            <li><strong>Developer Tools:</strong> Git, Docker, Linux/UNIX, CMake, GDB/Valgrind, MiniLibX, pthreads,
+                WebSockets, CI/CD</li>
+            <li><strong>Databases:</strong> PostgreSQL, MariaDB</li>
+            <li><strong>Core Concepts:</strong> System Programming, Network Programming (TCP/IP), Performance
+                Optimization, OOP, Multithreading, Data Structures & Algorithms, Web Development (Full-Stack),
+                Cybersecurity Fundamentals</li>
+        </ul>
+    </section>
+
+    <section id="experience">
+        <h2>Professional Experience</h2>
+        <div class="experience-item">
+            <h3><span class="job-title">C++ Development Engineer</span></h3>
+            <p><span class="company">Snowpack, Palaiseau</span> | <em>August 2024 – July 2025</em></p>
+            <ul>
+                <li>Led efforts to update the C++ SDK by building a successful WebAssembly (WASM) test version, showing
+                    core SDK features could run in web browsers.</li>
+                <li>Developed tools for C++, Android, and iOS to accurately track user data use; also wrote key plans
+                    for setting data limits based on user subscription levels.</li>
+                <li>Ensured software quality by thoroughly testing beta releases on multiple platforms (Android, macOS,
+                    ARM64); found and reported critical bugs quickly, helping to get them fixed faster.</li>
+                <li>Improved the command line tool with strong MFA and easy ways for users to see their services; also
+                    set up better log management to save memory and help with bug reports.</li>
+                <li>Collaborated effectively within a multicultural, English-speaking engineering team to achieve shared
+                    development goals and meet release objectives.</li>
+            </ul>
+        </div>
+        <div class="experience-item">
+            <h3><span class="job-title">Research Intern</span></h3>
+            <p><span class="company">LSCE - CNRS & CEA, Gif-sur-Yvette</span> | <em>February 2021 – August 2021</em></p>
+            <ul>
+                <li>Modeled mercury distribution in oceans using IPCC climate models (Python, Fortran), contributing to
+                    global pollution research.</li>
+                <li>Automated Python data processing pipelines for oceanic mercury predictions, enhancing research
+                    efficiency.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>Technical Projects</h2>
+        <div class="project">
+            <h3>Inception - System Administration with Docker</h3>
+            <p>Set up and managed a reliable multi-service web application (<span class="inline-code">WordPress</span>,
+                <span class="inline-code">Nginx</span>, <span class="inline-code">MariaDB</span>) on a Linux VM with
+                Docker Compose, creating custom Dockerfiles for better performance. Configured secure Docker networking
+                and persistent data storage.
+            </p>
+            <div>
+                <span class="tech-stack">Docker</span><span class="tech-stack">Nginx</span><span
+                    class="tech-stack">MariaDB</span><span class="tech-stack">WordPress</span><span
+                    class="tech-stack">Linux</span>
+            </div>
+            <p><a href="https://github.com/tham-le/inception" target="_blank" rel="noopener noreferrer">View on
+                    GitHub</a></p>
+        </div>
+        <div class="project">
+            <h3>Transcendence - Full-Stack SPA & 3D Game</h3>
+            <p>Built a full-stack Single Page Application using <span class="highlight">Django (Python)</span> for the
+                backend and Vanilla JavaScript for the frontend, creating a real-time multiplayer 3D Pong game with
+                <span class="inline-code">Three.js</span>. Implemented server-side game logic, real-time communication
+                (<span class="inline-code">WebSockets</span>), and JWT authentication.
+            </p>
+            <div>
+                <span class="tech-stack">Django</span><span class="tech-stack">Python</span><span
+                    class="tech-stack">PostgreSQL</span><span class="tech-stack">JavaScript</span><span
+                    class="tech-stack">Three.js</span><span class="tech-stack">WebSockets</span>
+            </div>
+            <p><a href="https://github.com/tham-le/ft_transcendence" target="_blank" rel="noopener noreferrer">View on
+                    GitHub</a></p>
+        </div>
+        <div class="project">
+            <h3>ft_irc - RFC Compliant IRC Server</h3>
+            <p>Built a strong IRC server from scratch in C++ that followed RFC 2812 rules, handling many client
+                connections at once using <code class="inline-code">poll()</code>. Implemented core IRC features like
+                user registration, channels, and messaging.</p>
+            <div>
+                <span class="tech-stack">C++</span><span class="tech-stack">Sockets</span><span
+                    class="tech-stack">TCP/IP</span><span class="tech-stack">Networking</span>
+            </div>
+            <p><a href="https://github.com/tham-le/ft_irc" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </p>
+        </div>
+        <div class="project">
+            <h3>Advanced C Graphics Programming (Ray Tracer & Fractal Explorer)</h3>
+            <p>Built an advanced, multithreaded ray tracing engine (<code class="inline-code">miniRT</code>) in C
+                (>8,000 LOC), creating detailed 3D scenes. Developed a fast fractal explorer (<code
+                    class="inline-code">fract-ol</code>) in C using pthreads for significant rendering speedups (2-8x)
+                and advanced visual features.</p>
+            <div>
+                <span class="tech-stack">C</span><span class="tech-stack">pthreads</span><span
+                    class="tech-stack">MiniLibX</span><span class="tech-stack">3D Math</span><span
+                    class="tech-stack">Graphics</span>
+            </div>
+            <p><a href="https://github.com/tham-le/miniRT" target="_blank" rel="noopener noreferrer">View Ray Tracer</a>
+                | <a href="https://github.com/tham-le/fractol" target="_blank" rel="noopener noreferrer">View Fractal
+                    Explorer</a></p>
+        </div>
+    </section>
+
+    <section id="activities-certifications">
+        <h2>Activities, Certifications & Community</h2>
+        <ul>
+            <li><strong>Certifications & Workshops:</strong>
+                <ul>
+                    <li>Foundations of Cybersecurity Certificate - Google (Jan 2025)</li>
+                    <li>Google init.g() workshops - Cybersecurity, Red Teaming, Responsible AI; Winner of CTF challenge
+                        (Oct 2024)</li>
+                    <li>Microsoft "Anyone Can Code" workshop - Azure Web Apps, Git, GitHub, AI (Jun 2023)</li>
+                </ul>
+            </li>
+            <li><strong>Hackathons & Tutoring:</strong>
+                <ul>
+                    <li>Google Hardware Hackathon (2024)</li>
+                    <li>InnovHer Hackathon - Developed EMA, a women's health management app (2024)</li>
+                    <li>DigHacktion Hackathon - Focused on digestive tract diseases and cancers (2024)</li>
+                    <li>42 Paris Tutor (C 'piscine' & Core Curriculum, Exam Surveillance) (2023-2024)</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section id="cybersecurity-ctf">
+        <h2>Cybersecurity & CTF Engagement</h2>
+        <p>I enjoy exploring cybersecurity by participating in Capture The Flag (CTF) competitions. These challenges
+            cover areas like web security, cryptography, and binary exploitation, helping me learn practical defensive
+            and offensive security skills.</p>
+        <div class="ctf-entry">
+            <h3>Recent CTF Competitions</h3>
+            <ul>
+                <li>HeroCTF (2024)</li>
+                <li>IrisCTF (2024)</li>
+                <li>HTB University CTF: Binary Badlands (2023)</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="education-background">
+        <h2>Educational Background</h2>
+        <div class="education-item">
+            <h3><strong>42 Paris</strong> - Digital Technologies Architect (Equivalent Master's RNCP Level 7)</h3>
+            <p><em>2022 – Expected Jun 2025</em></p>
+            <ul>
+                <li>Ranked Top 10 in 'piscine' (500+ candidates) & Top 20 for Common Core (800+ cohort).</li>
+                <li>Intensive, project-based learning in C/C++, Python, Linux, Docker, OOP, Performance Testing.</li>
+            </ul>
+        </div>
+        <div class="education-item">
+            <h3><strong>Aix Marseille University</strong> - M.Sc in Marine Science</h3>
+            <p><em>Sep 2019 – Jun 2021</em></p>
+            <ul>
+                <li>Specialized in oceanographic modeling and remote sensing using Python, R, and Fortran.</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>© <span id="currentYear"></span> Tham Le | Inspired by <a href="https://evenbettermotherfucking.website/"
+                target="_blank" rel="noopener noreferrer">Even Better Fucking Website</a> </p>
+        <p>Based in Paris, France | Trilingual: Vietnamese, French, English</p>
+    </footer>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

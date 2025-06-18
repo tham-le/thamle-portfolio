@@ -1,0 +1,78 @@
+name: Sync CTF Writeups from External Repo
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+  repository_dispatch:
+    types: [sync-writeups]
+
+jobs:
+  sync-writeups:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout portfolio repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+      
+    - name: Checkout CTF writeups repository
+      uses: actions/checkout@v4
+      with:
+        repository: tham-le/CTF-Writeups
+        path: ctf-writeups-source
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+        
+    - name: Sync writeups to assets directory
+      run: |
+        # Create assets/writeups directory if it doesn't exist
+        mkdir -p assets/writeups
+        
+        # Remove existing writeups (except README if it exists)
+        find assets/writeups -name "*.md" -not -name "README.md" -delete || true
+        
+        # Copy all markdown files from the CTF repo
+        find ctf-writeups-source -name "*.md" -type f -exec cp {} assets/writeups/ \;
+        
+        # Generate a simple index file
+        echo "# CTF Writeups Index" > assets/writeups/index.md
+        echo "" >> assets/writeups/index.md
+        echo "This directory contains CTF writeups automatically synced from the CTF-Writeups repository." >> assets/writeups/index.md
+        echo "" >> assets/writeups/index.md
+        echo "## Available Writeups:" >> assets/writeups/index.md
+        
+        # List all writeup files
+        cd assets/writeups
+        for file in *.md; do
+          if [ "$file" != "index.md" ] && [ "$file" != "README.md" ]; then
+            echo "- [$file](./$file)" >> index.md
+          fi
+        done
+        
+    - name: Check for changes
+      id: changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+          git add assets/writeups/
+          git commit -m "Auto-sync CTF writeups from CTF-Writeups repository"
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "No changes detected"
+        fi
+        
+    - name: Push changes
+      if: steps.changes.outputs.changes == 'true'
+      run: |
+        git push
+        
+    - name: Trigger CTF deployment
+      if: steps.changes.outputs.changes == 'true'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+        event-type: new-writeup

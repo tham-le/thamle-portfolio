@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "thamle-portfolio"
+  },
+  "targets": {
+    "thamle-portfolio": {
+      "hosting": {
+        "ctf-writeups": [
+          "your-firebase-project-ctf-subdomain"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
