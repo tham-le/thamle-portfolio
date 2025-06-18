@@ -1,367 +1,49 @@
-# ============================================
-# Comprehensive .gitignore for Portfolio Project
-# ============================================
+# Portfolio Project - Clean .gitignore
 
-# ================
-# FIREBASE & HOSTING
-# ================
-# Firebase cache and debug logs
+# Firebase
 .firebase/
 firebase-debug.log*
-firebase-debug.*.log*
-firebase-debug.log
 
-# Firebase config (uncomment if you want others to create their own project)
-# .firebaserc
-
-# ================
-# NODE.JS & NPM
-# ================
-# Dependencies
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
-
-# Runtime data
-pids/
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-.nyc_output
-
-# Grunt intermediate storage
-.grunt
-
-# Bower dependency directory
-bower_components/
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons
-build/Release
-
-# Optional npm cache directory
 .npm
+.env
+.env.*
 
-# Optional eslint cache
-.eslintcache
-
-# Optional stylelint cache
-.stylelintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# parcel-bundler cache
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-# public (commented out - we need our public directory for portfolio)
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# ================
-# FLUTTER & DART
-# ================
-# Build artifacts
-**/build/
+# Flutter/Dart
 .dart_tool/
+.packages
+build/
+pubspec.lock
+coverage/
 .flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
-.pub/
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-# Flutter web build
-ctf_app/build/
-ctf_app/.dart_tool/
-ctf_app/.flutter-plugins
-ctf_app/.flutter-plugins-dependencies
-ctf_app/.pub-cache/
-ctf_app/.pub/
-
-# ================
-# ENVIRONMENT & SECRETS
-# ================
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.*.local
-
-# Secrets and sensitive files
-*.pem
-*.key
-*.p12
-*.keystore
-secrets.json
-service-account*.json
-firebase-adminsdk*.json
-
-# API keys and tokens
-.env.firebase
-.env.secrets
-
-# ================
-# IDE & EDITORS
-# ================
-# Visual Studio Code
+# IDEs
 .vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# IntelliJ IDEA
 .idea/
-*.iws
-*.iml
-*.ipr
-out/
-
-# Android Studio
-.gradle/
-local.properties
 *.iml
 *.ipr
 *.iws
-.idea/
 
-# Eclipse
-.apt_generated/
-.classpath
-.factorypath
-.project
-.settings/
-.springBeans
-.sts4-cache/
-
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-# Vim
-*.swp
-*.swo
-*~
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# ================
-# OPERATING SYSTEMS
-# ================
-# macOS
+# Operating Systems
 .DS_Store
-.AppleDouble
-.LSOverride
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
 Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# Linux
 *~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
 
-# ================
-# LOGS & DEBUG
-# ================
-# Log files
+# Logs & Debug
 *.log
-logs/
-log/
-*.log.*
-
-# Debug files
 debug.log
-*.debug
 
-# Crash reports
-crash.log
-*.crash
-
-# ================
-# ARCHIVES & BINARIES
-# ================
-# Compressed files
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-
-# Executables
-*.exe
-*.out
-*.app
-
-# ================
-# BACKUP & TEMPORARY FILES
-# ================
-# Backup files
+# Temporary & Backup files
+*.tmp
 *.bak
 *.backup
-*.old
-*.orig
-*.save
-*.tmp
-
-# Temporary files
-*.temp
-*.temporary
-*~
-
-# Swap files
 *.swp
 *.swo
 
-# Lock files
-*.lock
-!package-lock.json
-!yarn.lock
-
-# ================
-# PROJECT SPECIFIC
-# ================
-# Portfolio specific ignores
-/public/backup/
-/public/old/
-/public/*.backup
-
-# CTF app specific
-ctf_app/assets/writeups/*.backup
-ctf_app/assets/writeups/draft_*
-
-# Generated files
-writeups_list.txt
+# Project Specific
+ctf_app/assets/writeups/
 *.generated.*
-
-# Test files
-test_output/
-coverage/
-test-results/
-
-# Documentation builds
-docs/_build/
-site/
-
-# Cache directories
-.cache/
-*.cache
-
-# ================
-# MISC
-# ================
-# Thumbnails
-*.thumbnail
-
-# Image metadata
-*.exif
-
-# Video files (if accidentally added)
-*.mp4
-*.avi
-*.mov
-*.wmv
-*.flv
-*.webm
-
-# Audio files (if accidentally added)
-*.mp3
-*.wav
-*.ogg
-*.flac
-
-# Large files that shouldn't be in git
-*.iso
-*.img
-*.dmp
