@@ -80,42 +80,8 @@ jobs:
                 # Find and copy writeup files (wu.md)
                 if [ -f "$challenge_dir/wu.md" ]; then
                   new_filename="${challenge_name}.md"
-                  output_file="$event_path/$category/$new_filename"
-                  
-                  # Determine difficulty based on points or challenge name
-                  difficulty="Medium"  # default
-                  points=100  # default
-                  case "$challenge_name" in
-                    *baby*|*easy*|*beginner*) difficulty="Easy"; points=50 ;;
-                    *hard*|*insane*|*expert*) difficulty="Hard"; points=500 ;;
-                  esac
-                  
-                  # Extract title from challenge name (clean up)
-                  title=$(echo "$challenge_name" | sed 's/_/ /g' | sed 's/-/ /g' | sed 's/\b\w/\u&/g')
-                  
-                  # Get current date
-                  current_date=$(date '+%Y-%m-%d')
-                  
-                  # Create the writeup with proper YAML front matter
-                  cat > "$output_file" << EOF
----
-title: "$title"
-date: "$current_date"
-ctf: "$ctf_name"
-category: "$category"
-difficulty: "$difficulty"
-points: $points
-tags: ["$ctf_name", "$category", "$difficulty"]
-author: "Tham Le"
-solved: true
----
-
-EOF
-                  
-                  # Append the original content
-                  cat "$challenge_dir/wu.md" >> "$output_file"
-                  
-                  echo "  ✅ $category/$new_filename (with metadata)"
+                  cp "$challenge_dir/wu.md" "$event_path/$category/$new_filename"
+                  echo "  ✅ $category/$new_filename"
                   
                   # Count categories
                   category_counts[$category]=$((${category_counts[$category]:-0} + 1))
