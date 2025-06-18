@@ -31,7 +31,7 @@ jobs:
       run: |
         mkdir -p ctf_app/assets/writeups
         cp -r assets/writeups/* ctf_app/assets/writeups/ 2>/dev/null || true
-        echo "Copied writeups to Flutter assets"
+        echo "📁 Copied writeups to Flutter assets for build"
         ls -la ctf_app/assets/writeups/
         
     - name: Get Flutter dependencies

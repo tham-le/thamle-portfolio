@@ -2,9 +2,6 @@
 
 > Modern web portfolio with automated content management
 
-## About This Project
-
-This portfolio showcases my skills in **web development**, **automation**, and **cloud infrastructure**. It features a clean, professional design with automated content synchronization from my cybersecurity research.
 
 ## Key Features
 
@@ -88,6 +85,3 @@ This portfolio showcases my skills in **web development**, **automation**, and *
 🔗 [LinkedIn](https://linkedin.com/in/tham42)  
 💻 [GitHub](https://github.com/tham-le)
 
----
-
-*This repository showcases modern web development practices, DevOps automation, and cloud infrastructure management.*

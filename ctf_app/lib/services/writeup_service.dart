@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import '../models/ctf_writeup.dart';
 
 class WriteupService {
-  static const String _basePath = 'assets/writeups/';
+  static const String _basePath = 'assets/writeups/';  // Flutter assets path
   
   // Hardcoded list of available writeups from sync
   static const List<String> _writeupFiles = [

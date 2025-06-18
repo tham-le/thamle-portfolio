@@ -31,12 +31,12 @@ jobs:
         
     - name: Sync writeups with organized structure
       run: |
-        # Create assets/writeups directory if it doesn't exist
-        mkdir -p assets/writeups
+        # Create ctf_app/assets/writeups directory if it doesn't exist
+        mkdir -p ctf_app/assets/writeups
         
         # Remove existing synced content (keep format guide)
-        find assets/writeups -name "*.md" -not -name "ctf-writeup-format.md" -delete 2>/dev/null || true
-        find assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
+        find ctf_app/assets/writeups -name "*.md" -not -name "ctf-writeup-format.md" -delete 2>/dev/null || true
+        find ctf_app/assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
         
         echo "🔄 Syncing writeups from CTF-Writeups repository..."
         
@@ -51,7 +51,7 @@ jobs:
             fi
             
             echo "🏆 Processing CTF: $ctf_name"
-            event_path="assets/writeups/$ctf_name"
+            event_path="ctf_app/assets/writeups/$ctf_name"
             mkdir -p "$event_path"
             
             # Initialize category counters
@@ -107,45 +107,40 @@ jobs:
         done
         
         # Generate main index
-        echo "# CTF Writeups Collection" > assets/writeups/index.md
-        echo "" >> assets/writeups/index.md
-        echo "> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)" >> assets/writeups/index.md
-        echo "" >> assets/writeups/index.md
-        echo "## 🏆 CTF Events" >> assets/writeups/index.md
-        echo "" >> assets/writeups/index.md
+        echo "# CTF Writeups Collection" > ctf_app/assets/writeups/index.md
+        echo "" >> ctf_app/assets/writeups/index.md
+        echo "> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)" >> ctf_app/assets/writeups/index.md
+        echo "" >> ctf_app/assets/writeups/index.md
+        echo "## 🏆 CTF Events" >> ctf_app/assets/writeups/index.md
+        echo "" >> ctf_app/assets/writeups/index.md
         
         # List all CTF events
-        for event_dir in assets/writeups/*/; do
+        for event_dir in ctf_app/assets/writeups/*/; do
           if [ -d "$event_dir" ]; then
             event=$(basename "$event_dir")
             if [ -f "$event_dir/README.md" ]; then
-              echo "- [$event](./$event/)" >> assets/writeups/index.md
+              echo "- [$event](./$event/)" >> ctf_app/assets/writeups/index.md
             fi
           fi
         done
         
-        echo "" >> assets/writeups/index.md
-        echo "## 📊 Statistics" >> assets/writeups/index.md
-        echo "" >> assets/writeups/index.md
+        echo "" >> ctf_app/assets/writeups/index.md
+        echo "## 📊 Statistics" >> ctf_app/assets/writeups/index.md
+        echo "" >> ctf_app/assets/writeups/index.md
         
         # Add statistics
-        total_writeups=$(find assets/writeups -mindepth 1 -maxdepth 3 -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
-        total_ctfs=$(find assets/writeups -mindepth 1 -maxdepth 1 -type d | wc -l)
+        total_writeups=$(find ctf_app/assets/writeups -mindepth 1 -maxdepth 3 -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
+        total_ctfs=$(find ctf_app/assets/writeups -mindepth 1 -maxdepth 1 -type d | wc -l)
         
-        echo "- **Total CTF Events:** $total_ctfs" >> assets/writeups/index.md
-        echo "- **Total Writeups:** $total_writeups" >> assets/writeups/index.md
-        echo "- **Last Updated:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> assets/writeups/index.md
+        echo "- **Total CTF Events:** $total_ctfs" >> ctf_app/assets/writeups/index.md
+        echo "- **Total Writeups:** $total_writeups" >> ctf_app/assets/writeups/index.md
+        echo "- **Last Updated:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> ctf_app/assets/writeups/index.md
         
         echo ""
         echo "📊 Sync Summary:"
         echo "- CTF Events: $total_ctfs"
         echo "- Total Writeups: $total_writeups"
-        
-        # Copy writeups to Flutter app assets for deployment
-        echo "📱 Copying writeups to Flutter app assets..."
-        mkdir -p ctf_app/assets/writeups
-        cp -r assets/writeups/* ctf_app/assets/writeups/ 2>/dev/null || true
-        
+
     - name: Check for changes
       id: changes
       run: |
@@ -154,7 +149,7 @@ jobs:
         
         if [ -n "$(git status --porcelain)" ]; then
           echo "changes=true" >> $GITHUB_OUTPUT
-          git add assets/writeups/
+          git add ctf_app/assets/writeups/
           git commit -m "Auto-sync CTF writeups from CTF-Writeups repository"
         else
           echo "changes=false" >> $GITHUB_OUTPUT

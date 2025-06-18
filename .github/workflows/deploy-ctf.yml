@@ -1,0 +1,137 @@
+name: Deploy CTF Write-ups
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_app/**'
+      - 'assets/writeups/**'
+  # Trigger on schedule to check for new writeups
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  # Manual trigger
+  workflow_dispatch:
+  # Webhook trigger from CTF-Writeups repo
+  repository_dispatch:
+    types: [new-writeup]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout portfolio repository
+      uses: actions/checkout@v4
+      
+    - name: Checkout CTF writeups repository
+      uses: actions/checkout@v4
+      with:
+        repository: tham-le/CTF-Writeups
+        path: ctf-writeups-repo
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.19.3'
+        channel: 'stable'
+        
+    - name: Copy markdown files from CTF repo to Flutter assets
+      run: |
+        mkdir -p ctf_app/assets/writeups
+        # Copy all markdown files from the CTF repo
+        find ctf-writeups-repo -name "*.md" -type f -exec cp {} ctf_app/assets/writeups/ \;
+        
+        # Generate writeup index for Flutter app
+        echo "Generating writeup index..."
+        cd ctf_app/assets/writeups
+        ls *.md > writeups_list.txt || echo "No markdown files found"
+        
+    - name: Update Flutter writeup service with new files
+      run: |
+        # Get list of markdown files
+        WRITEUP_FILES=$(find ctf_app/assets/writeups -name "*.md" -type f -exec basename {} \; | sort)
+        
+        # Update the writeup service file
+        cat > ctf_app/lib/services/writeup_service.dart << 'EOF'
+        import 'package:flutter/services.dart';
+        import '../models/ctf_writeup.dart';
+
+        class WriteupService {
+          static const String _basePath = 'assets/writeups/';
+          
+          // Automatically generated list of writeup files
+          static const List<String> _writeupFiles = [
+        $(echo "$WRITEUP_FILES" | sed 's/^/    "/' | sed 's/$/",' | head -20)  // Limit to 20 files for now
+          ];
+
+          static Future<List<CTFWriteup>> loadAllWriteups() async {
+            final List<CTFWriteup> writeups = [];
+            
+            for (final filename in _writeupFiles) {
+              try {
+                final String markdown = await rootBundle.loadString('$_basePath$filename');
+                final writeup = CTFWriteup.fromMarkdown(markdown, filename);
+                writeups.add(writeup);
+              } catch (e) {
+                print('Error loading writeup $filename: $e');
+              }
+            }
+            
+            // Sort by date (newest first)
+            writeups.sort((a, b) => b.date.compareTo(a.date));
+            
+            return writeups;
+          }
+
+          static Future<CTFWriteup?> loadWriteup(String filename) async {
+            try {
+              final String markdown = await rootBundle.loadString('$_basePath$filename');
+              return CTFWriteup.fromMarkdown(markdown, filename);
+            } catch (e) {
+              print('Error loading writeup $filename: $e');
+              return null;
+            }
+          }
+
+          static List<String> getAllCategories(List<CTFWriteup> writeups) {
+            final categories = writeups.map((w) => w.category).toSet().toList();
+            categories.sort();
+            return ['All', ...categories];
+          }
+
+          static List<String> getAllDifficulties(List<CTFWriteup> writeups) {
+            final difficulties = writeups.map((w) => w.difficulty).toSet().toList();
+            difficulties.sort();
+            return ['All', ...difficulties];
+          }
+
+          static List<String> getAllTags(List<CTFWriteup> writeups) {
+            final tags = <String>{};
+            for (final writeup in writeups) {
+              tags.addAll(writeup.tags);
+            }
+            final tagList = tags.toList();
+            tagList.sort();
+            return tagList;
+          }
+        }
+        EOF
+        
+    - name: Get Flutter dependencies
+      working-directory: ./ctf_app
+      run: flutter pub get
+      
+    - name: Build Flutter web app
+      working-directory: ./ctf_app
+      run: flutter build web --release
+      
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
+        channelId: live
+        projectId: thamle-portfolio
+        entryPoint: ./ctf_app
+        target: thamle-ctf
