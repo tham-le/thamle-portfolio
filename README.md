@@ -1,115 +1,42 @@
-# Tham Le Portfolio
+# Tham Le P**Live Sites:**
 
-> Professional portfolio website with automated CTF writeups deployment system
+- **[thamle.live](https://thamle.live)** - Professional portfolio and resume
+- **[ctf.thamle.live](https://ctf.thamle.live)** - CTF writeups and cybersecurity research
+
+## 🔄 How It Workslio
+
+> Professional portfolio website with automated CTF writeups synchronization
 
 [![Live Site](https://img.shields.io/badge/Live-thamle.live-blue?style=for-the-badge)](https://thamle.live)
 [![CTF Platform](https://img.shields.io/badge/CTF-ctf.thamle.live-red?style=for-the-badge)](https://ctf.thamle.live)
 
-## 🎯 Overview
+## 🎯 About This Portfolio
 
-This repository showcases a full-stack portfolio solution featuring:
+A modern web portfolio showcasing my cybersecurity and software development expertise. Features an automated system that syncs CTF writeups from my separate research repository and organizes them by event and category.
 
-- **Responsive Portfolio Site**: Professional showcase with modern design
-- **Automated CTF Platform**: Dynamic writeups with automated deployment
-- **CI/CD Pipeline**: Complete DevOps workflow with GitHub Actions
-- **Cloud Infrastructure**: Firebase hosting with custom domains
+**Live Sites:**
+- **[thamle.live](https://thamle.live)** - Professional portfolio and resume
+- **[ctf.thamle.live](https://ctf.thamle.live)** - CTF writeups and cybersecurity research
 
-## 🏗️ Architecture
+## � How It Works
 
-```
-┌─────────────────┐    ┌─────────────────┐
-│  Main Portfolio │    │  CTF Writeups   │
-│   thamle.live   │    │ ctf.thamle.live │
-└─────────────────┘    └─────────────────┘
-         │                       │
-         └───────────┬───────────┘
-                     │
-            ┌────────▼────────┐
-            │ Firebase Hosting │
-            └─────────────────┘
-                     │
-            ┌────────▼────────┐
-            │ GitHub Actions  │
-            │    CI/CD        │
-            └─────────────────┘
-```
+This portfolio automatically stays up-to-date with my latest work:
 
-## 📁 Project Structure
-
-```
-├── 📄 README.md                    # Project documentation
-├── 🔧 .github/workflows/           # CI/CD automation
-│   ├── deploy-main-site.yml        # Main portfolio deployment
-│   ├── deploy-ctf.yml              # CTF platform deployment
-│   └── sync-writeups.yml           # Content synchronization
-├── 🌐 public/                      # Main portfolio (Static)
-│   ├── index.html                  # Professional landing page
-│   ├── ThamLE_resume.pdf          # Resume/CV
-│   └── assets/                     # Static resources
-├── 📱 ctf_app/                     # Flutter CTF platform
-│   ├── lib/                        # Application source code
-│   └── pubspec.yaml               # Dependencies
-├── 📝 assets/writeups/             # CTF writeup content
-├── 🔥 firebase.json               # Hosting configuration
-└── 📋 DEPLOYMENT-SUMMARY.md       # Setup guide
-```
+1. **CTF Writeups**: Synced every 6 hours from my [CTF-Writeups repository](https://github.com/tham-le/CTF-Writeups)
+2. **Organization**: Automatically categorizes challenges by type (web, crypto, forensics, etc.)
+3. **Deployment**: GitHub Actions handles building and deploying to Firebase Hosting
+4. **Content**: Writeups are organized by CTF event and challenge category for easy navigation
 
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript, Flutter Web
 - **Hosting**: Firebase Hosting with custom domains
-- **CI/CD**: GitHub Actions for automated deployment
-- **Content**: Markdown-based CTF writeups
-- **Infrastructure**: Multi-target Firebase deployment
-
-## 🚀 Live Demonstrations
-
-| Platform | URL | Description |
-|----------|-----|-------------|
-| **Portfolio** | [thamle.live](https://thamle.live) | Professional showcase and resume |
-| **CTF Platform** | [ctf.thamle.live](https://ctf.thamle.live) | Cybersecurity writeups and challenges |
-
-## 🔧 Local Development
-
-### Portfolio Site
-```bash
-cd public
-python -m http.server 8000
-# Visit http://localhost:8000
-```
-
-### CTF Platform
-```bash
-cd ctf_app
-flutter pub get
-flutter run -d web-server --web-port 8080
-# Visit http://localhost:8080
-```
-
-## 📈 Features
-
-### Automated Deployment
-- **Push-to-deploy**: Automatic builds on code changes
-- **Content sync**: Scheduled updates from external repositories
-- **Multi-environment**: Separate staging and production workflows
-
-### Professional Portfolio
-- **Responsive design**: Mobile-first approach
-- **Performance optimized**: Fast loading times
-- **SEO friendly**: Semantic HTML structure
-
-### CTF Platform
-- **Dynamic content**: Automated writeup publishing
-- **Search functionality**: Easy content discovery
-- **Real-time updates**: Automatic synchronization
+- **Automation**: GitHub Actions for CI/CD and content synchronization
+- **Content Management**: Markdown-based writeups with automated organization
 
 ## 📞 Contact
 
-**Tham Le** - Software Engineer  
+**Tham Le** - Software Engineer & Cybersecurity Enthusiast  
 📧 [thamle.work@gmail.com](mailto:thamle.work@gmail.com)  
 🔗 [LinkedIn](https://linkedin.com/in/tham42)  
 💻 [GitHub](https://github.com/tham-le)
-
----
-
-*This repository demonstrates modern web development practices, DevOps automation, and cloud infrastructure management.*
