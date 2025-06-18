@@ -35,7 +35,7 @@ jobs:
         mkdir -p assets/writeups
         
         # Remove existing synced content (keep format guide)
-        find assets/writeups -name "*.md" -not -name "CTF-WRITEUP-FORMAT.md" -delete 2>/dev/null || true
+        find assets/writeups -name "*.md" -not -name "ctf-writeup-format.md" -delete 2>/dev/null || true
         find assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
         
         echo "🔄 Syncing writeups from CTF-Writeups repository..."
@@ -129,7 +129,7 @@ jobs:
         echo "" >> assets/writeups/index.md
         
         # Add statistics
-        total_writeups=$(find assets/writeups -mindepth 1 -maxdepth 3 -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "CTF-WRITEUP-FORMAT.md" | wc -l)
+        total_writeups=$(find assets/writeups -mindepth 1 -maxdepth 3 -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
         total_ctfs=$(find assets/writeups -mindepth 1 -maxdepth 1 -type d | wc -l)
         
         echo "- **Total CTF Events:** $total_ctfs" >> assets/writeups/index.md
