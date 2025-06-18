@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'models/ctf_writeup.dart';
+import 'services/writeup_service.dart';
 
 void main() {
   runApp(const CTFWriteupsApp());
@@ -127,11 +128,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> loadWriteups() async {
     try {
-      final String markdown = await rootBundle.loadString('assets/writeups/sample-web-challenge.md');
-      final writeup = CTFWriteup.fromMarkdown(markdown, 'sample-web-challenge.md');
+      // Use the WriteupService to load all writeups
+      final loadedWriteups = await WriteupService.loadAllWriteups();
       
       setState(() {
-        writeups = [writeup];
+        writeups = loadedWriteups;
         isLoading = false;
       });
     } catch (e) {
