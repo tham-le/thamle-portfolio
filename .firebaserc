@@ -5,8 +5,11 @@
   "targets": {
     "thamle-portfolio": {
       "hosting": {
-        "ctf-writeups": [
-          "your-firebase-project-ctf-subdomain"
+        "main": [
+          "thamle-portfolio"
+        ],
+        "ctf": [
+          "thamle-portfolio-ctf"
         ]
       }
     }

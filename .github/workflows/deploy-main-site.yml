@@ -26,6 +26,6 @@ jobs:
       
     - name: Deploy to Firebase Hosting
       run: |
-        firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project ${{ secrets.FIREBASE_PROJECT_ID }}
+        firebase deploy --only hosting:main --token ${{ secrets.FIREBASE_TOKEN }} --project ${{ secrets.FIREBASE_PROJECT_ID }}
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
