@@ -50,4 +50,5 @@ jobs:
         repoToken: ${{ secrets.GITHUB_TOKEN }}
         firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}
         projectId: thamle-portfolio
+        target: ctf
         entryPoint: ./ctf_app
