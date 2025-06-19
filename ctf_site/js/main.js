@@ -1,11 +1,6 @@
 // Global variables
-let allWriteups = [];
-let filteredWriteups = [];
-let categories = ['all'];
-let difficulties = ['all'];
-let ctfEvents = ['all'];
-let viewMode = 'grid'; // Default view mode
-let currentTab = 'all'; // Default tab
+let ctfEvents = [];
+let currentEvent = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async () => {
@@ -13,29 +8,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Setup the modal
         setupModal();
         
-        // Setup view toggle (grid/list)
-        setupViewToggle();
-        
         // Setup tab switching
         setupTabSwitching();
         
-        // Setup search functionality
-        setupSearch();
+        // Load CTF events
+        await loadCtfEvents();
         
-        // Load and process writeups
-        await fetchWriteups();
+        // Display events list
+        displayEventsList();
         
-        // Setup filters
-        setupFilters();
-        
-        // Display writeups
-        applyFilters();
-        
-        // Display featured writeups
-        displayFeaturedWriteups();
-        
-        // Display events and categories pages
-        setupEventCategoryPages();
+        // Hide loading indicator
+        document.getElementById('loading').style.display = 'none';
         
     } catch (error) {
         console.error('Error initializing app:', error);
@@ -48,319 +31,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Fetch writeups from the index
-async function fetchWriteups() {
-    try {
-        // First, fetch the master index to get all CTF events
-        const indexResponse = await fetch('assets/writeups/index.md');
-        const indexContent = await indexResponse.text();
-        
-        // Parse the index to get CTF events
-        const ctfEventMatches = [...indexContent.matchAll(/\[([^\]]+)\]\(\.\/([^\/]+)\/\)/g)];
-        
-        // For each CTF event, load its writeups
-        for (const match of ctfEventMatches) {
-            const ctfName = match[1];
-            const ctfPath = match[2];
-            
-            // Add CTF to the events list
-            if (!ctfEvents.includes(ctfName)) {
-                ctfEvents.push(ctfName);
-            }
-            
-            // Fetch the CTF README to identify categories
-            await fetchCTFWriteups(ctfName, ctfPath);
-        }
-        
-        // Hide loading indicator
-        document.getElementById('loading').style.display = 'none';
-        
-    } catch (error) {
-        console.error('Error fetching writeups:', error);
-        throw new Error(`Failed to fetch writeups: ${error.message}`);
-    }
-}
-
-// Fetch writeups for a specific CTF event
-async function fetchCTFWriteups(ctfName, ctfPath) {
-    try {
-        // Fetch the CTF README
-        const readmeResponse = await fetch(`assets/writeups/${ctfPath}/README.md`);
-        const readmeContent = await readmeResponse.text();
-        
-        // Parse the README to get categories
-        const categoryMatches = [...readmeContent.matchAll(/\*\*\[([^\]]+)\]\(\.\/([^\/]+)\/\)\*\* \((\d+) challenges\)/g)];
-        
-        // For each category, fetch the writeups
-        for (const match of categoryMatches) {
-            const category = match[1];
-            const categoryPath = match[2];
-            
-            // Add category to the categories list if not already there
-            if (!categories.includes(category)) {
-                categories.push(category);
-            }
-            
-            // Fetch all writeups in this category
-            const writeupFiles = await fetchCategoryWriteupsList(ctfPath, categoryPath);
-            
-            // Load each writeup
-            for (const filename of writeupFiles) {
-                const writeup = await fetchWriteup(ctfPath, categoryPath, filename, ctfName, category);
-                if (writeup) {
-                    allWriteups.push(writeup);
-                    
-                    // Add difficulty to the difficulties list if not already there
-                    if (!difficulties.includes(writeup.difficulty)) {
-                        difficulties.push(writeup.difficulty);
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error(`Error fetching writeups for ${ctfName}:`, error);
-    }
-}
-
-// Get a list of writeup files in a category
-async function fetchCategoryWriteupsList(ctfPath, categoryPath) {
-    // Since we can't list directory contents directly, we'll use the directory pattern
-    // we know from the repo structure - all .md files in the category directory except README.md
-    
-    // TODO: Implement a way to get the list of files in a directory
-    // For now, we'll hard-code the paths based on the known structure
-    // This would need to be dynamically generated in a real environment
-    
-    // For demo purposes, use known writeup files from the index
-    const knownWriteups = {
-        'IrisCTF': {
-            'web': ['sqlate.md', 'password-manager.md'],
-            'forensics': ['wheres-bobby.md'],
-            'misc': ['KittyCrypt.md']
-        }
-    };
-    
-    if (knownWriteups[ctfPath] && knownWriteups[ctfPath][categoryPath]) {
-        return knownWriteups[ctfPath][categoryPath];
-    }
-    
-    return [];
-}
-
-// Fetch a single writeup file
-async function fetchWriteup(ctfPath, categoryPath, filename, ctfName, category) {
-    try {
-        const filepath = `assets/writeups/${ctfPath}/${categoryPath}/${filename}`;
-        const response = await fetch(filepath);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${filepath}: ${response.statusText}`);
-        }
-        
-        const markdown = await response.text();
-        
-        // Parse the YAML frontmatter
-        const writeup = parseMarkdown(markdown, filename, ctfName, category);
-        writeup.filepath = filepath;
-        
-        return writeup;
-    } catch (error) {
-        console.error(`Error fetching writeup ${filename}:`, error);
-        return null;
-    }
-}
-
-// Parse markdown content with YAML frontmatter
-function parseMarkdown(markdown, filename, ctfName, category) {
-    try {
-        // Extract YAML front matter
-        const frontMatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
-        
-        if (!frontMatterMatch) {
-            throw new Error('Invalid markdown format: missing metadata');
-        }
-        
-        const frontMatter = frontMatterMatch[1];
-        const content = markdown.substring(frontMatterMatch[0].length);
-        
-        // Parse YAML
-        const metadata = jsyaml.load(frontMatter);
-        
-        // Extract featured status and banner image if they exist
-        const featured = metadata.featured || false;
-        const banner = metadata.banner || null;
-        const thumbnail = metadata.thumbnail || null;
-        const description = metadata.description || extractDescriptionFromMarkdown(content);
-        
-        // Fallback values if YAML parsing fails
-        return {
-            title: metadata.title || filename.replace('.md', '').replace(/-/g, ' '),
-            date: new Date(metadata.date || Date.now()),
-            ctf: metadata.ctf || ctfName,
-            category: metadata.category || category,
-            difficulty: metadata.difficulty || 'Medium',
-            points: metadata.points || 0,
-            tags: metadata.tags || [],
-            author: metadata.author || 'Tham Le',
-            solved: metadata.solved !== false,
-            featured: featured,
-            banner: banner,
-            thumbnail: thumbnail,
-            description: description,
-            content: content,
-            filename: filename
-        };
-    } catch (error) {
-        console.error('Error parsing markdown:', error);
-        
-        // Return default object if parsing fails
-        return {
-            title: filename.replace('.md', '').replace(/-/g, ' '),
-            date: new Date(),
-            ctf: ctfName,
-            category: category,
-            difficulty: 'Medium',
-            points: 0,
-            tags: [],
-            author: 'Tham Le',
-            solved: true,
-            featured: false,
-            banner: null,
-            thumbnail: null,
-            description: '',
-            content: markdown,
-            filename: filename
-        };
-    }
-}
-
-// Extract a short description from markdown content
-function extractDescriptionFromMarkdown(markdown) {
-    // Remove code blocks first
-    const noCodeBlocks = markdown.replace(/```[\s\S]*?```/g, '');
-    
-    // Remove headings
-    const noHeadings = noCodeBlocks.replace(/#+\s+.*$/gm, '');
-    
-    // Get first paragraph that's at least 20 chars
-    const paragraphs = noHeadings.split('\n\n');
-    for (const p of paragraphs) {
-        const cleaned = p.trim();
-        if (cleaned.length >= 20) {
-            // Truncate to max 150 chars and add ellipsis if needed
-            return cleaned.length > 150 ? cleaned.substring(0, 147) + '...' : cleaned;
-        }
-    }
-    
-    // Fallback to a shorter snippet if no good paragraph found
-    return noHeadings.trim().substring(0, 100).trim() + '...';
-}
-
-// Setup filter dropdowns
-function setupFilters() {
-    // Sort filter options
-    categories.sort();
-    difficulties.sort();
-    ctfEvents.sort();
-    
-    // Populate category filter
-    const categoryFilter = document.getElementById('category-filter');
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category === 'all' ? 'All' : category;
-        categoryFilter.appendChild(option);
-    });
-    
-    // Populate difficulty filter
-    const difficultyFilter = document.getElementById('difficulty-filter');
-    difficulties.forEach(difficulty => {
-        const option = document.createElement('option');
-        option.value = difficulty;
-        option.textContent = difficulty === 'all' ? 'All' : difficulty;
-        difficultyFilter.appendChild(option);
-    });
-    
-    // Populate CTF event filter
-    const ctfFilter = document.getElementById('ctf-filter');
-    ctfEvents.forEach(ctf => {
-        const option = document.createElement('option');
-        option.value = ctf;
-        option.textContent = ctf === 'all' ? 'All' : ctf;
-        ctfFilter.appendChild(option);
-    });
-    
-    // Add event listeners
-    categoryFilter.addEventListener('change', applyFilters);
-    difficultyFilter.addEventListener('change', applyFilters);
-    ctfFilter.addEventListener('change', applyFilters);
-}
-
-// Apply filters to writeups
-function applyFilters() {
-    const categoryValue = document.getElementById('category-filter').value;
-    const difficultyValue = document.getElementById('difficulty-filter').value;
-    const ctfValue = document.getElementById('ctf-filter').value;
-    const searchValue = document.getElementById('search-input').value.toLowerCase();
-    
-    filteredWriteups = allWriteups.filter(writeup => {
-        const categoryMatch = categoryValue === 'all' || writeup.category.toLowerCase() === categoryValue.toLowerCase();
-        const difficultyMatch = difficultyValue === 'all' || writeup.difficulty.toLowerCase() === difficultyValue.toLowerCase();
-        const ctfMatch = ctfValue === 'all' || writeup.ctf === ctfValue;
-        
-        // Search in title, description, and content
-        const searchMatch = searchValue === '' || 
-            writeup.title.toLowerCase().includes(searchValue) ||
-            writeup.description.toLowerCase().includes(searchValue) ||
-            writeup.content.toLowerCase().includes(searchValue) ||
-            writeup.tags.some(tag => tag.toLowerCase().includes(searchValue)) ||
-            writeup.author.toLowerCase().includes(searchValue) ||
-            writeup.category.toLowerCase().includes(searchValue) ||
-            writeup.ctf.toLowerCase().includes(searchValue);
-        
-        return categoryMatch && difficultyMatch && ctfMatch && searchMatch;
-    });
-    
-    // Sort by date (newest first)
-    filteredWriteups.sort((a, b) => b.date - a.date);
-    
-    // Display writeups
-    displayWriteups(filteredWriteups);
-}
-
-// Setup view toggle (grid/list)
-function setupViewToggle() {
-    const gridViewBtn = document.getElementById('grid-view-btn');
-    const listViewBtn = document.getElementById('list-view-btn');
-    
-    gridViewBtn.addEventListener('click', () => {
-        viewMode = 'grid';
-        gridViewBtn.classList.add('active');
-        listViewBtn.classList.remove('active');
-        document.getElementById('writeups-container').className = 'writeups-container grid-view';
-    });
-    
-    listViewBtn.addEventListener('click', () => {
-        viewMode = 'list';
-        listViewBtn.classList.add('active');
-        gridViewBtn.classList.remove('active');
-        document.getElementById('writeups-container').className = 'writeups-container list-view';
-    });
-    
-    // Set default view
-    document.getElementById('writeups-container').className = 'writeups-container grid-view';
-}
-
 // Setup tab switching
 function setupTabSwitching() {
     const tabButtons = document.querySelectorAll('.tab-btn');
-    const allContent = document.getElementById('writeups-container');
+    const allContent = document.getElementById('writeups-container').parentElement;
     const eventsContent = document.getElementById('events-container');
-    const categoriesContent = document.getElementById('categories-container');
-    const filtersSection = document.querySelector('.filters');
     
     tabButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
             // Remove active class from all buttons
             tabButtons.forEach(b => b.classList.remove('active'));
             
@@ -369,188 +47,71 @@ function setupTabSwitching() {
             
             // Get the view to show
             const view = btn.getAttribute('data-view');
-            currentTab = view;
             
             // Hide all content sections
-            allContent.parentElement.classList.add('hidden');
+            allContent.classList.add('hidden');
             eventsContent.classList.add('hidden');
-            categoriesContent.classList.add('hidden');
             
-            // Show filters only for 'all' view
-            if (view === 'all') {
-                allContent.parentElement.classList.remove('hidden');
-                filtersSection.style.display = 'flex';
-                // Apply current filters to refresh the view
-                applyFilters();
-            } else {
-                filtersSection.style.display = 'none';
+            // Show appropriate content
+            if (view === 'all' && currentEvent) {
+                // Show current event's writeups
+                allContent.classList.remove('hidden');
+            } else if (view === 'events') {
+                // Show events list
+                eventsContent.classList.remove('hidden');
+                // Reset current event when going back to events list
+                currentEvent = null;
                 
-                if (view === 'events') {
-                    eventsContent.classList.remove('hidden');
-                    displayEventsList();
-                } else if (view === 'categories') {
-                    categoriesContent.classList.remove('hidden');
-                    displayCategoriesList();
-                }
+                // Update page title
+                document.title = "Tham's CTF Writeups";
+            } else {
+                // Default to events list
+                eventsContent.classList.remove('hidden');
+                // Activate events tab
+                document.querySelector('[data-view="events"]').classList.add('active');
             }
         });
     });
 }
 
-// Setup search functionality
-function setupSearch() {
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-btn');
-    
-    // Add event listener for search input (search as you type)
-    searchInput.addEventListener('input', () => {
-        applyFilters();
-    });
-    
-    // Add event listener for search button
-    searchButton.addEventListener('click', () => {
-        applyFilters();
-    });
-    
-    // Add event listener for Enter key
-    searchInput.addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            applyFilters();
-        }
-    });
-}
-
-// Display writeups in the container
-function displayWriteups(writeups) {
-    const container = document.getElementById('writeups-container');
-    container.innerHTML = '';
-    
-    if (writeups.length === 0) {
-        container.innerHTML = `
-            <div class="no-results">
-                <p>No writeups found matching your filters.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    writeups.forEach(writeup => {
-        const card = document.createElement('div');
-        card.className = 'writeup-card';
-        card.dataset.filepath = writeup.filepath;
-        
-        const dateStr = writeup.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        
-        // Create thumbnail element if it exists
-        let thumbnailHtml = '';
-        if (writeup.thumbnail) {
-            thumbnailHtml = `
-                <div class="card-thumbnail">
-                    <img src="${writeup.thumbnail}" alt="${writeup.title}" />
-                </div>
-            `;
+// Load CTF events from index.md
+async function loadCtfEvents() {
+    try {
+        // Fetch the master index
+        const indexResponse = await fetch('assets/writeups/index.md');
+        if (!indexResponse.ok) {
+            throw new Error(`Failed to fetch index: ${indexResponse.status}`);
         }
         
-        card.innerHTML = `
-            ${thumbnailHtml}
-            <div class="card-header">
-                <div class="card-title">${writeup.title}</div>
-            </div>
-            <div class="card-body">
-                <div class="card-meta">
-                    <span>📅 ${dateStr}</span>
-                    <span>⭐ ${writeup.points} PTS</span>
-                </div>
-                <p class="card-description">${writeup.description}</p>
-                <div class="card-tags">
-                    <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
-                    <div class="event-tag">${writeup.ctf}</div>
-                    ${writeup.tags.map(tag => `<div class="tag">#${tag}</div>`).join('')}
-                </div>
-            </div>
-        `;
+        const indexContent = await indexResponse.text();
         
-        card.addEventListener('click', () => showWriteup(writeup));
-        container.appendChild(card);
-    });
-}
-
-// Display featured writeups in the featured section
-function displayFeaturedWriteups() {
-    const featuredSection = document.getElementById('featured-section');
-    const featuredWriteups = allWriteups.filter(writeup => writeup.featured);
-    
-    // If no featured writeups, hide the section
-    if (featuredWriteups.length === 0) {
-        featuredSection.style.display = 'none';
-        return;
+        // Parse the index to get CTF events
+        const ctfEventMatches = [...indexContent.matchAll(/\[([^\]]+)\]\(\.\/([^\/]+)\/\)/g)];
+        
+        // Extract event names and paths
+        ctfEvents = ctfEventMatches.map(match => ({
+            name: match[1],
+            path: match[2]
+        }));
+        
+        console.log(`Loaded ${ctfEvents.length} CTF events`);
+    } catch (error) {
+        console.error('Error loading CTF events:', error);
+        throw error;
     }
-    
-    // Clear the section
-    featuredSection.innerHTML = '<h2 class="section-title">Featured Writeups</h2>';
-    
-    // Create featured container
-    const featuredContainer = document.createElement('div');
-    featuredContainer.className = 'featured-container';
-    
-    // Add featured writeups
-    featuredWriteups.forEach(writeup => {
-        const card = document.createElement('div');
-        card.className = 'featured-card';
-        card.dataset.filepath = writeup.filepath;
-        
-        // Use banner image if available, fall back to thumbnail
-        const imageUrl = writeup.banner || writeup.thumbnail || 'assets/images/default-banner.jpg';
-        
-        const dateStr = writeup.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        
-        card.innerHTML = `
-            <div class="featured-image" style="background-image: url('${imageUrl}')"></div>
-            <div class="featured-content">
-                <div class="featured-tags">
-                    <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
-                    <div class="event-tag">${writeup.ctf}</div>
-                </div>
-                <h3>${writeup.title}</h3>
-                <p class="featured-description">${writeup.description}</p>
-                <div class="featured-meta">
-                    <span>📅 ${dateStr}</span>
-                    <span>👤 ${writeup.author}</span>
-                    <span class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</span>
-                </div>
-            </div>
-        `;
-        
-        card.addEventListener('click', () => showWriteup(writeup));
-        featuredContainer.appendChild(card);
-    });
-    
-    featuredSection.appendChild(featuredContainer);
-    featuredSection.style.display = 'block';
 }
 
-// Display events list for the events tab
+// Display events list
 function displayEventsList() {
     const container = document.getElementById('events-container');
     container.innerHTML = '<h2 class="section-title">CTF Events</h2>';
     
-    // Sort events alphabetically
-    const sortedEvents = [...ctfEvents].filter(e => e !== 'all').sort();
-    
     // Group events by year if they have a year in the name
     const eventsByYear = {};
     
-    sortedEvents.forEach(event => {
+    ctfEvents.forEach(event => {
         // Try to extract year from event name (assuming format like 'EventName 2023')
-        const yearMatch = event.match(/\b(20\d{2})\b/);
+        const yearMatch = event.name.match(/\b(20\d{2})\b/);
         const year = yearMatch ? yearMatch[1] : 'Other';
         
         if (!eventsByYear[year]) {
@@ -574,83 +135,460 @@ function displayEventsList() {
         yearHeader.textContent = year;
         eventsGrid.appendChild(yearHeader);
         
+        const yearEvents = document.createElement('div');
+        yearEvents.className = 'year-events';
+        
         // Create event cards for this year
         eventsByYear[year].forEach(event => {
             const eventCard = document.createElement('div');
             eventCard.className = 'event-card';
+            eventCard.innerHTML = `<h3>${event.name}</h3>`;
             
-            // Count writeups for this event
-            const writeupCount = allWriteups.filter(w => w.ctf === event).length;
-            
-            eventCard.innerHTML = `
-                <h3>${event}</h3>
-                <div class="event-meta">
-                    <span>${writeupCount} writeups</span>
-                </div>
-            `;
+            // Preload README to get a description if available
+            fetch(`assets/writeups/${event.path}/README.md`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    return '';
+                })
+                .then(content => {
+                    // Try to extract a short description
+                    const descMatch = content.match(/^(?!#)(.{10,100})(?=\n)/);
+                    if (descMatch) {
+                        const desc = document.createElement('p');
+                        desc.className = 'event-description';
+                        desc.textContent = descMatch[1].trim() + '...';
+                        eventCard.appendChild(desc);
+                    }
+                })
+                .catch(err => console.warn(`Could not load description for ${event.name}`, err));
             
             eventCard.addEventListener('click', () => {
-                // When clicked, switch to all writeups tab with this event filtered
-                document.getElementById('ctf-filter').value = event;
-                document.querySelector('[data-view="all"]').click();
-                applyFilters();
+                loadEventDetails(event);
             });
             
-            eventsGrid.appendChild(eventCard);
+            yearEvents.appendChild(eventCard);
         });
+        
+        eventsGrid.appendChild(yearEvents);
     });
     
     container.appendChild(eventsGrid);
 }
 
-// Display categories list for the categories tab
-function displayCategoriesList() {
-    const container = document.getElementById('categories-container');
-    container.innerHTML = '<h2 class="section-title">Challenge Categories</h2>';
-    
-    // Sort categories alphabetically
-    const sortedCategories = [...categories].filter(c => c !== 'all').sort();
-    
-    const categoriesGrid = document.createElement('div');
-    categoriesGrid.className = 'categories-grid';
-    
-    // Add each category
-    sortedCategories.forEach(category => {
-        const categoryCard = document.createElement('div');
-        categoryCard.className = 'category-card';
-        categoryCard.classList.add(`category-${category.toLowerCase()}`);
+// Load event details and writeups
+async function loadEventDetails(event) {
+    try {
+        currentEvent = event;
         
-        // Count writeups for this category
-        const writeupCount = allWriteups.filter(w => w.category.toLowerCase() === category.toLowerCase()).length;
+        // Show the writeups container
+        const writeupSection = document.getElementById('writeups-container').parentElement;
+        writeupSection.classList.remove('hidden');
         
-        categoryCard.innerHTML = `
-            <h3>${category}</h3>
-            <div class="category-meta">
-                <span>${writeupCount} writeups</span>
+        // Hide events container
+        document.getElementById('events-container').classList.add('hidden');
+        
+        // Switch to "all" tab
+        document.querySelector('[data-view="all"]').classList.add('active');
+        document.querySelector('[data-view="events"]').classList.remove('active');
+        
+        // Show loading indicator
+        const loadingEl = document.getElementById('loading');
+        loadingEl.style.display = 'flex';
+        
+        // Load event README
+        const readmeUrl = `assets/writeups/${event.path}/README.md`;
+        const readmeResponse = await fetch(readmeUrl);
+        let readmeContent = null;
+        let hasReadme = false;
+        
+        if (readmeResponse.ok) {
+            readmeContent = await readmeResponse.text();
+            hasReadme = true;
+        }
+        
+        // Check for categories and writeups
+        let writeupCategories = [];
+        
+        // If we have a README, try to find categories from it
+        if (hasReadme) {
+            // Display event detail with README
+            displayEventDetail(event, readmeContent);
+            
+            // Find all writeups links in README
+            writeupCategories = [...readmeContent.matchAll(/\*\*\[([^\]]+)\]\(\.\/([^\/]+)\/\)\*\*/g)];
+        } else {
+            // If no README, just display the event header
+            displayEventHeader(event);
+            
+            // Try common categories when README is not available
+            const commonCategories = [
+                ['web', 'web'], 
+                ['crypto', 'crypto'], 
+                ['pwn', 'pwn'], 
+                ['rev', 'rev'], 
+                ['forensics', 'forensics'], 
+                ['misc', 'misc']
+            ];
+            writeupCategories = commonCategories;
+        }
+        
+        // Load writeup list for each category
+        const writeups = [];
+        for (const link of writeupCategories) {
+            const category = link[0] || link;
+            const categoryPath = link[1] || link;
+            
+            // Try to load writeups from this category
+            const categoryWriteups = await loadCategoryWriteups(event, category, categoryPath);
+            writeups.push(...categoryWriteups);
+        }
+        
+        // Display writeups list
+        displayWriteupsList(event, writeups);
+        
+        // Hide loading indicator
+        loadingEl.style.display = 'none';
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+        
+    } catch (error) {
+        console.error('Error loading event details:', error);
+        document.getElementById('loading').innerHTML = `
+            <div class="error">
+                <p>Error loading event details. Please try again later.</p>
+                <p class="error-details">Details: ${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Load writeups from a category
+async function loadCategoryWriteups(event, category, categoryPath) {
+    try {
+        const writeups = [];
+        
+        // Try to detect writeups by fetching common markdown files in the category folder
+        // We'll check for .md files in a pattern
+        const possibleExtensions = ['.md', '.markdown'];
+        
+        // For each possible file, try to fetch it
+        // We'll try a few common patterns
+        const patternFiles = [
+            // Try direct fetch without guessing
+            async () => {
+                try {
+                    // First, try to fetch a category index file if it exists
+                    const indexPath = `assets/writeups/${event.path}/${categoryPath}/index.md`;
+                    const indexResponse = await fetch(indexPath);
+                    
+                    if (indexResponse.ok) {
+                        const indexContent = await indexResponse.text();
+                        
+                        // Extract links from the index file
+                        const matches = [...indexContent.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)];
+                        
+                        for (const match of matches) {
+                            const title = match[1];
+                            let filepath = match[2];
+                            
+                            // Handle relative paths
+                            if (filepath.startsWith('./')) {
+                                filepath = filepath.substring(2);
+                            }
+                            
+                            // Construct the full path
+                            const fullPath = `assets/writeups/${event.path}/${categoryPath}/${filepath}`;
+                            
+                            // Try to fetch the file
+                            const response = await fetch(fullPath);
+                            if (!response.ok) continue;
+                            
+                            const content = await response.text();
+                            
+                            writeups.push({
+                                title: title,
+                                filepath: fullPath,
+                                category: category,
+                                filename: filepath
+                            });
+                        }
+                        
+                        return writeups.length > 0;
+                    }
+                } catch (err) {
+                    console.warn("Error fetching category index file:", err);
+                }
+                return false;
+            },
+            
+            // Common specific filenames for this event and category
+            async () => {
+                // Known common patterns based on the event and category
+                let knownPatterns = {
+                    'ExampleCTF2025': {
+                        'web': ['xss-challenge.md', 'sql-injection.md', 'jwt-bypass.md'],
+                        'crypto': ['rsa-crack.md', 'aes-ecb.md'],
+                        'forensics': ['hidden-data.md'],
+                        'pwn': ['buffer-overflow.md'],
+                    },
+                    'IrisCTF2025': {
+                        'web': ['ssrf.md', 'prototype-pollution.md'],
+                        'crypto': ['substitution.md']
+                    }
+                };
+                
+                // Get known patterns for this event and category
+                const patterns = knownPatterns[event.path]?.[categoryPath] || [];
+                
+                for (const pattern of patterns) {
+                    const filepath = `assets/writeups/${event.path}/${categoryPath}/${pattern}`;
+                    
+                    try {
+                        const response = await fetch(filepath);
+                        if (!response.ok) continue;
+                        
+                        const content = await response.text();
+                        
+                        // Extract title from frontmatter or heading
+                        let title = pattern.replace('.md', '').replace(/-/g, ' ');
+                        
+                        // Try to get title from frontmatter
+                        const frontmatterMatch = content.match(/---\s+([\s\S]*?)\s+---/);
+                        if (frontmatterMatch) {
+                            const frontmatter = frontmatterMatch[1];
+                            const titleMatch = frontmatter.match(/title:\s*["']?([^"'\n]+)["']?/);
+                            if (titleMatch) {
+                                title = titleMatch[1];
+                            }
+                        } else {
+                            // Try to get title from first heading
+                            const headingMatch = content.match(/^#\s+(.+)$/m);
+                            if (headingMatch) {
+                                title = headingMatch[1];
+                            }
+                        }
+                        
+                        writeups.push({
+                            title: title,
+                            filepath: filepath,
+                            category: category,
+                            filename: pattern
+                        });
+                    } catch (err) {
+                        console.warn(`Failed to load writeup ${pattern}:`, err);
+                    }
+                }
+                
+                return writeups.length > 0;
+            }
+        ];
+        
+        // Try each pattern until one succeeds
+        for (const patternFn of patternFiles) {
+            const success = await patternFn();
+            if (success) break;
+        }
+        
+        return writeups;
+    } catch (error) {
+        console.error(`Error loading writeups for ${category}:`, error);
+        return [];
+    }
+}
+
+// Display just the event header (for when there's no README)
+function displayEventHeader(event) {
+    const container = document.getElementById('writeups-container');
+    
+    // Create event detail container
+    const eventDetail = document.createElement('div');
+    eventDetail.className = 'event-detail';
+    
+    // Add header with back button and event title
+    const header = document.createElement('div');
+    header.className = 'event-detail-header';
+    
+    // Back button
+    const backButton = document.createElement('button');
+    backButton.className = 'back-btn';
+    backButton.textContent = '← Back to Events';
+    backButton.addEventListener('click', () => {
+        // Switch back to events view
+        document.querySelector('[data-view="events"]').click();
+    });
+    
+    header.appendChild(backButton);
+    
+    // Add event title
+    const eventTitle = document.createElement('h1');
+    eventTitle.className = 'event-title';
+    eventTitle.textContent = event.name;
+    header.appendChild(eventTitle);
+    
+    eventDetail.appendChild(header);
+    
+    // Clear container and add event detail
+    container.innerHTML = '';
+    container.appendChild(eventDetail);
+}
+
+// Display event detail with README content
+function displayEventDetail(event, readmeContent) {
+    const container = document.getElementById('writeups-container');
+    
+    // Create event detail container
+    const eventDetail = document.createElement('div');
+    eventDetail.className = 'event-detail';
+    
+    // Add back button header
+    const header = document.createElement('div');
+    header.className = 'event-detail-header';
+    
+    // Back button
+    const backButton = document.createElement('button');
+    backButton.className = 'back-btn';
+    backButton.textContent = '← Back to Events';
+    backButton.addEventListener('click', () => {
+        // Switch back to events view
+        document.querySelector('[data-view="events"]').click();
+    });
+    
+    header.appendChild(backButton);
+    eventDetail.appendChild(header);
+    
+    // Add readme content
+    const readmeElement = document.createElement('div');
+    readmeElement.className = 'event-readme markdown-content';
+    readmeElement.innerHTML = marked.parse(readmeContent);
+    eventDetail.appendChild(readmeElement);
+    
+    // Clear container and add event detail
+    container.innerHTML = '';
+    container.appendChild(eventDetail);
+}
+
+// Display writeups list
+function displayWriteupsList(event, writeups) {
+    const container = document.getElementById('writeups-container');
+    
+    // Create writeups list container
+    const writeupsList = document.createElement('div');
+    writeupsList.className = 'writeups-list';
+    
+    // Add heading
+    const heading = document.createElement('h2');
+    heading.className = 'writeups-heading';
+    heading.textContent = 'Challenge Writeups';
+    writeupsList.appendChild(heading);
+    
+    if (writeups.length === 0) {
+        const noWriteups = document.createElement('p');
+        noWriteups.className = 'no-writeups';
+        noWriteups.textContent = 'No writeups available for this event yet.';
+        writeupsList.appendChild(noWriteups);
+    } else {
+        // Group writeups by category
+        const writeupsByCategory = {};
+        writeups.forEach(writeup => {
+            if (!writeupsByCategory[writeup.category]) {
+                writeupsByCategory[writeup.category] = [];
+            }
+            writeupsByCategory[writeup.category].push(writeup);
+        });
+        
+        // Display each category
+        Object.keys(writeupsByCategory).sort().forEach(category => {
+            const categorySection = document.createElement('div');
+            categorySection.className = 'writeup-category-section';
+            
+            const categoryTitle = document.createElement('h3');
+            categoryTitle.className = 'category-title';
+            categoryTitle.textContent = category;
+            categorySection.appendChild(categoryTitle);
+            
+            const categoryWriteups = document.createElement('ul');
+            categoryWriteups.className = 'writeup-links';
+            
+            writeupsByCategory[category].forEach(writeup => {
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.textContent = writeup.title;
+                link.href = '#';
+                link.setAttribute('data-filepath', writeup.filepath);
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadWriteupContent(writeup);
+                });
+                
+                item.appendChild(link);
+                categoryWriteups.appendChild(item);
+            });
+            
+            categorySection.appendChild(categoryWriteups);
+            writeupsList.appendChild(categorySection);
+        });
+    }
+    
+    // Append to container
+    container.appendChild(writeupsList);
+}
+
+// Load and show a specific writeup
+async function loadWriteupContent(writeup) {
+    try {
+        // Show loading indicator
+        const modal = document.getElementById('writeup-modal');
+        const modalBody = document.getElementById('modal-body');
+        
+        modalBody.innerHTML = `
+            <div class="loading-modal">
+                <div class="pixel-loader"></div>
+                <p>Loading writeup...</p>
             </div>
         `;
         
-        categoryCard.addEventListener('click', () => {
-            // When clicked, switch to all writeups tab with this category filtered
-            document.getElementById('category-filter').value = category;
-            document.querySelector('[data-view="all"]').click();
-            applyFilters();
-        });
+        modal.style.display = 'block';
         
-        categoriesGrid.appendChild(categoryCard);
-    });
-    
-    container.appendChild(categoriesGrid);
+        // Set modal title
+        document.getElementById('modal-title').textContent = writeup.title;
+        
+        // Fetch writeup content
+        const response = await fetch(writeup.filepath);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to load writeup: ${response.status}`);
+        }
+        
+        const content = await response.text();
+        
+        // Process content (convert markdown to HTML)
+        const htmlContent = marked.parse(content);
+        
+        // Add to modal
+        modalBody.innerHTML = `<div class="markdown-content">${htmlContent}</div>`;
+        
+        // Add syntax highlighting
+        setTimeout(() => {
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        }, 100);
+        
+    } catch (error) {
+        console.error('Error loading writeup:', error);
+        document.getElementById('modal-body').innerHTML = `
+            <div class="error">
+                <p>Error loading writeup. Please try again later.</p>
+                <p class="error-details">Details: ${error.message}</p>
+            </div>
+        `;
+    }
 }
 
-// Setup the event and category pages
-function setupEventCategoryPages() {
-    // Initial display of events and categories
-    displayEventsList();
-    displayCategoriesList();
-}
-
-// Set up modal functions
+// Setup modal functions
 function setupModal() {
     const modal = document.getElementById('writeup-modal');
     const closeBtn = document.querySelector('.close-modal');
@@ -670,95 +608,4 @@ function setupModal() {
     modal.addEventListener('scroll', (e) => {
         e.stopPropagation();
     });
-}
-
-// Show writeup in modal
-function showWriteup(writeup) {
-    const modal = document.getElementById('writeup-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-    
-    modalTitle.textContent = writeup.title;
-    
-    // Format date
-    const dateStr = writeup.date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-    
-    // Create banner image if available
-    let bannerHtml = '';
-    if (writeup.banner) {
-        bannerHtml = `
-            <div class="writeup-banner">
-                <img src="${writeup.banner}" alt="${writeup.title}" />
-            </div>
-        `;
-    }
-    
-    // Create header info
-    const headerInfo = document.createElement('div');
-    headerInfo.className = 'writeup-header-info';
-    headerInfo.innerHTML = `
-        <div class="writeup-meta">
-            <span>📅 ${dateStr}</span>
-            <span>🏆 ${writeup.ctf}</span>
-            <span>⭐ ${writeup.points} PTS</span>
-            <span>👤 ${writeup.author}</span>
-        </div>
-        <div class="card-tags">
-            <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
-            <div class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</div>
-            ${writeup.tags.map(tag => `<div class="tag">#${tag}</div>`).join('')}
-        </div>
-    `;
-    
-    // Create content
-    const content = document.createElement('div');
-    content.className = 'markdown-content';
-    
-    // Process any local image links to make them work correctly
-    const processedContent = processImageLinks(writeup.content, writeup.filepath);
-    content.innerHTML = marked.parse(processedContent);
-    
-    // Add syntax highlighting to code blocks
-    setTimeout(() => {
-        Prism.highlightAll();
-    }, 0);
-    
-    // Set modal content
-    modalBody.innerHTML = '';
-    if (bannerHtml) modalBody.innerHTML = bannerHtml;
-    modalBody.appendChild(headerInfo);
-    modalBody.appendChild(document.createElement('hr'));
-    modalBody.appendChild(content);
-    
-    // Show modal
-    modal.style.display = 'block';
-}
-
-// Process image links in markdown to make them work correctly
-function processImageLinks(markdown, filepath) {
-    // Get the base directory of the writeup
-    const baseDir = filepath.substring(0, filepath.lastIndexOf('/') + 1);
-    
-    // Replace relative image paths with absolute paths
-    return markdown.replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (match, alt, path) => {
-        return `![${alt}](${baseDir}${path})`;
-    });
-}
-
-// Helper function to create category colors
-function getCategoryColor(category) {
-    const colors = {
-        'web': '#87CEEB',      // Sky blue
-        'crypto': '#DDA0DD',   // Plum
-        'pwn': '#FF6B6B',      // Coral red
-        'rev': '#98D8C8',      // Mint
-        'forensics': '#ADD8E6', // Light blue
-        'misc': '#B19CD9'      // Soft lavender
-    };
-    
-    return colors[category.toLowerCase()] || '#B19CD9';
 }
