@@ -28,6 +28,29 @@
             </div>
         </section>
 
+        <!-- Featured Section -->
+        <section class="featured-section" id="featured-section">
+            <!-- Will be populated if featured articles exist -->
+        </section>
+
+        <!-- Browse Options -->
+        <section class="browse-options">
+            <div class="tabs">
+                <button class="tab-btn active" data-view="all">All Writeups</button>
+                <button class="tab-btn" data-view="events">Browse by Event</button>
+                <button class="tab-btn" data-view="categories">Browse by Category</button>
+            </div>
+            <div class="view-options">
+                <button id="grid-view-btn" class="view-btn active" title="Grid View">
+                    <span class="icon">⊞</span>
+                </button>
+                <button id="list-view-btn" class="view-btn" title="List View">
+                    <span class="icon">≡</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Filters -->
         <section class="filters">
             <div class="filter-group">
                 <label for="category-filter">Category:</label>
@@ -47,8 +70,23 @@
                     <option value="all">All</option>
                 </select>
             </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search writeups...">
+                <button id="search-btn">🔍</button>
+            </div>
         </section>
 
+        <!-- CTF Events Grid (Hidden Initially) -->
+        <section id="events-container" class="events-container hidden">
+            <!-- Events will be loaded here -->
+        </section>
+
+        <!-- Categories Grid (Hidden Initially) -->
+        <section id="categories-container" class="categories-container hidden">
+            <!-- Categories will be loaded here -->
+        </section>
+
+        <!-- Writeups Section -->
         <section class="writeups">
             <div class="loading" id="loading">
                 <div class="pixel-loader"></div>

@@ -4,12 +4,23 @@ let filteredWriteups = [];
 let categories = ['all'];
 let difficulties = ['all'];
 let ctfEvents = ['all'];
+let viewMode = 'grid'; // Default view mode
+let currentTab = 'all'; // Default tab
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Setup the modal
         setupModal();
+        
+        // Setup view toggle (grid/list)
+        setupViewToggle();
+        
+        // Setup tab switching
+        setupTabSwitching();
+        
+        // Setup search functionality
+        setupSearch();
         
         // Load and process writeups
         await fetchWriteups();
@@ -19,6 +30,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Display writeups
         applyFilters();
+        
+        // Display featured writeups
+        displayFeaturedWriteups();
+        
+        // Display events and categories pages
+        setupEventCategoryPages();
         
     } catch (error) {
         console.error('Error initializing app:', error);
@@ -169,6 +186,12 @@ function parseMarkdown(markdown, filename, ctfName, category) {
         // Parse YAML
         const metadata = jsyaml.load(frontMatter);
         
+        // Extract featured status and banner image if they exist
+        const featured = metadata.featured || false;
+        const banner = metadata.banner || null;
+        const thumbnail = metadata.thumbnail || null;
+        const description = metadata.description || extractDescriptionFromMarkdown(content);
+        
         // Fallback values if YAML parsing fails
         return {
             title: metadata.title || filename.replace('.md', '').replace(/-/g, ' '),
@@ -180,6 +203,10 @@ function parseMarkdown(markdown, filename, ctfName, category) {
             tags: metadata.tags || [],
             author: metadata.author || 'Tham Le',
             solved: metadata.solved !== false,
+            featured: featured,
+            banner: banner,
+            thumbnail: thumbnail,
+            description: description,
             content: content,
             filename: filename
         };
@@ -197,10 +224,36 @@ function parseMarkdown(markdown, filename, ctfName, category) {
             tags: [],
             author: 'Tham Le',
             solved: true,
+            featured: false,
+            banner: null,
+            thumbnail: null,
+            description: '',
             content: markdown,
             filename: filename
         };
     }
+}
+
+// Extract a short description from markdown content
+function extractDescriptionFromMarkdown(markdown) {
+    // Remove code blocks first
+    const noCodeBlocks = markdown.replace(/```[\s\S]*?```/g, '');
+    
+    // Remove headings
+    const noHeadings = noCodeBlocks.replace(/#+\s+.*$/gm, '');
+    
+    // Get first paragraph that's at least 20 chars
+    const paragraphs = noHeadings.split('\n\n');
+    for (const p of paragraphs) {
+        const cleaned = p.trim();
+        if (cleaned.length >= 20) {
+            // Truncate to max 150 chars and add ellipsis if needed
+            return cleaned.length > 150 ? cleaned.substring(0, 147) + '...' : cleaned;
+        }
+    }
+    
+    // Fallback to a shorter snippet if no good paragraph found
+    return noHeadings.trim().substring(0, 100).trim() + '...';
 }
 
 // Setup filter dropdowns
@@ -248,13 +301,24 @@ function applyFilters() {
     const categoryValue = document.getElementById('category-filter').value;
     const difficultyValue = document.getElementById('difficulty-filter').value;
     const ctfValue = document.getElementById('ctf-filter').value;
+    const searchValue = document.getElementById('search-input').value.toLowerCase();
     
     filteredWriteups = allWriteups.filter(writeup => {
         const categoryMatch = categoryValue === 'all' || writeup.category.toLowerCase() === categoryValue.toLowerCase();
         const difficultyMatch = difficultyValue === 'all' || writeup.difficulty.toLowerCase() === difficultyValue.toLowerCase();
         const ctfMatch = ctfValue === 'all' || writeup.ctf === ctfValue;
         
-        return categoryMatch && difficultyMatch && ctfMatch;
+        // Search in title, description, and content
+        const searchMatch = searchValue === '' || 
+            writeup.title.toLowerCase().includes(searchValue) ||
+            writeup.description.toLowerCase().includes(searchValue) ||
+            writeup.content.toLowerCase().includes(searchValue) ||
+            writeup.tags.some(tag => tag.toLowerCase().includes(searchValue)) ||
+            writeup.author.toLowerCase().includes(searchValue) ||
+            writeup.category.toLowerCase().includes(searchValue) ||
+            writeup.ctf.toLowerCase().includes(searchValue);
+        
+        return categoryMatch && difficultyMatch && ctfMatch && searchMatch;
     });
     
     // Sort by date (newest first)
@@ -262,6 +326,98 @@ function applyFilters() {
     
     // Display writeups
     displayWriteups(filteredWriteups);
+}
+
+// Setup view toggle (grid/list)
+function setupViewToggle() {
+    const gridViewBtn = document.getElementById('grid-view-btn');
+    const listViewBtn = document.getElementById('list-view-btn');
+    
+    gridViewBtn.addEventListener('click', () => {
+        viewMode = 'grid';
+        gridViewBtn.classList.add('active');
+        listViewBtn.classList.remove('active');
+        document.getElementById('writeups-container').className = 'writeups-container grid-view';
+    });
+    
+    listViewBtn.addEventListener('click', () => {
+        viewMode = 'list';
+        listViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+        document.getElementById('writeups-container').className = 'writeups-container list-view';
+    });
+    
+    // Set default view
+    document.getElementById('writeups-container').className = 'writeups-container grid-view';
+}
+
+// Setup tab switching
+function setupTabSwitching() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const allContent = document.getElementById('writeups-container');
+    const eventsContent = document.getElementById('events-container');
+    const categoriesContent = document.getElementById('categories-container');
+    const filtersSection = document.querySelector('.filters');
+    
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Remove active class from all buttons
+            tabButtons.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to clicked button
+            btn.classList.add('active');
+            
+            // Get the view to show
+            const view = btn.getAttribute('data-view');
+            currentTab = view;
+            
+            // Hide all content sections
+            allContent.parentElement.classList.add('hidden');
+            eventsContent.classList.add('hidden');
+            categoriesContent.classList.add('hidden');
+            
+            // Show filters only for 'all' view
+            if (view === 'all') {
+                allContent.parentElement.classList.remove('hidden');
+                filtersSection.style.display = 'flex';
+                // Apply current filters to refresh the view
+                applyFilters();
+            } else {
+                filtersSection.style.display = 'none';
+                
+                if (view === 'events') {
+                    eventsContent.classList.remove('hidden');
+                    displayEventsList();
+                } else if (view === 'categories') {
+                    categoriesContent.classList.remove('hidden');
+                    displayCategoriesList();
+                }
+            }
+        });
+    });
+}
+
+// Setup search functionality
+function setupSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-btn');
+    
+    // Add event listener for search input (search as you type)
+    searchInput.addEventListener('input', () => {
+        applyFilters();
+    });
+    
+    // Add event listener for search button
+    searchButton.addEventListener('click', () => {
+        applyFilters();
+    });
+    
+    // Add event listener for Enter key
+    searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            applyFilters();
+        }
+    });
 }
 
 // Display writeups in the container
@@ -289,7 +445,18 @@ function displayWriteups(writeups) {
             day: 'numeric'
         });
         
+        // Create thumbnail element if it exists
+        let thumbnailHtml = '';
+        if (writeup.thumbnail) {
+            thumbnailHtml = `
+                <div class="card-thumbnail">
+                    <img src="${writeup.thumbnail}" alt="${writeup.title}" />
+                </div>
+            `;
+        }
+        
         card.innerHTML = `
+            ${thumbnailHtml}
             <div class="card-header">
                 <div class="card-title">${writeup.title}</div>
             </div>
@@ -298,8 +465,10 @@ function displayWriteups(writeups) {
                     <span>📅 ${dateStr}</span>
                     <span>⭐ ${writeup.points} PTS</span>
                 </div>
+                <p class="card-description">${writeup.description}</p>
                 <div class="card-tags">
-                    <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category.toUpperCase()}</div>
+                    <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
+                    <div class="event-tag">${writeup.ctf}</div>
                     ${writeup.tags.map(tag => `<div class="tag">#${tag}</div>`).join('')}
                 </div>
             </div>
@@ -308,6 +477,177 @@ function displayWriteups(writeups) {
         card.addEventListener('click', () => showWriteup(writeup));
         container.appendChild(card);
     });
+}
+
+// Display featured writeups in the featured section
+function displayFeaturedWriteups() {
+    const featuredSection = document.getElementById('featured-section');
+    const featuredWriteups = allWriteups.filter(writeup => writeup.featured);
+    
+    // If no featured writeups, hide the section
+    if (featuredWriteups.length === 0) {
+        featuredSection.style.display = 'none';
+        return;
+    }
+    
+    // Clear the section
+    featuredSection.innerHTML = '<h2 class="section-title">Featured Writeups</h2>';
+    
+    // Create featured container
+    const featuredContainer = document.createElement('div');
+    featuredContainer.className = 'featured-container';
+    
+    // Add featured writeups
+    featuredWriteups.forEach(writeup => {
+        const card = document.createElement('div');
+        card.className = 'featured-card';
+        card.dataset.filepath = writeup.filepath;
+        
+        // Use banner image if available, fall back to thumbnail
+        const imageUrl = writeup.banner || writeup.thumbnail || 'assets/images/default-banner.jpg';
+        
+        const dateStr = writeup.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        card.innerHTML = `
+            <div class="featured-image" style="background-image: url('${imageUrl}')"></div>
+            <div class="featured-content">
+                <div class="featured-tags">
+                    <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
+                    <div class="event-tag">${writeup.ctf}</div>
+                </div>
+                <h3>${writeup.title}</h3>
+                <p class="featured-description">${writeup.description}</p>
+                <div class="featured-meta">
+                    <span>📅 ${dateStr}</span>
+                    <span>👤 ${writeup.author}</span>
+                    <span class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</span>
+                </div>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => showWriteup(writeup));
+        featuredContainer.appendChild(card);
+    });
+    
+    featuredSection.appendChild(featuredContainer);
+    featuredSection.style.display = 'block';
+}
+
+// Display events list for the events tab
+function displayEventsList() {
+    const container = document.getElementById('events-container');
+    container.innerHTML = '<h2 class="section-title">CTF Events</h2>';
+    
+    // Sort events alphabetically
+    const sortedEvents = [...ctfEvents].filter(e => e !== 'all').sort();
+    
+    // Group events by year if they have a year in the name
+    const eventsByYear = {};
+    
+    sortedEvents.forEach(event => {
+        // Try to extract year from event name (assuming format like 'EventName 2023')
+        const yearMatch = event.match(/\b(20\d{2})\b/);
+        const year = yearMatch ? yearMatch[1] : 'Other';
+        
+        if (!eventsByYear[year]) {
+            eventsByYear[year] = [];
+        }
+        
+        eventsByYear[year].push(event);
+    });
+    
+    // Sort years in descending order (newest first)
+    const sortedYears = Object.keys(eventsByYear).sort((a, b) => b - a);
+    
+    const eventsGrid = document.createElement('div');
+    eventsGrid.className = 'events-grid';
+    
+    // Add each year group
+    sortedYears.forEach(year => {
+        // Create year header
+        const yearHeader = document.createElement('h3');
+        yearHeader.className = 'year-header';
+        yearHeader.textContent = year;
+        eventsGrid.appendChild(yearHeader);
+        
+        // Create event cards for this year
+        eventsByYear[year].forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.className = 'event-card';
+            
+            // Count writeups for this event
+            const writeupCount = allWriteups.filter(w => w.ctf === event).length;
+            
+            eventCard.innerHTML = `
+                <h3>${event}</h3>
+                <div class="event-meta">
+                    <span>${writeupCount} writeups</span>
+                </div>
+            `;
+            
+            eventCard.addEventListener('click', () => {
+                // When clicked, switch to all writeups tab with this event filtered
+                document.getElementById('ctf-filter').value = event;
+                document.querySelector('[data-view="all"]').click();
+                applyFilters();
+            });
+            
+            eventsGrid.appendChild(eventCard);
+        });
+    });
+    
+    container.appendChild(eventsGrid);
+}
+
+// Display categories list for the categories tab
+function displayCategoriesList() {
+    const container = document.getElementById('categories-container');
+    container.innerHTML = '<h2 class="section-title">Challenge Categories</h2>';
+    
+    // Sort categories alphabetically
+    const sortedCategories = [...categories].filter(c => c !== 'all').sort();
+    
+    const categoriesGrid = document.createElement('div');
+    categoriesGrid.className = 'categories-grid';
+    
+    // Add each category
+    sortedCategories.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = 'category-card';
+        categoryCard.classList.add(`category-${category.toLowerCase()}`);
+        
+        // Count writeups for this category
+        const writeupCount = allWriteups.filter(w => w.category.toLowerCase() === category.toLowerCase()).length;
+        
+        categoryCard.innerHTML = `
+            <h3>${category}</h3>
+            <div class="category-meta">
+                <span>${writeupCount} writeups</span>
+            </div>
+        `;
+        
+        categoryCard.addEventListener('click', () => {
+            // When clicked, switch to all writeups tab with this category filtered
+            document.getElementById('category-filter').value = category;
+            document.querySelector('[data-view="all"]').click();
+            applyFilters();
+        });
+        
+        categoriesGrid.appendChild(categoryCard);
+    });
+    
+    container.appendChild(categoriesGrid);
+}
+
+// Setup the event and category pages
+function setupEventCategoryPages() {
+    // Initial display of events and categories
+    displayEventsList();
+    displayCategoriesList();
 }
 
 // Set up modal functions
@@ -347,6 +687,16 @@ function showWriteup(writeup) {
         day: 'numeric'
     });
     
+    // Create banner image if available
+    let bannerHtml = '';
+    if (writeup.banner) {
+        bannerHtml = `
+            <div class="writeup-banner">
+                <img src="${writeup.banner}" alt="${writeup.title}" />
+            </div>
+        `;
+    }
+    
     // Create header info
     const headerInfo = document.createElement('div');
     headerInfo.className = 'writeup-header-info';
@@ -358,8 +708,8 @@ function showWriteup(writeup) {
             <span>👤 ${writeup.author}</span>
         </div>
         <div class="card-tags">
-            <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category.toUpperCase()}</div>
-            <div class="category-tag" style="background-color:rgba(177, 156, 217, 0.3);border-color:#B19CD9;">${writeup.difficulty}</div>
+            <div class="category-tag category-${writeup.category.toLowerCase()}">${writeup.category}</div>
+            <div class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</div>
             ${writeup.tags.map(tag => `<div class="tag">#${tag}</div>`).join('')}
         </div>
     `;
@@ -367,7 +717,10 @@ function showWriteup(writeup) {
     // Create content
     const content = document.createElement('div');
     content.className = 'markdown-content';
-    content.innerHTML = marked.parse(writeup.content);
+    
+    // Process any local image links to make them work correctly
+    const processedContent = processImageLinks(writeup.content, writeup.filepath);
+    content.innerHTML = marked.parse(processedContent);
     
     // Add syntax highlighting to code blocks
     setTimeout(() => {
@@ -376,12 +729,24 @@ function showWriteup(writeup) {
     
     // Set modal content
     modalBody.innerHTML = '';
+    if (bannerHtml) modalBody.innerHTML = bannerHtml;
     modalBody.appendChild(headerInfo);
     modalBody.appendChild(document.createElement('hr'));
     modalBody.appendChild(content);
     
     // Show modal
     modal.style.display = 'block';
+}
+
+// Process image links in markdown to make them work correctly
+function processImageLinks(markdown, filepath) {
+    // Get the base directory of the writeup
+    const baseDir = filepath.substring(0, filepath.lastIndexOf('/') + 1);
+    
+    // Replace relative image paths with absolute paths
+    return markdown.replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (match, alt, path) => {
+        return `![${alt}](${baseDir}${path})`;
+    });
 }
 
 // Helper function to create category colors
