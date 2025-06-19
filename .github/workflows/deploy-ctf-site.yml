@@ -40,6 +40,6 @@ jobs:
       run: npm install -g firebase-tools
       
     - name: Deploy to Firebase
-      run: firebase deploy --only hosting:ctf --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive --channel live
+      run: firebase deploy --only hosting:ctf --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
