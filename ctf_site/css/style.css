@@ -1,0 +1,535 @@
+/* Base Styles */
+:root {
+    --primary-color: #B19CD9; /* Soft lavender */
+    --secondary-color: #FFB7C5; /* Pastel pink */
+    --tertiary-color: #C4E1FF; /* Pastel blue */
+    --quaternary-color: #BEE5BF; /* Pastel green */
+    --surface-color: #F8F4FF; /* Very light lavender */
+    --text-color: #2D2D2D; /* Dark grey */
+    --border-radius: 16px;
+    --card-shadow: 0 8px 16px rgba(124, 77, 255, 0.15);
+    --card-border: 2px solid rgba(177, 156, 217, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--text-color);
+    background-color: var(--surface-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', cursive;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1rem;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Layout */
+header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.logo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.875rem;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+nav .home-link {
+    display: inline-block;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.75rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 2px solid black;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+nav .home-link:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+nav .home-link:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+main {
+    padding-top: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    margin: 1rem;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom right, 
+        var(--primary-color), 
+        var(--secondary-color), 
+        var(--tertiary-color), 
+        var(--quaternary-color)
+    );
+    z-index: -1;
+}
+
+.hero-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-title-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border: 3px solid black;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+    display: inline-block;
+}
+
+.hero-title-box h1 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 0 rgba(0, 155, 255, 0.3);
+}
+
+.hero-title-box p {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
+    color: var(--text-color);
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    border: var(--card-border);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.625rem;
+}
+
+.filter-group select {
+    flex: 1;
+    padding: 0.5rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: white;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Writeups Cards */
+.writeups {
+    padding: 1rem;
+}
+
+.writeups-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.writeup-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: var(--card-border);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.writeup-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(124, 77, 255, 0.2);
+}
+
+.card-header {
+    padding: 1rem;
+    position: relative;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    z-index: 0;
+}
+
+.card-title {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.75rem;
+    color: var(--text-color);
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.category-tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
+}
+
+.tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    font-size: 0.625rem;
+    color: #666;
+}
+
+/* Category Colors */
+.category-web { 
+    background-color: rgba(135, 206, 235, 0.3);
+    border: 2px solid #87CEEB;
+    color: #4A89DC;
+}
+
+.category-crypto { 
+    background-color: rgba(221, 160, 221, 0.3);
+    border: 2px solid #DDA0DD;
+    color: #9B59B6;
+}
+
+.category-pwn { 
+    background-color: rgba(255, 107, 107, 0.3);
+    border: 2px solid #FF6B6B;
+    color: #E74C3C;
+}
+
+.category-rev { 
+    background-color: rgba(152, 216, 200, 0.3);
+    border: 2px solid #98D8C8;
+    color: #16A085;
+}
+
+.category-forensics { 
+    background-color: rgba(173, 216, 230, 0.3);
+    border: 2px solid #ADD8E6;
+    color: #3498DB;
+}
+
+.category-misc { 
+    background-color: rgba(177, 156, 217, 0.3);
+    border: 2px solid #B19CD9;
+    color: #9B59B6;
+}
+
+/* Loading Indicator */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.pixel-loader {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    position: relative;
+    animation: pixelLoader 1s infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes pixelLoader {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.75rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: var(--surface-color);
+    margin: 5% auto;
+    width: 90%;
+    max-width: 900px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    border: var(--card-border);
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eaeaea;
+    position: relative;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.modal-header h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    margin-right: 30px;
+}
+
+.close-modal {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+/* Markdown Content */
+.markdown-content {
+    line-height: 1.7;
+}
+
+.markdown-content h1 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.markdown-content h2 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.markdown-content h3 {
+    font-size: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content p {
+    margin-bottom: 1rem;
+}
+
+.markdown-content ul, 
+.markdown-content ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.markdown-content pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.markdown-content code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.875rem;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: #666;
+}
+
+/* Footer */
+footer {
+    background-color: #363535;
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer a {
+    color: var(--tertiary-color);
+    margin-left: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .filters {
+        flex-direction: column;
+    }
+    
+    .hero {
+        height: 180px;
+    }
+    
+    .writeups-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title-box h1 {
+        font-size: 1rem;
+    }
+    
+    .hero-title-box p {
+        font-size: 0.4rem;
+    }
+    
+    .logo {
+        font-size: 0.7rem;
+    }
+    
+    nav .home-link {
+        font-size: 0.6rem;
+    }
+}

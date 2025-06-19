@@ -10,6 +10,9 @@
         ],
         "ctf": [
           "ctf-writeups"
+        ],
+        "ctf-flutter": [
+          "ctf-flutter-app"
         ]
       }
     }

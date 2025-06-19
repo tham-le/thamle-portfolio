@@ -17,6 +17,21 @@
     },
     {
       "target": "ctf",
+      "public": "ctf_site",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "ctf-flutter",
       "public": "ctf_app/build/web",
       "ignore": [
         "firebase.json",

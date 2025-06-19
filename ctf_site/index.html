@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tham's CTF Writeups</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🏆 Tham's CTF Writeups 🏆</div>
+            <nav>
+                <a href="https://thamle.live" class="home-link">🏠 Back to Main</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-title-box">
+                    <h1>🎮 THAM 🎮</h1>
+                    <p>CYBER SECURITY ADVENTURES</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="filters">
+            <div class="filter-group">
+                <label for="category-filter">Category:</label>
+                <select id="category-filter">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="difficulty-filter">Difficulty:</label>
+                <select id="difficulty-filter">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="ctf-filter">CTF Event:</label>
+                <select id="ctf-filter">
+                    <option value="all">All</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="writeups">
+            <div class="loading" id="loading">
+                <div class="pixel-loader"></div>
+                <p>Loading writeups...</p>
+            </div>
+            <div id="writeups-container" class="writeups-container">
+                <!-- Writeups will be loaded here via JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <div id="writeup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal">&times;</span>
+                <h2 id="modal-title"></h2>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Writeup content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 Tham Le | Crafted with ❤️</p>
+            <a href="https://github.com/tham-le" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

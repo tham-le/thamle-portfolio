@@ -1,0 +1,45 @@
+name: Deploy CTF Site (Simpler Version)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_site/**'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [new-writeup]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-ctf-site:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Copy writeups to CTF site assets
+      run: |
+        mkdir -p ctf_site/assets/writeups
+        if [ -d "ctf_app/assets/writeups" ]; then
+          echo "📁 Copying writeups from ctf_app to ctf_site"
+          cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
+          find ctf_site/assets/writeups -type f -name "*.md" | wc -l
+        else
+          echo "⚠️ No writeups found in ctf_app/assets/writeups/"
+        fi
+        
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+      
+    - name: Deploy to Firebase
+      run: firebase deploy --only hosting:ctf --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive --channelId live
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
