@@ -4,10 +4,15 @@
 
 ## 🏆 CTF Events
 
+- [404CTF_2025](./404CTF_2025/)
+- [CTF_HackHer](./CTF_HackHer/)
+- [CyberApocalypse2025](./CyberApocalypse2025/)
+- [HTBUniversity2024](./HTBUniversity2024/)
+- [HeroCTF_v6](./HeroCTF_v6/)
 - [IrisCTF](./IrisCTF/)
 
 ## 📊 Statistics
 
-- **Total CTF Events:** 1
-- **Total Writeups:** 4
-- **Last Updated:** 2025-06-20 12:40 UTC
+- **Total CTF Events:** 6
+- **Total Writeups:** 0
+- **Last Updated:** 2025-06-20 18:27 UTC
