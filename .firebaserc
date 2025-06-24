@@ -9,10 +9,7 @@
           "thamle-portfolio"
         ],
         "ctf": [
-          "ctf-writeups"
-        ],
-        "ctf-flutter": [
-          "ctf-flutter-app"
+          "ctf-thamle-portfolio"
         ]
       }
     }
