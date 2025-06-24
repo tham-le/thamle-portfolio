@@ -29,132 +29,190 @@ jobs:
         path: ctf-writeups-source
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
         
-    - name: Sync writeups with organized structure
+    - name: Install Python dependencies for parsing
       run: |
-        # Create directories if they don't exist
-        mkdir -p ctf_app/assets/writeups
-        mkdir -p ctf_site/assets/writeups
+        python3 -m pip install --upgrade pip
+        python3 -m pip install pyyaml
         
-        # Remove existing synced content (keep format guide)
-        find ctf_app/assets/writeups -name "*.md" -not -name "ctf-writeup-format.md" -delete 2>/dev/null || true
-        find ctf_app/assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
-        
-        find ctf_site/assets/writeups -name "*.md" -delete 2>/dev/null || true
-        find ctf_site/assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
-        
-        echo "🔄 Syncing writeups from CTF-Writeups repository..."
-        
-        # Process each CTF event directory
-        for ctf_dir in ctf-writeups-source/*/; do
-          if [ -d "$ctf_dir" ] && [ "$(basename "$ctf_dir")" != ".git" ]; then
-            ctf_name=$(basename "$ctf_dir")
-            
-            # Skip if it's just the README
-            if [ "$ctf_name" = "README.md" ]; then
-              continue
-            fi
-            
-            echo "🏆 Processing CTF: $ctf_name"
-            event_path="ctf_app/assets/writeups/$ctf_name"
-            mkdir -p "$event_path"
-            
-            # Initialize category counters
-            declare -A category_counts
-            
-            # Process each challenge directory
-            for challenge_dir in "$ctf_dir"*/; do
-              if [ -d "$challenge_dir" ]; then
-                challenge_name=$(basename "$challenge_dir")
-                
-                # Determine category from challenge name
-                category="misc"  # default
-                case "$challenge_name" in
-                  *web*|*sql*|*xss*|*csrf*|*ssrf*|*http*|*server*) category="web" ;;
-                  *crypto*|*cipher*|*rsa*|*aes*|*hash*|*encrypt*|kitty*) category="crypto" ;;
-                  *pwn*|*buffer*|*overflow*|*rop*|*shellcode*|*binary*) category="pwn" ;;
-                  *rev*|*reverse*|*disasm*|*assembly*) category="rev" ;;
-                  *forensic*|*steg*|*disk*|*memory*|*where*|*bobby*) category="forensics" ;;
-                  *osint*|*recon*|*intel*) category="osint" ;;
-                  *password*|*manager*|*auth*) category="web" ;;
-                esac
-                
-                # Create category directory
-                mkdir -p "$event_path/$category"
-                
-                # Find and copy writeup files (wu.md)
-                if [ -f "$challenge_dir/wu.md" ]; then
-                  new_filename="${challenge_name}.md"
-                  cp "$challenge_dir/wu.md" "$event_path/$category/$new_filename"
-                  echo "  ✅ $category/$new_filename"
-                  
-                  # Count categories
-                  category_counts[$category]=$((${category_counts[$category]:-0} + 1))
-                fi
-              fi
-            done
-            
-            # Generate event index
-            echo "# $ctf_name" > "$event_path/README.md"
-            echo "" >> "$event_path/README.md"
-            echo "CTF writeups for $ctf_name challenges." >> "$event_path/README.md"
-            echo "" >> "$event_path/README.md"
-            echo "## Categories" >> "$event_path/README.md"
-            echo "" >> "$event_path/README.md"
-            
-            # List categories with counts
-            for category in crypto web pwn rev forensics osint misc; do
-              if [ "${category_counts[$category]:-0}" -gt 0 ]; then
-                echo "- **[$category](./$category/)** (${category_counts[$category]} challenges)" >> "$event_path/README.md"
-              fi
-            done
-          fi
-        done
-        
-        # Generate main index
-        echo "# CTF Writeups Collection" > ctf_app/assets/writeups/index.md
-        echo "" >> ctf_app/assets/writeups/index.md
-        echo "> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)" >> ctf_app/assets/writeups/index.md
-        echo "" >> ctf_app/assets/writeups/index.md
-        echo "## 🏆 CTF Events" >> ctf_app/assets/writeups/index.md
-        echo "" >> ctf_app/assets/writeups/index.md
-        
-        # List all CTF events
-        for event_dir in ctf_app/assets/writeups/*/; do
-          if [ -d "$event_dir" ]; then
-            event=$(basename "$event_dir")
-            if [ -f "$event_dir/README.md" ]; then
-              echo "- [$event](./$event/)" >> ctf_app/assets/writeups/index.md
-            fi
-          fi
-        done
-        
-        echo "" >> ctf_app/assets/writeups/index.md
-        echo "## 📊 Statistics" >> ctf_app/assets/writeups/index.md
-        echo "" >> ctf_app/assets/writeups/index.md
-        
-        # Add statistics
-        total_writeups=$(find ctf_app/assets/writeups -mindepth 1 -maxdepth 3 -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
-        total_ctfs=$(find ctf_app/assets/writeups -mindepth 1 -maxdepth 1 -type d | wc -l)
-        
-        echo "- **Total CTF Events:** $total_ctfs" >> ctf_app/assets/writeups/index.md
-        echo "- **Total Writeups:** $total_writeups" >> ctf_app/assets/writeups/index.md
-        echo "- **Last Updated:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> ctf_app/assets/writeups/index.md
-        
-        echo ""
-        echo "📊 Sync Summary:"
-        echo "- CTF Events: $total_ctfs"
-        echo "- Total Writeups: $total_writeups"
+    - name: Run sync script
+      id: sync
+      run: |
+        python3 -c "
+        import os
+        import shutil
+        import yaml
+        import re
+        from pathlib import Path
+        from datetime import datetime
 
-    - name: Copy writeups to simpler site
-      run: |
-        # Copy writeups to the simpler site as well
-        if [ -d "ctf_app/assets/writeups" ]; then
-          echo "📦 Copying writeups to simple CTF site..."
-          cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
-          echo "✅ Writeups copied to ctf_site/assets/writeups/"
+        def extract_frontmatter(content):
+            if content.startswith('---\n'):
+                try:
+                    end_index = content.find('\n---\n', 4)
+                    if end_index != -1:
+                        frontmatter = content[4:end_index]
+                        body = content[end_index + 5:]
+                        return yaml.safe_load(frontmatter), body
+                except yaml.YAMLError as e:
+                    print('YAML parsing error: {}'.format(e))
+            return {}, content
+
+        def normalize_category(category_name, challenge_name='', frontmatter={}):
+            category_lower = category_name.lower()
+            if 'category' in frontmatter:
+                fm_cat = frontmatter['category'].lower()
+                if fm_cat in ['crypto', 'cryptography']:
+                    return 'crypto'
+                elif fm_cat in ['web', 'web_exploitation']:
+                    return 'web'
+                elif fm_cat in ['pwn', 'binary', 'binary_exploitation']:
+                    return 'pwn'
+                elif fm_cat in ['rev', 'reverse', 'reverse_engineering']:
+                    return 'rev'
+                elif fm_cat in ['forensics', 'forensic']:
+                    return 'forensics'
+                elif fm_cat in ['osint', 'open_source_intelligence']:
+                    return 'osint'
+                elif fm_cat in ['misc', 'miscellaneous']:
+                    return 'misc'
+                else:
+                    return fm_cat
+            if 'crypto' in category_lower:
+                return 'crypto'
+            elif 'web' in category_lower:
+                return 'web'
+            elif 'binary' in category_lower or 'pwn' in category_lower:
+                return 'pwn'
+            elif 'reverse' in category_lower or 'rev' in category_lower:
+                return 'rev'
+            elif 'forensic' in category_lower:
+                return 'forensics'
+            elif 'osint' in category_lower or 'intelligence' in category_lower:
+                return 'osint'
+            else:
+                return 'misc'
+
+        def process_challenge(challenge_dir, ctf_name, category, target_base, ctf_writeups, category_counts):
+            wu_file = challenge_dir / 'wu.md'
+            if not wu_file.exists():
+                return
+            try:
+                content = wu_file.read_text(encoding='utf-8')
+                frontmatter, body = extract_frontmatter(content)
+                challenge_name = challenge_dir.name
+                category_dir = target_base / ctf_name / category
+                category_dir.mkdir(parents=True, exist_ok=True)
+                output_file = category_dir / '{}.md'.format(challenge_name)
+                output_file.write_text(content, encoding='utf-8')
+                ctf_writeups.append({'name': challenge_name, 'category': category, 'frontmatter': frontmatter})
+                category_counts[category] = category_counts.get(category, 0) + 1
+                print('    ✅ {}/{}'.format(category, challenge_name))
+            except Exception as e:
+                print('    ❌ Error processing {}: {}'.format(challenge_dir, e))
+
+        def create_ctf_index(ctf_dir, ctf_name, category_counts):
+            index_content = '# {}\n\nCTF writeups for {} challenges.\n\n## Categories\n\n'.format(ctf_name, ctf_name)
+            for category in sorted(category_counts.keys()):
+                count = category_counts[category]
+                plural = 's' if count != 1 else ''
+                index_content += '- **[{}](./{}/)**  ({} challenge{})\n'.format(category, category, count, plural)
+            (ctf_dir / 'README.md').write_text(index_content, encoding='utf-8')
+
+        def create_main_index(target_dir, stats):
+            lines = [
+                '# CTF Writeups Collection',
+                '',
+                '> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)',
+                '',
+                '## 🏆 CTF Events',
+                ''
+            ]
+            for event_dir in sorted(target_dir.iterdir()):
+                if event_dir.is_dir() and (event_dir / 'README.md').exists():
+                    lines.append('- [{}](./{}/)'.format(event_dir.name, event_dir.name))
+            lines.extend([
+                '',
+                '## 📊 Statistics',
+                '',
+                '- **Total CTF Events:** {}'.format(stats['total_ctfs']),
+                '- **Total Writeups:** {}'.format(stats['total_writeups']),
+                '- **Last Updated:** {}'.format(datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')),
+                '',
+                '## 📂 Categories',
+                ''
+            ])
+            for category, count in sorted(stats['categories'].items()):
+                plural = 's' if count != 1 else ''
+                lines.append('- **{}:** {} writeup{}'.format(category, count, plural))
+            (target_dir / 'index.md').write_text('\n'.join(lines), encoding='utf-8')
+
+        # Main sync logic
+        source_dir = Path('ctf-writeups-source')
+        target_app_dir = Path('ctf_app/assets/writeups')
+        target_site_dir = Path('ctf_site/assets/writeups')
+        target_app_dir.mkdir(parents=True, exist_ok=True)
+        target_site_dir.mkdir(parents=True, exist_ok=True)
+
+        for target_dir in [target_app_dir, target_site_dir]:
+            for item in target_dir.iterdir():
+                if item.is_file() and item.name not in ['ctf-writeup-format.md', '.gitkeep']:
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
+
+        stats = {'total_ctfs': 0, 'total_writeups': 0, 'categories': {}}
+        print('🔄 Starting writeup sync...')
+
+        for ctf_path in source_dir.iterdir():
+            if not ctf_path.is_dir() or ctf_path.name.startswith('.'):
+                continue
+            ctf_name = ctf_path.name
+            print('🏆 Processing CTF: {}'.format(ctf_name))
+            ctf_writeups = []
+            category_counts = {}
+
+            for item in ctf_path.iterdir():
+                if not item.is_dir():
+                    continue
+                if (item / 'wu.md').exists():
+                    category = normalize_category('misc', item.name)
+                    process_challenge(item, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
+                else:
+                    category_name = item.name
+                    for challenge_dir in item.iterdir():
+                        if challenge_dir.is_dir() and (challenge_dir / 'wu.md').exists():
+                            category = normalize_category(category_name, challenge_dir.name)
+                            process_challenge(challenge_dir, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
+
+            if ctf_writeups:
+                stats['total_ctfs'] += 1
+                stats['total_writeups'] += len(ctf_writeups)
+                for cat, count in category_counts.items():
+                    stats['categories'][cat] = stats['categories'].get(cat, 0) + count
+                create_ctf_index(target_app_dir / ctf_name, ctf_name, category_counts)
+                print('  ✅ Processed {} writeups'.format(len(ctf_writeups)))
+            else:
+                print('  ⚠️ No writeups found in {}'.format(ctf_name))
+
+        if target_app_dir.exists():
+            shutil.copytree(target_app_dir, target_site_dir, dirs_exist_ok=True)
+
+        create_main_index(target_app_dir, stats)
+        create_main_index(target_site_dir, stats)
+
+        print('\n📊 Sync Summary:')
+        print('- CTF Events: {}'.format(stats['total_ctfs']))
+        print('- Total Writeups: {}'.format(stats['total_writeups']))
+        print('- Categories: {}'.format(', '.join(stats['categories'].keys())))
+        "
+        
+        if [ $? -eq 0 ]; then
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Check for changes
+    - name: Check for changes and commit
       id: changes
       run: |
         git config --local user.email "action@github.com"
@@ -164,10 +222,14 @@ jobs:
           echo "changes=true" >> $GITHUB_OUTPUT
           git add ctf_app/assets/writeups/
           git add ctf_site/assets/writeups/
-          git commit -m "Auto-sync CTF writeups from CTF-Writeups repository"
+          git commit -m "Auto-sync CTF writeups from CTF-Writeups repository
+
+          - Synced writeups with proper category organization
+          - Updated indexes and statistics
+          - Maintained YAML frontmatter from source files"
         else
           echo "changes=false" >> $GITHUB_OUTPUT
-          echo "No changes detected"
+          echo "No changes detected in writeup content"
         fi
         
     - name: Push changes
