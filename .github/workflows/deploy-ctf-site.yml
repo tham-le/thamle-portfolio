@@ -48,8 +48,8 @@ jobs:
         mkdir -p ctf_site/assets/writeups
         
         # Copy writeups
-        echo "📁 Copying writeups from ctf_app to ctf_site"
-        cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
+          echo "📁 Copying writeups from ctf_app to ctf_site"
+          cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
         
         # Verify copy was successful
         copied_count=$(find ctf_site/assets/writeups -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
@@ -123,7 +123,7 @@ jobs:
         fi
         
         echo "✅ Firebase configuration validation passed"
-        
+      
     - name: Deploy to Firebase
       run: |
         echo "🚀 Deploying CTF site to Firebase..."

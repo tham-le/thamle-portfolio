@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tham Le - Project Showcase</title>
+    
+    <!-- SEO & Open Graph Meta Tags -->
+    <meta name="description" content="An elite showcase of projects by Tham Le, a passionate developer and cybersecurity enthusiast.">
+    <meta name="author" content="Tham Le">
+    <meta name="keywords" content="Tham Le, Portfolio, Projects, Software Developer, Cybersecurity, Web Developer, Flutter Developer">
+    <meta property="og:title" content="Tham Le - Project Showcase">
+    <meta property="og:description" content="Explore a curated collection of innovative projects by Tham Le.">
+    <meta property="og:image" content="assets/images/og-image.png">
+    <meta property="og:url" content="https://project.thamle.live">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/icons/site.webmanifest">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Feather Icons) -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ========================================
+       LOADING SCREEN
+       ======================================== -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">T.L</div>
+            <p class="loading-text">Crafting Excellence...</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+       NAVIGATION
+       ======================================== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="#" class="brand-link">
+                    <span class="brand-icon">T</span>
+                    <span class="brand-text">Tham Le</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="#projects" class="nav-link active"><i data-feather="grid"></i> Projects</a>
+                <a href="#technologies" class="nav-link"><i data-feather="code"></i> Technologies</a>
+                <a href="#contact" class="nav-link"><i data-feather="mail"></i> Contact</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========================================
+       HERO SECTION
+       ======================================== -->
+    <header class="hero">
+        <div class="hero-background">
+            <div class="hero-particles"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-feather="star"></i>
+                <span>Curated Collection of My Best Work</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Innovate. Create.</span>
+                <span class="title-line highlight">Deploy.</span>
+            </h1>
+            <p class="hero-description">
+                A showcase of my journey through code, from complex web applications to intricate cybersecurity challenges. Each project represents a problem solved and a skill honed.
+            </p>
+            <div class="hero-stats" id="github-stats">
+                <!-- GitHub stats will be dynamically inserted here -->
+            </div>
+            <div class="hero-actions">
+                <a href="#projects" class="btn btn-primary"><i data-feather="arrow-down-circle"></i> Explore Projects</a>
+                <a href="https://github.com/tham-le" target="_blank" class="btn btn-secondary"><i data-feather="github"></i> My GitHub</a>
+            </div>
+        </div>
+        <a href="#filters" class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+            <span>Scroll Down</span>
+        </a>
+    </header>
+
+    <main>
+        <!-- ========================================
+           FILTERS SECTION
+           ======================================== -->
+        <section id="filters" class="filters">
+            <div class="container">
+                <div class="filter-header">
+                    <h2>Filter & Sort</h2>
+                    <div class="search-container">
+                        <i class="search-icon" data-feather="search"></i>
+                        <input type="text" id="search-input" class="search-input" placeholder="Search projects...">
+                    </div>
+                </div>
+                <div class="filter-tabs" id="filter-tabs">
+                     <button class="filter-tab active" data-filter="all">All Projects</button>
+                    <!-- Language filter tabs will be dynamically inserted here -->
+                </div>
+                 <div class="sort-controls">
+                    <select id="sort-select" class="sort-select">
+                        <option value="stars">Sort by Stars</option>
+                        <option value="updated">Sort by Last Updated</option>
+                        <option value="name">Sort by Name</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+           PROJECTS GRID
+           ======================================== -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Project cards will be dynamically inserted here -->
+                </div>
+                <div class="load-more-container" id="load-more-container">
+                    <!-- Load more button will be here if needed -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+           TECHNOLOGIES SECTION
+           ======================================== -->
+        <section id="technologies" class="technologies">
+            <div class="container">
+                <div class="section-header">
+                    <h2>My Tech Arsenal</h2>
+                    <p>A collection of tools and technologies I'm proficient with, continuously learning and adapting to the best in the industry.</p>
+                </div>
+                <div class="tech-categories" id="tech-categories">
+                    <!-- Tech categories will be dynamically loaded -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+           CONTACT & SITES SECTION
+           ======================================== -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get In Touch</h2>
+                    <p>Let's connect! Whether you have a question or just want to say hi, feel free to reach out.</p>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i data-feather="mail"></i></div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p><a href="mailto:tham.le@epitech.eu">tham.le@epitech.eu</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i data-feather="linkedin"></i></div>
+                            <div class="contact-details">
+                                <h3>LinkedIn</h3>
+                                <p><a href="https://www.linkedin.com/in/tham-le-epitech/" target="_blank">linkedin.com/in/tham-le-epitech</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-links">
+                        <h3>My Other Sites</h3>
+                        <div class="site-links">
+                            <a href="https://thamle.live" class="site-link">
+                                <span><i data-feather="home"></i> Main Portfolio</span>
+                                <i data-feather="arrow-right"></i>
+                            </a>
+                            <a href="https://ctf.thamle.live" class="site-link">
+                                <span><i data-feather="flag"></i> CTF Writeups</span>
+                                <i data-feather="arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================
+       FOOTER
+       ======================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; <span id="footer-year"></span> Tham Le. All Rights Reserved.</p>
+                <div class="footer-social">
+                    <a href="https://github.com/tham-le" target="_blank" aria-label="GitHub"><i data-feather="github"></i></a>
+                    <a href="https://www.linkedin.com/in/tham-le-epitech/" target="_blank" aria-label="LinkedIn"><i data-feather="linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- ========================================
+       BACK TO TOP BUTTON
+       ======================================== -->
+    <button class="back-to-top" aria-label="Back to top">
+        <i data-feather="arrow-up"></i>
+    </button>
+    
+    <!-- ========================================
+       PROJECT MODAL
+       ======================================== -->
+    <div class="modal" id="project-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal"><i data-feather="x"></i></button>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html> 

@@ -44,6 +44,21 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "project",
+      "public": "project_site",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ]
 }

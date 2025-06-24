@@ -13,6 +13,9 @@
         ],
         "ctf-flutter": [
           "ctf-flutter-app"
+        ],
+        "project": [
+          "project-thamle-portfolio"
         ]
       }
     }
