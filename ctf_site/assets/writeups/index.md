@@ -15,4 +15,4 @@
 
 - **Total CTF Events:** 6
 - **Total Writeups:** 0
-- **Last Updated:** 2025-06-24 18:27 UTC
+- **Last Updated:** 2025-06-24 22:32 UTC
