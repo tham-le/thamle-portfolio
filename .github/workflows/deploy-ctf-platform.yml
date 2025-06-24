@@ -1,0 +1,59 @@
+name: Deploy CTF Platform
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_app/**'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [new-writeup]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-ctf:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.19.3'
+        channel: 'stable'
+        
+    - name: Copy writeups to Flutter assets
+      run: |
+        mkdir -p ctf_app/assets/writeups
+        if [ -d "ctf_app/assets/writeups" ] && [ "$(ls -A ctf_app/assets/writeups)" ]; then
+          echo "📁 Writeups already present in CTF app assets"
+          ls -la ctf_app/assets/writeups/
+        else
+          echo "⚠️ No writeups found in ctf_app/assets/writeups/"
+        fi
+        
+    - name: Get Flutter dependencies
+      working-directory: ./ctf_app
+      run: flutter pub get
+      
+    - name: Build Flutter web app
+      working-directory: ./ctf_app
+      run: flutter build web --release --base-href /
+      
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: ${{ secrets.GITHUB_TOKEN }}
+        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}
+        projectId: thamle-portfolio
+        target: ctf-flutter
+        channelId: live
