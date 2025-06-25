@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Fetch writeups from the index
+// Fetch writeups from the synced structure
 async function fetchWriteups() {
     try {
         // First, fetch the master index to get all CTF events
@@ -56,7 +56,7 @@ async function fetchWriteups() {
         const indexContent = await indexResponse.text();
         
         // Parse the index to get CTF events
-        const ctfEventMatches = [...indexContent.matchAll(/\[([^\]]+)\]\(\.\/([^\/]+)\/\)/g)];
+        const ctfEventMatches = [...indexContent.matchAll(/- \[([^\]]+)\]\(\.\/([^\/]+)\/\)/g)];
         
         // For each CTF event, load its writeups
         for (const match of ctfEventMatches) {
@@ -89,12 +89,13 @@ async function fetchCTFWriteups(ctfName, ctfPath) {
         const readmeContent = await readmeResponse.text();
         
         // Parse the README to get categories
-        const categoryMatches = [...readmeContent.matchAll(/\*\*\[([^\]]+)\]\(\.\/([^\/]+)\/\)\*\* \((\d+) challenges\)/g)];
+        const categoryMatches = [...readmeContent.matchAll(/- \*\*\[([^\]]+)\]\(\.\/([^\/]+)\/\)\*\*\s+\((\d+) challenge[s]?\)/g)];
         
         // For each category, fetch the writeups
         for (const match of categoryMatches) {
             const category = match[1];
             const categoryPath = match[2];
+            const challengeCount = parseInt(match[3]);
             
             // Add category to the categories list if not already there
             if (!categories.includes(category)) {
@@ -102,155 +103,137 @@ async function fetchCTFWriteups(ctfName, ctfPath) {
             }
             
             // Fetch all writeups in this category
-            const writeupFiles = await fetchCategoryWriteupsList(ctfPath, categoryPath);
-            
-            // Load each writeup
-            for (const filename of writeupFiles) {
-                const writeup = await fetchWriteup(ctfPath, categoryPath, filename, ctfName, category);
-                if (writeup) {
-                    allWriteups.push(writeup);
-                    
-                    // Add difficulty to the difficulties list if not already there
-                    if (!difficulties.includes(writeup.difficulty)) {
-                        difficulties.push(writeup.difficulty);
-                    }
-                }
-            }
+            await fetchCategoryWriteups(ctfPath, categoryPath, ctfName, category);
         }
     } catch (error) {
         console.error(`Error fetching writeups for ${ctfName}:`, error);
     }
 }
 
-// Get a list of writeup files in a category
-async function fetchCategoryWriteupsList(ctfPath, categoryPath) {
-    // Since we can't list directory contents directly via browser,
-    // we'll use a discovery approach by trying common writeup filenames
-    // and checking which ones exist
-    
-    const writeupFiles = [];
-    
-    // First, try to get a directory listing by checking for common challenge names
-    // We'll discover challenges by parsing the CTF README if it exists
+// Fetch writeups from a category directory
+async function fetchCategoryWriteups(ctfPath, categoryPath, ctfName, category) {
     try {
-        const ctfReadmeResponse = await fetch(`assets/writeups/${ctfPath}/README.md`);
-        if (ctfReadmeResponse.ok) {
-            const ctfReadmeContent = await ctfReadmeResponse.text();
-            
-            // Look for the category section and extract challenge count
-            const categoryRegex = new RegExp(`\\*\\*\\[${categoryPath}\\]\\([^)]+\\)\\*\\*\\s*\\((\\d+)\\s+challenge[s]?\\)`, 'i');
-            const match = ctfReadmeContent.match(categoryRegex);
-            
-            if (match) {
-                const challengeCount = parseInt(match[1]);
-                console.log(`Found ${challengeCount} challenges in ${categoryPath} category`);
+        // Since we can't list directory contents directly in the browser,
+        // we need to use a comprehensive discovery approach
+        
+        // Generate potential filenames based on known patterns and challenge names
+        const potentialFilenames = generatePotentialFilenames(category, ctfName);
+        
+        let foundFiles = 0;
+        
+        // Try each potential filename
+        for (const filename of potentialFilenames) {
+            try {
+                const filepath = `assets/writeups/${ctfPath}/${categoryPath}/${filename}`;
+                const response = await fetch(filepath);
                 
-                // Now we need to discover the actual challenge names
-                // We'll try a brute force approach with common naming patterns
-                const discoveredChallenges = await discoverChallengeFiles(ctfPath, categoryPath);
-                return discoveredChallenges;
+                if (response.ok) {
+                    const content = await response.text();
+                    const writeup = parseMarkdown(content, filename, ctfName, category);
+                    writeup.filepath = filepath;
+                    
+                    allWriteups.push(writeup);
+                    
+                    // Add difficulty to the difficulties list if not already there
+                    if (!difficulties.includes(writeup.difficulty)) {
+                        difficulties.push(writeup.difficulty);
+                    }
+                    
+                    console.log(`✅ Loaded: ${ctfName}/${category}/${filename}`);
+                    foundFiles++;
+                }
+            } catch (error) {
+                // File doesn't exist, continue silently
             }
         }
+        
+        console.log(`📊 Found ${foundFiles} writeups in ${ctfName}/${category}`);
+        
     } catch (error) {
-        console.log(`Could not read CTF README for ${ctfPath}:`, error);
+        console.error(`Error fetching category writeups for ${ctfPath}/${categoryPath}:`, error);
     }
-    
-    // Fallback: try to discover challenges by checking the directory
-    return await discoverChallengeFiles(ctfPath, categoryPath);
 }
 
-// Discover challenge files by trying different approaches
-async function discoverChallengeFiles(ctfPath, categoryPath) {
-    const writeupFiles = [];
+// Generate potential filenames based on category, CTF name, and common patterns
+function generatePotentialFilenames(category, ctfName) {
+    const filenames = [];
     
-    // Method 1: Try to fetch a directory listing endpoint (won't work in browser, but worth trying)
-    try {
-        const dirResponse = await fetch(`assets/writeups/${ctfPath}/${categoryPath}/`);
-        if (dirResponse.ok) {
-            const dirHtml = await dirResponse.text();
-            // Parse HTML directory listing if available
-            const fileMatches = [...dirHtml.matchAll(/href="([^"]+\.md)"/g)];
-            for (const match of fileMatches) {
-                const filename = match[1];
-                if (filename !== 'README.md') {
-                    writeupFiles.push(filename);
-                }
-            }
-            if (writeupFiles.length > 0) {
-                console.log(`Discovered ${writeupFiles.length} files via directory listing`);
-                return writeupFiles;
-            }
-        }
-    } catch (error) {
-        // Expected to fail in most cases
+    // Known existing files from IrisCTF (for backward compatibility)
+    const knownIrisFiles = {
+        'web': ['Political.md', 'password-manager.md'],
+        'crypto': ['KittyCrypt.md'],
+        'forensics': ['Tracem_1.md', 'deldeldel.md'],
+        'osint': ['Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md'],
+        'pwn': ['sqlate.md']
+    };
+    
+    // Add known IrisCTF files for this category
+    if (ctfName === 'IrisCTF 2025' && knownIrisFiles[category]) {
+        filenames.push(...knownIrisFiles[category]);
     }
     
-    // Method 2: Try common challenge naming patterns and see which files exist
+    // Fake challenge files we just added (for testing)
+    const fakeFiles = {
+        'HeroCTF v6': {
+            'web': ['fake_login.md'],
+            'crypto': ['caesar_cipher.md']
+        },
+        'HTB University CTF 2024': {
+            'pwn': ['buffer_overflow.md'],
+            'forensics': ['memory_dump.md']
+        },
+        'HTB Cyber Apocalypse CTF 2025': {
+            'web': ['api_chaos.md'],
+            'osint': ['social_media_hunt.md']
+        },
+        '404CTF 2025': {
+            'rev': ['binary_analysis.md'],
+            'misc': ['steganography.md']
+        },
+        'HackHer CTF': {
+            'crypto': ['rsa_challenge.md'],
+            'forensics': ['network_analysis.md']
+        }
+    };
+    
+    // Add fake files for this CTF and category
+    if (fakeFiles[ctfName] && fakeFiles[ctfName][category]) {
+        filenames.push(...fakeFiles[ctfName][category]);
+    }
+    
+    // Common filename patterns used in CTF writeups
     const commonPatterns = [
-        // From our known writeups
-        'Political.md', 'password-manager.md', 'KittyCrypt.md', 'Tracem_1.md', 'deldeldel.md',
-        'Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md', 'sqlate.md',
-        
-        // Common CTF challenge naming patterns
-        'challenge.md', 'writeup.md', 'solution.md', 'wu.md',
+        'writeup.md', 'wu.md', 'solution.md', 'solve.md', 'challenge.md',
+        'README.md', 'readme.md', 'index.md',
         'easy.md', 'medium.md', 'hard.md',
-        'pwn1.md', 'pwn2.md', 'crypto1.md', 'crypto2.md',
-        'web1.md', 'web2.md', 'forensics1.md', 'forensics2.md',
-        'rev1.md', 'rev2.md', 'misc1.md', 'misc2.md',
-        'osint1.md', 'osint2.md', 'osint3.md', 'osint4.md'
+        'beginner.md', 'intermediate.md', 'advanced.md',
+        'chall.md', 'chal.md', 'task.md', 'prob.md', 'problem.md',
+        'level1.md', 'level2.md', 'level3.md',
+        'challenge1.md', 'challenge2.md', 'challenge3.md',
+        'task1.md', 'task2.md', 'task3.md',
+        'prob1.md', 'prob2.md', 'prob3.md',
+        'chall1.md', 'chall2.md', 'chall3.md'
     ];
     
-    // Filter patterns by category
-    let patternsToTry = commonPatterns;
-    if (categoryPath === 'web') {
-        patternsToTry = ['Political.md', 'password-manager.md', ...commonPatterns.filter(p => p.includes('web'))];
-    } else if (categoryPath === 'crypto') {
-        patternsToTry = ['KittyCrypt.md', ...commonPatterns.filter(p => p.includes('crypto'))];
-    } else if (categoryPath === 'forensics') {
-        patternsToTry = ['Tracem_1.md', 'deldeldel.md', ...commonPatterns.filter(p => p.includes('forensics'))];
-    } else if (categoryPath === 'osint') {
-        patternsToTry = ['Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md', ...commonPatterns.filter(p => p.includes('osint'))];
-    } else if (categoryPath === 'pwn') {
-        patternsToTry = ['sqlate.md', ...commonPatterns.filter(p => p.includes('pwn'))];
+    filenames.push(...commonPatterns);
+    
+    // Category-specific patterns
+    const categoryPatterns = {
+        'web': ['web.md', 'webapp.md', 'website.md', 'http.md', 'sql.md', 'xss.md', 'csrf.md'],
+        'crypto': ['crypto.md', 'cryptography.md', 'cipher.md', 'rsa.md', 'aes.md', 'hash.md'],
+        'pwn': ['pwn.md', 'binary.md', 'exploit.md', 'overflow.md', 'rop.md', 'shellcode.md'],
+        'rev': ['rev.md', 'reverse.md', 'reversing.md', 'binary.md', 'disasm.md'],
+        'forensics': ['forensics.md', 'forensic.md', 'memory.md', 'disk.md', 'network.md', 'pcap.md'],
+        'osint': ['osint.md', 'recon.md', 'investigation.md', 'search.md', 'social.md'],
+        'misc': ['misc.md', 'miscellaneous.md', 'other.md', 'steganography.md', 'stego.md']
+    };
+    
+    if (categoryPatterns[category]) {
+        filenames.push(...categoryPatterns[category]);
     }
     
-    for (const filename of patternsToTry) {
-        try {
-            const testResponse = await fetch(`assets/writeups/${ctfPath}/${categoryPath}/${filename}`);
-            if (testResponse.ok) {
-                writeupFiles.push(filename);
-                console.log(`✅ Discovered: ${categoryPath}/${filename}`);
-            }
-        } catch (error) {
-            // File doesn't exist, continue
-        }
-    }
-    
-    console.log(`Discovered ${writeupFiles.length} writeup files in ${ctfPath}/${categoryPath}`);
-    return writeupFiles;
-}
-
-// Fetch a single writeup file
-async function fetchWriteup(ctfPath, categoryPath, filename, ctfName, category) {
-    try {
-        const filepath = `assets/writeups/${ctfPath}/${categoryPath}/${filename}`;
-        const response = await fetch(filepath);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${filepath}: ${response.statusText}`);
-        }
-        
-        const markdown = await response.text();
-        
-        // Parse the YAML frontmatter or table metadata
-        const writeup = parseMarkdown(markdown, filename, ctfName, category);
-        writeup.filepath = filepath;
-        
-        return writeup;
-    } catch (error) {
-        console.error(`Error fetching writeup ${filename}:`, error);
-        return null;
-    }
+    // Remove duplicates and return
+    return [...new Set(filenames)];
 }
 
 // Parse markdown content with YAML frontmatter or table metadata
