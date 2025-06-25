@@ -93,9 +93,16 @@ jobs:
                 return 'misc'
 
         def process_challenge(challenge_dir, ctf_name, category, target_base, ctf_writeups, category_counts):
-            wu_file = challenge_dir / 'wu.md'
-            if not wu_file.exists():
+            # Look for either 'wu.md' or 'writeup.md'
+            wu_file = None
+            if (challenge_dir / 'wu.md').exists():
+                wu_file = challenge_dir / 'wu.md'
+            elif (challenge_dir / 'writeup.md').exists():
+                wu_file = challenge_dir / 'writeup.md'
+            
+            if not wu_file:
                 return
+
             try:
                 content = wu_file.read_text(encoding='utf-8')
                 frontmatter, body = extract_frontmatter(content)
@@ -174,15 +181,22 @@ jobs:
             for item in ctf_path.iterdir():
                 if not item.is_dir():
                     continue
-                if (item / 'wu.md').exists():
+                
+                # Check for writeup file in the immediate subdirectory (e.g., /IrisCTF/challenge/wu.md)
+                is_challenge_dir = (item / 'wu.md').exists() or (item / 'writeup.md').exists()
+
+                if is_challenge_dir:
                     category = normalize_category('misc', item.name)
                     process_challenge(item, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
                 else:
+                    # Assume this is a category directory (e.g., /IrisCTF/Web/challenge/wu.md)
                     category_name = item.name
                     for challenge_dir in item.iterdir():
-                        if challenge_dir.is_dir() and (challenge_dir / 'wu.md').exists():
-                            category = normalize_category(category_name, challenge_dir.name)
-                            process_challenge(challenge_dir, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
+                        if challenge_dir.is_dir():
+                            is_challenge_in_category = (challenge_dir / 'wu.md').exists() or (challenge_dir / 'writeup.md').exists()
+                            if is_challenge_in_category:
+                                category = normalize_category(category_name, challenge_dir.name)
+                                process_challenge(challenge_dir, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
 
             if ctf_writeups:
                 stats['total_ctfs'] += 1
