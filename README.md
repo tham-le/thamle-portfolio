@@ -1,38 +1,74 @@
-# Tham Le Portfolio
+# Tham Le - Comprehensive Portfolio
 
-> Professional portfolio website with automated CTF writeups synchronization
+This repository contains the source code for my personal portfolio, showcasing my skills in web development, cybersecurity (CTF writeups), and mobile app development. The project is structured as a monorepo, with each part of the portfolio in its own dedicated directory.
 
-[![Live Site](https://img.shields.io/badge/Live-thamle.live-blue?style=for-the-badge)](https://thamle.live)
-[![CTF Platform](https://img.shields.io/badge/CTF-ctf.thamle.live-red?style=for-the-badge)](https://ctf.thamle.live)
+## 🚀 Portfolio Sites
 
-## 🎯 About This Portfolio
+- **Main Landing Page:** [thamle.live](https://thamle.live) - A simple, lightweight landing page.
+- **Project Showcase:** [project.thamle.live](https://project.thamle.live) - A dynamic site to display my GitHub projects.
+- **CTF Writeups:** [ctf.thamle.live](https://ctf.thamle.live) - A collection of my Capture The Flag writeups.
+- **Flutter Showcase:** [ctf-flutter-app.web.app](https://ctf-flutter-app.web.app) - A Flutter application to demonstrate my mobile development capabilities.
 
-A modern web portfolio showcasing my cybersecurity and software development expertise. Features an automated system that syncs CTF writeups from my separate research repository and organizes them by event and category.
+## 📂 Repository Structure
 
-**Live Sites:**
+```
+/
+├── .github/            # GitHub Actions workflows for CI/CD
+├── ctf_app/            # Source code for the Flutter showcase app
+├── ctf_site/           # Source code for the static CTF writeups site
+├── external-writeups/  # Git submodule for CTF writeup content
+├── project_site/       # Source code for the project showcase site
+├── public/             # Files for the main landing page
+└── scripts/            # Utility scripts for local development
+```
 
-- **[thamle.live](https://thamle.live)** - Professional portfolio and resume
-- **[ctf.thamle.live](https://ctf.thamle.live)** - CTF writeups and cybersecurity research
+## 🛠️ Local Development
 
-## 🔄 How It Works
+To run any of the sites locally, first clone the repository and initialize the submodule for the CTF writeups:
 
-This portfolio automatically stays up-to-date with my latest work:
+```bash
+git clone https://github.com/tham-le/thamle-portfolio.git
+cd thamle-portfolio
+git submodule update --init --recursive
+```
 
-1. **CTF Writeups**: Synced every 6 hours from my [CTF-Writeups repository](https://github.com/tham-le/CTF-Writeups)
-2. **Organization**: Automatically categorizes challenges by type (web, crypto, forensics, etc.)
-3. **Deployment**: GitHub Actions handles building and deploying to Firebase Hosting
-4. **Content**: Writeups are organized by CTF event and challenge category for easy navigation
+### Main Site (`public/`)
 
-## 🛠️ Technology Stack
+This is a simple static site.
 
-- **Frontend**: HTML5, CSS3, JavaScript, Flutter Web
-- **Hosting**: Firebase Hosting with custom domains
-- **Automation**: GitHub Actions for CI/CD and content synchronization
-- **Content Management**: Markdown-based writeups with automated organization
+1.  Navigate to the directory: `cd public`
+2.  Start a simple web server: `python3 -m http.server`
+3.  Open your browser to `http://localhost:8000`.
 
-## 📞 Contact
+### Project Showcase (`project_site/`)
 
-**Tham Le** - Software Engineer & Cybersecurity Enthusiast  
-📧 [thamle.work@gmail.com](mailto:thamle.work@gmail.com)  
-🔗 [LinkedIn](https://linkedin.com/in/tham42)  
-💻 [GitHub](https://github.com/tham-le)
+This is a static site that fetches project data from a local JSON file.
+
+1.  Navigate to the directory: `cd project_site`
+2.  Start a simple web server: `python3 -m http.server`
+3.  Open your browser to `http://localhost:8000`.
+
+### CTF Writeups Site (`ctf_site/`)
+
+This site displays CTF writeups from the `external-writeups` submodule.
+
+1.  Navigate to the directory: `cd ctf_site`
+2.  Start a simple web server: `python3 -m http.server`
+3.  Open your browser to `http://localhost:8000`.
+
+### Flutter App (`ctf_app/`)
+
+This is a Flutter web application.
+
+1.  Ensure you have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed.
+2.  Navigate to the directory: `cd ctf_app`
+3.  Get dependencies: `flutter pub get`
+4.  Run the app: `flutter run -d chrome`
+
+## ⚙️ Automation
+
+This repository uses GitHub Actions for Continuous Integration and Deployment (CI/CD).
+
+- **CI:** On every pull request, workflows run to check for broken links and lint the code.
+- **Sync Writeups:** A workflow runs automatically when the `external-writeups` submodule is updated, processing the markdown files into a JSON index for the CTF site.
+- **Deployment:** Pushes to the `main` branch automatically trigger deployment of the corresponding site to Firebase Hosting.

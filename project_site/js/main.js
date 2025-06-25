@@ -6,9 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONFIGURATION ---
-    const GITHUB_USERNAME = 'tham-le';
-    const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`;
-    const REPOS_URL = `${GITHUB_API_URL}/repos?per_page=100`;
+    const REPOS_URL = 'js/projects.json';
     
     // --- DOM ELEMENTS ---
     const loadingScreen = document.getElementById('loading-screen');
@@ -18,11 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const sortSelect = document.getElementById('sort-select');
     const techCategoriesContainer = document.getElementById('tech-categories');
-    const modal = document.getElementById('project-modal');
-    const modalBody = document.getElementById('modal-body');
-    const modalClose = document.querySelector('.modal-close');
-    const modalOverlay = document.querySelector('.modal-overlay');
-    const backToTopBtn = document.querySelector('.back-to-top');
+    
     const navbar = document.querySelector('.navbar');
     const footerYear = document.getElementById('footer-year');
 
@@ -261,17 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderProjects(displayedProjects);
         });
 
-        // Project modal
-        projectsGrid.addEventListener('click', (e) => {
-            const card = e.target.closest('.project-card');
-            if (card) {
-                const projectId = parseInt(card.dataset.projectId, 10);
-                openModal(projectId);
-            }
-        });
-
-        modalClose.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', closeModal);
+        
         
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
@@ -282,17 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Back to top button
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('visible');
-            } else {
-                backToTopBtn.classList.remove('visible');
-            }
-        });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        
         
         // Set footer year
         if(footerYear) {
@@ -315,55 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- MODAL LOGIC ---
-    const openModal = async (projectId) => {
-        const project = allProjects.find(p => p.id === projectId);
-        if (!project) return;
-        
-        modalBody.innerHTML = `<div class="loading-logo" style="margin: 2rem auto;">T.L</div>`;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Fetch README
-        let readmeContent = 'No README found for this project.';
-        try {
-            const readmeUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${project.name}/readme`;
-            const readmeRes = await fetch(readmeUrl, { headers: { 'Accept': 'application/vnd.github.v3.html' } });
-            if (readmeRes.ok) {
-                readmeContent = await readmeRes.text();
-            }
-        } catch (error) {
-            console.warn(`Could not fetch README for ${project.name}:`, error);
-        }
-
-        modalBody.innerHTML = `
-            <h2 class="modal-title">${project.name.replace(/-/g, ' ')}</h2>
-            <div class="modal-stats">
-                <span><i data-feather="star"></i> ${project.stars}</span>
-                <span><i data-feather="git-branch"></i> ${project.forks}</span>
-                <span><i data-feather="clock"></i> Last updated: ${project.updated.toLocaleDateString()}</span>
-            </div>
-            <div class="modal-tags">
-                ${project.languages.map(lang => `<span class="project-tag language">${lang}</span>`).join('')}
-                ${project.topics.map(topic => `<span class="project-tag">${topic}</span>`).join('')}
-            </div>
-            <div class="modal-actions">
-                 <a href="${project.url}" target="_blank" class="btn btn-primary"><i data-feather="github"></i> View on GitHub</a>
-            </div>
-            <hr class="modal-divider">
-            <div class="modal-readme-content">
-                <h3>About This Project</h3>
-                ${readmeContent}
-            </div>
-        `;
-        feather.replace();
-    };
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        modalBody.innerHTML = '';
-    };
+    
 
     // --- RUN ---
     init();
