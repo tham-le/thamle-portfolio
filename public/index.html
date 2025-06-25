@@ -7,7 +7,7 @@
     <title>Tham Le | Software Engineer</title>
     <meta name="description"
         content="Software Engineer with skills in Python and C++, experienced in system programming, problem-solving, and with a background in computational science." />
-    <link rel="canonical" href="https://thamle.live" />
+    <link rel="canonical" href="https://thamle.dev" />
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         body {
@@ -201,87 +201,6 @@
         }
 
         .testimonial-author {
-            font-weight: 600;
-            color: #2c5282;
-            text-align: right;
-            margin-top: 5px;
-        }
-
-        /* Fun CTF Button */
-        .ctf-button-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .ctf-button {
-            display: inline-block;
-            background: linear-gradient(45deg, #667eea, #764ba2, #667eea, #764ba2, #667eea);
-            background-size: 300% 300%;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2em;
-            padding: 15px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-            animation: gradientShift 3s ease infinite;
-            border: 3px solid transparent;
-            background-clip: padding-box;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ctf-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            text-decoration: none;
-            color: white;
-            animation-duration: 1s;
-        }
-
-        .ctf-button::before {
-            content: "🚩";
-            margin-right: 8px;
-            font-size: 1.1em;
-        }
-
-        .ctf-button::after {
-            content: "🔐";
-            margin-left: 8px;
-            font-size: 1.1em;
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Pulse animation for extra fun */
-        .ctf-button {
-            animation: gradientShift 3s ease infinite, pulse 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            }
-
-            100% {
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5), 0 0 20px rgba(118, 75, 162, 0.4);
-            }
-        }
-
-        .testimonial-author {
             font-weight: bold;
             margin-top: 12px;
             text-align: right;
@@ -372,16 +291,11 @@
             <a href="https://linkedin.com/in/tham42" target="_blank" rel="noopener noreferrer">LinkedIn</a> |
             <a href="mailto:thamle.work@gmail.com">Email Me</a> |
             <a href="ThamLE_resume.pdf" target="_blank" rel="noopener noreferrer">CV / Resume</a> |
+            <a href="https://ctf.thamle.live" target="_blank" rel="noopener noreferrer">CTF Write-ups</a> |
+            <a href="https://ctf-flutter-app.web.app" target="_blank" rel="noopener noreferrer">Flutter Demo</a> |
             <a href="https://cv.42.fr/thi-le" target="_blank" rel="noopener noreferrer">42 Profile</a>
         </div>
     </header>
-
-    <!-- Fun CTF Button -->
-    <div class="ctf-button-container">
-        <a href="https://ctf.thamle.live" class="ctf-button" target="_blank">
-            Explore My CTF Writeups
-        </a>
-    </div>
 
     <section id="testimonial">
         <h2>Testimonial</h2>
@@ -408,6 +322,10 @@
         <p>I'm always eager to learn new technologies and apply my skills to create solid, efficient solutions. I aim to
             contribute to challenging projects where I can use my adaptability and technical skills.</p>
     </section>
+    
+    <div class="projects-button-container">
+        <a href="https://ctf.thamle.live" class="projects-button ctf-button" target="_blank" rel="noopener noreferrer">🏴‍☠️ Explore My CTF Write-ups</a>
+    </div>
 
     <section id="why-software-dev">
         <h2>My Approach to Software Development</h2>
@@ -513,6 +431,15 @@
             </div>
             <p><a href="https://github.com/tham-le/ft_irc" target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </p>
+        </div>
+        <div class="project">
+            <h3>CTF Writeups Platform - Flutter Web App</h3>
+            <p>Developed a modern, responsive web application using <span class="highlight">Flutter/Dart</span> to showcase CTF writeups with an interactive, mobile-like interface. Features dynamic content loading, markdown rendering, and smooth animations optimized for web deployment.</p>
+            <div>
+                <span class="tech-stack">Flutter</span><span class="tech-stack">Dart</span><span
+                    class="tech-stack">Web</span><span class="tech-stack">Responsive Design</span>
+            </div>
+            <p><a href="https://ctf-flutter-app.web.app" target="_blank" rel="noopener noreferrer">Live Demo</a> | <a href="https://github.com/tham-le/thamle-portfolio/tree/main/ctf_app" target="_blank" rel="noopener noreferrer">View Code</a></p>
         </div>
         <div class="project">
             <h3>Advanced C Graphics Programming (Ray Tracer & Fractal Explorer)</h3>

@@ -1,5 +1,12 @@
 # Sync Trigger
 
-This file exists to trigger the sync workflow to pull latest writeups from the external CTF-Writeups repository.
+Last sync: 2025-01-12 - Testing comprehensive portfolio overhaul with YAML fixes
 
-Last triggered: 2025-06-18
+## Changes Made:
+- Fixed YAML frontmatter generation using proper yaml.dump()
+- Fixed string formatting in master index creation
+- Enhanced metadata extraction with proper skills detection
+- Improved image processing and optimization
+- Added comprehensive statistics generation for recruiter appeal
+
+This file triggers the sync workflow when modified.

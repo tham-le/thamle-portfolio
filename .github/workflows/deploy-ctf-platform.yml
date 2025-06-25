@@ -1,13 +1,19 @@
-name: Deploy CTF Platform
+name: Deploy CTF Platform (DISABLED - Flutter showcase only)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'ctf_app/**'
+  # Disabled automatic triggers - Flutter app is for showcase only
+  # push:
+  #   branches: [ main ]
+  #   paths:
+  #     - 'ctf_app/**'
   workflow_dispatch:
-  repository_dispatch:
-    types: [new-writeup]
+    inputs:
+      confirm_deploy:
+        description: 'Type "DEPLOY_FLUTTER" to confirm Flutter app deployment'
+        required: true
+        default: ''
+  # repository_dispatch:
+  #   types: [new-writeup]
 
 permissions:
   contents: read
@@ -15,8 +21,15 @@ permissions:
 jobs:
   deploy-ctf:
     runs-on: ubuntu-latest
+    if: github.event.inputs.confirm_deploy == 'DEPLOY_FLUTTER'
     
     steps:
+    - name: Flutter Showcase Notice
+      run: |
+        echo "🚨 NOTICE: This workflow deploys the Flutter CTF app for showcase purposes only."
+        echo "🌐 The main CTF site at ctf.thamle.live is served by the HTML version."
+        echo "🎯 This Flutter app will be deployed to a separate showcase URL."
+        
     - name: Checkout repository
       uses: actions/checkout@v4
       

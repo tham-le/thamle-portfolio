@@ -35,11 +35,9 @@ The image provides several key identifiers:
 ### Step 2: Sign Translation
 
 1. Used Google Lens to read the Chinese text on the green sign:
-
    ```
    西沙屯桥至楼自庄桥 行驶畅通
    ```
-
 2. Translation:
    - "From Xishatun Bridge to Louzizhuang Bridge"
    - "Smooth driving" (traffic status)

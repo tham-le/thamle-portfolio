@@ -2,7 +2,26 @@
 let ctfEvents = [];
 let currentEvent = null;
 
-// Initialize the application
+// Global state management
+let portfolioData = {
+    writeups: [],
+    achievements: [],
+    statistics: {},
+    categories: new Set(),
+    ctfEvents: new Set(),
+    difficulties: new Set(['Easy', 'Medium', 'Hard']),
+    isLoading: true
+};
+
+let currentFilters = {
+    category: 'all',
+    difficulty: 'all',
+    ctf: 'all',
+    search: '',
+    view: 'grid'
+};
+
+// Initialize the elite portfolio system
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Setup the modal
@@ -21,13 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('loading').style.display = 'none';
         
     } catch (error) {
-        console.error('Error initializing app:', error);
-        document.getElementById('loading').innerHTML = `
-            <div class="error">
-                <p>Error loading writeups. Please try again later.</p>
-                <p class="error-details">Details: ${error.message}</p>
-            </div>
-        `;
+        console.error('🚨 Portfolio initialization failed:', error);
+        showErrorState(error);
     }
 });
 
@@ -121,19 +135,61 @@ function displayEventsList() {
         eventsByYear[year].push(event);
     });
     
-    // Sort years in descending order (newest first)
-    const sortedYears = Object.keys(eventsByYear).sort((a, b) => b - a);
+    body.innerHTML = `
+        <div class="writeup-header">
+            <div class="writeup-meta">
+                <div class="meta-row">
+                    <span>🏆 <strong>${writeup.ctf}</strong></span>
+                    <span>📅 ${dateStr}</span>
+                    <span>⭐ ${writeup.points} Points</span>
+                </div>
+                <div class="meta-row">
+                    <span class="category-tag category-${writeup.category}">${writeup.category.toUpperCase()}</span>
+                    <span class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</span>
+                    <span>👤 ${writeup.author}</span>
+                </div>
+            </div>
+            <div class="skills-detailed">
+                <h4>🎯 Skills Demonstrated:</h4>
+                <div class="skills-list">
+                    ${writeup.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+            </div>
+            <div class="impact-detailed">
+                <h4>💼 Professional Impact:</h4>
+                <p>${writeup.impact}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="writeup-content markdown-content">
+            ${marked.parse(writeup.content)}
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+    
+    // Apply syntax highlighting
+    setTimeout(() => {
+        if (window.Prism) {
+            Prism.highlightAll();
+        }
+    }, 100);
+}
+
+// 🏆 Display events view
+function displayEventsView() {
+    const container = document.getElementById('events-container');
+    if (!container) return;
+    
+    container.innerHTML = '<h2 class="section-title">🏆 CTF Events Portfolio</h2>';
     
     const eventsGrid = document.createElement('div');
     eventsGrid.className = 'events-grid';
     
-    // Add each year group
-    sortedYears.forEach(year => {
-        // Create year header
-        const yearHeader = document.createElement('h3');
-        yearHeader.className = 'year-header';
-        yearHeader.textContent = year;
-        eventsGrid.appendChild(yearHeader);
+    [...portfolioData.ctfEvents].sort().forEach(ctfEvent => {
+        const eventWriteups = portfolioData.writeups.filter(w => w.ctf === ctfEvent);
+        const totalPoints = eventWriteups.reduce((sum, w) => sum + w.points, 0);
+        const categories = [...new Set(eventWriteups.map(w => w.category))];
         
         const yearEvents = document.createElement('div');
         yearEvents.className = 'year-events';
