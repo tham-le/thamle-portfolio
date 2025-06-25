@@ -1,13 +1,12 @@
 # Sync Trigger
 
-This file is used to trigger the sync workflow manually.
+Last sync: 2025-01-12 - Testing comprehensive portfolio overhaul with YAML fixes
 
-Last sync: 2025-01-12 - Added fake challenges for testing
-- Added 10 fake challenges across all 6 CTF events
-- HeroCTF v6: 2 challenges (web, crypto)
-- HTB University 2024: 2 challenges (pwn, forensics)
-- HTB Cyber Apocalypse 2025: 2 challenges (web, osint)
-- 404CTF 2025: 2 challenges (rev, misc)
-- HackHer CTF: 2 challenges (crypto, forensics)
-- Total: 20 writeups across 6 CTF events
-- Should now show 6 CTF events with proper dynamic discovery
+## Changes Made:
+- Fixed YAML frontmatter generation using proper yaml.dump()
+- Fixed string formatting in master index creation
+- Enhanced metadata extraction with proper skills detection
+- Improved image processing and optimization
+- Added comprehensive statistics generation for recruiter appeal
+
+This file triggers the sync workflow when modified.

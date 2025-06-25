@@ -1,260 +1,433 @@
-name: Sync CTF Writeups from External Repo
+name: 🚀 Sync CTF Writeups & Assets
 
 on:
+  push:
+    paths:
+      - 'sync-trigger.md'
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
+    # Sync daily at 6 AM UTC to keep content fresh
+    - cron: '0 6 * * *'
   workflow_dispatch:
-  repository_dispatch:
-    types: [sync-writeups]
-
-permissions:
-  contents: write
-  actions: read
 
 jobs:
-  sync-writeups:
+  sync-comprehensive:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout portfolio repository
+    - name: 📥 Checkout Portfolio Repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
-        persist-credentials: true
-      
-    - name: Checkout CTF writeups repository
-      uses: actions/checkout@v4
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: 🔧 Setup Python Environment
+      uses: actions/setup-python@v4
       with:
-        repository: tham-le/CTF-Writeups
-        path: ctf-writeups-source
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+        python-version: '3.11'
         
-    - name: Install Python dependencies for parsing
+    - name: 📦 Install Dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install pyyaml
+        pip install PyYAML requests Pillow
         
-    - name: Run sync script
-      id: sync
+    - name: 🗂️ Clone External CTF Repository
       run: |
-        python3 -c "
+        git clone https://github.com/tham-le/CTF-Writeups.git external-ctf-repo
+        
+    - name: 🧹 Clean Previous Sync
+      run: |
+        rm -rf ctf_site/assets/writeups/*
+        rm -rf ctf_site/assets/images/ctf/*
+        mkdir -p ctf_site/assets/writeups
+        mkdir -p ctf_site/assets/images/ctf
+        
+    - name: 🚀 Execute Comprehensive Sync
+      run: |
+        python3 << 'PYTHON_SCRIPT'
         import os
         import shutil
         import yaml
+        import json
         import re
         from pathlib import Path
         from datetime import datetime
-
-        def extract_frontmatter(content):
-            if content.startswith('---\n'):
-                try:
-                    end_index = content.find('\n---\n', 4)
-                    if end_index != -1:
-                        frontmatter = content[4:end_index]
-                        body = content[end_index + 5:]
-                        return yaml.safe_load(frontmatter), body
-                except yaml.YAMLError as e:
-                    print('YAML parsing error: {}'.format(e))
-            return {}, content
-
-        def normalize_category(category_name, challenge_name='', frontmatter={}):
-            category_lower = category_name.lower()
-            if 'category' in frontmatter:
-                fm_cat = frontmatter['category'].lower()
-                if fm_cat in ['crypto', 'cryptography']:
-                    return 'crypto'
-                elif fm_cat in ['web', 'web_exploitation']:
-                    return 'web'
-                elif fm_cat in ['pwn', 'binary', 'binary_exploitation']:
-                    return 'pwn'
-                elif fm_cat in ['rev', 'reverse', 'reverse_engineering']:
-                    return 'rev'
-                elif fm_cat in ['forensics', 'forensic']:
-                    return 'forensics'
-                elif fm_cat in ['osint', 'open_source_intelligence']:
-                    return 'osint'
-                elif fm_cat in ['misc', 'miscellaneous']:
-                    return 'misc'
-                else:
-                    return fm_cat
-            if 'crypto' in category_lower:
-                return 'crypto'
-            elif 'web' in category_lower:
-                return 'web'
-            elif 'binary' in category_lower or 'pwn' in category_lower:
-                return 'pwn'
-            elif 'reverse' in category_lower or 'rev' in category_lower:
-                return 'rev'
-            elif 'forensic' in category_lower:
-                return 'forensics'
-            elif 'osint' in category_lower or 'intelligence' in category_lower:
-                return 'osint'
-            else:
-                return 'misc'
-
-        def process_challenge(challenge_dir, ctf_name, category, target_base, ctf_writeups, category_counts):
-            # Look for either 'wu.md' or 'writeup.md'
-            wu_file = None
-            if (challenge_dir / 'wu.md').exists():
-                wu_file = challenge_dir / 'wu.md'
-            elif (challenge_dir / 'writeup.md').exists():
-                wu_file = challenge_dir / 'writeup.md'
-            
-            if not wu_file:
-                return
-
-            try:
-                content = wu_file.read_text(encoding='utf-8')
-                frontmatter, body = extract_frontmatter(content)
-                challenge_name = challenge_dir.name
-                category_dir = target_base / ctf_name / category
-                category_dir.mkdir(parents=True, exist_ok=True)
-                output_file = category_dir / '{}.md'.format(challenge_name)
-                output_file.write_text(content, encoding='utf-8')
-                ctf_writeups.append({'name': challenge_name, 'category': category, 'frontmatter': frontmatter})
-                category_counts[category] = category_counts.get(category, 0) + 1
-                print('    ✅ {}/{}'.format(category, challenge_name))
-            except Exception as e:
-                print('    ❌ Error processing {}: {}'.format(challenge_dir, e))
-
-        def create_ctf_index(ctf_dir, ctf_name, category_counts):
-            index_content = '# {}\n\nCTF writeups for {} challenges.\n\n## Categories\n\n'.format(ctf_name, ctf_name)
-            for category in sorted(category_counts.keys()):
-                count = category_counts[category]
-                plural = 's' if count != 1 else ''
-                index_content += '- **[{}](./{}/)**  ({} challenge{})\n'.format(category, category, count, plural)
-            (ctf_dir / 'README.md').write_text(index_content, encoding='utf-8')
-
-        def create_main_index(target_dir, stats):
-            lines = [
-                '# CTF Writeups Collection',
-                '',
-                '> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)',
-                '',
-                '## 🏆 CTF Events',
-                ''
-            ]
-            for event_dir in sorted(target_dir.iterdir()):
-                if event_dir.is_dir() and (event_dir / 'README.md').exists():
-                    lines.append('- [{}](./{}/)'.format(event_dir.name, event_dir.name))
-            lines.extend([
-                '',
-                '## 📊 Statistics',
-                '',
-                '- **Total CTF Events:** {}'.format(stats['total_ctfs']),
-                '- **Total Writeups:** {}'.format(stats['total_writeups']),
-                '- **Last Updated:** {}'.format(datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')),
-                '',
-                '## 📂 Categories',
-                ''
-            ])
-            for category, count in sorted(stats['categories'].items()):
-                plural = 's' if count != 1 else ''
-                lines.append('- **{}:** {} writeup{}'.format(category, count, plural))
-            (target_dir / 'index.md').write_text('\n'.join(lines), encoding='utf-8')
-
-        # Main sync logic
-        source_dir = Path('ctf-writeups-source')
-        target_app_dir = Path('ctf_app/assets/writeups')
-        target_site_dir = Path('ctf_site/assets/writeups')
-        target_app_dir.mkdir(parents=True, exist_ok=True)
-        target_site_dir.mkdir(parents=True, exist_ok=True)
-
-        for target_dir in [target_app_dir, target_site_dir]:
-            for item in target_dir.iterdir():
-                if item.is_file() and item.name not in ['ctf-writeup-format.md', '.gitkeep']:
-                    item.unlink()
-                elif item.is_dir():
-                    shutil.rmtree(item)
-
-        stats = {'total_ctfs': 0, 'total_writeups': 0, 'categories': {}}
-        print('🔄 Starting writeup sync...')
-
-        for ctf_path in source_dir.iterdir():
-            if not ctf_path.is_dir() or ctf_path.name.startswith('.'):
-                continue
-            ctf_name = ctf_path.name
-            print('🏆 Processing CTF: {}'.format(ctf_name))
-            ctf_writeups = []
-            category_counts = {}
-
-            for item in ctf_path.iterdir():
-                if not item.is_dir():
-                    continue
-                
-                # Check for writeup file in the immediate subdirectory (e.g., /IrisCTF/challenge/wu.md)
-                is_challenge_dir = (item / 'wu.md').exists() or (item / 'writeup.md').exists()
-
-                if is_challenge_dir:
-                    category = normalize_category('misc', item.name)
-                    process_challenge(item, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
-                else:
-                    # Assume this is a category directory (e.g., /IrisCTF/Web/challenge/wu.md)
-                    category_name = item.name
-                    for challenge_dir in item.iterdir():
-                        if challenge_dir.is_dir():
-                            is_challenge_in_category = (challenge_dir / 'wu.md').exists() or (challenge_dir / 'writeup.md').exists()
-                            if is_challenge_in_category:
-                                category = normalize_category(category_name, challenge_dir.name)
-                                process_challenge(challenge_dir, ctf_name, category, target_app_dir, ctf_writeups, category_counts)
-
-            if ctf_writeups:
-                stats['total_ctfs'] += 1
-                stats['total_writeups'] += len(ctf_writeups)
-                for cat, count in category_counts.items():
-                    stats['categories'][cat] = stats['categories'].get(cat, 0) + count
-                create_ctf_index(target_app_dir / ctf_name, ctf_name, category_counts)
-                print('  ✅ Processed {} writeups'.format(len(ctf_writeups)))
-            else:
-                print('  ⚠️ No writeups found in {}'.format(ctf_name))
-
-        if target_app_dir.exists():
-            shutil.copytree(target_app_dir, target_site_dir, dirs_exist_ok=True)
-
-        create_main_index(target_app_dir, stats)
-        create_main_index(target_site_dir, stats)
-
-        print('\n📊 Sync Summary:')
-        print('- CTF Events: {}'.format(stats['total_ctfs']))
-        print('- Total Writeups: {}'.format(stats['total_writeups']))
-        print('- Categories: {}'.format(', '.join(stats['categories'].keys())))
-        "
+        from PIL import Image
         
-        if [ $? -eq 0 ]; then
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-        else
-          echo "has_changes=false" >> $GITHUB_OUTPUT
+        def optimize_image(source_path, target_path, max_size=(800, 600)):
+            """Optimize images for web display"""
+            try:
+                with Image.open(source_path) as img:
+                    # Convert to RGB if necessary
+                    if img.mode in ('RGBA', 'LA', 'P'):
+                        img = img.convert('RGB')
+                    
+                    # Resize if too large
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    
+                    # Save with optimization
+                    img.save(target_path, 'JPEG', quality=85, optimize=True)
+                    print(f"✅ Optimized image: {os.path.basename(target_path)}")
+            except Exception as e:
+                print(f"⚠️ Image optimization failed for {source_path}: {e}")
+                # Fallback: just copy the original
+                shutil.copy2(source_path, target_path)
+        
+        def process_markdown_content(content, source_path, target_dir):
+            """Process markdown content and handle image references"""
+            def replace_image_path(match):
+                original_path = match.group(2)
+                if original_path.startswith('./') or not original_path.startswith('http'):
+                    # Handle local image
+                    if original_path.startswith('./'):
+                        source_img = os.path.join(os.path.dirname(source_path), original_path[2:])
+                    else:
+                        source_img = os.path.join(os.path.dirname(source_path), original_path)
+                    
+                    if os.path.exists(source_img):
+                        img_name = os.path.basename(source_img)
+                        # Create unique name to avoid conflicts
+                        base_name, ext = os.path.splitext(img_name)
+                        unique_name = f"{base_name}_{hash(source_path) % 10000}{ext}"
+                        target_img = f"ctf_site/assets/images/ctf/{unique_name}"
+                        
+                        os.makedirs(os.path.dirname(target_img), exist_ok=True)
+                        
+                        # Optimize image if it's an image file
+                        if ext.lower() in ['.png', '.jpg', '.jpeg']:
+                            optimize_image(source_img, target_img)
+                        else:
+                            shutil.copy2(source_img, target_img)
+                        
+                        return f"![{match.group(1)}](../../images/ctf/{unique_name})"
+                
+                return match.group(0)
+            
+            # Replace image references
+            content = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', replace_image_path, content)
+            return content
+        
+        def extract_metadata_from_content(content, filepath):
+            """Extract comprehensive metadata from markdown content"""
+            metadata = {
+                'title': os.path.basename(filepath).replace('.md', ''),
+                'date': datetime.now().isoformat(),
+                'category': 'misc',
+                'difficulty': 'Medium',
+                'points': 0,
+                'tags': [],
+                'author': 'Tham Le',
+                'solved': True,
+                'skills': [],
+                'tools': [],
+                'techniques': []
+            }
+            
+            # Try YAML frontmatter first
+            yaml_match = re.match(r'^---\n(.*?)\n---\n(.*)$', content, re.DOTALL)
+            if yaml_match:
+                try:
+                    yaml_data = yaml.safe_load(yaml_match.group(1))
+                    if yaml_data:
+                        metadata.update(yaml_data)
+                    content = yaml_match.group(2)
+                except Exception as e:
+                    print(f"⚠️ YAML parsing failed for {filepath}: {e}")
+            
+            # Extract title from first heading
+            title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
+            if title_match:
+                metadata['title'] = title_match.group(1).strip()
+            
+            # Extract points/score
+            points_match = re.search(r'(?:points?|score)[:\s]+(\d+)', content, re.IGNORECASE)
+            if points_match:
+                metadata['points'] = int(points_match.group(1))
+            
+            # Extract difficulty
+            difficulty_match = re.search(r'(?:difficulty|level)[:\s]+(easy|medium|hard)', content, re.IGNORECASE)
+            if difficulty_match:
+                metadata['difficulty'] = difficulty_match.group(1).capitalize()
+            
+            # Extract tools and techniques from content
+            tools_pattern = r'(?:using|with|via)\s+([A-Za-z0-9_-]+(?:\s+[A-Za-z0-9_-]+)?)'
+            tools = re.findall(tools_pattern, content, re.IGNORECASE)
+            metadata['tools'] = list(set(tools[:5]))  # Limit to 5 most relevant
+            
+            # Extract skills based on content analysis
+            skill_keywords = {
+                'web': ['XSS', 'SQL injection', 'CSRF', 'authentication', 'session', 'cookie', 'HTTP', 'web application'],
+                'crypto': ['encryption', 'decryption', 'cipher', 'hash', 'RSA', 'AES', 'cryptography'],
+                'forensics': ['memory dump', 'disk image', 'network capture', 'file analysis', 'steganography'],
+                'pwn': ['buffer overflow', 'ROP', 'shellcode', 'binary exploitation', 'stack', 'heap'],
+                'osint': ['social media', 'reconnaissance', 'information gathering', 'metadata', 'geolocation'],
+                'rev': ['reverse engineering', 'disassembly', 'debugging', 'binary analysis', 'decompilation']
+            }
+            
+            detected_skills = []
+            content_lower = content.lower()
+            for category, keywords in skill_keywords.items():
+                for keyword in keywords:
+                    if keyword.lower() in content_lower:
+                        detected_skills.append(keyword)
+            
+            metadata['skills'] = list(set(detected_skills[:8]))  # Limit to 8 most relevant
+            
+            return metadata, content
+        
+        def discover_all_writeups(external_repo):
+            """Discover all markdown files in the external repository"""
+            writeups = []
+            
+            for root, dirs, files in os.walk(external_repo):
+                # Skip hidden directories and git
+                dirs[:] = [d for d in dirs if not d.startswith('.') and d != '__pycache__']
+                
+                for file in files:
+                    if file.endswith('.md'):
+                        filepath = os.path.join(root, file)
+                        rel_path = os.path.relpath(filepath, external_repo)
+                        
+                        # Parse path structure: CTF/Category/Challenge/writeup.md
+                        path_parts = rel_path.split(os.sep)
+                        
+                        if len(path_parts) >= 2:
+                            ctf_event = path_parts[0]
+                            
+                            # Skip if it's a top-level README
+                            if file == 'README.md' and len(path_parts) == 2:
+                                continue
+                            
+                            # Determine category and challenge
+                            if len(path_parts) == 3:  # CTF/Category/writeup.md
+                                category = path_parts[1].lower()
+                                challenge = file.replace('.md', '')
+                            elif len(path_parts) == 4:  # CTF/Category/Challenge/writeup.md
+                                category = path_parts[1].lower()
+                                challenge = path_parts[2]
+                            else:
+                                category = 'misc'
+                                challenge = file.replace('.md', '')
+                            
+                            # Normalize category names
+                            category_mapping = {
+                                'web_exploitation': 'web',
+                                'web-exploitation': 'web',
+                                'webexploitation': 'web',
+                                'cryptography': 'crypto',
+                                'binary_exploitation': 'pwn',
+                                'binary-exploitation': 'pwn',
+                                'binaryexploitation': 'pwn',
+                                'reverse_engineering': 'rev',
+                                'reverse-engineering': 'rev',
+                                'reverseengineering': 'rev',
+                                'open_source_intelligence': 'osint',
+                                'open-source-intelligence': 'osint',
+                                'opensourceintelligence': 'osint',
+                                'miscellaneous': 'misc'
+                            }
+                            
+                            category = category_mapping.get(category, category)
+                            
+                            writeups.append({
+                                'filepath': filepath,
+                                'ctf_event': ctf_event,
+                                'category': category,
+                                'challenge': challenge,
+                                'relative_path': rel_path
+                            })
+            
+            print(f"🔍 Discovered {len(writeups)} writeup files")
+            return writeups
+        
+        def sync_all_content():
+            """Main sync function"""
+            external_repo = "external-ctf-repo"
+            target_base = "ctf_site/assets/writeups"
+            
+            # Discover all writeups
+            discovered_writeups = discover_all_writeups(external_repo)
+            
+            # Statistics for recruiter appeal
+            stats = {
+                'total_writeups': len(discovered_writeups),
+                'ctf_events': len(set(w['ctf_event'] for w in discovered_writeups)),
+                'categories': {},
+                'total_points': 0,
+                'achievements': [],
+                'skills_demonstrated': set(),
+                'last_updated': datetime.now().isoformat(),
+                'writeup_list': []
+            }
+            
+            # Process each discovered writeup
+            for writeup_info in discovered_writeups:
+                try:
+                    source_path = writeup_info['filepath']
+                    ctf_event = writeup_info['ctf_event']
+                    category = writeup_info['category']
+                    challenge = writeup_info['challenge']
+                    
+                    # Create target directory structure
+                    target_ctf_dir = os.path.join(target_base, ctf_event)
+                    target_cat_dir = os.path.join(target_ctf_dir, category)
+                    os.makedirs(target_cat_dir, exist_ok=True)
+                    
+                    # Read and process content
+                    with open(source_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                    
+                    # Extract metadata
+                    metadata, processed_content = extract_metadata_from_content(content, source_path)
+                    
+                    # Process images and content
+                    final_content = process_markdown_content(processed_content, source_path, target_cat_dir)
+                    
+                    # Add YAML frontmatter
+                    frontmatter_data = {
+                        'title': metadata['title'],
+                        'ctf': ctf_event,
+                        'category': category,
+                        'challenge': challenge,
+                        'difficulty': metadata['difficulty'],
+                        'points': metadata['points'],
+                        'solved': metadata['solved'],
+                        'date': metadata['date'],
+                        'author': metadata['author'],
+                        'skills': metadata['skills'],
+                        'tools': metadata['tools'],
+                        'tags': metadata.get('tags', [])
+                    }
+                    
+                    yaml_frontmatter = "---\n" + yaml.dump(frontmatter_data, default_flow_style=False) + "---\n\n"
+                    
+                    # Write processed file
+                    target_file = os.path.join(target_cat_dir, f"{challenge}.md")
+                    with open(target_file, 'w', encoding='utf-8') as f:
+                        f.write(yaml_frontmatter + final_content)
+                    
+                    # Update statistics
+                    if category not in stats['categories']:
+                        stats['categories'][category] = 0
+                    stats['categories'][category] += 1
+                    stats['total_points'] += metadata['points']
+                    stats['skills_demonstrated'].update(metadata['skills'])
+                    
+                    # Add to writeup list for frontend
+                    stats['writeup_list'].append({
+                        'title': metadata['title'],
+                        'ctf': ctf_event,
+                        'category': category,
+                        'challenge': challenge,
+                        'difficulty': metadata['difficulty'],
+                        'points': metadata['points'],
+                        'skills': metadata['skills'],
+                        'path': f"{ctf_event}/{category}/{challenge}.md"
+                    })
+                    
+                    print(f"✅ Processed: {ctf_event}/{category}/{challenge}")
+                    
+                except Exception as e:
+                    print(f"❌ Failed to process {writeup_info['filepath']}: {e}")
+            
+            # Copy achievement images
+            for ctf_event in set(w['ctf_event'] for w in discovered_writeups):
+                ctf_path = os.path.join(external_repo, ctf_event)
+                
+                # Look for achievement images
+                for img_file in ['rank.png', 'rank.jpg', 'team_mvp.png', 'achievement.png', 'certificate.png']:
+                    img_path = os.path.join(ctf_path, img_file)
+                    if os.path.exists(img_path):
+                        target_img = f"ctf_site/assets/images/ctf/{ctf_event}_{img_file}"
+                        optimize_image(img_path, target_img)
+                        stats['achievements'].append({
+                            'ctf': ctf_event,
+                            'image': f"../../images/ctf/{ctf_event}_{img_file}",
+                            'type': img_file.replace('.png', '').replace('.jpg', '')
+                        })
+            
+            # Convert sets to lists for JSON serialization
+            stats['skills_demonstrated'] = list(stats['skills_demonstrated'])
+            
+            # Write statistics file
+            with open('ctf_site/assets/stats.json', 'w') as f:
+                json.dump(stats, f, indent=2)
+            
+            # Create master index
+            create_master_index(stats, target_base)
+            
+            print(f"🎉 Sync completed successfully!")
+            print(f"📊 Total: {stats['total_writeups']} writeups across {stats['ctf_events']} CTF events")
+            print(f"🏆 Categories: {list(stats['categories'].keys())}")
+            print(f"💡 Skills: {len(stats['skills_demonstrated'])} unique skills demonstrated")
+        
+        def create_master_index(stats, target_base):
+            """Create a master index file for easy navigation"""
+            index_content = "# 🏆 Tham Le - CTF Writeups Portfolio\n\n"
+            index_content += f"> Professional cybersecurity portfolio showcasing {stats['total_writeups']} writeups across {stats['ctf_events']} CTF competitions\n\n"
+            index_content += "## 📊 Portfolio Statistics\n\n"
+            index_content += f"- **Total Writeups**: {stats['total_writeups']}\n"
+            index_content += f"- **CTF Events**: {stats['ctf_events']}\n"
+            index_content += f"- **Total Points**: {stats['total_points']}\n"
+            index_content += f"- **Categories Mastered**: {len(stats['categories'])}\n"
+            index_content += f"- **Skills Demonstrated**: {len(stats['skills_demonstrated'])}\n"
+            index_content += f"- **Last Updated**: {datetime.now().strftime('%B %d, %Y')}\n\n"
+            index_content += "## 🎯 Skills Demonstrated\n\n"
+            index_content += f"{', '.join(sorted(stats['skills_demonstrated']))}\n\n"
+            index_content += "## 🏅 CTF Events Participated\n\n"
+            
+            # Group by CTF events
+            ctf_groups = {}
+            for writeup in stats['writeup_list']:
+                ctf = writeup['ctf']
+                if ctf not in ctf_groups:
+                    ctf_groups[ctf] = []
+                ctf_groups[ctf].append(writeup)
+            
+            for ctf_name, writeups in sorted(ctf_groups.items()):
+                index_content += f"\n### 🚩 {ctf_name} ({len(writeups)} writeups)\n\n"
+                
+                # Group by category
+                cat_groups = {}
+                for writeup in writeups:
+                    cat = writeup['category']
+                    if cat not in cat_groups:
+                        cat_groups[cat] = []
+                    cat_groups[cat].append(writeup)
+                
+                for category, cat_writeups in sorted(cat_groups.items()):
+                    index_content += f"**{category.upper()}**\n"
+                    for writeup in sorted(cat_writeups, key=lambda x: x['challenge']):
+                        skills_str = ', '.join(writeup['skills'][:3]) if writeup['skills'] else 'General'
+                        index_content += f"- [{writeup['challenge']}](./{writeup['path']}) - {writeup['difficulty']} ({writeup['points']} pts) - *{skills_str}*\n"
+                    index_content += "\n"
+            
+            # Write master index
+            with open(os.path.join(target_base, 'index.md'), 'w', encoding='utf-8') as f:
+                f.write(index_content)
+            
+            print("📝 Created master index file")
+        
+        # Execute the sync
+        sync_all_content()
+        PYTHON_SCRIPT
+        
+    - name: 📊 Generate Portfolio Summary
+      run: |
+        echo "## 🚀 Portfolio Sync Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Sync Date**: $(date)" >> $GITHUB_STEP_SUMMARY
+        if [ -f "ctf_site/assets/stats.json" ]; then
+          echo "- **Total Writeups**: $(cat ctf_site/assets/stats.json | jq -r '.total_writeups')" >> $GITHUB_STEP_SUMMARY
+          echo "- **CTF Events**: $(cat ctf_site/assets/stats.json | jq -r '.ctf_events')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Points**: $(cat ctf_site/assets/stats.json | jq -r '.total_points')" >> $GITHUB_STEP_SUMMARY
         fi
-
-    - name: Check for changes and commit
-      id: changes
+        
+    - name: 🚀 Deploy to Firebase
+      run: |
+        npm install -g firebase-tools
+        firebase deploy --only hosting:ctf --token "${{ secrets.FIREBASE_TOKEN }}"
+        
+    - name: 📝 Commit Changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "changes=true" >> $GITHUB_OUTPUT
-          git add ctf_app/assets/writeups/
-          git add ctf_site/assets/writeups/
-          git commit -m "Auto-sync CTF writeups from CTF-Writeups repository
-
-          - Synced writeups with proper category organization
-          - Updated indexes and statistics
-          - Maintained YAML frontmatter from source files"
-        else
-          echo "changes=false" >> $GITHUB_OUTPUT
-          echo "No changes detected in writeup content"
-        fi
-        
-    - name: Push changes
-      if: steps.changes.outputs.changes == 'true'
-      run: |
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git add .
+        git commit -m "🚀 Auto-sync CTF writeups and assets $(date)" || exit 0
         git push
-        
-    - name: Trigger CTF deployment
-      if: steps.changes.outputs.changes == 'true'
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
-        event-type: new-writeup
