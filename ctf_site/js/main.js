@@ -190,20 +190,17 @@ function displayEventsList() {
     if (ctfEvents.length === 0) {
         container.innerHTML += `
             <div class="no-events">
-                <p>🌸 Welcome to Tham's Pixel CTF Adventure! 🌸</p>
-                <p>✨ No CTF quests loaded yet! This could be because:</p>
+                <h3>CTF Events Portfolio</h3>
+                <p>No CTF events are currently available. This could be due to:</p>
                 <ul>
-                    <li>🔄 The magical sync spell hasn't been cast recently</li>
-                    <li>📚 No adventure scrolls are available in the external library</li>
-                    <li>⏳ The pixelated content is still materializing</li>
-                    <li>🎮 The CTF dimension portal is still opening</li>
+                    <li>The synchronization process hasn't run recently</li>
+                    <li>No writeups are available in the external repository</li>
+                    <li>Content is still being processed and loaded</li>
+                    <li>The external data source is temporarily unavailable</li>
                 </ul>
-                <p>🎯 Please check back later or ask the wizard to trigger a manual sync!</p>
-                <div class="kawaii-loading">
-                    <span class="loading-pixel">🎮</span>
-                    <span class="loading-pixel">🌸</span>
-                    <span class="loading-pixel">⭐</span>
-                    <span class="loading-pixel">🚀</span>
+                <p>Please check back later or contact the administrator to refresh the content.</p>
+                <div class="refresh-hint">
+                    Content is automatically synced daily at 6 AM UTC
                 </div>
             </div>
         `;
