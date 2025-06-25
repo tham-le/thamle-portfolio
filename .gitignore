@@ -44,5 +44,17 @@ debug.log
 *.swp
 *.swo
 
+# Development & Testing Files (Clean Production)
+temp-*/
+test-*.sh
+*-temp/
+*.tmp
+*.backup
+.DS_Store
+
+# External Sync Files
+external-writeups/
+!external-writeups-example/
+
 # Project Specific
 *.generated.*

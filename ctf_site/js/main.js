@@ -727,3 +727,39 @@ function setupModal() {
         e.stopPropagation();
     });
 }
+
+// Enhanced error state display
+function showErrorState(error) {
+    const loadingEl = document.getElementById('loading');
+    loadingEl.innerHTML = `
+        <div class="error-state">
+            <h2>🚨 Portfolio Loading Error</h2>
+            <p>Unable to load CTF writeups. Please try refreshing the page.</p>
+            <p class="error-details">Technical details: ${error.message}</p>
+            <button onclick="location.reload()" class="retry-btn">🔄 Retry</button>
+        </div>
+    `;
+    loadingEl.style.display = 'flex';
+}
+
+// 📊 Performance monitoring for production
+function initPerformanceMonitoring() {
+    if ('performance' in window) {
+        window.addEventListener('load', () => {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            
+            // Only log performance in development
+            if (window.location.hostname === 'localhost' || window.location.hostname.includes('localhost')) {
+                console.log(`⚡ Page loaded in ${loadTime}ms`);
+            }
+            
+            // Send analytics in production (if needed)
+            if (loadTime > 3000) {
+                console.warn('⚠️ Slow page load detected');
+            }
+        });
+    }
+}
+
+// Initialize performance monitoring
+initPerformanceMonitoring();

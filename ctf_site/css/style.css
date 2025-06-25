@@ -496,7 +496,7 @@ body {
 /* Back Button */
 .back-button {
     display: inline-block;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-mono);
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
