@@ -9,12 +9,13 @@
 ## 📊 Statistics
 
 - **Total CTF Events:** 1
-- **Total Writeups:** 4
-- **Last Updated:** 2025-06-25 06:30 UTC
+- **Total Writeups:** 10
+- **Last Updated:** 2025-06-25 07:09 UTC
 
 ## 📂 Categories
 
 - **crypto:** 1 writeup
-- **osint:** 1 writeup
+- **forensics:** 2 writeups
+- **osint:** 4 writeups
 - **pwn:** 1 writeup
-- **web:** 1 writeup
+- **web:** 2 writeups
