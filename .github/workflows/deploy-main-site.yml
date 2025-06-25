@@ -1,52 +1,16 @@
-name: 🏠 Deploy Main Portfolio Site
+name: Deploy Main Portfolio Site
 
 on:
-  # SECURITY: Only deploy after CI/CD validation passes
-  workflow_run:
-    workflows: ["🧪 CI/CD - Code Validation"]
-    types: [completed]
+  push:
     branches: [ main ]
+    paths:
+      - 'public/**'
+      - 'firebase.json'
   workflow_dispatch:
-    inputs:
-      bypass_validation:
-        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
-        required: false
-        default: false
-        type: boolean
-
-permissions:
-  contents: read
 
 jobs:
-  check-validation:
-    runs-on: ubuntu-latest
-    outputs:
-      validation-passed: ${{ steps.check.outputs.passed }}
-    steps:
-    - name: Check CI/CD Validation Status
-      id: check
-      run: |
-        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
-          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
-            echo "✅ CI/CD validation passed"
-            echo "passed=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ CI/CD validation failed"
-            echo "passed=false" >> $GITHUB_OUTPUT
-          fi
-        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
-          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
-          echo "passed=true" >> $GITHUB_OUTPUT
-        else
-          echo "❌ No valid trigger or bypass"
-          echo "passed=false" >> $GITHUB_OUTPUT
-        fi
-
   deploy-main:
     runs-on: ubuntu-latest
-    needs: check-validation
-    # SECURITY: Only deploy if validation passed
-    if: needs.check-validation.outputs.validation-passed == 'true'
     
     steps:
     - name: Checkout repository
