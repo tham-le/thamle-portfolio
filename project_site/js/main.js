@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `).join('');
-        feather.replace(); // Re-initialize Feather Icons
+        
     };
     
     const renderTechSection = () => {
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('');
-        feather.replace();
+        
     };
 
     // --- EVENT HANDLING ---
