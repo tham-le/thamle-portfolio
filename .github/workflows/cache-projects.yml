@@ -1,0 +1,35 @@
+name: Cache GitHub Projects
+
+on: 
+  schedule:
+    - cron: '0 0 * * *' # Run daily
+  workflow_dispatch:
+
+jobs:
+  cache-projects:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Fetch and cache projects
+        run: |
+          curl -s "https://api.github.com/users/tham-le/repos?per_page=100" | \
+          jq '[
+            .[] | 
+            select(.fork == false and .name != "tham-le.github.io") | 
+            {
+              id: .id,
+              name: .name,
+              description: .description,
+              url: .html_url,
+              stars: .stargazers_count,
+              forks: .forks_count,
+              updated: .updated_at,
+              languages: .languages_url,
+              topics: .topics
+            }
+          ]' > project_site/js/projects.json
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: update cached projects"
+          file_pattern: project_site/js/projects.json

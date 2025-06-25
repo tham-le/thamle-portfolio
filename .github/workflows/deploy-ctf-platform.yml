@@ -47,12 +47,7 @@ jobs:
     - name: Copy writeups to Flutter assets
       run: |
         mkdir -p ctf_app/assets/writeups
-        if [ -d "ctf_app/assets/writeups" ] && [ "$(ls -A ctf_app/assets/writeups)" ]; then
-          echo "📁 Writeups already present in CTF app assets"
-          ls -la ctf_app/assets/writeups/
-        else
-          echo "⚠️ No writeups found in ctf_app/assets/writeups/"
-        fi
+        cp -r external-writeups/* ctf_app/assets/writeups/
         
     - name: Get Flutter dependencies
       working-directory: ./ctf_app
