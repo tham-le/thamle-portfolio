@@ -1,451 +1,254 @@
-{
-  "writeups": [
-    {
-      "title": "Political",
-      "ctf_event": "IrisCTF",
-      "category": "web",
-      "challenge": "Political",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/web/Political/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "password-manager",
-      "ctf_event": "IrisCTF",
-      "category": "web",
-      "challenge": "password-manager",
-      "description": "title: \"IrisCTF 2025 - Password Manager Challenge Writeup\"...",
-      "difficulty": "Medium",
-      "path": "IrisCTF/web/password-manager/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "KittyCrypt",
-      "ctf_event": "IrisCTF",
-      "category": "cryptography",
-      "challenge": "KittyCrypt",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/cryptography/KittyCrypt/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "Sleuths_and_Sweets",
-      "ctf_event": "IrisCTF",
-      "category": "osint",
-      "challenge": "Sleuths_and_Sweets",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/osint/Sleuths_and_Sweets/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "Not_Eelaborate",
-      "ctf_event": "IrisCTF",
-      "category": "osint",
-      "challenge": "Not_Eelaborate",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/osint/Not_Eelaborate/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "Late_Night_Bite",
-      "ctf_event": "IrisCTF",
-      "category": "osint",
-      "challenge": "Late_Night_Bite",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/osint/Late_Night_Bite/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "wheres-bobby",
-      "ctf_event": "IrisCTF",
-      "category": "osint",
-      "challenge": "wheres-bobby",
-      "description": "title: \"Where's Bobby (247 Points) - SOLVED\"...",
-      "difficulty": "Medium",
-      "path": "IrisCTF/osint/wheres-bobby/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "deldeldel",
-      "ctf_event": "IrisCTF",
-      "category": "forensics",
-      "challenge": "deldeldel",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/forensics/deldeldel/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "Tracem_1",
-      "ctf_event": "IrisCTF",
-      "category": "forensics",
-      "challenge": "Tracem_1",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/forensics/Tracem_1/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "sqlate",
-      "ctf_event": "IrisCTF",
-      "category": "pwn",
-      "challenge": "sqlate",
-      "description": "",
-      "difficulty": "Medium",
-      "path": "IrisCTF/pwn/sqlate/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "memory_dump",
-      "ctf_event": "HTBUniversity2024",
-      "category": "forensics",
-      "challenge": "memory_dump",
-      "description": "tags: [\"forensics\", \"memory\", \"volatility\"]...",
-      "difficulty": "Medium",
-      "path": "HTBUniversity2024/forensics/memory_dump/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "buffer_overflow",
-      "ctf_event": "HTBUniversity2024",
-      "category": "pwn",
-      "challenge": "buffer_overflow",
-      "description": "tags: [\"pwn\", \"buffer-overflow\", \"ret2win\"]...",
-      "difficulty": "Medium",
-      "path": "HTBUniversity2024/pwn/buffer_overflow/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "fake_login",
-      "ctf_event": "HeroCTF_v6",
-      "category": "web",
-      "challenge": "fake_login",
-      "description": "tags: [\"web\", \"sql-injection\", \"authentication\"]...",
-      "difficulty": "Medium",
-      "path": "HeroCTF_v6/web/fake_login/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "caesar_cipher",
-      "ctf_event": "HeroCTF_v6",
-      "category": "cryptography",
-      "challenge": "caesar_cipher",
-      "description": "tags: [\"crypto\", \"caesar\", \"classical\"]...",
-      "difficulty": "Medium",
-      "path": "HeroCTF_v6/cryptography/caesar_cipher/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "api_chaos",
-      "ctf_event": "CyberApocalypse2025",
-      "category": "web",
-      "challenge": "api_chaos",
-      "description": "ctf: \"HTB Cyber Apocalypse CTF 2025\"...",
-      "difficulty": "Medium",
-      "path": "CyberApocalypse2025/web/api_chaos/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "social_media_hunt",
-      "ctf_event": "CyberApocalypse2025",
-      "category": "osint",
-      "challenge": "social_media_hunt",
-      "description": "ctf: \"HTB Cyber Apocalypse CTF 2025\"...",
-      "difficulty": "Medium",
-      "path": "CyberApocalypse2025/osint/social_media_hunt/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "binary_analysis",
-      "ctf_event": "404CTF_2025",
-      "category": "rev",
-      "challenge": "binary_analysis",
-      "description": "tags: [\"rev\", \"binary\", \"analysis\", \"ghidra\"]...",
-      "difficulty": "Medium",
-      "path": "404CTF_2025/rev/binary_analysis/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "steganography",
-      "ctf_event": "404CTF_2025",
-      "category": "misc",
-      "challenge": "steganography",
-      "description": "tags: [\"misc\", \"steganography\", \"images\"]...",
-      "difficulty": "Medium",
-      "path": "404CTF_2025/misc/steganography/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "rsa_challenge",
-      "ctf_event": "CTF_HackHer",
-      "category": "cryptography",
-      "challenge": "rsa_challenge",
-      "description": "tags: [\"crypto\", \"rsa\", \"factorization\"]...",
-      "difficulty": "Medium",
-      "path": "CTF_HackHer/cryptography/rsa_challenge/writeup.md",
-      "date": "2025-01-01"
-    },
-    {
-      "title": "network_analysis",
-      "ctf_event": "CTF_HackHer",
-      "category": "forensics",
-      "challenge": "network_analysis",
-      "description": "tags: [\"forensics\", \"network\", \"wireshark\", \"pcap\"]...",
-      "difficulty": "Medium",
-      "path": "CTF_HackHer/forensics/network_analysis/writeup.md",
-      "date": "2025-01-01"
-    }
-  ],
-  "events": [
-    {
-      "name": "IrisCTF",
-      "description": "# IrisCTF 2025\n\nIrisCTF is a 48-hour Capture the Flag competition organized by IrisSec.\n\nI was with the team N0rm1n3tte with 2 other members. we got 120/1538 place.\n\n![Rank](rank.png)\n\n## Writeups\n\n- [Password Manager](./password-manager/wu.md)\n- [KittyCrypt](./KittyCrypt/wu.md)\n- [Sqlate](./sqlate/wu.md)\n- [wheres-bobby](./wheres-bobby/wu.md)\n\nMore writeups will be added soon.\n",
-      "readme_path": "IrisCTF/README.md",
-      "writeups": [
-        {
-          "title": "Political",
-          "ctf_event": "IrisCTF",
-          "category": "web",
-          "challenge": "Political",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/web/Political/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "password-manager",
-          "ctf_event": "IrisCTF",
-          "category": "web",
-          "challenge": "password-manager",
-          "description": "title: \"IrisCTF 2025 - Password Manager Challenge Writeup\"...",
-          "difficulty": "Medium",
-          "path": "IrisCTF/web/password-manager/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "KittyCrypt",
-          "ctf_event": "IrisCTF",
-          "category": "cryptography",
-          "challenge": "KittyCrypt",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/cryptography/KittyCrypt/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "Sleuths_and_Sweets",
-          "ctf_event": "IrisCTF",
-          "category": "osint",
-          "challenge": "Sleuths_and_Sweets",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/osint/Sleuths_and_Sweets/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "Not_Eelaborate",
-          "ctf_event": "IrisCTF",
-          "category": "osint",
-          "challenge": "Not_Eelaborate",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/osint/Not_Eelaborate/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "Late_Night_Bite",
-          "ctf_event": "IrisCTF",
-          "category": "osint",
-          "challenge": "Late_Night_Bite",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/osint/Late_Night_Bite/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "wheres-bobby",
-          "ctf_event": "IrisCTF",
-          "category": "osint",
-          "challenge": "wheres-bobby",
-          "description": "title: \"Where's Bobby (247 Points) - SOLVED\"...",
-          "difficulty": "Medium",
-          "path": "IrisCTF/osint/wheres-bobby/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "deldeldel",
-          "ctf_event": "IrisCTF",
-          "category": "forensics",
-          "challenge": "deldeldel",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/forensics/deldeldel/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "Tracem_1",
-          "ctf_event": "IrisCTF",
-          "category": "forensics",
-          "challenge": "Tracem_1",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/forensics/Tracem_1/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "sqlate",
-          "ctf_event": "IrisCTF",
-          "category": "pwn",
-          "challenge": "sqlate",
-          "description": "",
-          "difficulty": "Medium",
-          "path": "IrisCTF/pwn/sqlate/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    },
-    {
-      "name": "HTBUniversity2024",
-      "description": "# HTB University CTF 2024: Binary Badlands\n\n![Rank](rank.png)\n",
-      "readme_path": "HTBUniversity2024/README.md",
-      "writeups": [
-        {
-          "title": "memory_dump",
-          "ctf_event": "HTBUniversity2024",
-          "category": "forensics",
-          "challenge": "memory_dump",
-          "description": "tags: [\"forensics\", \"memory\", \"volatility\"]...",
-          "difficulty": "Medium",
-          "path": "HTBUniversity2024/forensics/memory_dump/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "buffer_overflow",
-          "ctf_event": "HTBUniversity2024",
-          "category": "pwn",
-          "challenge": "buffer_overflow",
-          "description": "tags: [\"pwn\", \"buffer-overflow\", \"ret2win\"]...",
-          "difficulty": "Medium",
-          "path": "HTBUniversity2024/pwn/buffer_overflow/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    },
-    {
-      "name": "HeroCTF_v6",
-      "description": "# HeroCTF v6\n\n![Rank](rank.png)\n",
-      "readme_path": "HeroCTF_v6/README.md",
-      "writeups": [
-        {
-          "title": "fake_login",
-          "ctf_event": "HeroCTF_v6",
-          "category": "web",
-          "challenge": "fake_login",
-          "description": "tags: [\"web\", \"sql-injection\", \"authentication\"]...",
-          "difficulty": "Medium",
-          "path": "HeroCTF_v6/web/fake_login/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "caesar_cipher",
-          "ctf_event": "HeroCTF_v6",
-          "category": "cryptography",
-          "challenge": "caesar_cipher",
-          "description": "tags: [\"crypto\", \"caesar\", \"classical\"]...",
-          "difficulty": "Medium",
-          "path": "HeroCTF_v6/cryptography/caesar_cipher/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    },
-    {
-      "name": "CyberApocalypse2025",
-      "description": "# Cyber Apocalypse CTF 2025: Tales from Eldoria\n\n![Team MVP](team_mvp.png)\n\n",
-      "readme_path": "CyberApocalypse2025/README.md",
-      "writeups": [
-        {
-          "title": "api_chaos",
-          "ctf_event": "CyberApocalypse2025",
-          "category": "web",
-          "challenge": "api_chaos",
-          "description": "ctf: \"HTB Cyber Apocalypse CTF 2025\"...",
-          "difficulty": "Medium",
-          "path": "CyberApocalypse2025/web/api_chaos/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "social_media_hunt",
-          "ctf_event": "CyberApocalypse2025",
-          "category": "osint",
-          "challenge": "social_media_hunt",
-          "description": "ctf: \"HTB Cyber Apocalypse CTF 2025\"...",
-          "difficulty": "Medium",
-          "path": "CyberApocalypse2025/osint/social_media_hunt/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    },
-    {
-      "name": "404CTF_2025",
-      "description": "# 404CTF 2025\n",
-      "readme_path": "404CTF_2025/README.md",
-      "writeups": [
-        {
-          "title": "binary_analysis",
-          "ctf_event": "404CTF_2025",
-          "category": "rev",
-          "challenge": "binary_analysis",
-          "description": "tags: [\"rev\", \"binary\", \"analysis\", \"ghidra\"]...",
-          "difficulty": "Medium",
-          "path": "404CTF_2025/rev/binary_analysis/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "steganography",
-          "ctf_event": "404CTF_2025",
-          "category": "misc",
-          "challenge": "steganography",
-          "description": "tags: [\"misc\", \"steganography\", \"images\"]...",
-          "difficulty": "Medium",
-          "path": "404CTF_2025/misc/steganography/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    },
-    {
-      "name": "CTF_HackHer",
-      "description": "# CTF HackHer\n",
-      "readme_path": "CTF_HackHer/README.md",
-      "writeups": [
-        {
-          "title": "rsa_challenge",
-          "ctf_event": "CTF_HackHer",
-          "category": "cryptography",
-          "challenge": "rsa_challenge",
-          "description": "tags: [\"crypto\", \"rsa\", \"factorization\"]...",
-          "difficulty": "Medium",
-          "path": "CTF_HackHer/cryptography/rsa_challenge/writeup.md",
-          "date": "2025-01-01"
-        },
-        {
-          "title": "network_analysis",
-          "ctf_event": "CTF_HackHer",
-          "category": "forensics",
-          "challenge": "network_analysis",
-          "description": "tags: [\"forensics\", \"network\", \"wireshark\", \"pcap\"]...",
-          "difficulty": "Medium",
-          "path": "CTF_HackHer/forensics/network_analysis/writeup.md",
-          "date": "2025-01-01"
-        }
-      ]
-    }
-  ],
-  "last_updated": "2025-06-25",
-  "total_count": 20,
-  "events_count": 6
-}
+[
+  {
+    "title": "README",
+    "event": "",
+    "category": "external-writeups",
+    "tags": [],
+    "path": "README.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "IrisCTF",
+    "tags": [],
+    "path": "IrisCTF/README.md"
+  },
+  {
+    "title": "Political",
+    "event": "Unknown",
+    "category": "web",
+    "tags": [
+      "easy"
+    ],
+    "path": "IrisCTF/Web_Exploitation/Political/writeup.md"
+  },
+  {
+    "title": "IrisCTF 2025 - Password Manager Challenge Writeup",
+    "event": "Unknown",
+    "category": "web",
+    "tags": [
+      "web"
+    ],
+    "path": "IrisCTF/Web_Exploitation/password-manager/wu.md"
+  },
+  {
+    "title": "KittyCrypt Writeup",
+    "event": "Unknown",
+    "category": "crypto",
+    "tags": [
+      "crypto"
+    ],
+    "path": "IrisCTF/Cryptography/KittyCrypt/wu.md"
+  },
+  {
+    "title": "Sleuths and Sweets",
+    "event": "Unknown",
+    "category": "osint",
+    "tags": [
+      "osint"
+    ],
+    "path": "IrisCTF/Open-Source_Intelligence/Sleuths_and_Sweets/writeup.md"
+  },
+  {
+    "title": "Not Eelaborate",
+    "event": "Unknown",
+    "category": "osint",
+    "tags": [
+      "osint"
+    ],
+    "path": "IrisCTF/Open-Source_Intelligence/Not_Eelaborate/writeup.md"
+  },
+  {
+    "title": "Late Night Bite",
+    "event": "Unknown",
+    "category": "osint",
+    "tags": [
+      "osint"
+    ],
+    "path": "IrisCTF/Open-Source_Intelligence/Late_Night_Bite/writeup.md"
+  },
+  {
+    "title": "Where's Bobby (247 Points) - SOLVED",
+    "event": "Unknown",
+    "category": "osint",
+    "tags": [
+      "osint"
+    ],
+    "path": "IrisCTF/Open-Source_Intelligence/wheres-bobby/wu.md"
+  },
+  {
+    "title": "deldeldel",
+    "event": "Unknown",
+    "category": "forensics",
+    "tags": [
+      "easy"
+    ],
+    "path": "IrisCTF/Forensics/deldeldel/writeup.md"
+  },
+  {
+    "title": "Tracem 1",
+    "event": "Unknown",
+    "category": "forensics",
+    "tags": [
+      "baby"
+    ],
+    "path": "IrisCTF/Forensics/Tracem_1/writeup.md"
+  },
+  {
+    "title": "Sqlate Write-up",
+    "event": "Unknown",
+    "category": "pwn",
+    "tags": [
+      "pwn"
+    ],
+    "path": "IrisCTF/Binary_Exploitation/sqlate/wu.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "HTBUniversity2024",
+    "tags": [],
+    "path": "HTBUniversity2024/README.md"
+  },
+  {
+    "title": "Memory Dump",
+    "event": "Unknown",
+    "category": "forensics",
+    "tags": [
+      "forensics",
+      "memory",
+      "volatility"
+    ],
+    "path": "HTBUniversity2024/Forensics/memory_dump/wu.md"
+  },
+  {
+    "title": "Buffer Overflow",
+    "event": "Unknown",
+    "category": "pwn",
+    "tags": [
+      "pwn",
+      "buffer-overflow",
+      "ret2win"
+    ],
+    "path": "HTBUniversity2024/Binary_Exploitation/buffer_overflow/writeup.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "HeroCTF_v6",
+    "tags": [],
+    "path": "HeroCTF_v6/README.md"
+  },
+  {
+    "title": "Fake Login",
+    "event": "Unknown",
+    "category": "web",
+    "tags": [
+      "web",
+      "sql-injection",
+      "authentication"
+    ],
+    "path": "HeroCTF_v6/Web_Exploitation/fake_login/writeup.md"
+  },
+  {
+    "title": "Caesar Cipher",
+    "event": "Unknown",
+    "category": "crypto",
+    "tags": [
+      "crypto",
+      "caesar",
+      "classical"
+    ],
+    "path": "HeroCTF_v6/Cryptography/caesar_cipher/wu.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "CyberApocalypse2025",
+    "tags": [],
+    "path": "CyberApocalypse2025/README.md"
+  },
+  {
+    "title": "API Chaos",
+    "event": "Unknown",
+    "category": "web",
+    "tags": [
+      "web",
+      "api",
+      "jwt",
+      "authentication"
+    ],
+    "path": "CyberApocalypse2025/Web_Exploitation/api_chaos/writeup.md"
+  },
+  {
+    "title": "Social Media Hunt",
+    "event": "Unknown",
+    "category": "osint",
+    "tags": [
+      "osint",
+      "social-media",
+      "reconnaissance"
+    ],
+    "path": "CyberApocalypse2025/Open-Source_Intelligence/social_media_hunt/wu.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "404CTF_2025",
+    "tags": [],
+    "path": "404CTF_2025/README.md"
+  },
+  {
+    "title": "Binary Analysis",
+    "event": "Unknown",
+    "category": "rev",
+    "tags": [
+      "rev",
+      "binary",
+      "analysis",
+      "ghidra"
+    ],
+    "path": "404CTF_2025/Reverse_Engineering/binary_analysis/writeup.md"
+  },
+  {
+    "title": "Steganography",
+    "event": "Unknown",
+    "category": "misc",
+    "tags": [
+      "misc",
+      "steganography",
+      "images"
+    ],
+    "path": "404CTF_2025/Miscellaneous/steganography/wu.md"
+  },
+  {
+    "title": "README",
+    "event": "external-writeups",
+    "category": "CTF_HackHer",
+    "tags": [],
+    "path": "CTF_HackHer/README.md"
+  },
+  {
+    "title": "RSA Challenge",
+    "event": "Unknown",
+    "category": "crypto",
+    "tags": [
+      "crypto",
+      "rsa",
+      "factorization"
+    ],
+    "path": "CTF_HackHer/Cryptography/rsa_challenge/writeup.md"
+  },
+  {
+    "title": "Network Analysis",
+    "event": "Unknown",
+    "category": "forensics",
+    "tags": [
+      "forensics",
+      "network",
+      "wireshark",
+      "pcap"
+    ],
+    "path": "CTF_HackHer/Forensics/network_analysis/wu.md"
+  }
+]
