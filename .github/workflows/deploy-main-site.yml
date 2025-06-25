@@ -1,6 +1,7 @@
-name: Deploy Main Portfolio Site
+name: 🏠 Deploy Main Portfolio Site
 
 on:
+  # SECURITY: Only deploy from main branch, not from PRs
   push:
     branches: [ main ]
     paths:
@@ -8,9 +9,14 @@ on:
       - 'firebase.json'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy-main:
     runs-on: ubuntu-latest
+    # SECURITY: Only run on main branch
+    if: github.ref == 'refs/heads/main'
     
     steps:
     - name: Checkout repository

@@ -1,16 +1,22 @@
-name: Deploy Project Showcase Site
+name: 📁 Deploy Project Showcase Site
 
 on:
+  # SECURITY: Only deploy from main branch, not from PRs
   push:
-    branches:
-      - main
+    branches: [ main ]
     paths:
       - 'project_site/**'
       - '.github/workflows/deploy-project-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build_and_deploy:
+  deploy-project-showcase:
     runs-on: ubuntu-latest
+    # SECURITY: Only run on main branch
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
       - uses: FirebaseExtended/action-hosting-deploy@v0

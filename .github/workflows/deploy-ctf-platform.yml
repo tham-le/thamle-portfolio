@@ -1,27 +1,26 @@
-name: Deploy CTF Platform (DISABLED - Flutter showcase only)
+name: 🎯 Deploy Flutter Showcase App
 
 on:
-  # Disabled automatic triggers - Flutter app is for showcase only
-  # push:
-  #   branches: [ main ]
-  #   paths:
-  #     - 'ctf_app/**'
+  # SECURITY: Only deploy from main branch with manual confirmation
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_app/**'
   workflow_dispatch:
     inputs:
       confirm_deploy:
         description: 'Type "DEPLOY_FLUTTER" to confirm Flutter app deployment'
         required: true
         default: ''
-  # repository_dispatch:
-  #   types: [new-writeup]
 
 permissions:
   contents: read
 
 jobs:
-  deploy-ctf:
+  deploy-flutter-showcase:
     runs-on: ubuntu-latest
-    if: github.event.inputs.confirm_deploy == 'DEPLOY_FLUTTER'
+    # SECURITY: Require manual confirmation for deployment
+    if: github.ref == 'refs/heads/main' && (github.event.inputs.confirm_deploy == 'DEPLOY_FLUTTER' || github.event_name == 'push')
     
     steps:
     - name: Flutter Showcase Notice
