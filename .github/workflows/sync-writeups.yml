@@ -70,35 +70,69 @@ jobs:
                 # Fallback: just copy the original
                 shutil.copy2(source_path, target_path)
         
-        def process_markdown_content(content, source_path, target_dir):
-            """Process markdown content and handle image references"""
+        def process_markdown_content(content, source_path, target_dir, ctf_event, category, challenge):
+            """Process markdown content and handle image references with better path resolution"""
+            source_dir = os.path.dirname(source_path)
+            
             def replace_image_path(match):
+                alt_text = match.group(1)
                 original_path = match.group(2)
-                if original_path.startswith('./') or not original_path.startswith('http'):
-                    # Handle local image
-                    if original_path.startswith('./'):
-                        source_img = os.path.join(os.path.dirname(source_path), original_path[2:])
-                    else:
-                        source_img = os.path.join(os.path.dirname(source_path), original_path)
-                    
-                    if os.path.exists(source_img):
-                        img_name = os.path.basename(source_img)
-                        # Create unique name to avoid conflicts
-                        base_name, ext = os.path.splitext(img_name)
-                        unique_name = f"{base_name}_{hash(source_path) % 10000}{ext}"
-                        target_img = f"ctf_site/assets/images/ctf/{unique_name}"
-                        
-                        os.makedirs(os.path.dirname(target_img), exist_ok=True)
-                        
-                        # Optimize image if it's an image file
-                        if ext.lower() in ['.png', '.jpg', '.jpeg']:
-                            optimize_image(source_img, target_img)
-                        else:
-                            shutil.copy2(source_img, target_img)
-                        
-                        return f"![{match.group(1)}](../../images/ctf/{unique_name})"
                 
-                return match.group(0)
+                if original_path.startswith('http'):
+                    # Keep external URLs as-is
+                    return match.group(0)
+                
+                # Handle local image paths
+                possible_paths = []
+                
+                if original_path.startswith('./'):
+                    # Relative to current directory
+                    possible_paths.append(os.path.join(source_dir, original_path[2:]))
+                elif original_path.startswith('../'):
+                    # Relative to parent directory
+                    possible_paths.append(os.path.join(source_dir, original_path))
+                elif not original_path.startswith('/'):
+                    # Relative path without ./
+                    possible_paths.extend([
+                        os.path.join(source_dir, original_path),
+                        os.path.join(source_dir, 'images', original_path),
+                        os.path.join(source_dir, 'assets', original_path),
+                        os.path.join(source_dir, 'img', original_path)
+                    ])
+                else:
+                    # Absolute path (probably not found, but try)
+                    possible_paths.append(original_path)
+                
+                # Find the first existing image file
+                source_img = None
+                for path in possible_paths:
+                    if os.path.exists(path):
+                        source_img = path
+                        break
+                
+                if source_img:
+                    img_name = os.path.basename(source_img)
+                    base_name, ext = os.path.splitext(img_name)
+                    
+                    # Create unique filename to avoid conflicts
+                    unique_name = f"{ctf_event}_{category}_{challenge}_{base_name}{ext}"
+                    target_img_path = f"ctf_site/assets/images/ctf/{unique_name}"
+                    
+                    os.makedirs(os.path.dirname(target_img_path), exist_ok=True)
+                    
+                    # Optimize image if it's an image file
+                    if ext.lower() in ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp']:
+                        optimize_image(source_img, target_img_path)
+                        print(f"🖼️ Processed image: {img_name} -> {unique_name}")
+                    else:
+                        shutil.copy2(source_img, target_img_path)
+                        print(f"📄 Copied file: {img_name} -> {unique_name}")
+                    
+                    # Return updated markdown with new path
+                    return f"![{alt_text}](../../images/ctf/{unique_name})"
+                else:
+                    print(f"⚠️ Image not found: {original_path} (searched in {len(possible_paths)} locations)")
+                    return match.group(0)  # Keep original if not found
             
             # Replace image references
             content = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', replace_image_path, content)
@@ -173,7 +207,7 @@ jobs:
             return metadata, content
         
         def discover_all_writeups(external_repo):
-            """Discover all markdown files in the external repository"""
+            """Discover all markdown files in the external repository with dynamic parsing"""
             writeups = []
             
             for root, dirs, files in os.walk(external_repo):
@@ -185,54 +219,109 @@ jobs:
                         filepath = os.path.join(root, file)
                         rel_path = os.path.relpath(filepath, external_repo)
                         
-                        # Parse path structure: CTF/Category/Challenge/writeup.md
-                        path_parts = rel_path.split(os.sep)
+                        # Parse filename format: CTF_event-category-challengename-writeup.md
+                        filename_without_ext = file.replace('.md', '')
                         
-                        if len(path_parts) >= 2:
-                            ctf_event = path_parts[0]
+                        # Check if filename follows the desired pattern
+                        if '-' in filename_without_ext and ('writeup' in filename_without_ext.lower() or 'wu' in filename_without_ext.lower()):
+                            parts = filename_without_ext.split('-')
                             
-                            # Skip if it's a top-level README
-                            if file == 'README.md' and len(path_parts) == 2:
-                                continue
-                            
-                            # Determine category and challenge
-                            if len(path_parts) == 3:  # CTF/Category/writeup.md
-                                category = path_parts[1].lower()
-                                challenge = file.replace('.md', '')
-                            elif len(path_parts) == 4:  # CTF/Category/Challenge/writeup.md
-                                category = path_parts[1].lower()
-                                challenge = path_parts[2]
+                            if len(parts) >= 3:
+                                # Extract CTF event (first part)
+                                ctf_event = parts[0]
+                                
+                                # Extract category (second part)
+                                category = parts[1].lower()
+                                
+                                # Extract challenge name (everything between category and 'writeup')
+                                challenge_parts = []
+                                for i in range(2, len(parts)):
+                                    if parts[i].lower() not in ['writeup', 'wu', 'solution', 'solve']:
+                                        challenge_parts.append(parts[i])
+                                    else:
+                                        break
+                                
+                                challenge = '-'.join(challenge_parts) if challenge_parts else 'unknown-challenge'
+                                
+                                print(f"📝 Parsed filename: {file} -> CTF: {ctf_event}, Category: {category}, Challenge: {challenge}")
                             else:
+                                # Fallback parsing
+                                ctf_event = parts[0] if len(parts) > 0 else 'UnknownCTF'
+                                category = parts[1] if len(parts) > 1 else 'misc'
+                                challenge = '-'.join(parts[2:]) if len(parts) > 2 else filename_without_ext
+                        else:
+                            # Fallback: Use directory structure or filename analysis
+                            path_parts = rel_path.split(os.sep)
+                            
+                            if len(path_parts) >= 2:
+                                ctf_event = path_parts[0]
+                                
+                                # Skip if it's a top-level README
+                                if file == 'README.md' and len(path_parts) == 2:
+                                    continue
+                                
+                                # Determine category and challenge from path
+                                if len(path_parts) == 3:  # CTF/Category/writeup.md
+                                    category = path_parts[1].lower()
+                                    challenge = file.replace('.md', '')
+                                elif len(path_parts) == 4:  # CTF/Category/Challenge/writeup.md
+                                    category = path_parts[1].lower()
+                                    challenge = path_parts[2]
+                                else:
+                                    category = 'misc'
+                                    challenge = file.replace('.md', '')
+                            else:
+                                # Last resort: extract from filename
+                                ctf_event = 'UnknownCTF'
                                 category = 'misc'
-                                challenge = file.replace('.md', '')
-                            
-                            # Normalize category names
-                            category_mapping = {
-                                'web_exploitation': 'web',
-                                'web-exploitation': 'web',
-                                'webexploitation': 'web',
-                                'cryptography': 'crypto',
-                                'binary_exploitation': 'pwn',
-                                'binary-exploitation': 'pwn',
-                                'binaryexploitation': 'pwn',
-                                'reverse_engineering': 'rev',
-                                'reverse-engineering': 'rev',
-                                'reverseengineering': 'rev',
-                                'open_source_intelligence': 'osint',
-                                'open-source-intelligence': 'osint',
-                                'opensourceintelligence': 'osint',
-                                'miscellaneous': 'misc'
-                            }
-                            
-                            category = category_mapping.get(category, category)
-                            
-                            writeups.append({
-                                'filepath': filepath,
-                                'ctf_event': ctf_event,
-                                'category': category,
-                                'challenge': challenge,
-                                'relative_path': rel_path
-                            })
+                                challenge = filename_without_ext
+                        
+                        # Normalize category names
+                        category_mapping = {
+                            'web_exploitation': 'web',
+                            'web-exploitation': 'web',
+                            'webexploitation': 'web',
+                            'webexp': 'web',
+                            'webapp': 'web',
+                            'cryptography': 'crypto',
+                            'cryptanalysis': 'crypto',
+                            'encryption': 'crypto',
+                            'binary_exploitation': 'pwn',
+                            'binary-exploitation': 'pwn',
+                            'binaryexploitation': 'pwn',
+                            'binexp': 'pwn',
+                            'exploitation': 'pwn',
+                            'reverse_engineering': 'rev',
+                            'reverse-engineering': 'rev',
+                            'reverseengineering': 'rev',
+                            'reversing': 'rev',
+                            'malware': 'rev',
+                            'open_source_intelligence': 'osint',
+                            'open-source-intelligence': 'osint',
+                            'opensourceintelligence': 'osint',
+                            'intelligence': 'osint',
+                            'recon': 'osint',
+                            'miscellaneous': 'misc',
+                            'general': 'misc',
+                            'other': 'misc',
+                            'digital_forensics': 'forensics',
+                            'digital-forensics': 'forensics',
+                            'digitalforensics': 'forensics',
+                            'investigation': 'forensics',
+                            'steganography': 'forensics',
+                            'stego': 'forensics'
+                        }
+                        
+                        category = category_mapping.get(category, category)
+                        
+                        writeups.append({
+                            'filepath': filepath,
+                            'ctf_event': ctf_event,
+                            'category': category,
+                            'challenge': challenge,
+                            'relative_path': rel_path,
+                            'original_filename': file
+                        })
             
             print(f"🔍 Discovered {len(writeups)} writeup files")
             return writeups
@@ -278,7 +367,7 @@ jobs:
                     metadata, processed_content = extract_metadata_from_content(content, source_path)
                     
                     # Process images and content
-                    final_content = process_markdown_content(processed_content, source_path, target_cat_dir)
+                    final_content = process_markdown_content(processed_content, source_path, target_cat_dir, ctf_event, category, challenge)
                     
                     # Add YAML frontmatter
                     frontmatter_data = {
