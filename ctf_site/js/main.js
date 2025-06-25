@@ -36,6 +36,8 @@ async function loadAndDisplayWriteups() {
         option.textContent = category;
         categoryFilter.appendChild(option);
     }
+
+    document.getElementById('loading').style.display = 'none';
 }
 
 function setupEventListeners() {

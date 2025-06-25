@@ -33,38 +33,58 @@ jobs:
 
         def find_writeups(directory):
             writeups = []
-            for root, _, files in os.walk(directory):
-                for file in files:
-                    if file.endswith('.md'):
-                        path = os.path.join(root, file)
-                        with open(path, 'r', encoding='utf-8', errors='ignore') as f:
-                            content = f.read()
-                        
-                        try:
-                            # Extract YAML frontmatter
-                            _, frontmatter_str, _ = content.split('---', 2)
-                            metadata = yaml.safe_load(frontmatter_str)
-                        except ValueError:
-                            # No frontmatter, use basic info
-                            metadata = {
-                                'title': os.path.basename(path).replace('.md', ''),
-                                'event': os.path.basename(os.path.dirname(os.path.dirname(path))),
-                                'category': os.path.basename(os.path.dirname(path)),
-                                'tags': []
-                            }
+            # The first level of directories inside the 'directory' are the CTF events
+            for event_name in os.listdir(directory):
+                event_path = os.path.join(directory, event_name)
+                # Process only if it's a directory
+                if os.path.isdir(event_path):
+                    for root, _, files in os.walk(event_path):
+                        for file in files:
+                            # Process only markdown files and explicitly ignore any README.md files
+                            if file.endswith('.md') and 'readme.md' not in file.lower():
+                                path = os.path.join(root, file)
+                                with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                                    content = f.read()
+                                
+                                metadata = {}
+                                # Try to parse YAML frontmatter
+                                if content.startswith('---'):
+                                    try:
+                                        _, frontmatter_str, _ = content.split('---', 2)
+                                        parsed_yaml = yaml.safe_load(frontmatter_str)
+                                        if isinstance(parsed_yaml, dict):
+                                            metadata = parsed_yaml
+                                    except (ValueError, yaml.YAMLError):
+                                        # Malformed frontmatter, proceed with empty metadata
+                                        pass
+                                
+                                # Derive category from the path relative to the event directory
+                                relative_path_from_event = os.path.relpath(path, event_path)
+                                path_parts = relative_path_from_event.split(os.sep)
+                                category = path_parts[0] if len(path_parts) > 1 else 'misc'
 
-                        writeups.append({
-                            'title': metadata.get('title', ''),
-                            'event': metadata.get('event', ''),
-                            'category': metadata.get('category', ''),
-                            'tags': metadata.get('tags', []),
-                            'path': os.path.relpath(path, directory)
-                        })
+                                # Use frontmatter data if available, otherwise use sensible defaults
+                                title = metadata.get('title', os.path.basename(path).replace('.md', ''))
+                                tags = metadata.get('tags', [])
+                                
+                                writeups.append({
+                                    'title': title,
+                                    'event': event_name,
+                                    'category': category,
+                                    'tags': tags,
+                                    'path': os.path.relpath(path, directory)
+                                })
             return writeups
 
-        writeups = find_writeups('external-writeups')
+        # Create the target directory if it doesn't exist
+        if not os.path.exists('ctf_site/assets/writeups'):
+            os.makedirs('ctf_site/assets/writeups')
+
+        all_writeups = find_writeups('external-writeups')
 
         with open('ctf_site/assets/writeups/index.json', 'w') as f:
-            json.dump(writeups, f, indent=2)
+            json.dump(all_writeups, f, indent=2)
+
+        print(f"Successfully generated index.json with {len(all_writeups)} writeups.")
 
         PYTHON_SCRIPT
