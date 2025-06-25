@@ -180,32 +180,7 @@ async function loadCtfEventsEnhanced() {
 // Display events list
 function displayEventsList() {
     const container = document.getElementById('events-container');
-    if (!container) {
-        console.error('Events container not found');
-        return;
-    }
-    
-    container.innerHTML = '<h2 class="section-title">🏆 CTF Events Portfolio</h2>';
-    
-    if (ctfEvents.length === 0) {
-        container.innerHTML += `
-            <div class="no-events">
-                <h3>CTF Events Portfolio</h3>
-                <p>No CTF events are currently available. This could be due to:</p>
-                <ul>
-                    <li>The synchronization process hasn't run recently</li>
-                    <li>No writeups are available in the external repository</li>
-                    <li>Content is still being processed and loaded</li>
-                    <li>The external data source is temporarily unavailable</li>
-                </ul>
-                <p>Please check back later or contact the administrator to refresh the content.</p>
-                <div class="refresh-hint">
-                    Content is automatically synced daily at 6 AM UTC
-                </div>
-            </div>
-        `;
-        return;
-    }
+    container.innerHTML = '<h2 class="section-title">CTF Events</h2>';
     
     // Group events by year if they have a year in the name
     const eventsByYear = {};
@@ -222,59 +197,45 @@ function displayEventsList() {
         eventsByYear[year].push(event);
     });
     
-    // Create the events display
-    const eventsGrid = document.createElement('div');
-    eventsGrid.className = 'events-grid';
-    
-    Object.keys(eventsByYear).sort().reverse().forEach(year => {
-        const yearSection = document.createElement('div');
-        yearSection.className = 'year-section';
-        
-        const yearHeader = document.createElement('h3');
-        yearHeader.className = 'year-header';
-        yearHeader.textContent = year === 'Other' ? 'Other Events' : `${year} Events`;
-        yearSection.appendChild(yearHeader);
-        
-        eventsByYear[year].forEach(event => {
-            const eventCard = createEventCard(event);
-            yearSection.appendChild(eventCard);
-        });
-        
-        eventsGrid.appendChild(yearSection);
-    });
-    
-    container.appendChild(eventsGrid);
-}
-
-// Create event card
-function createEventCard(event) {
-    const eventCard = document.createElement('div');
-    eventCard.className = 'event-card';
-    
-    // Calculate event statistics
-    const writeupCount = event.writeups ? event.writeups.length : 0;
-    const totalPoints = event.writeups ? event.writeups.reduce((sum, w) => sum + (w.points || 0), 0) : 0;
-    const categories = event.writeups ? [...new Set(event.writeups.map(w => w.category))].sort() : [];
-    
-    eventCard.innerHTML = `
-        <div class="event-header">
-            <h3 class="event-title">${event.name}</h3>
-            <div class="event-stats">
-                <span class="stat">📝 ${writeupCount} writeups</span>
-                <span class="stat">⭐ ${totalPoints} points</span>
+    body.innerHTML = `
+        <div class="writeup-header">
+            <div class="writeup-meta">
+                <div class="meta-row">
+                    <span>🏆 <strong>${writeup.ctf}</strong></span>
+                    <span>📅 ${dateStr}</span>
+                    <span>⭐ ${writeup.points} Points</span>
+                </div>
+                <div class="meta-row">
+                    <span class="category-tag category-${writeup.category}">${writeup.category.toUpperCase()}</span>
+                    <span class="difficulty-tag difficulty-${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</span>
+                    <span>👤 ${writeup.author}</span>
+                </div>
+            </div>
+            <div class="skills-detailed">
+                <h4>🎯 Skills Demonstrated:</h4>
+                <div class="skills-list">
+                    ${writeup.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+            </div>
+            <div class="impact-detailed">
+                <h4>💼 Professional Impact:</h4>
+                <p>${writeup.impact}</p>
             </div>
         </div>
-        <div class="event-categories">
-            ${categories.map(cat => `<span class="category-tag category-${cat}">${cat}</span>`).join('')}
-        </div>
-        <div class="event-actions">
-            <button class="btn-primary" onclick="loadEventContent('${event.path}')">
-                📖 View Event & Writeups
-            </button>
+        <hr>
+        <div class="writeup-content markdown-content">
+            ${marked.parse(writeup.content)}
         </div>
     `;
     
-    return eventCard;
+    modal.style.display = 'block';
+    
+    // Apply syntax highlighting
+    setTimeout(() => {
+        if (window.Prism) {
+            Prism.highlightAll();
+        }
+    }, 100);
 }
 
 // 🏆 Display events view

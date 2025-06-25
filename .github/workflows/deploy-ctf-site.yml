@@ -1,112 +1,74 @@
-name: 🌐 Deploy CTF Writeups Site
+name: Deploy CTF Site (Simpler Version)
 
 on:
-  # SECURITY: Only deploy after CI/CD validation passes
-  workflow_run:
-    workflows: ["🧪 CI/CD - Code Validation"]
-    types: [completed]
+  push:
     branches: [ main ]
+    paths:
+      - 'ctf_site/**'
   workflow_dispatch:
-    inputs:
-      sync_first:
-        description: 'Run sync workflow first? (recommended)'
-        required: false
-        default: true
-        type: boolean
-      bypass_validation:
-        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
-        required: false
-        default: false
-        type: boolean
+  repository_dispatch:
+    types: [new-writeup]
 
 permissions:
   contents: read
 
 jobs:
-  check-validation:
-    runs-on: ubuntu-latest
-    outputs:
-      validation-passed: ${{ steps.check.outputs.passed }}
-    steps:
-    - name: Check CI/CD Validation Status
-      id: check
-      run: |
-        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
-          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
-            echo "✅ CI/CD validation passed"
-            echo "passed=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ CI/CD validation failed"
-            echo "passed=false" >> $GITHUB_OUTPUT
-          fi
-        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
-          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
-          echo "passed=true" >> $GITHUB_OUTPUT
-        else
-          echo "❌ No valid trigger or bypass"
-          echo "passed=false" >> $GITHUB_OUTPUT
-        fi
-
   deploy-ctf-site:
     runs-on: ubuntu-latest
-    needs: check-validation
-    # SECURITY: Only deploy if validation passed
-    if: needs.check-validation.outputs.validation-passed == 'true'
     
     steps:
-    - name: 📢 Deployment Notice
-      run: |
-        echo "🌐 Deploying CTF Writeups Site..."
-        echo "📝 Note: For latest content, ensure the sync workflow has run recently"
-        echo "🔗 Target: https://ctf.thamle.live/"
-    - name: Checkout repository with submodules
+    - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
+      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
         
-    - name: Verify CTF site content exists
+    - name: Verify writeups exist and copy to CTF site
       run: |
-        echo "🔍 Checking CTF site content..."
+        echo "🔍 Checking for writeups..."
         
-        # Check if CTF site exists
-        if [ ! -f "ctf_site/index.html" ]; then
-          echo "❌ ctf_site/index.html not found"
+        # Check if source directory exists
+        if [ ! -d "ctf_app/assets/writeups" ]; then
+          echo "❌ Source directory ctf_app/assets/writeups does not exist"
           exit 1
         fi
         
-        # Check if writeups directory exists (may be empty if sync hasn't run)
-        if [ ! -d "ctf_site/assets/writeups" ]; then
-          echo "📁 Creating writeups directory..."
-          mkdir -p ctf_site/assets/writeups
+        # Count writeups
+        writeup_count=$(find ctf_app/assets/writeups -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
+        echo "📄 Found $writeup_count writeup files"
+        
+        if [ "$writeup_count" -eq 0 ]; then
+          echo "⚠️ No writeup files found to deploy"
+          exit 1
         fi
         
-        # Check for existing writeups
-        writeup_count=$(find ctf_site/assets/writeups -name "*.md" -type f 2>/dev/null | wc -l || echo "0")
-        echo "📄 Found $writeup_count writeup files in ctf_site"
+        # Create target directory
+        mkdir -p ctf_site/assets/writeups
         
-        # If no writeups exist, create a basic index
-        if [ ! -f "ctf_site/assets/writeups/index.md" ]; then
-          echo "📝 Creating basic writeups index..."
-          echo "# CTF Events & Writeups" > ctf_site/assets/writeups/index.md
-          echo "" >> ctf_site/assets/writeups/index.md
-          echo "Welcome to my CTF writeups collection! This content is automatically synced from my external writeups repository." >> ctf_site/assets/writeups/index.md
-          echo "" >> ctf_site/assets/writeups/index.md
-          echo "## Getting Started" >> ctf_site/assets/writeups/index.md
-          echo "" >> ctf_site/assets/writeups/index.md
-          echo "The writeups are organized by CTF event and category. New content is added regularly through an automated sync process." >> ctf_site/assets/writeups/index.md
-          echo "" >> ctf_site/assets/writeups/index.md
-          echo "## Available Events" >> ctf_site/assets/writeups/index.md
-          echo "" >> ctf_site/assets/writeups/index.md
-          echo "*Content will be populated automatically via the sync workflow.*" >> ctf_site/assets/writeups/index.md
+        # Copy writeups
+          echo "📁 Copying writeups from ctf_app to ctf_site"
+          cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
+        
+        # Verify copy was successful
+        copied_count=$(find ctf_site/assets/writeups -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
+        echo "✅ Successfully copied $copied_count writeup files"
+        
+        if [ "$copied_count" -ne "$writeup_count" ]; then
+          echo "❌ Copy verification failed: expected $writeup_count, got $copied_count"
+          exit 1
         fi
         
-        echo "✅ CTF site content verification completed"
+        # List CTF events
+        echo "🏆 CTF Events found:"
+        for dir in ctf_site/assets/writeups/*/; do
+          if [ -d "$dir" ]; then
+            event_name=$(basename "$dir")
+            event_writeups=$(find "$dir" -name "*.md" -not -name "README.md" | wc -l)
+            echo "  - $event_name ($event_writeups writeups)"
+          fi
+        done
         
     - name: Validate CTF site structure
       run: |
@@ -118,24 +80,17 @@ jobs:
           exit 1
         fi
         
-        # Check if writeups directory exists (should have been created above)
+        # Check if writeups directory exists
         if [ ! -d "ctf_site/assets/writeups" ]; then
           echo "❌ ctf_site/assets/writeups directory not found"
           exit 1
         fi
         
-        # Check if main index exists (should have been created above if missing)
+        # Check if main index exists
         if [ ! -f "ctf_site/assets/writeups/index.md" ]; then
           echo "❌ Main writeups index not found"
           exit 1
         fi
-        
-        # Show current content summary
-        echo "📊 Content summary:"
-        echo "  - HTML files: $(find ctf_site -name "*.html" | wc -l)"
-        echo "  - CSS files: $(find ctf_site -name "*.css" | wc -l)"
-        echo "  - JS files: $(find ctf_site -name "*.js" | wc -l)"
-        echo "  - Writeup files: $(find ctf_site/assets/writeups -name "*.md" 2>/dev/null | wc -l || echo "0")"
         
         echo "✅ CTF site structure validation passed"
         
