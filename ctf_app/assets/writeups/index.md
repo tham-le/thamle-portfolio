@@ -1,13 +1,13 @@
 # CTF Writeups Collection
 
-> Automatically synced from External CTF-Writeups Repository
+> Automatically synced from [CTF-Writeups Repository](https://github.com/tham-le/CTF-Writeups)
 
 ## 🏆 CTF Events
 
-- [ExampleCTF2025](./ExampleCTF2025/)
+- [IrisCTF](./IrisCTF/)
 
 ## 📊 Statistics
 
 - **Total CTF Events:** 1
-- **Total Writeups:** 1
-- **Last Updated:** 2025-06-19 17:00 UTC
+- **Total Writeups:** 4
+- **Last Updated:** 2025-06-19 12:40 UTC

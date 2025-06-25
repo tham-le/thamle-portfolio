@@ -27,7 +27,7 @@ This example shows how to format a writeup with images for the new version of th
 
 The challenge asked us to bypass a strict Content Security Policy to execute JavaScript on the admin's browser.
 
-**URL:** <https://example-ctf.com/challenge>
+**URL:** https://example-ctf.com/challenge
 
 ## Initial Analysis
 
@@ -72,7 +72,7 @@ The final payload looked like this:
 This challenge taught me the importance of:
 
 1. Understanding CSP bypass techniques
-2. Checking for outdated libraries
+2. Checking for outdated libraries 
 3. Being creative with payload delivery
 
 ## Additional Resources

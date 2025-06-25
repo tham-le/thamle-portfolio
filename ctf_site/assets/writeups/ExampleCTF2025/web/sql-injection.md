@@ -35,7 +35,7 @@ $query = "SELECT * FROM users WHERE username='$username' AND password='$password
 
 I tried the common `' OR '1'='1` payload in the username field and left the password blank.
 
-### Step 2: Success
+### Step 2: Success!
 
 The application logged me in as the first user in the database, which was the admin.
 
