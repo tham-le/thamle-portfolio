@@ -14,10 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 Checkout Portfolio Repository
+    - name: 📥 Checkout Portfolio Repository with Submodules
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: recursive
+        
+    - name: 🔄 Update Submodule to Latest
+      run: |
+        git submodule update --remote --merge
+        echo "📦 Updated external-writeups submodule to latest commit"
         
     - name: 🔧 Setup Python Environment
       uses: actions/setup-python@v4
@@ -28,14 +34,11 @@ jobs:
       run: |
         pip install PyYAML requests Pillow
         
-    - name: 🗂️ Clone External CTF Repository
+    - name: 🗂️ Verify External CTF Repository Structure
       run: |
-        # Clone the actual external CTF repository
-        git clone https://github.com/tham-le/CTF-Writeups.git external-ctf-repo
-        
-        # List structure for debugging
+        # The submodule is now available as external-writeups/
         echo "📁 External repo structure:"
-        find external-ctf-repo -type f -name "*.md" | head -20
+        find external-writeups -type f -name "*.md" | head -20
         
     - name: 🧹 Clean Previous Sync
       run: |
@@ -368,7 +371,7 @@ jobs:
         
         def sync_all_content():
             """Main sync function"""
-            external_repo = "external-ctf-repo"
+            external_repo = "external-writeups"
             target_base = "ctf_site/assets/writeups"
             
             # Discover all writeups

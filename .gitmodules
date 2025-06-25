@@ -1,0 +1,3 @@
+[submodule "external-writeups"]
+	path = external-writeups
+	url = https://github.com/tham-le/CTF-Writeups.git
