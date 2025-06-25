@@ -1,15 +1,3 @@
----
-title: "Tracem 1"
-date: "2025-01-12"
-ctf: "IrisCTF 2025"
-category: "forensics"
-difficulty: "Easy"
-points: 152
-tags: ["forensics", "baby"]
-author: "Tham Le"
-solved: true
----
-
 # Tracem 1
 
 | Category | Author | Tags | Points | Solves |

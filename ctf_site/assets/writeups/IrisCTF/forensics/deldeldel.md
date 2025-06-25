@@ -1,15 +1,3 @@
----
-title: "deldeldel"
-date: "2025-01-12"
-ctf: "IrisCTF 2025"
-category: "forensics"
-difficulty: "Easy"
-points: 50
-tags: ["forensics", "easy"]
-author: "Tham Le"
-solved: true
----
-
 # deldeldel
 
 | Category | Author | Tags | Points | Solves |
