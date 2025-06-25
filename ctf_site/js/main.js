@@ -134,9 +134,11 @@ async function fetchCategoryWriteupsList(ctfPath, categoryPath) {
     // For demo purposes, use known writeup files from the index
     const knownWriteups = {
         'IrisCTF': {
-            'web': ['sqlate.md', 'password-manager.md'],
-            'forensics': ['wheres-bobby.md'],
-            'misc': ['KittyCrypt.md']
+            'web': ['Political.md', 'password-manager.md'],
+            'crypto': ['KittyCrypt.md'],
+            'forensics': ['Tracem_1.md', 'deldeldel.md'],
+            'osint': ['Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md'],
+            'pwn': ['sqlate.md']
         }
     };
     

@@ -1,3 +1,15 @@
+---
+title: "Political"
+date: "2025-01-12"
+ctf: "IrisCTF 2025"
+category: "web"
+difficulty: "Easy"
+points: 50
+tags: ["web", "easy"]
+author: "Tham Le"
+solved: true
+---
+
 # Political
 
 | Category | Author | Tags | Points | Solves |

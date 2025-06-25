@@ -2,10 +2,10 @@
 title: "Sqlate"
 date: "2025-01-12"
 ctf: "IrisCTF 2025"
-category: "web"
+category: "pwn"
 difficulty: "Easy"
 points: 50
-tags: ["web", "binary", "buffer-overflow"]
+tags: ["pwn", "binary", "buffer-overflow"]
 author: "Tham Le"
 solved: true
 ---
