@@ -1,0 +1,15 @@
+# Redirect all directory accesses to the homepage
+ErrorDocument 404 /index.html
+
+# For Apache servers
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # If the request is not for a real file or directory
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Redirect to index.html
+  RewriteRule . /index.html [L]
+</IfModule>
