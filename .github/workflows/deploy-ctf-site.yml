@@ -1,6 +1,7 @@
-name: Deploy CTF Site (Simpler Version)
+name: 🌐 Deploy CTF Writeups Site
 
 on:
+  # SECURITY: Only deploy from main branch, not from PRs
   push:
     branches: [ main ]
     paths:
@@ -15,6 +16,8 @@ permissions:
 jobs:
   deploy-ctf-site:
     runs-on: ubuntu-latest
+    # SECURITY: Only run on main branch
+    if: github.ref == 'refs/heads/main'
     
     steps:
     - name: Checkout repository

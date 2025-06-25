@@ -1,17 +1,25 @@
-name: 🚀 Sync CTF Writeups & Assets
+name: � Sync CTF Writeups & Assets
 
 on:
+  # SECURITY: Only sync from main branch or manual trigger
   push:
+    branches: [ main ]
     paths:
       - 'sync-trigger.md'
+      - 'external-writeups'
   schedule:
     # Sync daily at 6 AM UTC to keep content fresh
     - cron: '0 6 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write  # Need write access to update submodule
+
 jobs:
   sync-comprehensive:
     runs-on: ubuntu-latest
+    # SECURITY: Only run on main branch
+    if: github.ref == 'refs/heads/main'
     
     steps:
     - name: 📥 Checkout Portfolio Repository with Submodules
