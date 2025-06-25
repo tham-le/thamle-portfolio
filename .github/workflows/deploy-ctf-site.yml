@@ -1,38 +1,209 @@
-name: Deploy CTF Site
+name: 🌐 Deploy CTF Writeups Site
 
 on:
-  push:
+  # SECURITY: Only deploy after CI/CD validation passes
+  workflow_run:
+    workflows: ["🧪 CI/CD - Code Validation"]
+    types: [completed]
     branches: [ main ]
-    paths:
-      - 'ctf_site/**'
-      - 'external-writeups/**'
   workflow_dispatch:
+    inputs:
+      sync_first:
+        description: 'Run sync workflow first? (recommended)'
+        required: false
+        default: true
+        type: boolean
+      bypass_validation:
+        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
 
 jobs:
+  check-validation:
+    runs-on: ubuntu-latest
+    outputs:
+      validation-passed: ${{ steps.check.outputs.passed }}
+    steps:
+    - name: Check CI/CD Validation Status
+      id: check
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+            echo "✅ CI/CD validation passed"
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ CI/CD validation failed"
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
+          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
+          echo "passed=true" >> $GITHUB_OUTPUT
+        else
+          echo "❌ No valid trigger or bypass"
+          echo "passed=false" >> $GITHUB_OUTPUT
+        fi
+
   deploy-ctf-site:
     runs-on: ubuntu-latest
+    needs: check-validation
+    # SECURITY: Only deploy if validation passed
+    if: needs.check-validation.outputs.validation-passed == 'true'
     
     steps:
-    - name: Checkout repository
+    - name: 📢 Deployment Notice
+      run: |
+        echo "🌐 Deploying CTF Writeups Site..."
+        echo "📝 Note: For latest content, ensure the sync workflow has run recently"
+        echo "🔗 Target: https://ctf.thamle.live/"
+    - name: Checkout repository with submodules
       uses: actions/checkout@v4
       with:
-        submodules: true
-      
+        submodules: recursive
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
         
-    - name: Copy writeups to CTF site
+    - name: Verify CTF site content exists
       run: |
-        mkdir -p ctf_site/assets/writeups
-        cp -r external-writeups/* ctf_site/assets/writeups/
+        echo "🔍 Checking CTF site content..."
         
-    - name: Deploy to Firebase Hosting
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: ${{ secrets.GITHUB_TOKEN }}
-        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}
-        projectId: thamle-portfolio
-        target: ctf
-        channelId: live
+        # Check if CTF site exists
+        if [ ! -f "ctf_site/index.html" ]; then
+          echo "❌ ctf_site/index.html not found"
+          exit 1
+        fi
+        
+        # Check if writeups directory exists (may be empty if sync hasn't run)
+        if [ ! -d "ctf_site/assets/writeups" ]; then
+          echo "📁 Creating writeups directory..."
+          mkdir -p ctf_site/assets/writeups
+        fi
+        
+        # Check for existing writeups
+        writeup_count=$(find ctf_site/assets/writeups -name "*.md" -type f 2>/dev/null | wc -l || echo "0")
+        echo "📄 Found $writeup_count writeup files in ctf_site"
+        
+        # If no writeups exist, create a basic index
+        if [ ! -f "ctf_site/assets/writeups/index.md" ]; then
+          echo "📝 Creating basic writeups index..."
+          echo "# CTF Events & Writeups" > ctf_site/assets/writeups/index.md
+          echo "" >> ctf_site/assets/writeups/index.md
+          echo "Welcome to my CTF writeups collection! This content is automatically synced from my external writeups repository." >> ctf_site/assets/writeups/index.md
+          echo "" >> ctf_site/assets/writeups/index.md
+          echo "## Getting Started" >> ctf_site/assets/writeups/index.md
+          echo "" >> ctf_site/assets/writeups/index.md
+          echo "The writeups are organized by CTF event and category. New content is added regularly through an automated sync process." >> ctf_site/assets/writeups/index.md
+          echo "" >> ctf_site/assets/writeups/index.md
+          echo "## Available Events" >> ctf_site/assets/writeups/index.md
+          echo "" >> ctf_site/assets/writeups/index.md
+          echo "*Content will be populated automatically via the sync workflow.*" >> ctf_site/assets/writeups/index.md
+        fi
+        
+        echo "✅ CTF site content verification completed"
+        
+    - name: Validate CTF site structure
+      run: |
+        echo "🔍 Validating CTF site structure..."
+        
+        # Check if index.html exists
+        if [ ! -f "ctf_site/index.html" ]; then
+          echo "❌ ctf_site/index.html not found"
+          exit 1
+        fi
+        
+        # Check if writeups directory exists (should have been created above)
+        if [ ! -d "ctf_site/assets/writeups" ]; then
+          echo "❌ ctf_site/assets/writeups directory not found"
+          exit 1
+        fi
+        
+        # Check if main index exists (should have been created above if missing)
+        if [ ! -f "ctf_site/assets/writeups/index.md" ]; then
+          echo "❌ Main writeups index not found"
+          exit 1
+        fi
+        
+        # Show current content summary
+        echo "📊 Content summary:"
+        echo "  - HTML files: $(find ctf_site -name "*.html" | wc -l)"
+        echo "  - CSS files: $(find ctf_site -name "*.css" | wc -l)"
+        echo "  - JS files: $(find ctf_site -name "*.js" | wc -l)"
+        echo "  - Writeup files: $(find ctf_site/assets/writeups -name "*.md" 2>/dev/null | wc -l || echo "0")"
+        
+        echo "✅ CTF site structure validation passed"
+        
+    - name: Install Firebase CLI
+      run: |
+        echo "📦 Installing Firebase CLI..."
+        npm install -g firebase-tools
+        firebase --version
+        
+    - name: Validate Firebase configuration
+      run: |
+        echo "🔍 Validating Firebase configuration..."
+        
+        # Check if firebase.json exists
+        if [ ! -f "firebase.json" ]; then
+          echo "❌ firebase.json not found"
+          exit 1
+        fi
+        
+        # Check if .firebaserc exists
+        if [ ! -f ".firebaserc" ]; then
+          echo "❌ .firebaserc not found"
+          exit 1
+        fi
+        
+        # Validate Firebase token is set
+        if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+          echo "❌ FIREBASE_TOKEN secret is not set"
+          exit 1
+        fi
+        
+        echo "✅ Firebase configuration validation passed"
+      
+    - name: Deploy to Firebase
+      run: |
+        echo "🚀 Deploying CTF site to Firebase..."
+        
+        # Set Firebase token
+        export FIREBASE_TOKEN="${{ secrets.FIREBASE_TOKEN }}"
+        
+        # Deploy with detailed logging
+        firebase deploy --only hosting:ctf --token "$FIREBASE_TOKEN" --non-interactive --debug
+        
+        if [ $? -eq 0 ]; then
+          echo "✅ Deployment successful!"
+          echo "🌐 CTF site is live at: https://ctf.thamle.live"
+        else
+          echo "❌ Deployment failed"
+          exit 1
+        fi
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        
+    - name: Post-deployment verification
+      run: |
+        echo "🔍 Post-deployment verification..."
+        
+        # Wait a moment for deployment to propagate
+        sleep 10
+        
+        # Try to curl the deployed site (basic check)
+        if command -v curl >/dev/null 2>&1; then
+          echo "📡 Testing deployed site connectivity..."
+          if curl -f -s -o /dev/null "https://ctf.thamle.live"; then
+            echo "✅ Site is accessible"
+          else
+            echo "⚠️ Site accessibility check failed (this might be normal for new deployments)"
+          fi
+        fi
+        
+        echo "🎉 Deployment workflow completed successfully!"

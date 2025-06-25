@@ -1,0 +1,534 @@
+/* 🎮 Pixelart Pastel CTF Portfolio - Kawaii Gaming Vibes 🌸 */
+
+:root {
+    /* 🌈 Pastel Pixel Palette */
+    --pixel-pink: #ffb3d1;
+    --pixel-purple: #d1b3ff;
+    --pixel-blue: #b3d1ff;
+    --pixel-cyan: #b3ffff;
+    --pixel-green: #b3ffb3;
+    --pixel-yellow: #ffffb3;
+    --pixel-orange: #ffccb3;
+    --pixel-coral: #ffb3cc;
+    --pixel-lavender: #e6b3ff;
+    --pixel-mint: #b3ffe6;
+    --pixel-peach: #ffccb3;
+    --pixel-sky: #ccf0ff;
+
+    /* 🎨 Main Theme Colors */
+    --primary-color: var(--pixel-purple);
+    --secondary-color: var(--pixel-blue);
+    --accent-color: var(--pixel-pink);
+    --success-color: var(--pixel-green);
+    --warning-color: var(--pixel-yellow);
+    --error-color: var(--pixel-coral);
+
+    /* 🖤 Background & Text */
+    --dark-bg: #2d2a3d;
+    --light-bg: #fafcff;
+    --card-bg: #ffffff;
+    --text-primary: #2d2a3d;
+    --text-secondary: #6b5b95;
+    --text-muted: #9b8ec2;
+
+    /* 🎯 Category Colors - Pastel Style */
+    --web-color: var(--pixel-blue);
+    --crypto-color: var(--pixel-purple);
+    --pwn-color: var(--pixel-coral);
+    --forensics-color: var(--pixel-cyan);
+    --osint-color: var(--pixel-green);
+    --rev-color: var(--pixel-orange);
+    --misc-color: var(--pixel-pink);
+
+    /* ✨ Pixel Art Effects */
+    --pixel-shadow: 4px 4px 0px rgba(45, 42, 61, 0.2);
+    --pixel-shadow-hover: 6px 6px 0px rgba(45, 42, 61, 0.3);
+    --pixel-border: 3px solid var(--text-primary);
+    --pixel-border-light: 2px solid var(--text-secondary);
+    --pixel-radius: 0px;
+    /* Sharp corners for pixel art */
+
+    /* 🎮 8-bit Font Stack */
+    --pixel-font: 'Press Start 2P', 'Courier New', monospace;
+    --body-font: 'Roboto Mono', 'Courier New', monospace;
+}
+
+/* 🌟 Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--body-font);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--pixel-sky) 0%, var(--pixel-lavender) 50%, var(--pixel-mint) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+
+    /* Pixel grid effect */
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+    background-size: 20px 20px;
+}
+
+/* 🎮 Header Styling */
+header {
+    background: var(--card-bg);
+    border-bottom: var(--pixel-border);
+    box-shadow: var(--pixel-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--pixel-font);
+    font-size: 18px;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 0px var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    color: var(--accent-color);
+}
+
+.home-link {
+    background: var(--accent-color);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    text-decoration: none;
+    font-family: var(--pixel-font);
+    font-size: 12px;
+    border: var(--pixel-border-light);
+    box-shadow: var(--pixel-shadow);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.home-link:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--pixel-shadow-hover);
+    background: var(--pixel-pink);
+}
+
+.home-link:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
+}
+
+/* 🎯 Main Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* 🎨 Tab Navigation */
+.tab-navigation {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 15px 25px;
+    border: var(--pixel-border-light);
+    box-shadow: var(--pixel-shadow);
+    font-family: var(--pixel-font);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tab-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--pixel-shadow-hover);
+    background: var(--secondary-color);
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: var(--text-primary);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px rgba(45, 42, 61, 0.3);
+}
+
+/* 🏆 Section Titles */
+.section-title {
+    font-family: var(--pixel-font);
+    font-size: 24px;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 0px var(--secondary-color);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: var(--accent-color);
+    margin: 15px auto;
+    box-shadow: var(--pixel-shadow);
+}
+
+/* 🎮 No Events State - Kawaii Style */
+.no-events {
+    background: var(--card-bg);
+    border: var(--pixel-border);
+    box-shadow: var(--pixel-shadow);
+    padding: 40px;
+    text-align: center;
+    margin: 30px auto;
+    max-width: 600px;
+    position: relative;
+}
+
+.no-events::before {
+    content: '🎮';
+    font-size: 48px;
+    display: block;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.no-events p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-family: var(--pixel-font);
+    line-height: 1.8;
+}
+
+.no-events ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.no-events li {
+    background: var(--pixel-mint);
+    margin: 10px 0;
+    padding: 15px;
+    border: 2px solid var(--text-secondary);
+    box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
+    font-size: 13px;
+    position: relative;
+}
+
+.no-events li::before {
+    content: '→';
+    color: var(--text-primary);
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* 🌈 Event Cards */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.year-section {
+    margin-bottom: 40px;
+}
+
+.year-header {
+    font-family: var(--pixel-font);
+    font-size: 20px;
+    color: var(--text-primary);
+    text-shadow: 2px 2px 0px var(--accent-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.event-card {
+    background: var(--card-bg);
+    border: var(--pixel-border);
+    box-shadow: var(--pixel-shadow);
+    padding: 25px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pixel-pink), var(--pixel-purple), var(--pixel-blue));
+}
+
+.event-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--pixel-shadow-hover);
+    background: var(--light-bg);
+}
+
+.event-header {
+    margin-bottom: 20px;
+}
+
+.event-title {
+    font-family: var(--pixel-font);
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+}
+
+.event-stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: var(--pixel-yellow);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 12px;
+    border: 2px solid var(--text-secondary);
+    box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
+}
+
+.event-categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.category-tag {
+    padding: 8px 15px;
+    font-size: 11px;
+    font-family: var(--pixel-font);
+    border: 2px solid;
+    box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
+    color: var(--text-primary);
+}
+
+/* 🎨 Category Colors */
+.category-web {
+    background: var(--web-color);
+    border-color: var(--text-primary);
+}
+
+.category-crypto {
+    background: var(--crypto-color);
+    border-color: var(--text-primary);
+}
+
+.category-pwn {
+    background: var(--pwn-color);
+    border-color: var(--text-primary);
+}
+
+.category-forensics {
+    background: var(--forensics-color);
+    border-color: var(--text-primary);
+}
+
+.category-osint {
+    background: var(--osint-color);
+    border-color: var(--text-primary);
+}
+
+.category-rev {
+    background: var(--rev-color);
+    border-color: var(--text-primary);
+}
+
+.category-misc {
+    background: var(--misc-color);
+    border-color: var(--text-primary);
+}
+
+/* 🚀 Action Buttons */
+.event-actions {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: var(--success-color);
+    color: var(--text-primary);
+    padding: 15px 25px;
+    border: var(--pixel-border-light);
+    box-shadow: var(--pixel-shadow);
+    font-family: var(--pixel-font);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--pixel-shadow-hover);
+    background: var(--pixel-green);
+}
+
+.btn-primary:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
+}
+
+/* ✨ Loading Animation */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--pixel-purple) 0%, var(--pixel-pink) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: var(--pixel-font);
+    color: var(--text-primary);
+    font-size: 18px;
+}
+
+#loading::before {
+    content: '🎮 Loading CTF Adventures... 🌸';
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* 🌟 Animations */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes pixelBlink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0.3;
+    }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .logo {
+        font-size: 14px;
+    }
+
+    .tab-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tab-btn {
+        width: 100%;
+        padding: 12px 20px;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .no-events {
+        padding: 25px;
+        margin: 20px;
+    }
+
+    .event-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 15px;
+    }
+
+    .logo {
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .event-title {
+        font-size: 14px;
+    }
+
+    .home-link {
+        font-size: 10px;
+        padding: 10px 15px;
+    }
+}

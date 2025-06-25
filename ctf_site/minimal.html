@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal CTF Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .event-card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+        .event-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .category-tag { background: #e0e0e0; padding: 2px 8px; margin: 2px; border-radius: 3px; font-size: 12px; }
+        .event-actions { margin-top: 10px; }
+        .explore-btn { background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Minimal CTF Events Test</h1>
+    <div id="status"></div>
+    <div id="events-container"></div>
+    
+    <script>
+        async function test() {
+            const status = document.getElementById('status');
+            const container = document.getElementById('events-container');
+            
+            try {
+                status.innerHTML = '🔄 Loading data...';
+                
+                const response = await fetch('assets/writeups/index.json');
+                const data = await response.json();
+                
+                status.innerHTML = `✅ Loaded ${data.events.length} events, ${data.writeups.length} writeups`;
+                
+                // Simple render
+                container.innerHTML = `
+                    <h2>🏆 CTF Events Portfolio</h2>
+                    <div class="events-grid">
+                        ${data.events.map(event => `
+                            <div class="event-card">
+                                <div class="event-header">
+                                    <h3>${event.name}</h3>
+                                    <span>${event.writeups.length} writeups</span>
+                                </div>
+                                <div>
+                                    Categories: ${[...new Set(event.writeups.map(w => w.category))].map(cat => 
+                                        `<span class="category-tag">${cat}</span>`
+                                    ).join('')}
+                                </div>
+                                <div class="event-actions">
+                                    <button class="explore-btn">🎯 EXPLORE</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                console.log('✅ Rendered successfully');
+                
+            } catch (error) {
+                status.innerHTML = `❌ Error: ${error.message}`;
+                console.error('Error:', error);
+            }
+        }
+        
+        test();
+    </script>
+</body>
+</html>

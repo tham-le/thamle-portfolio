@@ -1,67 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tham's CTF Writeups</title>
+    <title>🏆 CTF 🏆 - Tham Le</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <div class="header-content">
-            <h1 class="logo">Tham's CTF Writeups</h1>
+            <div class="logo">🏆 Tham 🏆</div>
             <nav>
-                <a href="https://thamle.live" class="home-link">Back to Main</a>
+                <a href="https://thamle.live" class="home-link">🏠 BACK TO BASE</a>
             </nav>
         </div>
     </header>
 
-        <!-- Filters -->
-        <section class="filters">
-            <input type="text" id="search-input" placeholder="Search writeups...">
-            <select id="category-filter">
-                <option value="all">All Categories</option>
-            </select>
+    <main>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="container">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="events-view">🏆 BY CTF EVENT</button>
+                    <button class="view-btn" id="category-view">📂 BY CATEGORY</button>
+                </div>
+                <div class="filter-grid" id="category-filters" style="display: none;">
+                    <button class="filter-btn active" data-category="all">ALL QUESTS</button>
+                    <button class="filter-btn" data-category="web">WEB HACKING</button>
+                    <button class="filter-btn" data-category="crypto">CRYPTOGRAPHY</button>
+                    <button class="filter-btn" data-category="pwn">BINARY EXPLOITATION</button>
+                    <button class="filter-btn" data-category="forensics">DIGITAL FORENSICS</button>
+                    <button class="filter-btn" data-category="osint">OSINT</button>
+                    <button class="filter-btn" data-category="rev">REVERSE ENGINEERING</button>
+                    <button class="filter-btn" data-category="misc">MISCELLANEOUS</button>
+                </div>
+            </div>
         </section>
 
-        
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading-container">
+            <div class="loading">🎮 Loading CTF adventures...</div>
+        </div>
 
-        <!-- Writeups Section -->
-        <section class="writeups">
-            <div class="loading" id="loading">
-                <div class="pixel-loader"></div>
-                <p>Loading writeups...</p>
-            </div>
-            <div id="writeups-container" class="writeups-container">
-                <!-- Writeups will be loaded here via JavaScript -->
+        <!-- Events/Writeups Display -->
+        <section class="content-section">
+            <div class="container">
+                <!-- Events view (default) -->
+                <div id="events-container" class="events-container">
+                    <!-- CTF Events will be loaded here -->
+                </div>
+
+                <!-- Category view (hidden by default) -->
+                <div id="writeups-container" class="writeups-container" style="display: none;">
+                    <!-- Writeups will be loaded here by JavaScript -->
+                </div>
             </div>
         </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <p>🎮 Made with pixel perfect precision by Tham Le</p>
+                    <p>🔥 Powered by caffeine and cybersecurity passion</p>
+                    <div class="footer-links">
+                        <a href="https://thamle.live" target="_blank">🏠 Main Portfolio</a>
+                        <a href="https://github.com/tham-le" target="_blank">📱 GitHub</a>
+                        <a href="https://linkedin.com/in/tham42" target="_blank">💼 LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </main>
 
+    <!-- Writeup Modal -->
     <div id="writeup-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
+                <h2 id="modal-title">Writeup</h2>
                 <span class="close-modal">&times;</span>
-                <h2 id="modal-title"></h2>
             </div>
-            <div class="modal-body" id="modal-body">
+            <div id="modal-body" class="modal-body">
                 <!-- Writeup content will be loaded here -->
             </div>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <p>© 2025 Tham Le | Crafted with ❤️</p>
-            <a href="https://github.com/tham-le" target="_blank">GitHub</a>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-    <script src="js/main.js?v=1.2"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>
