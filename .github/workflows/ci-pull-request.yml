@@ -2,6 +2,14 @@ name: CI
 
 on:
   pull_request:
+    branches:
+      - main
+    paths:
+      - 'ctf_app/**'
+      - 'ctf_site/**'
+      - 'project_site/**'
+      - 'public/**'
+      - '.github/workflows/ci-pull-request.yml'
 
 jobs:
   lint-project-site:
