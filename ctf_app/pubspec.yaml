@@ -53,7 +53,7 @@ dependencies:
   url_launcher: ^6.2.2
   
   # UI components
-  google_fonts: ^6.1.0
+  
   flutter_svg: ^2.0.9
   
   # Responsive UI
