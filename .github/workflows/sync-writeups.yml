@@ -1,4 +1,21 @@
-name: � Sync CTF Writeups & Assets
+name: 📄 Sync CTF Writeups & Assets
+
+on:
+  # SECURITY: Only sync after CI/CD validation passes OR on schedule
+  workflow_run:
+    workflows: ["🧪 CI/CD - Code Validation"]
+    types: [completed]
+    branches: [ main ]
+  schedule:
+    # Sync daily at 6 AM UTC to keep content fresh
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      bypass_validation:
+        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
+        required: false
+        default: false
+        type: booleanCTF Writeups & Assets
 
 on:
   # SECURITY: Only sync from main branch or manual trigger
@@ -16,10 +33,38 @@ permissions:
   contents: write  # Need write access to update submodule
 
 jobs:
+  check-validation:
+    runs-on: ubuntu-latest
+    outputs:
+      validation-passed: ${{ steps.check.outputs.passed }}
+    steps:
+    - name: Check CI/CD Validation Status
+      id: check
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+            echo "✅ CI/CD validation passed"
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ CI/CD validation failed"
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+          echo "⏰ Scheduled sync - proceeding"
+          echo "passed=true" >> $GITHUB_OUTPUT
+        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
+          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
+          echo "passed=true" >> $GITHUB_OUTPUT
+        else
+          echo "❌ No valid trigger or bypass"
+          echo "passed=false" >> $GITHUB_OUTPUT
+        fi
+
   sync-comprehensive:
     runs-on: ubuntu-latest
-    # SECURITY: Only run on main branch
-    if: github.ref == 'refs/heads/main'
+    needs: check-validation
+    # SECURITY: Only run on main branch AND after validation passes
+    if: github.ref == 'refs/heads/main' && needs.check-validation.outputs.validation-passed == 'true'
     
     steps:
     - name: 📥 Checkout Portfolio Repository with Submodules
@@ -347,34 +392,6 @@ jobs:
                     print(f"📋 Added writeup: {ctf_event}/{category}/{challenge}")
             
             print(f"🔍 Discovered {len(writeups)} writeup files total")
-            return writeups
-                            'open-source-intelligence': 'osint',
-                            'opensourceintelligence': 'osint',
-                            'intelligence': 'osint',
-                            'recon': 'osint',
-                            'miscellaneous': 'misc',
-                            'general': 'misc',
-                            'other': 'misc',
-                            'digital_forensics': 'forensics',
-                            'digital-forensics': 'forensics',
-                            'digitalforensics': 'forensics',
-                            'investigation': 'forensics',
-                            'steganography': 'forensics',
-                            'stego': 'forensics'
-                        }
-                        
-                        category = category_mapping.get(category, category)
-                        
-                        writeups.append({
-                            'filepath': filepath,
-                            'ctf_event': ctf_event,
-                            'category': category,
-                            'challenge': challenge,
-                            'relative_path': rel_path,
-                            'original_filename': file
-                        })
-            
-            print(f"🔍 Discovered {len(writeups)} writeup files")
             return writeups
         
         def sync_all_content():
