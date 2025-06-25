@@ -30,7 +30,12 @@ jobs:
         
     - name: 🗂️ Clone External CTF Repository
       run: |
+        # Clone the actual external CTF repository
         git clone https://github.com/tham-le/CTF-Writeups.git external-ctf-repo
+        
+        # List structure for debugging
+        echo "📁 External repo structure:"
+        find external-ctf-repo -type f -name "*.md" | head -20
         
     - name: 🧹 Clean Previous Sync
       run: |
@@ -210,93 +215,128 @@ jobs:
             """Discover all markdown files in the external repository with dynamic parsing"""
             writeups = []
             
+            print(f"🔍 Scanning {external_repo} for writeup files...")
+            
             for root, dirs, files in os.walk(external_repo):
-                # Skip hidden directories and git
-                dirs[:] = [d for d in dirs if not d.startswith('.') and d != '__pycache__']
+                # Skip hidden directories, git, and other non-content dirs
+                dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['__pycache__', '.git', 'node_modules']]
                 
                 for file in files:
-                    if file.endswith('.md'):
-                        filepath = os.path.join(root, file)
-                        rel_path = os.path.relpath(filepath, external_repo)
+                    if not file.endswith('.md'):
+                        continue
                         
-                        # Parse filename format: CTF_event-category-challengename-writeup.md
-                        filename_without_ext = file.replace('.md', '')
+                    filepath = os.path.join(root, file)
+                    rel_path = os.path.relpath(filepath, external_repo)
+                    
+                    print(f"📝 Found markdown file: {rel_path}")
+                    
+                    # Parse filename format: CTF_event-category-challengename-writeup.md
+                    filename_without_ext = file.replace('.md', '')
+                    
+                    # METHOD 1: Check if filename follows the desired pattern
+                    if '-' in filename_without_ext and any(keyword in filename_without_ext.lower() for keyword in ['writeup', 'wu', 'solution', 'solve']):
+                        print(f"🎯 Detected format pattern in filename: {file}")
+                        parts = filename_without_ext.split('-')
                         
-                        # Check if filename follows the desired pattern
-                        if '-' in filename_without_ext and ('writeup' in filename_without_ext.lower() or 'wu' in filename_without_ext.lower()):
-                            parts = filename_without_ext.split('-')
+                        if len(parts) >= 3:
+                            # Extract CTF event (first part)
+                            ctf_event = parts[0]
                             
-                            if len(parts) >= 3:
-                                # Extract CTF event (first part)
-                                ctf_event = parts[0]
-                                
-                                # Extract category (second part)
-                                category = parts[1].lower()
-                                
-                                # Extract challenge name (everything between category and 'writeup')
-                                challenge_parts = []
-                                for i in range(2, len(parts)):
-                                    if parts[i].lower() not in ['writeup', 'wu', 'solution', 'solve']:
-                                        challenge_parts.append(parts[i])
-                                    else:
-                                        break
-                                
-                                challenge = '-'.join(challenge_parts) if challenge_parts else 'unknown-challenge'
-                                
-                                print(f"📝 Parsed filename: {file} -> CTF: {ctf_event}, Category: {category}, Challenge: {challenge}")
-                            else:
-                                # Fallback parsing
-                                ctf_event = parts[0] if len(parts) > 0 else 'UnknownCTF'
-                                category = parts[1] if len(parts) > 1 else 'misc'
-                                challenge = '-'.join(parts[2:]) if len(parts) > 2 else filename_without_ext
-                        else:
-                            # Fallback: Use directory structure or filename analysis
-                            path_parts = rel_path.split(os.sep)
+                            # Extract category (second part)
+                            category = parts[1].lower()
                             
-                            if len(path_parts) >= 2:
-                                ctf_event = path_parts[0]
-                                
-                                # Skip if it's a top-level README
-                                if file == 'README.md' and len(path_parts) == 2:
-                                    continue
-                                
-                                # Determine category and challenge from path
-                                if len(path_parts) == 3:  # CTF/Category/writeup.md
-                                    category = path_parts[1].lower()
-                                    challenge = file.replace('.md', '')
-                                elif len(path_parts) == 4:  # CTF/Category/Challenge/writeup.md
-                                    category = path_parts[1].lower()
-                                    challenge = path_parts[2]
+                            # Extract challenge name (everything between category and 'writeup')
+                            challenge_parts = []
+                            for i in range(2, len(parts)):
+                                if parts[i].lower() not in ['writeup', 'wu', 'solution', 'solve']:
+                                    challenge_parts.append(parts[i])
                                 else:
-                                    category = 'misc'
-                                    challenge = file.replace('.md', '')
-                            else:
-                                # Last resort: extract from filename
-                                ctf_event = 'UnknownCTF'
-                                category = 'misc'
-                                challenge = filename_without_ext
+                                    break
+                            
+                            challenge = '-'.join(challenge_parts) if challenge_parts else 'unknown-challenge'
+                            
+                            print(f"✅ Parsed from filename: CTF={ctf_event}, Category={category}, Challenge={challenge}")
+                        else:
+                            # Fallback parsing for short filenames
+                            ctf_event = parts[0] if len(parts) > 0 else 'UnknownCTF'
+                            category = parts[1] if len(parts) > 1 else 'misc'
+                            challenge = '-'.join(parts[2:]) if len(parts) > 2 else filename_without_ext
+                    
+                    # METHOD 2: Use directory structure (more common format)
+                    else:
+                        path_parts = rel_path.split(os.sep)
+                        print(f"🗂️ Using directory structure parsing for: {rel_path}")
+                        print(f"   Path parts: {path_parts}")
                         
-                        # Normalize category names
-                        category_mapping = {
-                            'web_exploitation': 'web',
-                            'web-exploitation': 'web',
-                            'webexploitation': 'web',
-                            'webexp': 'web',
-                            'webapp': 'web',
-                            'cryptography': 'crypto',
-                            'cryptanalysis': 'crypto',
-                            'encryption': 'crypto',
-                            'binary_exploitation': 'pwn',
-                            'binary-exploitation': 'pwn',
-                            'binaryexploitation': 'pwn',
-                            'binexp': 'pwn',
-                            'exploitation': 'pwn',
-                            'reverse_engineering': 'rev',
-                            'reverse-engineering': 'rev',
-                            'reverseengineering': 'rev',
-                            'reversing': 'rev',
-                            'malware': 'rev',
-                            'open_source_intelligence': 'osint',
+                        if len(path_parts) >= 3:  # e.g., IrisCTF/web/challenge.md
+                            ctf_event = path_parts[0]
+                            category = path_parts[1].lower()
+                            
+                            # Skip if it's a top-level README in CTF directory
+                            if file == 'README.md' and len(path_parts) == 2:
+                                print(f"⏭️ Skipping top-level README: {rel_path}")
+                                continue
+                            
+                            # Handle different directory depths
+                            if len(path_parts) == 3:  # CTF/Category/writeup.md
+                                challenge = filename_without_ext
+                            elif len(path_parts) == 4:  # CTF/Category/Challenge/writeup.md
+                                challenge = path_parts[2]
+                                # If the filename is just "writeup.md" or "README.md", use the directory name
+                                if filename_without_ext.lower() in ['writeup', 'readme', 'wu', 'solution']:
+                                    challenge = path_parts[2]
+                            else:  # Deeper nesting
+                                challenge = '-'.join(path_parts[2:-1]) if len(path_parts) > 3 else filename_without_ext
+                                
+                        elif len(path_parts) == 2:  # e.g., CTF/writeup.md
+                            ctf_event = path_parts[0]
+                            category = 'misc'  # Default category
+                            challenge = filename_without_ext
+                            
+                        else:  # Single file in root
+                            # Extract from filename or use defaults
+                            ctf_event = 'UnknownCTF'
+                            category = 'misc'
+                            challenge = filename_without_ext
+                        
+                        print(f"✅ Parsed from directory: CTF={ctf_event}, Category={category}, Challenge={challenge}")
+                    
+                    # Normalize category names to standard format
+                    category_mapping = {
+                        'web_exploitation': 'web', 'web-exploitation': 'web', 'webexploitation': 'web',
+                        'webexp': 'web', 'webapp': 'web', 'website': 'web',
+                        'cryptography': 'crypto', 'cryptanalysis': 'crypto', 'encryption': 'crypto',
+                        'binary_exploitation': 'pwn', 'binary-exploitation': 'pwn', 'binaryexploitation': 'pwn',
+                        'binexp': 'pwn', 'exploitation': 'pwn', 'buffer_overflow': 'pwn',
+                        'reverse_engineering': 'rev', 'reverse-engineering': 'rev', 'reverseengineering': 'rev',
+                        'reversing': 'rev', 'malware': 'rev', 'disassembly': 'rev',
+                        'open_source_intelligence': 'osint', 'open-source-intelligence': 'osint',
+                        'opensourceintelligence': 'osint', 'intelligence': 'osint', 'recon': 'osint',
+                        'miscellaneous': 'misc', 'general': 'misc', 'other': 'misc',
+                        'digital_forensics': 'forensics', 'digital-forensics': 'forensics',
+                        'digitalforensics': 'forensics', 'investigation': 'forensics',
+                        'steganography': 'forensics', 'stego': 'forensics', 'memory': 'forensics'
+                    }
+                    
+                    category = category_mapping.get(category, category)
+                    
+                    # Clean up challenge name
+                    challenge = challenge.replace('_', '-').replace(' ', '-')
+                    
+                    writeup_data = {
+                        'filepath': filepath,
+                        'ctf_event': ctf_event,
+                        'category': category,
+                        'challenge': challenge,
+                        'relative_path': rel_path,
+                        'original_filename': file
+                    }
+                    
+                    writeups.append(writeup_data)
+                    print(f"📋 Added writeup: {ctf_event}/{category}/{challenge}")
+            
+            print(f"🔍 Discovered {len(writeups)} writeup files total")
+            return writeups
                             'open-source-intelligence': 'osint',
                             'opensourceintelligence': 'osint',
                             'intelligence': 'osint',
