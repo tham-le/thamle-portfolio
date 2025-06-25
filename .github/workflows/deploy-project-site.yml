@@ -1,58 +1,33 @@
-name: 📁 Deploy Project Showcase Site
+name: Deploy Project Showcase Site
 
 on:
-  # SECURITY: Only deploy after CI/CD validation passes
-  workflow_run:
-    workflows: ["🧪 CI/CD - Code Validation"]
-    types: [completed]
+  push:
     branches: [ main ]
+    paths:
+      - 'project_site/**'
+      - '.github/workflows/deploy-project-site.yml'
   workflow_dispatch:
-    inputs:
-      bypass_validation:
-        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
 
 jobs:
-  check-validation:
+  deploy-project:
     runs-on: ubuntu-latest
-    outputs:
-      validation-passed: ${{ steps.check.outputs.passed }}
+    if: github.repository == 'tham-le/thamle-portfolio'
+    
     steps:
-    - name: Check CI/CD Validation Status
-      id: check
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Build and deploy to Firebase
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
-          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
-            echo "✅ CI/CD validation passed"
-            echo "passed=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ CI/CD validation failed"
-            echo "passed=false" >> $GITHUB_OUTPUT
-          fi
-        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
-          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
-          echo "passed=true" >> $GITHUB_OUTPUT
-        else
-          echo "❌ No valid trigger or bypass"
-          echo "passed=false" >> $GITHUB_OUTPUT
-        fi
-
-  deploy-project-showcase:
-    runs-on: ubuntu-latest
-    needs: check-validation
-    # SECURITY: Only deploy if validation passed
-    if: needs.check-validation.outputs.validation-passed == 'true'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
-          channelId: live
-          projectId: thamle-portfolio
-          target: project 
+        npm install -g firebase-tools
+        firebase deploy --only hosting:projects --token "$FIREBASE_TOKEN"
