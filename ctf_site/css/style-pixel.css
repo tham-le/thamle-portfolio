@@ -135,147 +135,6 @@ header {
     box-shadow: 2px 2px 0px rgba(45, 42, 61, 0.2);
 }
 
-/* 🌸 Hero Section - Kawaii Style */
-.hero {
-    background: linear-gradient(135deg, var(--pixel-purple) 0%, var(--pixel-pink) 50%, var(--pixel-blue) 100%);
-    padding: 60px 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 2px, transparent 2px),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 2px, transparent 2px),
-        radial-gradient(circle at 60% 40%, rgba(255,255,255,0.05) 1px, transparent 1px);
-    background-size: 50px 50px, 60px 60px, 30px 30px;
-    animation: pixelTwinkle 8s ease-in-out infinite;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-.hero-title-box {
-    background: var(--card-bg);
-    border: var(--pixel-border);
-    box-shadow: var(--pixel-shadow-hover);
-    padding: 40px;
-    display: inline-block;
-    position: relative;
-}
-
-.hero-title-box h1 {
-    font-family: var(--pixel-font);
-    font-size: 32px;
-    color: var(--text-primary);
-    text-shadow: 3px 3px 0px var(--accent-color);
-    margin-bottom: 15px;
-    animation: float 4s ease-in-out infinite;
-}
-
-.hero-subtitle {
-    font-family: var(--pixel-font);
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 25px;
-    letter-spacing: 2px;
-}
-
-.hero-decorations {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-.pixel-decoration {
-    font-size: 24px;
-    animation: pixelBlink 3s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 0.5s);
-}
-
-.pixel-decoration:nth-child(1) { --i: 0; }
-.pixel-decoration:nth-child(2) { --i: 1; }
-.pixel-decoration:nth-child(3) { --i: 2; }
-.pixel-decoration:nth-child(4) { --i: 3; }
-.pixel-decoration:nth-child(5) { --i: 4; }
-
-/* 🎯 Navigation Section */
-.simple-nav {
-    background: var(--card-bg);
-    border-bottom: var(--pixel-border-light);
-    padding: 25px 0;
-    box-shadow: var(--pixel-shadow);
-}
-
-.simple-nav .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.tabs {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.search-box {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-#search-input {
-    background: var(--light-bg);
-    border: var(--pixel-border-light);
-    padding: 12px 15px;
-    font-family: var(--body-font);
-    font-size: 14px;
-    color: var(--text-primary);
-    min-width: 250px;
-    box-shadow: inset 2px 2px 0px rgba(45, 42, 61, 0.1);
-}
-
-#search-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: inset 2px 2px 0px rgba(45, 42, 61, 0.2);
-}
-
-#search-input::placeholder {
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-#search-btn {
-    background: var(--accent-color);
-    color: var(--text-primary);
-    border: var(--pixel-border-light);
-    padding: 12px 20px;
-    font-family: var(--pixel-font);
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: var(--pixel-shadow);
-    transition: all 0.2s ease;
-}
-
-#search-btn:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--pixel-shadow-hover);
-    background: var(--pixel-coral);
-}
-
 /* 🎯 Main Container */
 .container {
     max-width: 1200px;
@@ -342,45 +201,30 @@ header {
 
 /* 🎮 No Events State - Kawaii Style */
 .no-events {
-    background: linear-gradient(135deg, var(--card-bg) 0%, var(--light-bg) 100%);
+    background: var(--card-bg);
     border: var(--pixel-border);
-    box-shadow: var(--pixel-shadow-hover);
-    padding: 50px;
+    box-shadow: var(--pixel-shadow);
+    padding: 40px;
     text-align: center;
-    margin: 40px auto;
-    max-width: 700px;
+    margin: 30px auto;
+    max-width: 600px;
     position: relative;
-    overflow: hidden;
 }
 
 .no-events::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 179, 209, 0.1) 1px, transparent 1px);
-    background-size: 30px 30px;
-    animation: pixelTwinkle 6s linear infinite;
-    pointer-events: none;
-}
-
-.no-events p:first-child {
-    font-family: var(--pixel-font);
-    font-size: 18px;
-    color: var(--primary-color);
+    content: '🎮';
+    font-size: 48px;
+    display: block;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 0px var(--accent-color);
+    animation: float 3s ease-in-out infinite;
 }
 
 .no-events p {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--text-secondary);
     margin-bottom: 20px;
+    font-family: var(--pixel-font);
     line-height: 1.8;
-    position: relative;
-    z-index: 2;
 }
 
 .no-events ul {
@@ -557,45 +401,6 @@ header {
     animation: pulse 2s ease-in-out infinite;
 }
 
-/* 🌸 Kawaii Loading Animation */
-.kawaii-loading {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 25px;
-    padding: 20px;
-}
-
-.loading-pixel {
-    font-size: 28px;
-    animation: kawaiiFloat 2s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 0.3s);
-}
-
-.loading-pixel:nth-child(1) { --i: 0; }
-.loading-pixel:nth-child(2) { --i: 1; }
-.loading-pixel:nth-child(3) { --i: 2; }
-.loading-pixel:nth-child(4) { --i: 3; }
-
-@keyframes kawaiiFloat {
-    0%, 100% { 
-        transform: translateY(0px) scale(1);
-        filter: brightness(1);
-    }
-    25% { 
-        transform: translateY(-8px) scale(1.1);
-        filter: brightness(1.2);
-    }
-    50% { 
-        transform: translateY(-12px) scale(1.2);
-        filter: brightness(1.4);
-    }
-    75% { 
-        transform: translateY(-8px) scale(1.1);
-        filter: brightness(1.2);
-    }
-}
-
 /* 🌟 Animations */
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
@@ -610,34 +415,6 @@ header {
 @keyframes pixelBlink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0.3; }
-}
-
-@keyframes pixelTwinkle {
-    0%, 100% { 
-        opacity: 1; 
-        transform: translateY(0px);
-    }
-    25% { 
-        opacity: 0.7; 
-        transform: translateY(-2px);
-    }
-    50% { 
-        opacity: 1; 
-        transform: translateY(0px);
-    }
-    75% { 
-        opacity: 0.8; 
-        transform: translateY(1px);
-    }
-}
-
-@keyframes pixelGlow {
-    0%, 100% { 
-        box-shadow: var(--pixel-shadow);
-    }
-    50% { 
-        box-shadow: var(--pixel-shadow-hover), 0 0 20px rgba(255, 179, 209, 0.3);
-    }
 }
 
 /* 📱 Responsive Design */
