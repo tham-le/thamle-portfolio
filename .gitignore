@@ -52,7 +52,8 @@ test-*.sh
 *.backup
 .DS_Store
 
-# External Sync Files - now handled as submodule
+# External Sync Files
+external-writeups/
 !external-writeups-example/
 
 # Project Specific
