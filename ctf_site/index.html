@@ -28,47 +28,11 @@
             </div>
         </section>
 
-        <!-- Featured Section -->
-        <section class="featured-section" id="featured-section">
-            <!-- Will be populated if featured articles exist -->
-        </section>
-
-        <!-- Browse Options -->
-        <section class="browse-options">
+        <!-- Simple Navigation -->
+        <section class="simple-nav">
             <div class="tabs">
-                <button class="tab-btn active" data-view="all">All Writeups</button>
-                <button class="tab-btn" data-view="events">Browse by Event</button>
-                <button class="tab-btn" data-view="categories">Browse by Category</button>
-            </div>
-            <div class="view-options">
-                <button id="grid-view-btn" class="view-btn active" title="Grid View">
-                    <span class="icon">⊞</span>
-                </button>
-                <button id="list-view-btn" class="view-btn" title="List View">
-                    <span class="icon">≡</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- Filters -->
-        <section class="filters">
-            <div class="filter-group">
-                <label for="category-filter">Category:</label>
-                <select id="category-filter">
-                    <option value="all">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="difficulty-filter">Difficulty:</label>
-                <select id="difficulty-filter">
-                    <option value="all">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="ctf-filter">CTF Event:</label>
-                <select id="ctf-filter">
-                    <option value="all">All</option>
-                </select>
+                <button class="tab-btn active" data-view="events">CTF Events</button>
+                <button class="tab-btn" data-view="all">Current Event</button>
             </div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Search writeups...">
@@ -120,6 +84,6 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=1.2"></script>
 </body>
 </html>
