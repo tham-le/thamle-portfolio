@@ -1,16 +1,12 @@
-name: Deploy CTF Site (Simpler Version)
+name: Deploy CTF Site
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'ctf_site/**'
+      - 'external-writeups/**'
   workflow_dispatch:
-  repository_dispatch:
-    types: [new-writeup]
-
-permissions:
-  contents: read
 
 jobs:
   deploy-ctf-site:
@@ -19,146 +15,24 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: true
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
         
-    - name: Verify writeups exist and copy to CTF site
+    - name: Copy writeups to CTF site
       run: |
-        echo "🔍 Checking for writeups..."
-        
-        # Check if source directory exists
-        if [ ! -d "ctf_app/assets/writeups" ]; then
-          echo "❌ Source directory ctf_app/assets/writeups does not exist"
-          exit 1
-        fi
-        
-        # Count writeups
-        writeup_count=$(find ctf_app/assets/writeups -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
-        echo "📄 Found $writeup_count writeup files"
-        
-        if [ "$writeup_count" -eq 0 ]; then
-          echo "⚠️ No writeup files found to deploy"
-          exit 1
-        fi
-        
-        # Create target directory
         mkdir -p ctf_site/assets/writeups
+        cp -r external-writeups/* ctf_site/assets/writeups/
         
-        # Copy writeups
-          echo "📁 Copying writeups from ctf_app to ctf_site"
-          cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
-        
-        # Verify copy was successful
-        copied_count=$(find ctf_site/assets/writeups -name "*.md" -not -name "README.md" -not -name "index.md" -not -name "ctf-writeup-format.md" | wc -l)
-        echo "✅ Successfully copied $copied_count writeup files"
-        
-        if [ "$copied_count" -ne "$writeup_count" ]; then
-          echo "❌ Copy verification failed: expected $writeup_count, got $copied_count"
-          exit 1
-        fi
-        
-        # List CTF events
-        echo "🏆 CTF Events found:"
-        for dir in ctf_site/assets/writeups/*/; do
-          if [ -d "$dir" ]; then
-            event_name=$(basename "$dir")
-            event_writeups=$(find "$dir" -name "*.md" -not -name "README.md" | wc -l)
-            echo "  - $event_name ($event_writeups writeups)"
-          fi
-        done
-        
-    - name: Validate CTF site structure
-      run: |
-        echo "🔍 Validating CTF site structure..."
-        
-        # Check if index.html exists
-        if [ ! -f "ctf_site/index.html" ]; then
-          echo "❌ ctf_site/index.html not found"
-          exit 1
-        fi
-        
-        # Check if writeups directory exists
-        if [ ! -d "ctf_site/assets/writeups" ]; then
-          echo "❌ ctf_site/assets/writeups directory not found"
-          exit 1
-        fi
-        
-        # Check if main index exists
-        if [ ! -f "ctf_site/assets/writeups/index.md" ]; then
-          echo "❌ Main writeups index not found"
-          exit 1
-        fi
-        
-        echo "✅ CTF site structure validation passed"
-        
-    - name: Install Firebase CLI
-      run: |
-        echo "📦 Installing Firebase CLI..."
-        npm install -g firebase-tools
-        firebase --version
-        
-    - name: Validate Firebase configuration
-      run: |
-        echo "🔍 Validating Firebase configuration..."
-        
-        # Check if firebase.json exists
-        if [ ! -f "firebase.json" ]; then
-          echo "❌ firebase.json not found"
-          exit 1
-        fi
-        
-        # Check if .firebaserc exists
-        if [ ! -f ".firebaserc" ]; then
-          echo "❌ .firebaserc not found"
-          exit 1
-        fi
-        
-        # Validate Firebase token is set
-        if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
-          echo "❌ FIREBASE_TOKEN secret is not set"
-          exit 1
-        fi
-        
-        echo "✅ Firebase configuration validation passed"
-      
-    - name: Deploy to Firebase
-      run: |
-        echo "🚀 Deploying CTF site to Firebase..."
-        
-        # Set Firebase token
-        export FIREBASE_TOKEN="${{ secrets.FIREBASE_TOKEN }}"
-        
-        # Deploy with detailed logging
-        firebase deploy --only hosting:ctf --token "$FIREBASE_TOKEN" --non-interactive --debug
-        
-        if [ $? -eq 0 ]; then
-          echo "✅ Deployment successful!"
-          echo "🌐 CTF site is live at: https://ctf.thamle.live"
-        else
-          echo "❌ Deployment failed"
-          exit 1
-        fi
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        
-    - name: Post-deployment verification
-      run: |
-        echo "🔍 Post-deployment verification..."
-        
-        # Wait a moment for deployment to propagate
-        sleep 10
-        
-        # Try to curl the deployed site (basic check)
-        if command -v curl >/dev/null 2>&1; then
-          echo "📡 Testing deployed site connectivity..."
-          if curl -f -s -o /dev/null "https://ctf.thamle.live"; then
-            echo "✅ Site is accessible"
-          else
-            echo "⚠️ Site accessibility check failed (this might be normal for new deployments)"
-          fi
-        fi
-        
-        echo "🎉 Deployment workflow completed successfully!"
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: ${{ secrets.GITHUB_TOKEN }}
+        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}
+        projectId: thamle-portfolio
+        target: ctf-writeups
+        channelId: live

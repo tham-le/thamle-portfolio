@@ -6,49 +6,27 @@
     <title>Tham's CTF Writeups</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">🏆 Tham's CTF Writeups 🏆</div>
+            <h1 class="logo">Tham's CTF Writeups</h1>
             <nav>
-                <a href="https://thamle.live" class="home-link">🏠 Back to Main</a>
+                <a href="https://thamle.live" class="home-link">Back to Main</a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-title-box">
-                    <h1>🎮 THAM 🎮</h1>
-                    <p>CYBER SECURITY ADVENTURES</p>
-                </div>
-            </div>
+        <!-- Filters -->
+        <section class="filters">
+            <input type="text" id="search-input" placeholder="Search writeups...">
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+            </select>
         </section>
 
-        <!-- Simple Navigation -->
-        <section class="simple-nav">
-            <div class="tabs">
-                <button class="tab-btn active" data-view="events">CTF Events</button>
-                <button class="tab-btn" data-view="all">Current Event</button>
-            </div>
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Search writeups...">
-                <button id="search-btn">🔍</button>
-            </div>
-        </section>
-
-        <!-- CTF Events Grid (Hidden Initially) -->
-        <section id="events-container" class="events-container hidden">
-            <!-- Events will be loaded here -->
-        </section>
-
-        <!-- Categories Grid (Hidden Initially) -->
-        <section id="categories-container" class="categories-container hidden">
-            <!-- Categories will be loaded here -->
-        </section>
+        
 
         <!-- Writeups Section -->
         <section class="writeups">
