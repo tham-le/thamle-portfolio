@@ -1,22 +1,8 @@
 [
   {
-    "title": "README",
-    "event": "",
-    "category": "external-writeups",
-    "tags": [],
-    "path": "README.md"
-  },
-  {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "IrisCTF",
-    "tags": [],
-    "path": "IrisCTF/README.md"
-  },
-  {
     "title": "Political",
-    "event": "Unknown",
-    "category": "web",
+    "event": "IrisCTF",
+    "category": "Web_Exploitation",
     "tags": [
       "easy"
     ],
@@ -24,8 +10,8 @@
   },
   {
     "title": "IrisCTF 2025 - Password Manager Challenge Writeup",
-    "event": "Unknown",
-    "category": "web",
+    "event": "IrisCTF",
+    "category": "Web_Exploitation",
     "tags": [
       "web"
     ],
@@ -33,8 +19,8 @@
   },
   {
     "title": "KittyCrypt Writeup",
-    "event": "Unknown",
-    "category": "crypto",
+    "event": "IrisCTF",
+    "category": "Cryptography",
     "tags": [
       "crypto"
     ],
@@ -42,8 +28,8 @@
   },
   {
     "title": "Sleuths and Sweets",
-    "event": "Unknown",
-    "category": "osint",
+    "event": "IrisCTF",
+    "category": "Open-Source_Intelligence",
     "tags": [
       "osint"
     ],
@@ -51,8 +37,8 @@
   },
   {
     "title": "Not Eelaborate",
-    "event": "Unknown",
-    "category": "osint",
+    "event": "IrisCTF",
+    "category": "Open-Source_Intelligence",
     "tags": [
       "osint"
     ],
@@ -60,8 +46,8 @@
   },
   {
     "title": "Late Night Bite",
-    "event": "Unknown",
-    "category": "osint",
+    "event": "IrisCTF",
+    "category": "Open-Source_Intelligence",
     "tags": [
       "osint"
     ],
@@ -69,8 +55,8 @@
   },
   {
     "title": "Where's Bobby (247 Points) - SOLVED",
-    "event": "Unknown",
-    "category": "osint",
+    "event": "IrisCTF",
+    "category": "Open-Source_Intelligence",
     "tags": [
       "osint"
     ],
@@ -78,8 +64,8 @@
   },
   {
     "title": "deldeldel",
-    "event": "Unknown",
-    "category": "forensics",
+    "event": "IrisCTF",
+    "category": "Forensics",
     "tags": [
       "easy"
     ],
@@ -87,8 +73,8 @@
   },
   {
     "title": "Tracem 1",
-    "event": "Unknown",
-    "category": "forensics",
+    "event": "IrisCTF",
+    "category": "Forensics",
     "tags": [
       "baby"
     ],
@@ -96,24 +82,17 @@
   },
   {
     "title": "Sqlate Write-up",
-    "event": "Unknown",
-    "category": "pwn",
+    "event": "IrisCTF",
+    "category": "Binary_Exploitation",
     "tags": [
       "pwn"
     ],
     "path": "IrisCTF/Binary_Exploitation/sqlate/wu.md"
   },
   {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "HTBUniversity2024",
-    "tags": [],
-    "path": "HTBUniversity2024/README.md"
-  },
-  {
     "title": "Memory Dump",
-    "event": "Unknown",
-    "category": "forensics",
+    "event": "HTBUniversity2024",
+    "category": "Forensics",
     "tags": [
       "forensics",
       "memory",
@@ -123,8 +102,8 @@
   },
   {
     "title": "Buffer Overflow",
-    "event": "Unknown",
-    "category": "pwn",
+    "event": "HTBUniversity2024",
+    "category": "Binary_Exploitation",
     "tags": [
       "pwn",
       "buffer-overflow",
@@ -133,16 +112,9 @@
     "path": "HTBUniversity2024/Binary_Exploitation/buffer_overflow/writeup.md"
   },
   {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "HeroCTF_v6",
-    "tags": [],
-    "path": "HeroCTF_v6/README.md"
-  },
-  {
     "title": "Fake Login",
-    "event": "Unknown",
-    "category": "web",
+    "event": "HeroCTF_v6",
+    "category": "Web_Exploitation",
     "tags": [
       "web",
       "sql-injection",
@@ -152,8 +124,8 @@
   },
   {
     "title": "Caesar Cipher",
-    "event": "Unknown",
-    "category": "crypto",
+    "event": "HeroCTF_v6",
+    "category": "Cryptography",
     "tags": [
       "crypto",
       "caesar",
@@ -162,16 +134,9 @@
     "path": "HeroCTF_v6/Cryptography/caesar_cipher/wu.md"
   },
   {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "CyberApocalypse2025",
-    "tags": [],
-    "path": "CyberApocalypse2025/README.md"
-  },
-  {
     "title": "API Chaos",
-    "event": "Unknown",
-    "category": "web",
+    "event": "CyberApocalypse2025",
+    "category": "Web_Exploitation",
     "tags": [
       "web",
       "api",
@@ -182,8 +147,8 @@
   },
   {
     "title": "Social Media Hunt",
-    "event": "Unknown",
-    "category": "osint",
+    "event": "CyberApocalypse2025",
+    "category": "Open-Source_Intelligence",
     "tags": [
       "osint",
       "social-media",
@@ -192,16 +157,9 @@
     "path": "CyberApocalypse2025/Open-Source_Intelligence/social_media_hunt/wu.md"
   },
   {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "404CTF_2025",
-    "tags": [],
-    "path": "404CTF_2025/README.md"
-  },
-  {
     "title": "Binary Analysis",
-    "event": "Unknown",
-    "category": "rev",
+    "event": "404CTF_2025",
+    "category": "Reverse_Engineering",
     "tags": [
       "rev",
       "binary",
@@ -212,8 +170,8 @@
   },
   {
     "title": "Steganography",
-    "event": "Unknown",
-    "category": "misc",
+    "event": "404CTF_2025",
+    "category": "Miscellaneous",
     "tags": [
       "misc",
       "steganography",
@@ -222,16 +180,9 @@
     "path": "404CTF_2025/Miscellaneous/steganography/wu.md"
   },
   {
-    "title": "README",
-    "event": "external-writeups",
-    "category": "CTF_HackHer",
-    "tags": [],
-    "path": "CTF_HackHer/README.md"
-  },
-  {
     "title": "RSA Challenge",
-    "event": "Unknown",
-    "category": "crypto",
+    "event": "CTF_HackHer",
+    "category": "Cryptography",
     "tags": [
       "crypto",
       "rsa",
@@ -241,8 +192,8 @@
   },
   {
     "title": "Network Analysis",
-    "event": "Unknown",
-    "category": "forensics",
+    "event": "CTF_HackHer",
+    "category": "Forensics",
     "tags": [
       "forensics",
       "network",
