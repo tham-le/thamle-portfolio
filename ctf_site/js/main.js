@@ -124,29 +124,110 @@ async function fetchCTFWriteups(ctfName, ctfPath) {
 
 // Get a list of writeup files in a category
 async function fetchCategoryWriteupsList(ctfPath, categoryPath) {
-    // Since we can't list directory contents directly, we'll use the directory pattern
-    // we know from the repo structure - all .md files in the category directory except README.md
+    // Since we can't list directory contents directly via browser,
+    // we'll use a discovery approach by trying common writeup filenames
+    // and checking which ones exist
     
-    // TODO: Implement a way to get the list of files in a directory
-    // For now, we'll hard-code the paths based on the known structure
-    // This would need to be dynamically generated in a real environment
+    const writeupFiles = [];
     
-    // For demo purposes, use known writeup files from the index
-    const knownWriteups = {
-        'IrisCTF': {
-            'web': ['Political.md', 'password-manager.md'],
-            'crypto': ['KittyCrypt.md'],
-            'forensics': ['Tracem_1.md', 'deldeldel.md'],
-            'osint': ['Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md'],
-            'pwn': ['sqlate.md']
+    // First, try to get a directory listing by checking for common challenge names
+    // We'll discover challenges by parsing the CTF README if it exists
+    try {
+        const ctfReadmeResponse = await fetch(`assets/writeups/${ctfPath}/README.md`);
+        if (ctfReadmeResponse.ok) {
+            const ctfReadmeContent = await ctfReadmeResponse.text();
+            
+            // Look for the category section and extract challenge count
+            const categoryRegex = new RegExp(`\\*\\*\\[${categoryPath}\\]\\([^)]+\\)\\*\\*\\s*\\((\\d+)\\s+challenge[s]?\\)`, 'i');
+            const match = ctfReadmeContent.match(categoryRegex);
+            
+            if (match) {
+                const challengeCount = parseInt(match[1]);
+                console.log(`Found ${challengeCount} challenges in ${categoryPath} category`);
+                
+                // Now we need to discover the actual challenge names
+                // We'll try a brute force approach with common naming patterns
+                const discoveredChallenges = await discoverChallengeFiles(ctfPath, categoryPath);
+                return discoveredChallenges;
+            }
         }
-    };
-    
-    if (knownWriteups[ctfPath] && knownWriteups[ctfPath][categoryPath]) {
-        return knownWriteups[ctfPath][categoryPath];
+    } catch (error) {
+        console.log(`Could not read CTF README for ${ctfPath}:`, error);
     }
     
-    return [];
+    // Fallback: try to discover challenges by checking the directory
+    return await discoverChallengeFiles(ctfPath, categoryPath);
+}
+
+// Discover challenge files by trying different approaches
+async function discoverChallengeFiles(ctfPath, categoryPath) {
+    const writeupFiles = [];
+    
+    // Method 1: Try to fetch a directory listing endpoint (won't work in browser, but worth trying)
+    try {
+        const dirResponse = await fetch(`assets/writeups/${ctfPath}/${categoryPath}/`);
+        if (dirResponse.ok) {
+            const dirHtml = await dirResponse.text();
+            // Parse HTML directory listing if available
+            const fileMatches = [...dirHtml.matchAll(/href="([^"]+\.md)"/g)];
+            for (const match of fileMatches) {
+                const filename = match[1];
+                if (filename !== 'README.md') {
+                    writeupFiles.push(filename);
+                }
+            }
+            if (writeupFiles.length > 0) {
+                console.log(`Discovered ${writeupFiles.length} files via directory listing`);
+                return writeupFiles;
+            }
+        }
+    } catch (error) {
+        // Expected to fail in most cases
+    }
+    
+    // Method 2: Try common challenge naming patterns and see which files exist
+    const commonPatterns = [
+        // From our known writeups
+        'Political.md', 'password-manager.md', 'KittyCrypt.md', 'Tracem_1.md', 'deldeldel.md',
+        'Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md', 'sqlate.md',
+        
+        // Common CTF challenge naming patterns
+        'challenge.md', 'writeup.md', 'solution.md', 'wu.md',
+        'easy.md', 'medium.md', 'hard.md',
+        'pwn1.md', 'pwn2.md', 'crypto1.md', 'crypto2.md',
+        'web1.md', 'web2.md', 'forensics1.md', 'forensics2.md',
+        'rev1.md', 'rev2.md', 'misc1.md', 'misc2.md',
+        'osint1.md', 'osint2.md', 'osint3.md', 'osint4.md'
+    ];
+    
+    // Filter patterns by category
+    let patternsToTry = commonPatterns;
+    if (categoryPath === 'web') {
+        patternsToTry = ['Political.md', 'password-manager.md', ...commonPatterns.filter(p => p.includes('web'))];
+    } else if (categoryPath === 'crypto') {
+        patternsToTry = ['KittyCrypt.md', ...commonPatterns.filter(p => p.includes('crypto'))];
+    } else if (categoryPath === 'forensics') {
+        patternsToTry = ['Tracem_1.md', 'deldeldel.md', ...commonPatterns.filter(p => p.includes('forensics'))];
+    } else if (categoryPath === 'osint') {
+        patternsToTry = ['Sleuths_and_Sweets.md', 'Late_Night_Bite.md', 'Not_Eelaborate.md', 'wheres-bobby.md', ...commonPatterns.filter(p => p.includes('osint'))];
+    } else if (categoryPath === 'pwn') {
+        patternsToTry = ['sqlate.md', ...commonPatterns.filter(p => p.includes('pwn'))];
+    }
+    
+    for (const filename of patternsToTry) {
+        try {
+            const testResponse = await fetch(`assets/writeups/${ctfPath}/${categoryPath}/${filename}`);
+            if (testResponse.ok) {
+                writeupFiles.push(filename);
+                console.log(`✅ Discovered: ${categoryPath}/${filename}`);
+            }
+        } catch (error) {
+            // File doesn't exist, continue
+        }
+    }
+    
+    console.log(`Discovered ${writeupFiles.length} writeup files in ${ctfPath}/${categoryPath}`);
+    return writeupFiles;
 }
 
 // Fetch a single writeup file
@@ -161,7 +242,7 @@ async function fetchWriteup(ctfPath, categoryPath, filename, ctfName, category) 
         
         const markdown = await response.text();
         
-        // Parse the YAML frontmatter
+        // Parse the YAML frontmatter or table metadata
         const writeup = parseMarkdown(markdown, filename, ctfName, category);
         writeup.filepath = filepath;
         
@@ -172,46 +253,105 @@ async function fetchWriteup(ctfPath, categoryPath, filename, ctfName, category) 
     }
 }
 
-// Parse markdown content with YAML frontmatter
+// Parse markdown content with YAML frontmatter or table metadata
 function parseMarkdown(markdown, filename, ctfName, category) {
     try {
-        // Extract YAML front matter
+        // First, try to extract YAML front matter
         const frontMatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
         
-        if (!frontMatterMatch) {
-            throw new Error('Invalid markdown format: missing metadata');
+        if (frontMatterMatch) {
+            // YAML frontmatter format
+            const frontMatter = frontMatterMatch[1];
+            const content = markdown.substring(frontMatterMatch[0].length);
+            
+            // Parse YAML
+            const metadata = jsyaml.load(frontMatter);
+            
+            // Extract featured status and banner image if they exist
+            const featured = metadata.featured || false;
+            const banner = metadata.banner || null;
+            const thumbnail = metadata.thumbnail || null;
+            const description = metadata.description || extractDescriptionFromMarkdown(content);
+            
+            return {
+                title: metadata.title || filename.replace('.md', '').replace(/-/g, ' '),
+                date: new Date(metadata.date || Date.now()),
+                ctf: metadata.ctf || ctfName,
+                category: metadata.category || category,
+                difficulty: metadata.difficulty || 'Medium',
+                points: metadata.points || 0,
+                tags: metadata.tags || [],
+                author: metadata.author || 'Tham Le',
+                solved: metadata.solved !== false,
+                featured: featured,
+                banner: banner,
+                thumbnail: thumbnail,
+                description: description,
+                content: content,
+                filename: filename
+            };
+        } else {
+            // Table-based metadata format (from external repository)
+            const tableMatch = markdown.match(/\|\s*Category\s*\|\s*Author\s*\|\s*Tags\s*\|\s*Points\s*\|\s*Solves\s*\|\s*\n\|\s*:---.*?\n\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|/);
+            
+            let tableMetadata = {};
+            if (tableMatch) {
+                tableMetadata = {
+                    category: tableMatch[1].trim(),
+                    author: tableMatch[2].trim(),
+                    tags: tableMatch[3].trim().split(/[,\s]+/).filter(t => t),
+                    points: parseInt(tableMatch[4].trim()) || 0,
+                    solves: parseInt(tableMatch[5].trim()) || 0
+                };
+            }
+            
+            // Extract title from first heading
+            const titleMatch = markdown.match(/^#\s+(.+)$/m);
+            const title = titleMatch ? titleMatch[1].trim() : filename.replace('.md', '').replace(/-/g, ' ');
+            
+            // Determine difficulty based on tags or points
+            let difficulty = 'Medium';
+            if (tableMetadata.tags) {
+                if (tableMetadata.tags.some(tag => tag.toLowerCase().includes('easy') || tag.toLowerCase().includes('baby'))) {
+                    difficulty = 'Easy';
+                } else if (tableMetadata.tags.some(tag => tag.toLowerCase().includes('hard') || tag.toLowerCase().includes('insane'))) {
+                    difficulty = 'Hard';
+                }
+            }
+            if (tableMetadata.points < 100) difficulty = 'Easy';
+            else if (tableMetadata.points > 300) difficulty = 'Hard';
+            
+            // Normalize category name
+            let normalizedCategory = category;
+            if (tableMetadata.category) {
+                const cat = tableMetadata.category.toLowerCase();
+                if (cat.includes('web')) normalizedCategory = 'web';
+                else if (cat.includes('crypto')) normalizedCategory = 'crypto';
+                else if (cat.includes('forensic')) normalizedCategory = 'forensics';
+                else if (cat.includes('binary') || cat.includes('pwn')) normalizedCategory = 'pwn';
+                else if (cat.includes('osint') || cat.includes('intelligence')) normalizedCategory = 'osint';
+                else if (cat.includes('reverse')) normalizedCategory = 'rev';
+                else if (cat.includes('misc')) normalizedCategory = 'misc';
+            }
+            
+            return {
+                title: title,
+                date: new Date(), // Default to current date since no date in table format
+                ctf: ctfName,
+                category: normalizedCategory,
+                difficulty: difficulty,
+                points: tableMetadata.points || 0,
+                tags: tableMetadata.tags || [],
+                author: tableMetadata.author || 'Tham Le',
+                solved: true, // Assume solved if writeup exists
+                featured: false,
+                banner: null,
+                thumbnail: null,
+                description: extractDescriptionFromMarkdown(markdown),
+                content: markdown,
+                filename: filename
+            };
         }
-        
-        const frontMatter = frontMatterMatch[1];
-        const content = markdown.substring(frontMatterMatch[0].length);
-        
-        // Parse YAML
-        const metadata = jsyaml.load(frontMatter);
-        
-        // Extract featured status and banner image if they exist
-        const featured = metadata.featured || false;
-        const banner = metadata.banner || null;
-        const thumbnail = metadata.thumbnail || null;
-        const description = metadata.description || extractDescriptionFromMarkdown(content);
-        
-        // Fallback values if YAML parsing fails
-        return {
-            title: metadata.title || filename.replace('.md', '').replace(/-/g, ' '),
-            date: new Date(metadata.date || Date.now()),
-            ctf: metadata.ctf || ctfName,
-            category: metadata.category || category,
-            difficulty: metadata.difficulty || 'Medium',
-            points: metadata.points || 0,
-            tags: metadata.tags || [],
-            author: metadata.author || 'Tham Le',
-            solved: metadata.solved !== false,
-            featured: featured,
-            banner: banner,
-            thumbnail: thumbnail,
-            description: description,
-            content: content,
-            filename: filename
-        };
     } catch (error) {
         console.error('Error parsing markdown:', error);
         
