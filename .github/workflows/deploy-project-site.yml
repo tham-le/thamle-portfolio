@@ -1,22 +1,52 @@
 name: 📁 Deploy Project Showcase Site
 
 on:
-  # SECURITY: Only deploy from main branch, not from PRs
-  push:
+  # SECURITY: Only deploy after CI/CD validation passes
+  workflow_run:
+    workflows: ["🧪 CI/CD - Code Validation"]
+    types: [completed]
     branches: [ main ]
-    paths:
-      - 'project_site/**'
-      - '.github/workflows/deploy-project-site.yml'
   workflow_dispatch:
+    inputs:
+      bypass_validation:
+        description: 'EMERGENCY: Bypass CI/CD validation? (DANGER)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
 jobs:
+  check-validation:
+    runs-on: ubuntu-latest
+    outputs:
+      validation-passed: ${{ steps.check.outputs.passed }}
+    steps:
+    - name: Check CI/CD Validation Status
+      id: check
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+            echo "✅ CI/CD validation passed"
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ CI/CD validation failed"
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        elif [[ "${{ github.event.inputs.bypass_validation }}" == "true" ]]; then
+          echo "⚠️ EMERGENCY: Bypassing CI/CD validation"
+          echo "passed=true" >> $GITHUB_OUTPUT
+        else
+          echo "❌ No valid trigger or bypass"
+          echo "passed=false" >> $GITHUB_OUTPUT
+        fi
+
   deploy-project-showcase:
     runs-on: ubuntu-latest
-    # SECURITY: Only run on main branch
-    if: github.ref == 'refs/heads/main'
+    needs: check-validation
+    # SECURITY: Only deploy if validation passed
+    if: needs.check-validation.outputs.validation-passed == 'true'
     steps:
       - uses: actions/checkout@v3
       - uses: FirebaseExtended/action-hosting-deploy@v0
