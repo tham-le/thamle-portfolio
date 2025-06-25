@@ -26,12 +26,14 @@ We intercepted an RSA public key and an encrypted message. The challenge is to d
 ## Solution
 
 I was given a public key (n, e) where:
+
 - n = 9615312128647...65763 (large number truncated)
 - e = 65537
 
 ### Step 1: Factor the modulus
 
 Using factordb.com, I discovered that n could be factored into:
+
 - p = 98324178762...767
 - q = 97793173854...979
 
@@ -40,6 +42,7 @@ The modulus used was too small, making it vulnerable to factorization.
 ### Step 2: Calculate the private key
 
 With p and q known, I calculated:
+
 - Φ(n) = (p-1)(q-1)
 - d = e^(-1) mod Φ(n)
 

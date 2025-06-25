@@ -35,12 +35,22 @@ jobs:
         mkdir -p ctf_app/assets/writeups
         mkdir -p ctf_site/assets/writeups
         
-        # Remove existing synced content (keep format guide)
+        # Remove existing synced content (keep format guide and preserve redirection pages)
         find ctf_app/assets/writeups -name "*.md" -not -name "ctf-writeup-format.md" -delete 2>/dev/null || true
         find ctf_app/assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
         
+        # For the ctf_site, just remove the writeups content but keep the redirection pages
         find ctf_site/assets/writeups -name "*.md" -delete 2>/dev/null || true
-        find ctf_site/assets/writeups -type d -not -name "writeups" -exec rm -rf {} + 2>/dev/null || true
+        find ctf_site/assets/writeups -type d -not -name "writeups" -not -name "assets" -not -name "images" -exec rm -rf {} + 2>/dev/null || true
+        
+        # Ensure redirection directories exist
+        mkdir -p ctf_site/web
+        mkdir -p ctf_site/crypto
+        mkdir -p ctf_site/forensics
+        mkdir -p ctf_site/pwn
+        mkdir -p ctf_site/rev
+        mkdir -p ctf_site/misc
+        mkdir -p ctf_site/osint
         
         echo "🔄 Syncing writeups from CTF-Writeups repository..."
         
@@ -89,6 +99,21 @@ jobs:
                   
                   # Count categories
                   category_counts[$category]=$((${category_counts[$category]:-0} + 1))
+                  
+                  # Check for images directory and copy images if they exist
+                  if [ -d "$challenge_dir/images" ]; then
+                    # Create image directories
+                    mkdir -p "$event_path/$category/images"
+                    mkdir -p "ctf_site/assets/images/writeups/$ctf_name/$category/$challenge_name"
+                    
+                    # Copy images to both locations
+                    cp -r "$challenge_dir/images/"* "$event_path/$category/images/"
+                    cp -r "$challenge_dir/images/"* "ctf_site/assets/images/writeups/$ctf_name/$category/$challenge_name/"
+                    
+                    # Update image paths in the writeup
+                    sed -i "s|!\[.*\](images/|![](/assets/images/writeups/$ctf_name/$category/$challenge_name/|g" "$event_path/$category/$new_filename"
+                    echo "  📷 Copied images and updated paths"
+                  fi
                 fi
               fi
             done
@@ -152,6 +177,31 @@ jobs:
           echo "📦 Copying writeups to simple CTF site..."
           cp -r ctf_app/assets/writeups/* ctf_site/assets/writeups/
           echo "✅ Writeups copied to ctf_site/assets/writeups/"
+          
+          # Ensure category redirection index.html files still exist
+          for category in web crypto forensics pwn rev misc osint; do
+            if [ ! -f "ctf_site/$category/index.html" ]; then
+              mkdir -p "ctf_site/$category"
+              cat > "ctf_site/$category/index.html" << EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=/">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <p>Redirecting to home page...</p>
+    <script>
+        window.location.href = '/';
+    </script>
+</body>
+</html>
+EOF
+              echo "✅ Restored redirection page for $category"
+            fi
+          done
         fi
 
     - name: Check for changes

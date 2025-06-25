@@ -1,0 +1,15 @@
+name: Trigger Writeups Sync
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger sync-writeups workflow
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+          event-type: sync-writeups
+          repository: ${{ github.repository }}
