@@ -1,9 +1,17 @@
-name: 🧪 CI/CD - Pull Request Validation
+name: 🧪 CI/CD - Code Validation
 
 on:
   pull_request:
     branches: [ main, test-for-ctf-page ]
     types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]
+    paths:
+      - 'ctf_site/**'
+      - 'ctf_app/**' 
+      - 'project_site/**'
+      - 'public/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
