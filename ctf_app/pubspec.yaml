@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,7 +52,7 @@ dependencies:
   url_launcher: ^6.2.2
   
   # UI components
-  
+  google_fonts: ^6.1.0
   flutter_svg: ^2.0.9
   
   # Responsive UI
@@ -88,7 +87,13 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/writeups/
+    - assets/writeups/index.md
+    - assets/writeups/ctf-writeup-format.md
+    - assets/writeups/IrisCTF/README.md
+    - assets/writeups/IrisCTF/misc/KittyCrypt.md
+    - assets/writeups/IrisCTF/forensics/wheres-bobby.md
+    - assets/writeups/IrisCTF/web/password-manager.md
+    - assets/writeups/IrisCTF/web/sqlate.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
