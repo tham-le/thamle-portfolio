@@ -36,7 +36,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5; /* Simple, light grey background */
             color: #333333;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
@@ -46,73 +46,57 @@
         .main-content {
             max-width: 800px;
             margin: 0 auto;
-            background: #f5f5f5;
-            padding: 0 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: #ffffff; /* White content area */
+            padding: 20px 40px; /* More horizontal padding */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             min-height: 100vh;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .header-section {
             text-align: center;
-            padding: 60px 20px;
-            margin: 0 -20px 40px -20px;
-            position: relative;
-            overflow: hidden;
+            padding: 50px 0 30px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 40px;
         }
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .profile-photo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            backdrop-filter: blur(10px);
-        }
-
-        .profile-info h1 {
+        .header-section h1 {
             margin: 0;
             font-size: 2.8em;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: #1a1a1a;
             border: none;
             padding: 0;
         }
 
-        .profile-info .tagline {
+        .header-section .tagline {
             font-size: 1.2em;
-            margin: 10px 0;
-            opacity: 0.9;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .header-contact {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-contact a {
+            color: #2c5282;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: #e0eafc;
+            border-radius: 25px;
+            border: 1px solid #c3dafe;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .header-contact a:hover {
+            background: #c3dafe;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .hero-description {
@@ -121,31 +105,6 @@
             margin: 0 auto 30px;
             opacity: 0.95;
             line-height: 1.6;
-        }
-
-        .hero-contact {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .hero-contact a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .hero-contact a:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         h1,
@@ -610,85 +569,61 @@
                 padding: 40px 20px;
             }
             
-            .profile-info h1 {
+            .header-section h1 {
                 font-size: 2.2em;
             }
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2c5282;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #1e3a5f;
+            transform: scale(1.1);
         }
     </style>
 </head>
 
 <body>
     <div class="main-content">
-        <div class="hero-section">
-            <div class="hero-content">
-                <div class="profile-section">
-                    <div class="profile-photo">TL</div>
-                    <div class="profile-info">
-        <h1>Tham Le</h1>
-                        <p class="tagline">Software Engineer | Python & C++ Developer | Problem Solver</p>
-                    </div>
-                </div>
-                <p class="hero-description">A quick learner who enjoys new challenges; I rapidly pick up new skills to solve
-            problems and get great results in different tech roles.</p>
-                <div class="hero-contact">
-                    <a href="https://github.com/tham-le" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="https://linkedin.com/in/tham42" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                    <a href="mailto:thamle.work@gmail.com">Email Me</a>
-                    <a href="ThamLE_resume.pdf" target="_blank" rel="noopener noreferrer">CV / Resume</a>
-            <a href="https://cv.42.fr/thi-le" target="_blank" rel="noopener noreferrer">42 Profile</a>
-                </div>
+        <header class="header-section">
+            <div class="profile-info">
+                <h1>Tham Le</h1>
+                <p class="tagline">Software Engineer | C++, Python, Systems & Security</p>
             </div>
-        </div>
-
-    <!-- Fun CTF Button -->
-    <div class="ctf-button-container">
-        <a href="https://ctf.thamle.live" class="ctf-button" target="_blank">
-            Explore My CTF Writeups
-        </a>
-    </div>
-
-        <!-- Key Metrics Section -->
-        <section class="metrics-section">
-            <div class="metrics-container">
-                <div class="metric-item">
-                    <div class="metric-number">8,000+</div>
-                    <div class="metric-label">Lines of Code</div>
-                    <div class="metric-sublabel">Ray Tracer Project</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">Top 10</div>
-                    <div class="metric-label">42 Piscine Rank</div>
-                    <div class="metric-sublabel">500+ Candidates</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">2-8x</div>
-                    <div class="metric-label">Performance Boost</div>
-                    <div class="metric-sublabel">Multithreading</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">4+</div>
-                    <div class="metric-label">Programming Languages</div>
-                    <div class="metric-sublabel">C++, Python, JS, C</div>
-                </div>
+            <p class="hero-description" style="display:none;">Abridged for simplicity. Key skills highlighted below.</p>
+            <div class="header-contact">
+                <a href="mailto:tham.le@epitech.eu">Email</a>
+                <a href="https://www.linkedin.com/in/tham-le-epitech/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/tham-le" target="_blank">GitHub</a>
+                <a href="ThamLE_resume.pdf" target="_blank">Resume (PDF)</a>
             </div>
-        </section>
+        </header>
 
-    <section id="testimonial">
-        <h2>Testimonial</h2>
-        <div class="testimonial">
-            <p class="testimonial-quote">"Tham a été un excellent élément de notre équipe. Elle a fait preuve d'un
-                niveau technique et d'une capacité de communication au delà de nos attentes. Elle a montré sa capacité à
-                expérimenter et rechercher... Tham prouve qu'elle a le niveau nécessaire pour intégrer le monde du
-                travail comme ingénieure logiciel."</p>
-            <p class="testimonial-translation"><em>(English Translation: "Tham was an excellent team member,
-                    demonstrating technical and communication skills beyond our expectations. She showed a strong
-                    ability to experiment and research... Tham proves she has the necessary level to join the
-                    professional world as a software engineer.")</em></p>
-            <p class="testimonial-author">— Martin Parisot, Snowpack</p>
-        </div>
-    </section>
-
-    <section id="about">
         <h2>About Me</h2>
         <p>As a Software Engineer, I bring a unique perspective from my background in <span
                 class="highlight">computational oceanography</span> and my training at 42 Paris. I enjoy working with
@@ -697,232 +632,55 @@
             I'm building complex systems or working with data.</p>
         <p>I'm always eager to learn new technologies and apply my skills to create solid, efficient solutions. I aim to
             contribute to challenging projects where I can use my adaptability and technical skills.</p>
-    </section>
+        <p><strong><a href="https://ctf.thamle.live">CTF Platform</a>:</strong> A website I built to host and showcase my Capture The Flag (CTF) writeups, demonstrating my skills in web development and cybersecurity analysis. The writeups are automatically synced from a dedicated GitHub repository.</p>
+        <p><strong><a href="https://project.thamle.live">Project Showcase</a>:</strong> An elite, dynamic showcase of my software projects, automatically populated from the GitHub API. Features interactive filtering, sorting, and a detailed modal view for each project's README.</p>
 
-    <section id="why-software-dev">
-        <h2>My Approach to Software Development</h2>
-        <p>My journey has given me a broad approach to engineering:</p>
-        <ul>
-            <li><strong>Analytical & Mathematical Skills:</strong> Good at solving complex problems using skills from
-                scientific modeling (Python, R, Fortran).</li>
-            <li><strong>Performance Focus:</strong> Experienced in making code (especially C++) run faster for large
-                datasets and heavy tasks.</li>
-            <li><strong>Adaptable Problem-Solving:</strong> Good at turning abstract ideas into working software, using
-                Python for quick tests or C++ for speed.</li>
-            <li><strong>Wide Range of Skills:</strong> Comfortable with low-level system programming (C/C++) and
-                high-level application development (Python, JavaScript).</li>
-        </ul>
-    </section>
+        <h2>Contact</h2>
+        <p>
+            All contact information can be found on my <a href="https://www.linkedin.com/in/tham-le-epitech/" target="_blank">LinkedIn profile</a> 
+            and my <a href="ThamLE_resume.pdf" target="_blank">resume</a>.
+        </p>
 
-    <section id="technical-skills">
-        <h2>Technical Skills</h2>
-        <ul>
-            <li><strong>Languages:</strong> C++ (STL, Modern C++), Python (Scientific Stack, Web Frameworks), C,
-                JavaScript, Bash, SQL</li>
-            <li><strong>Frameworks & Libraries:</strong> Django, Three.js, React, Vue.js, (Pandas, NumPy - if relevant)
-            </li>
-            <li><strong>Developer Tools:</strong> Git, Docker, Linux/UNIX, CMake, GDB/Valgrind, MiniLibX, pthreads,
-                WebSockets, CI/CD</li>
-            <li><strong>Databases:</strong> PostgreSQL, MariaDB</li>
-            <li><strong>Core Concepts:</strong> System Programming, Network Programming (TCP/IP), Performance
-                Optimization, OOP, Multithreading, Data Structures & Algorithms, Web Development (Full-Stack),
-                Cybersecurity Fundamentals</li>
-        </ul>
-    </section>
-
-    <section id="experience">
-        <h2>Professional Experience</h2>
-        <div class="experience-item">
-            <h3><span class="job-title">C++ Development Engineer</span></h3>
-            <p><span class="company">Snowpack, Palaiseau</span> | <em>August 2024 – July 2025</em></p>
-            <ul>
-                <li>Led efforts to update the C++ SDK by building a successful WebAssembly (WASM) test version, showing
-                    core SDK features could run in web browsers.</li>
-                <li>Developed tools for C++, Android, and iOS to accurately track user data use; also wrote key plans
-                    for setting data limits based on user subscription levels.</li>
-                <li>Ensured software quality by thoroughly testing beta releases on multiple platforms (Android, macOS,
-                    ARM64); found and reported critical bugs quickly, helping to get them fixed faster.</li>
-                <li>Improved the command line tool with strong MFA and easy ways for users to see their services; also
-                    set up better log management to save memory and help with bug reports.</li>
-                <li>Collaborated effectively within a multicultural, English-speaking engineering team to achieve shared
-                    development goals and meet release objectives.</li>
-            </ul>
-        </div>
-        <div class="experience-item">
-            <h3><span class="job-title">Research Intern</span></h3>
-            <p><span class="company">LSCE - CNRS & CEA, Gif-sur-Yvette</span> | <em>February 2021 – August 2021</em></p>
-            <ul>
-                <li>Modeled mercury distribution in oceans using IPCC climate models (Python, Fortran), contributing to
-                    global pollution research.</li>
-                <li>Automated Python data processing pipelines for oceanic mercury predictions, enhancing research
-                    efficiency.</li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="projects">
-        <h2>Technical Projects</h2>
-        <div class="project">
-            <h3>Inception - System Administration with Docker</h3>
-            <p>Set up and managed a reliable multi-service web application (<span class="inline-code">WordPress</span>,
-                <span class="inline-code">Nginx</span>, <span class="inline-code">MariaDB</span>) on a Linux VM with
-                Docker Compose, creating custom Dockerfiles for better performance. Configured secure Docker networking
-                and persistent data storage.
-            </p>
-            <div>
-                <span class="tech-stack">Docker</span><span class="tech-stack">Nginx</span><span
-                    class="tech-stack">MariaDB</span><span class="tech-stack">WordPress</span><span
-                    class="tech-stack">Linux</span>
-            </div>
-            <p><a href="https://github.com/tham-le/inception" target="_blank" rel="noopener noreferrer">View on
-                    GitHub</a></p>
-        </div>
-        <div class="project">
-            <h3>Transcendence - Full-Stack SPA & 3D Game</h3>
-            <p>Built a full-stack Single Page Application using <span class="highlight">Django (Python)</span> for the
-                backend and Vanilla JavaScript for the frontend, creating a real-time multiplayer 3D Pong game with
-                <span class="inline-code">Three.js</span>. Implemented server-side game logic, real-time communication
-                (<span class="inline-code">WebSockets</span>), and JWT authentication.
-            </p>
-            <div>
-                <span class="tech-stack">Django</span><span class="tech-stack">Python</span><span
-                    class="tech-stack">PostgreSQL</span><span class="tech-stack">JavaScript</span><span
-                    class="tech-stack">Three.js</span><span class="tech-stack">WebSockets</span>
-            </div>
-            <p><a href="https://github.com/tham-le/ft_transcendence" target="_blank" rel="noopener noreferrer">View on
-                    GitHub</a></p>
-        </div>
-        <div class="project">
-            <h3>ft_irc - RFC Compliant IRC Server</h3>
-            <p>Built a strong IRC server from scratch in C++ that followed RFC 2812 rules, handling many client
-                connections at once using <code class="inline-code">poll()</code>. Implemented core IRC features like
-                user registration, channels, and messaging.</p>
-            <div>
-                <span class="tech-stack">C++</span><span class="tech-stack">Sockets</span><span
-                    class="tech-stack">TCP/IP</span><span class="tech-stack">Networking</span>
-            </div>
-            <p><a href="https://github.com/tham-le/ft_irc" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-            </p>
-        </div>
-        <div class="project">
-            <h3>Advanced C Graphics Programming (Ray Tracer & Fractal Explorer)</h3>
-            <p>Built an advanced, multithreaded ray tracing engine (<code class="inline-code">miniRT</code>) in C
-                (>8,000 LOC), creating detailed 3D scenes. Developed a fast fractal explorer (<code
-                    class="inline-code">fract-ol</code>) in C using pthreads for significant rendering speedups (2-8x)
-                and advanced visual features.</p>
-            <div>
-                <span class="tech-stack">C</span><span class="tech-stack">pthreads</span><span
-                    class="tech-stack">MiniLibX</span><span class="tech-stack">3D Math</span><span
-                    class="tech-stack">Graphics</span>
-            </div>
-            <p><a href="https://github.com/tham-le/miniRT" target="_blank" rel="noopener noreferrer">View Ray Tracer</a>
-                | <a href="https://github.com/tham-le/fractol" target="_blank" rel="noopener noreferrer">View Fractal
-                    Explorer</a></p>
-        </div>
-    </section>
-
-    <section id="activities-certifications">
-        <h2>Activities, Certifications & Community</h2>
-        <ul>
-            <li><strong>Certifications & Workshops:</strong>
-                <ul>
-                    <li>Foundations of Cybersecurity Certificate - Google (Jan 2025)</li>
-                    <li>Google init.g() workshops - Cybersecurity, Red Teaming, Responsible AI; Winner of CTF challenge
-                        (Oct 2024)</li>
-                    <li>Microsoft "Anyone Can Code" workshop - Azure Web Apps, Git, GitHub, AI (Jun 2023)</li>
-                </ul>
-            </li>
-            <li><strong>Hackathons & Tutoring:</strong>
-                <ul>
-                    <li>Google Hardware Hackathon (2024)</li>
-                    <li>InnovHer Hackathon - Developed EMA, a women's health management app (2024)</li>
-                    <li>DigHacktion Hackathon - Focused on digestive tract diseases and cancers (2024)</li>
-                    <li>42 Paris Tutor (C 'piscine' & Core Curriculum, Exam Surveillance) (2023-2024)</li>
-                </ul>
-            </li>
-        </ul>
-    </section>
-
-    <section id="cybersecurity-ctf">
-        <h2>Cybersecurity & CTF Engagement</h2>
-        <p>I enjoy exploring cybersecurity by participating in Capture The Flag (CTF) competitions. These challenges
-            cover areas like web security, cryptography, and binary exploitation, helping me learn practical defensive
-            and offensive security skills.</p>
-        <div class="ctf-entry">
-            <h3>Recent CTF Competitions</h3>
-            <ul>
-                <li>HeroCTF (2024)</li>
-                <li>IrisCTF (2024)</li>
-                <li>HTB University CTF: Binary Badlands (2023)</li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="education-background">
-        <h2>Educational Background</h2>
-        <div class="education-item">
-            <h3><strong>42 Paris</strong> - Digital Technologies Architect (Equivalent Master's RNCP Level 7)</h3>
-            <p><em>2022 – Expected Jun 2025</em></p>
-            <ul>
-                <li>Ranked Top 10 in 'piscine' (500+ candidates) & Top 20 for Common Core (800+ cohort).</li>
-                <li>Intensive, project-based learning in C/C++, Python, Linux, Docker, OOP, Performance Testing.</li>
-            </ul>
-        </div>
-        <div class="education-item">
-            <h3><strong>Aix Marseille University</strong> - M.Sc in Marine Science</h3>
-            <p><em>Sep 2019 – Jun 2021</em></p>
-            <ul>
-                <li>Specialized in oceanographic modeling and remote sensing using Python, R, and Fortran.</li>
-            </ul>
-        </div>
-    </section>
-
-    <footer>
-        <p>© <span id="currentYear"></span> Tham Le | Inspired by <a href="https://evenbettermotherfucking.website/"
-                target="_blank" rel="noopener noreferrer">Even Better Fucking Website</a> </p>
-        <p>Based in Paris, France | Trilingual: Vietnamese, French, English</p>
-            <div class="footer-links">
-                <a href="https://github.com/tham-le" target="_blank" rel="noopener noreferrer" title="GitHub Profile">
-                    <span class="icon">⚡</span> GitHub
-                </a>
-                <a href="https://linkedin.com/in/tham42" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile">
-                    <span class="icon">💼</span> LinkedIn
-                </a>
-                <a href="mailto:thamle.work@gmail.com" title="Send Email">
-                    <span class="icon">📧</span> Email
-                </a>
-                <a href="https://ctf.thamle.live" target="_blank" rel="noopener noreferrer" title="CTF Writeups">
-                    <span class="icon">🚩</span> CTF
-                </a>
-            </div>
-    </footer>
-
-        <!-- Scroll to top button -->
-        <button id="scrollToTop" class="scroll-to-top" title="Back to top">
-            ↑
-        </button>
+        <footer>
+            <p>© <span id="currentYear"></span> Tham Le | Inspired by <a href="https://evenbettermotherfucking.website/"
+                    target="_blank" rel="noopener noreferrer">Even Better Fucking Website</a> </p>
+            <p>Based in Paris, France | Trilingual: Vietnamese, French, English</p>
+                <div class="footer-links">
+                    <a href="https://github.com/tham-le" target="_blank" rel="noopener noreferrer" title="GitHub Profile">
+                        <span class="icon">⚡</span> GitHub
+                    </a>
+                    <a href="https://linkedin.com/in/tham42" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile">
+                        <span class="icon">💼</span> LinkedIn
+                    </a>
+                    <a href="mailto:thamle.work@gmail.com" title="Send Email">
+                        <span class="icon">📧</span> Email
+                    </a>
+                    <a href="https://ctf.thamle.live" target="_blank" rel="noopener noreferrer" title="CTF Writeups">
+                        <span class="icon">🚩</span> CTF
+                    </a>
+                </div>
+        </footer>
     </div>
+
+    <button onclick="scrollToTop()" class="scroll-to-top" title="Go to top">&uarr;</button>
 
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
         // Scroll to top functionality
-        const scrollToTopBtn = document.getElementById('scrollToTop');
+        const scrollToTopBtn = document.querySelector('.scroll-to-top');
         
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
+        window.onscroll = () => {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
                 scrollToTopBtn.classList.add('visible');
             } else {
                 scrollToTopBtn.classList.remove('visible');
             }
-        });
+        };
         
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
+        const scrollToTop = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
     </script>
 </body>
 
