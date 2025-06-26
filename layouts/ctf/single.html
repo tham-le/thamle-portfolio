@@ -1,0 +1,236 @@
+{{ define "main" }}
+<article class="ctf-writeup">
+    <header class="writeup-header">
+        <div class="writeup-meta">
+            {{ range .Params.ctf_events }}
+                <span class="ctf-event">{{ . | title }}</span>
+            {{ end }}
+            {{ range .Params.categories }}
+                <span class="category-badge category-{{ . }}">{{ . | title }}</span>
+            {{ end }}
+        </div>
+        <h1 class="writeup-title">{{ .Title }}</h1>
+        {{ if .Params.description }}
+            <p class="writeup-description">{{ .Params.description }}</p>
+        {{ end }}
+        <div class="writeup-info">
+            <time class="writeup-date">{{ .Date.Format "Jan 2, 2006" }}</time>
+            <span class="reading-time">{{ .ReadingTime }} min read</span>
+        </div>
+    </header>
+
+    <div class="writeup-content">
+        {{ .Content }}
+    </div>
+
+    <footer class="writeup-footer">
+        {{ if .Params.tags }}
+        <div class="writeup-tags">
+            <strong>Tags:</strong>
+            {{ range .Params.tags }}
+                <span class="tag">{{ . }}</span>
+            {{ end }}
+        </div>
+        {{ end }}
+        
+        <div class="writeup-navigation">
+            <a href="/ctf/" class="back-link">← Back to CTF Writeups</a>
+        </div>
+    </footer>
+</article>
+
+<style>
+.ctf-writeup {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.writeup-header {
+    margin-bottom: 40px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30px;
+}
+
+.writeup-meta {
+    margin-bottom: 15px;
+}
+
+.ctf-event {
+    background: #667eea;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.category-badge {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.category-web { background: #28a745; color: white; }
+.category-crypto { background: #ffc107; color: #212529; }
+.category-reverse { background: #dc3545; color: white; }
+.category-pwn { background: #6f42c1; color: white; }
+.category-forensics { background: #20c997; color: white; }
+.category-misc { background: #6c757d; color: white; }
+.category-binary { background: #fd7e14; color: white; }
+
+.writeup-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+    line-height: 1.2;
+}
+
+.writeup-description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.writeup-info {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.writeup-date {
+    margin-right: 20px;
+}
+
+.writeup-content {
+    line-height: 1.7;
+    font-size: 1.1rem;
+}
+
+.writeup-content h1,
+.writeup-content h2,
+.writeup-content h3 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.writeup-content h1 {
+    font-size: 2rem;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.writeup-content h2 {
+    font-size: 1.6rem;
+    color: #667eea;
+}
+
+.writeup-content h3 {
+    font-size: 1.3rem;
+}
+
+.writeup-content pre {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 20px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+.writeup-content code {
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.writeup-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.writeup-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.writeup-content blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 20px;
+    margin: 20px 0;
+    color: #666;
+    font-style: italic;
+}
+
+.writeup-footer {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.writeup-tags {
+    margin-bottom: 20px;
+}
+
+.writeup-tags .tag {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+.back-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #5a6fd8;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .ctf-writeup {
+        padding: 15px;
+    }
+    
+    .writeup-title {
+        font-size: 2rem;
+    }
+    
+    .writeup-description {
+        font-size: 1.1rem;
+    }
+    
+    .writeup-content {
+        font-size: 1rem;
+    }
+    
+    .writeup-meta {
+        text-align: center;
+    }
+    
+    .ctf-event,
+    .category-badge {
+        display: inline-block;
+        margin-bottom: 5px;
+    }
+}
+</style>
+{{ end }}

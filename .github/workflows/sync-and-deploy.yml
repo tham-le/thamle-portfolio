@@ -1,0 +1,43 @@
+name: Deploy to Firebase
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Sync CTF Writeups
+      run: |
+        chmod +x ./sync-writeups.sh
+        ./sync-writeups.sh
+
+    - name: Sync GitHub Projects
+      run: |
+        chmod +x ./sync-projects.sh
+        ./sync-projects.sh
+    
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '0.147.9'
+        extended: true
+    
+    - name: Build Hugo Site
+      run: hugo --minify
+    
+    - name: Deploy to Firebase
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
+        projectId: 'thamle-portfolio'
+        channelId: live

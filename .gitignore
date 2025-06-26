@@ -1,0 +1,16 @@
+# Hugo Generated Files
+public/
+resources/
+.hugo_build.lock
+
+# Processed CTF Content (auto-generated)
+content/ctf/processed/
+
+# Development Files  
+*.tmp
+*.log
+__pycache__/
+
+# IDEs & OS
+.vscode/
+.DS_Store
