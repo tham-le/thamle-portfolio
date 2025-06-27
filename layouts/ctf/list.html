@@ -1,0 +1,46 @@
+{{ define "main" }}
+    <article class="main-article">
+        <header class="main-article-header">
+            <h1>{{ .Title }}</h1>
+            {{ with .Description }}
+                <p class="article-subtitle">{{ . }}</p>
+            {{ end }}
+        </header>
+
+        {{/* Render the content from the README.md file in the same folder */}}
+        <section class="main-article-content">
+            {{ with .Resources.GetMatch "README.md" }}
+                {{ .Content }}
+            {{ else }}
+                {{/* Fallback to the content of _index.md if no README.md is found */}}
+                {{ .Content }}
+            {{ end }}
+        </section>
+
+        {{/* Filter out the README page from the list of regular pages */}}
+        {{ $pages := where .RegularPages ".File.Basename" "!=" "README" }}
+        {{ $sections := .Sections }}
+
+        {{ if or (gt (len $sections) 0) (gt (len $pages) 0) }}
+            <hr>
+            {{/* Dynamically set the heading based on the page's depth */}}
+            {{ if eq (len .Ancestors) 2 }}
+                <h2>Categories</h2>
+            {{ else }}
+                <h2>Challenges</h2>
+            {{ end }}
+            
+            <section class="article-list--compact">
+                {{/* List sub-directories (like categories or challenge folders) */}}
+                {{ range $sections }}
+                    {{ partial "article-list/compact" . }}
+                {{ end }}
+
+                {{/* List individual markdown files as challenges */}}
+                {{ range $pages }}
+                    {{ partial "article-list/compact" . }}
+                {{ end }}
+            </section>
+        {{ end }}
+    </article>
+{{ end }} 

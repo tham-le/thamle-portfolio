@@ -26,3 +26,13 @@ __pycache__/
 
 # IDEs & OS
 .DS_Store
+
+# Hugo
+/public/
+/resources/
+/node_modules/
+.hugo_build.lock
+/test
+
+# Generated Hugo content
+content/ctf/**/_index.md
