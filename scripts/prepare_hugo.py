@@ -54,6 +54,9 @@ def main():
 
     print("Starting Hugo preparation for CTF content...")
 
+    # First, create an index for the top-level ctf directory itself
+    create_hugo_index(ctf_path, ctf_path)
+
     # Iterate through all subdirectories of content/ctf
     for path in ctf_path.rglob('*'):
         if path.is_dir() and not path.name.startswith('.'):
