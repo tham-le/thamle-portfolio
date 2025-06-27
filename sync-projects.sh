@@ -71,19 +71,16 @@ check_dependencies() {
     log_success "All dependencies are available."
 }
 
-# Function to download all images from GitHub repository
-download_repo_images() {
+# Function to get all images from GitHub repository (reference only, no download)
+get_repo_images() {
     local repo_name="$1"
-    local project_image_dir="${IMAGES_DIR}/${repo_name}"
-    
-    mkdir -p "$project_image_dir"
     
     # Look only in the "image" directory as specified by user
     local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/contents/image"
     local images_found=()
     local main_image=""
     
-    log_info "Searching for images in repository: $repo_name/image" >&2
+    log_info "Finding images in repository: $repo_name/image" >&2
     
     # Use authentication if available
     local dir_contents
@@ -95,34 +92,33 @@ download_repo_images() {
     
     # Check if we got valid JSON array
     if echo "$dir_contents" | jq -e 'type == "array"' >/dev/null 2>&1; then
-        # Find all image files
+        # Find all image files and create GitHub raw URLs
         local image_files=$(echo "$dir_contents" | jq -r '.[] | select(.type == "file" and (.name | test("\\.(png|jpg|jpeg|gif|svg|webp|bmp)$"; "i"))) | .name')
         
         while IFS= read -r image_file; do
             if [ -n "$image_file" ]; then
-                local download_url=$(echo "$dir_contents" | jq -r --arg name "$image_file" '.[] | select(.name == $name) | .download_url')
                 local extension="${image_file##*.}"
                 local base_name="${image_file%.*}"
-                local output_file="${project_image_dir}/${base_name}.${extension}"
+                # Create GitHub raw URL for direct reference
+                local github_raw_url="https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repo_name}/main/image/${image_file}"
                 
-                if curl -s -L "$download_url" -o "$output_file"; then
-                    log_success "Downloaded: image/$image_file" >&2
-                    images_found+=("/images/projects/${repo_name}/${base_name}.${extension}")
-                    
-                    # Set main image (prefer screenshot, demo, preview, then first image)
-                    if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
-                        main_image="/images/projects/${repo_name}/${base_name}.${extension}"
-                    fi
+                log_success "Found image: image/$image_file" >&2
+                images_found+=("$github_raw_url")
+                
+                # Set main image (prefer screenshot, demo, preview, then first image)
+                if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
+                    main_image="$github_raw_url"
                 fi
             fi
         done <<< "$image_files"
     fi
     
-    # If no images found, create placeholder
+    # If no images found, create placeholder URL
     if [ ${#images_found[@]} -eq 0 ]; then
-        create_project_placeholder "$repo_name"
-        main_image="/images/projects/${repo_name}.svg"
-        images_found=("$main_image")
+        local placeholder_url="https://via.placeholder.com/400x200/667eea/ffffff?text=${repo_name// /+}"
+        main_image="$placeholder_url"
+        images_found=("$placeholder_url")
+        log_info "No images found, using placeholder for $repo_name" >&2
     fi
     
     # Return main image and all images (JSON format)
@@ -145,47 +141,23 @@ generate_gallery_html() {
     echo "## Gallery"
     echo ""
     
-    # Generate gallery HTML
-    while IFS= read -r image_path; do
-        if [ -n "$image_path" ] && [ "$image_path" != "null" ]; then
-            local filename=$(basename "$image_path")
+    # Generate gallery HTML with GitHub raw URLs
+    while IFS= read -r image_url; do
+        if [ -n "$image_url" ] && [ "$image_url" != "null" ]; then
+            local filename=$(basename "$image_url")
             local name="${filename%.*}"
             # Convert filename to readable title
             local title=$(echo "$name" | sed 's/[-_]/ /g' | sed 's/\b\w/\u&/g')
-            echo "<img src=\"$image_path\" alt=\"$title\" class=\"gallery-image\" title=\"$title\" />"
+            echo "<img src=\"$image_url\" alt=\"$title\" class=\"gallery-image\" title=\"$title\" loading=\"lazy\" />"
         fi
     done <<< "$all_images"
 }
 
-# Function to download image from GitHub repository (updated)
+# Function to download image from GitHub repository (now just gets URL)
 download_repo_image() {
     local repo_name="$1"
-    local images_data=$(download_repo_images "$repo_name")
+    local images_data=$(get_repo_images "$repo_name")
     echo "$images_data" | jq -r '.main'
-}
-
-# Function to create project placeholder SVG
-create_project_placeholder() {
-    local repo_name="$1"
-    local image_dir="${IMAGES_DIR}"
-    local output_file="${image_dir}/${repo_name}.svg"
-    
-    mkdir -p "$image_dir"
-    
-    # Create a simple SVG placeholder
-    cat > "$output_file" << EOF
-<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100%" height="100%" fill="#f8f9fa"/>
-  <rect x="20" y="20" width="360" height="160" fill="#e9ecef" stroke="#dee2e6" stroke-width="2"/>
-  <text x="200" y="90" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#495057">$repo_name</text>
-  <text x="200" y="120" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#6c757d">GitHub Project</text>
-  <circle cx="50" cy="50" r="8" fill="#28a745"/>
-  <circle cx="70" cy="50" r="8" fill="#ffc107"/>
-  <circle cx="90" cy="50" r="8" fill="#dc3545"/>
-</svg>
-EOF
-    
-    log_info "Created placeholder image for $repo_name" >&2
 }
 
 # Function to get repository data from GitHub API
@@ -283,8 +255,8 @@ create_project_content() {
     # Determine category
     local category=$(determine_category "$name" "$description" "$languages")
     
-    # Get all images for gallery
-    local images_data=$(download_repo_images "$name")
+    # Get all images for gallery (now returns GitHub URLs)
+    local images_data=$(get_repo_images "$name")
     local main_image=$(echo "$images_data" | jq -r '.main')
     local gallery_html=$(generate_gallery_html "$images_data")
     
@@ -354,30 +326,6 @@ $(if [ -n "$homepage" ] && [ "$homepage" != "null" ]; then echo "- [🚀 **Live 
 EOF
 
     log_success "Created project content: $content_file"
-}
-
-# Function to generate SVG placeholder if image doesn't exist
-generate_svg_placeholder() {
-    local repo_name="$1"
-    local svg_file="${IMAGES_DIR}/${repo_name}.svg"
-    
-    if [ ! -f "$svg_file" ]; then
-        local first_letter=$(echo "$repo_name" | cut -c1 | tr '[:lower:]' '[:upper:]')
-        
-        cat > "$svg_file" << EOF
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="200" height="200" fill="url(#grad)" rx="20"/>
-  <text x="100" y="120" font-family="Arial, sans-serif" font-size="80" font-weight="bold" text-anchor="middle" fill="white">$first_letter</text>
-</svg>
-EOF
-        log_info "Generated SVG placeholder for $repo_name"
-    fi
 }
 
 # Function to sync specific repositories
@@ -493,7 +441,6 @@ main() {
     
     # Create directories if they don't exist
     mkdir -p "$PROJECTS_DIR"
-    mkdir -p "$IMAGES_DIR"
     
     # Check dependencies
     check_dependencies
@@ -506,7 +453,7 @@ main() {
     
     log_success "GitHub projects sync completed successfully!"
     log_info "Generated content files in: $PROJECTS_DIR"
-    log_info "Generated images in: $IMAGES_DIR"
+    log_info "Images referenced directly from GitHub repositories"
 }
 
 # Run main function

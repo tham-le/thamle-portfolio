@@ -3,7 +3,7 @@ title: "Python-for-Data-Science"
 date: 2024-06-08T19:08:02Z
 lastmod: 2025-02-24T12:18:45Z
 description: "No description available"
-image: "/images/projects/Python-for-Data-Science.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=Python-for-Data-Science"
 categories:
     - "Projects"
     - "Data Science"

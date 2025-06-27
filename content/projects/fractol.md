@@ -3,7 +3,7 @@ title: "fractol"
 date: 2025-05-30T20:24:09Z
 lastmod: 2025-06-05T18:22:11Z
 description: "High-performance fractal visualization in C with multi-threading and advanced graphics"
-image: "/images/projects/fractol/Newton-rainbow.bmp"
+image: "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp"
 categories:
     - "Projects"
     - "Graphics & Games"
@@ -81,15 +81,15 @@ cd fractol
 make
 ## Gallery
 
-<img src="/images/projects/fractol/Newton-rainbow.bmp" alt="Newton Rainbow" class="gallery-image" title="Newton Rainbow" />
-<img src="/images/projects/fractol/Newton.bmp" alt="Newton" class="gallery-image" title="Newton" />
-<img src="/images/projects/fractol/barnley.bmp" alt="Barnley" class="gallery-image" title="Barnley" />
-<img src="/images/projects/fractol/julia-1.bmp" alt="Julia 1" class="gallery-image" title="Julia 1" />
-<img src="/images/projects/fractol/julia_2.bmp" alt="Julia 2" class="gallery-image" title="Julia 2" />
-<img src="/images/projects/fractol/julia_3.bmp" alt="Julia 3" class="gallery-image" title="Julia 3" />
-<img src="/images/projects/fractol/julia_6.bmp" alt="Julia 6" class="gallery-image" title="Julia 6" />
-<img src="/images/projects/fractol/mandelbrot-fire.bmp" alt="Mandelbrot Fire" class="gallery-image" title="Mandelbrot Fire" />
-<img src="/images/projects/fractol/mandelbrot-smooth-color.bmp" alt="Mandelbrot Smooth Color" class="gallery-image" title="Mandelbrot Smooth Color" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp" alt="Newton Rainbow" class="gallery-image" title="Newton Rainbow" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp" alt="Newton" class="gallery-image" title="Newton" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp" alt="Barnley" class="gallery-image" title="Barnley" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp" alt="Julia 1" class="gallery-image" title="Julia 1" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp" alt="Julia 2" class="gallery-image" title="Julia 2" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp" alt="Julia 3" class="gallery-image" title="Julia 3" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp" alt="Julia 6" class="gallery-image" title="Julia 6" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp" alt="Mandelbrot Fire" class="gallery-image" title="Mandelbrot Fire" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp" alt="Mandelbrot Smooth Color" class="gallery-image" title="Mandelbrot Smooth Color" loading="lazy" />
 
 ## Technologies Used
 

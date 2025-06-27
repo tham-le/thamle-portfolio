@@ -3,7 +3,7 @@ title: "Darkly"
 date: 2024-08-31T13:45:57Z
 lastmod: 2025-06-05T18:18:59Z
 description: "Introduction to cyber security in the field of the Web"
-image: "/images/projects/Darkly.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=Darkly"
 categories:
     - "Projects"
     - "Web Development"

@@ -3,7 +3,7 @@ title: "miniRT"
 date: 2023-09-10T15:12:29Z
 lastmod: 2025-06-05T18:19:54Z
 description: "Ray Tracing Engine"
-image: "/images/projects/miniRT/all-shapes.png"
+image: "https://raw.githubusercontent.com/tham-le/miniRT/main/image/all-shapes.png"
 categories:
     - "Projects"
     - "Graphics & Games"
@@ -80,15 +80,15 @@ _A majestic dragon, showcasing complex model rendering._
 ## Installation
 ## Gallery
 
-<img src="/images/projects/miniRT/all-shapes.png" alt="All Shapes" class="gallery-image" title="All Shapes" />
-<img src="/images/projects/miniRT/atom.png" alt="Atom" class="gallery-image" title="Atom" />
-<img src="/images/projects/miniRT/candies.png" alt="Candies" class="gallery-image" title="Candies" />
-<img src="/images/projects/miniRT/cornell.png" alt="Cornell" class="gallery-image" title="Cornell" />
-<img src="/images/projects/miniRT/planet.png" alt="Planet" class="gallery-image" title="Planet" />
-<img src="/images/projects/miniRT/room-dark.png" alt="Room Dark" class="gallery-image" title="Room Dark" />
-<img src="/images/projects/miniRT/room-light.png" alt="Room Light" class="gallery-image" title="Room Light" />
-<img src="/images/projects/miniRT/teapot.png" alt="Teapot" class="gallery-image" title="Teapot" />
-<img src="/images/projects/miniRT/wolf.png" alt="Wolf" class="gallery-image" title="Wolf" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/all-shapes.png" alt="All Shapes" class="gallery-image" title="All Shapes" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/atom.png" alt="Atom" class="gallery-image" title="Atom" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/candies.png" alt="Candies" class="gallery-image" title="Candies" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/cornell.png" alt="Cornell" class="gallery-image" title="Cornell" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/planet.png" alt="Planet" class="gallery-image" title="Planet" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/room-dark.png" alt="Room Dark" class="gallery-image" title="Room Dark" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/room-light.png" alt="Room Light" class="gallery-image" title="Room Light" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/teapot.png" alt="Teapot" class="gallery-image" title="Teapot" loading="lazy" />
+<img src="https://raw.githubusercontent.com/tham-le/miniRT/main/image/wolf.png" alt="Wolf" class="gallery-image" title="Wolf" loading="lazy" />
 
 ## Technologies Used
 

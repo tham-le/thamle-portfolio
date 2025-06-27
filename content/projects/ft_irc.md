@@ -3,7 +3,7 @@ title: "ft_irc"
 date: 2024-01-04T20:10:12Z
 lastmod: 2025-06-05T18:21:43Z
 description: "Implementation of a basic IRC server, adhering to a subset of the IRC RFC specifications (primarily RFC 2810, 2811, 2812, 2813, and 7194)."
-image: "/images/projects/ft_irc.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=ft_irc"
 categories:
     - "Projects"
     - "System Programming"

@@ -3,7 +3,7 @@ title: "Set-up-new-computer"
 date: 2024-09-10T14:20:41Z
 lastmod: 2024-09-26T22:17:47Z
 description: "No description available"
-image: "/images/projects/Set-up-new-computer.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=Set-up-new-computer"
 categories:
     - "Projects"
     - "Scripts & Tools"
