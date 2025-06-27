@@ -78,56 +78,45 @@ download_repo_images() {
     
     mkdir -p "$project_image_dir"
     
-    # Common image patterns to look for
-    local image_patterns=("*.png" "*.jpg" "*.jpeg" "*.gif" "*.svg" "*.webp")
-    local image_directories=("" "images" "assets" "docs" "screenshots" "demo" "renders" "examples" "gallery")
-    
-    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/contents"
+    # Look only in the "image" directory as specified by user
+    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/contents/image"
     local images_found=()
     local main_image=""
     
-    log_info "Searching for images in repository: $repo_name" >&2
+    log_info "Searching for images in repository: $repo_name/image" >&2
     
-    # Search in each directory
-    for dir in "${image_directories[@]}"; do
-        local search_url="$api_url"
-        if [ -n "$dir" ]; then
-            search_url="$api_url/$dir"
-        fi
+    # Use authentication if available
+    local dir_contents
+    if [ -n "$AUTH_HEADER" ]; then
+        dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url" 2>/dev/null)
+    else
+        dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url" 2>/dev/null)
+    fi
+    
+    # Check if we got valid JSON array
+    if echo "$dir_contents" | jq -e 'type == "array"' >/dev/null 2>&1; then
+        # Find all image files
+        local image_files=$(echo "$dir_contents" | jq -r '.[] | select(.type == "file" and (.name | test("\\.(png|jpg|jpeg|gif|svg|webp|bmp)$"; "i"))) | .name')
         
-        # Use authentication if available
-        local dir_contents
-        if [ -n "$AUTH_HEADER" ]; then
-            dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$search_url" 2>/dev/null)
-        else
-            dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" "$search_url" 2>/dev/null)
-        fi
-        
-        # Check if we got valid JSON array
-        if echo "$dir_contents" | jq -e 'type == "array"' >/dev/null 2>&1; then
-            # Find all image files
-            local image_files=$(echo "$dir_contents" | jq -r '.[] | select(.type == "file" and (.name | test("\\.(png|jpg|jpeg|gif|svg|webp)$"; "i"))) | .name')
-            
-            while IFS= read -r image_file; do
-                if [ -n "$image_file" ]; then
-                    local download_url=$(echo "$dir_contents" | jq -r --arg name "$image_file" '.[] | select(.name == $name) | .download_url')
-                    local extension="${image_file##*.}"
-                    local base_name="${image_file%.*}"
-                    local output_file="${project_image_dir}/${base_name}.${extension}"
+        while IFS= read -r image_file; do
+            if [ -n "$image_file" ]; then
+                local download_url=$(echo "$dir_contents" | jq -r --arg name "$image_file" '.[] | select(.name == $name) | .download_url')
+                local extension="${image_file##*.}"
+                local base_name="${image_file%.*}"
+                local output_file="${project_image_dir}/${base_name}.${extension}"
+                
+                if curl -s -L "$download_url" -o "$output_file"; then
+                    log_success "Downloaded: image/$image_file" >&2
+                    images_found+=("/images/projects/${repo_name}/${base_name}.${extension}")
                     
-                    if curl -s -L "$download_url" -o "$output_file"; then
-                        log_success "Downloaded: $dir/$image_file" >&2
-                        images_found+=("/images/projects/${repo_name}/${base_name}.${extension}")
-                        
-                        # Set main image (prefer screenshot, demo, preview, then first image)
-                        if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
-                            main_image="/images/projects/${repo_name}/${base_name}.${extension}"
-                        fi
+                    # Set main image (prefer screenshot, demo, preview, then first image)
+                    if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
+                        main_image="/images/projects/${repo_name}/${base_name}.${extension}"
                     fi
                 fi
-            done <<< "$image_files"
-        fi
-    done
+            fi
+        done <<< "$image_files"
+    fi
     
     # If no images found, create placeholder
     if [ ${#images_found[@]} -eq 0 ]; then
