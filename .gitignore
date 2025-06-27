@@ -1,16 +1,29 @@
-# Hugo Generated Files
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Hugo generated files
 public/
-resources/
+resources/_gen/
+
+# Temporary files
+.DS_Store
+.vscode/
+*.tmp
+*.temp
+
+# Build artifacts
+/hugo_cache/
 .hugo_build.lock
 
 # Processed CTF Content (auto-generated)
 content/ctf/processed/
 
 # Development Files  
-*.tmp
 *.log
 __pycache__/
 
 # IDEs & OS
-.vscode/
 .DS_Store
+temp-analysis/

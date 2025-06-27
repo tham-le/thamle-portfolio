@@ -1,38 +1,56 @@
-name: Deploy to Firebase
+name: Sync and Deploy Portfolio
 
 on:
   workflow_dispatch:
   push:
     branches: [ main, master ]
+  schedule:
+    # Daily sync at 6 AM UTC
+    - cron: '0 6 * * *'
 
 jobs:
-  deploy:
+  sync-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
+        token: ${{ secrets.TOKEN_GITHUB }}
 
-    - name: Sync CTF Writeups
+    - name: Setup environment
       run: |
-        chmod +x ./sync-writeups.sh
-        ./sync-writeups.sh
+        echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> .env
+        echo "GITHUB_USERNAME=tham-le" >> .env
+        echo "HUGO_ENV=production" >> .env
 
-    - name: Sync GitHub Projects
+    - name: Install dependencies
       run: |
-        chmod +x ./sync-projects.sh
-        ./sync-projects.sh
+        sudo apt-get update
+        sudo apt-get install -y jq curl
+
+    - name: Update CTF writeups submodule
+      run: |
+        git submodule update --remote content/ctf-external || echo "No CTF submodule updates"
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+    - name: Sync all content
+      run: |
+        chmod +x ./sync-all.sh
+        ./sync-all.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
     
     - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
+      uses: peaceiris/actions-hugo@v3
       with:
         hugo-version: '0.147.9'
         extended: true
     
-    - name: Build Hugo Site
-      run: hugo --minify
+    - name: Build Hugo site
+      run: hugo --minify --environment production
     
     - name: Deploy to Firebase
       uses: FirebaseExtended/action-hosting-deploy@v0

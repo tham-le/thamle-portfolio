@@ -1,19 +1,26 @@
 ---
 title: "Projects"
-description: "A showcase of my software engineering projects"
+description: "Things I've built while learning"
 date: 2025-06-26
 draft: false
 ---
 
-# My Projects
+# Projects
 
-This section showcases a selection of my software engineering projects, automatically synced from my GitHub repositories. These projects demonstrate my skills in full-stack development, system administration, and graphics programming. Each project includes a link to the source code and, where applicable, a live demo.
+These are things I've built while learning different technologies and solving problems. Each project taught me something new about programming, system design, or problem-solving.
 
-## Categories
+The projects are automatically synced from my GitHub repositories, so you're seeing the actual code I write and maintain.
 
-- **Web Development** - Full-stack applications and APIs
-- **Cybersecurity** - Security tools and vulnerability research  
-- **Mobile Apps** - Cross-platform mobile applications
-- **Desktop Apps** - Desktop applications and utilities
-- **Scripts & Automation** - Automation tools and utilities
-- **Research & Learning** - Academic and experimental projects
+## Learning Areas
+
+**Systems Programming** - Working with C/C++, memory management, and performance optimization
+
+**Web Development** - Full-stack applications, APIs, and user interfaces
+
+**Security & CTF** - Tools and solutions for cybersecurity challenges
+
+**Graphics & Visualization** - Mathematical rendering and interactive applications
+
+---
+
+*Projects are loaded dynamically from GitHub. If you don't see any below, the sync might be running or there could be an API issue.*

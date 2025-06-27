@@ -1,59 +1,79 @@
 # Tham Le Portfolio
 
-Modern portfolio website built with Hugo, featuring CTF writeups and project showcase.
-**Live at: [thamle.live](https://thamle.live)**
+Personal portfolio website built with Hugo, focusing on learning through building and documenting the process.
 
-## 🚀 Quick Start
+## Philosophy
+
+This portfolio represents genuine learning and growth rather than marketing speak. It automatically syncs content from GitHub repositories and documents real problems solved through code.
+
+## Features
+
+- **Dynamic Content**: Projects auto-synced from GitHub API
+- **CTF Documentation**: Security challenge writeups from submodule
+- **Learning Focus**: Honest documentation of what was learned
+- **Clean Design**: Hugo Stack theme with minimal customization
+
+## Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone --recursive https://github.com/tham-le/thamle-portfolio.git
+   cd thamle-portfolio
+   ```
+
+2. **Set up environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your GitHub token
+   ```
+
+3. **Sync content**
+   ```bash
+   ./sync-all.sh
+   ```
+
+4. **Run locally**
+   ```bash
+   hugo server
+   ```
+
+## Content Structure
+
+- **Projects**: Automatically generated from GitHub repositories
+- **CTF Writeups**: Synced from CTF-Writeups submodule
+- **Notes**: Manual blog posts about learning and insights
+
+## Environment Variables
+
+Required in `.env` file:
+- `GITHUB_TOKEN`: Personal access token for GitHub API
+- `GITHUB_USERNAME`: Your GitHub username (default: tham-le)
+
+## Deployment
+
+The site deploys automatically to Firebase Hosting via GitHub Actions when changes are pushed to main.
+
+## Content Philosophy
+
+- Document actual learning, not achievements
+- Show real code and real problems
+- Explain thought process and failures
+- Keep descriptions honest and concise
+
+## Local Development
 
 ```bash
-./quick-start.sh    # Install Hugo, sync content, start server
+# Start Hugo development server
+hugo server --buildDrafts --buildFuture
+
+# Sync content without building
+./sync-all.sh
+
+# Test sync functionality
+./test-sync.sh
 ```
 
-## 📁 Simple Structure
+## License
 
-```
-thamle-portfolio/
-├── hugo.toml              # Site config
-├── content/
-│   ├── _index.md         # Homepage (short about)
-│   ├── about/_index.md   # Full about page
-│   ├── projects/         # Projects showcase  
-│   ├── ctf/              # Manual CTF writeups
-│   └── ctf-external/     # Auto-synced writeups (submodule)
-├── layouts/              # Custom templates
-├── static/               # Static files
-└── quick-start.sh        # One-command setup
-```
-
-## 🔄 Content Management
-
-```bash
-# Sync CTF writeups from external repo
-./sync-writeups.sh
-
-# Start development server  
-hugo server --buildDrafts
-
-# Build for production
-hugo --minify
-```
-
-## 🚀 Deployment
-
-Automatically deploys to **Firebase Hosting** at [thamle.live](https://thamle.live) when you push to main branch.
-
-```bash
-git add .
-git commit -m "Update portfolio"
-git push origin main    # Auto-deploys to Firebase
-```
-
-## 🏗️ Architecture
-
-- **Homepage**: Short introduction with links to detailed about page
-- **About Page**: Complete professional bio, skills, experience
-- **Projects**: Software engineering projects showcase
-- **CTF**: Cybersecurity writeups (manual + auto-synced)
-- **Firebase**: Hosting at custom domain thamle.live
-
-Built with Hugo + Stack theme for performance and SEO.
+Content: CC BY-NC-SA 4.0  
+Code: MIT License

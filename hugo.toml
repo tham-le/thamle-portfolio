@@ -1,8 +1,14 @@
 baseURL = "https://thamle.live/"
 languageCode = "en-us"
 theme = "hugo-theme-stack"
-title = "Tham Le - Software Engineer & Cybersecurity Enthusiast"
+title = "Tham Le - Learning Through Code"
 copyright = "© 2025 Tham Le. All rights reserved."
+
+# Enhanced metadata for better SEO
+[params.meta]
+description = "Software engineer learning through building, breaking, and understanding systems. From ocean science to code."
+keywords = ["Software Engineer", "Learning", "Python", "C++", "Cybersecurity", "System Programming", "CTF", "Projects"]
+author = "Tham Le"
 
 # Theme i18n support
 DefaultContentLanguage = "en"
@@ -29,36 +35,44 @@ name = "CTF Writeups"
 url = "/ctf/"
 weight = 40
 [[menu.main]]
+identifier = "notes"
+name = "Notes"
+url = "/notes/"
+weight = 50
+[[menu.main]]
 identifier = "resume"
 name = "Resume"
 url = "/ThamLE_resume.pdf"
-weight = 50
+weight = 60
 [menu.main.params]
 newTab = true
 
-# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
-hasCJKLanguage = false
-
 # Pagination
 [pagination]
-pagerSize = 9
+pagerSize = 12
 
 # Permalinks for different content types
 [permalinks]
 projects = "/projects/:slug/"
 ctf = "/ctf/:sections[1:]/:slug/"
-blog = "/blog/:slug/"
+notes = "/notes/:slug/"
 
 # Main sections for homepage
 [params]
-mainSections = ["projects", "ctf", "blog"]
+mainSections = ["projects", "ctf", "notes"]
 featuredImageField = "image"
 rssFullContent = true
 favicon = "/favicon.ico"
 
+# Enhanced sidebar configuration
 [params.sidebar]
 emoji = "👨‍💻"
-subtitle = "Software Engineer | Cybersecurity Enthusiast"
+subtitle = "Learning through building and breaking things"
+
+[params.sidebar.avatar]
+enabled = false
+local = true
+src = "images/tham_photo.jpg"
 
 # Color scheme configuration for dark mode
 [params.colorScheme]
@@ -68,7 +82,7 @@ default = "auto"
 # Footer configuration
 [params.footer]
 since = 2024
-customText = "Building secure and innovative solutions"
+customText = "Always learning, always building"
 
 # Date format
 [params.dateFormat]
@@ -80,16 +94,16 @@ lastUpdated = "Jan 02, 2006 15:04 MST"
 math = true
 toc = true
 readingTime = true
+
 [params.article.license]
 enabled = true
 default = "Licensed under CC BY-NC-SA 4.0"
 
-# Comments (you can enable later)
+# Comments (disabled for professional portfolio)
 [params.comments]
 enabled = false
-provider = "utterances"
 
-# Social links (global)
+# Social links
 [[menu.social]]
 identifier = "github"
 name = "GitHub"
@@ -102,45 +116,33 @@ identifier = "linkedin"
 name = "LinkedIn"
 url = "https://linkedin.com/in/tham42"
 [menu.social.params]
-icon = "user"
+icon = "brand-linkedin"
 
 [[menu.social]]
 identifier = "email"
 name = "Email"
 url = "mailto:thamle.work@gmail.com"
 [menu.social.params]
-icon = "messages"
+icon = "mail"
 
 # Taxonomies for content organization
 [taxonomies]
-event = "events"
 category = "categories"
 tag = "tags"
+series = "series"
 
-# Image processing
-[imaging]
-quality = 95
-resampleFilter = "CatmullRom"
-
-# Security
-[security]
-enableInlineShortcodes = false
-[security.exec]
-allow = ['^dart-sass-embedded$', '^go$', '^npx$', '^postcss$']
-[security.funcs]
-getenv = ['^HUGO_', '^CI$']
-
-# Markup
+# Markup configuration
 [markup]
 [markup.goldmark]
 [markup.goldmark.renderer]
 unsafe = true
-[markup.goldmark.parser]
-[markup.goldmark.parser.attribute]
-block = true
-title = true
 [markup.highlight]
 style = "github-dark"
 lineNos = true
-lineNumbersInTable = true
 codeFences = true
+
+# Output formats
+[outputFormats]
+[outputFormats.RSS]
+mediatype = "application/rss"
+baseName = "feed"
