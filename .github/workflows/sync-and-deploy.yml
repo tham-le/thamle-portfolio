@@ -59,6 +59,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
     
+    - name: Prepare Hugo Content
+      run: |
+        chmod +x ./scripts/prepare_hugo.py
+        python3 ./scripts/prepare_hugo.py
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
       with:
