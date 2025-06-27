@@ -1,6 +1,34 @@
-# My Digital Workbench
+# Personal Portfolio
 
-This repository contains the source for my personal portfolio. It's built with Hugo and serves as a live, auto-updating collection of my work, thoughts, and experiments. I built it to be a transparent representation of my skills, not a static resume.
+Source code for my personal portfolio website: [thamle.live](https://thamle.live)
+
+Built with [Hugo](https://gohugo.io/) and deployed on [Firebase](https://firebase.google.com/docs/hosting).
+
+---
+
+## Local Development
+
+1.  **Clone the repository with submodules:**
+    ```bash
+    git clone --recursive https://github.com/tham-le/thamle-portfolio.git
+    cd thamle-portfolio
+    ```
+
+2.  **Set up environment variables:**
+    ```bash
+    # This is only needed if you want to sync projects from the GitHub API.
+    cp .env.example .env
+    # Add your GitHub token to .env
+    ```
+
+3.  **Prepare content and run the server:**
+    ```bash
+    # Generate the local index files needed for the CTF section.
+    python3 scripts/prepare_hugo.py
+    
+    # Run the Hugo development server.
+    hugo server
+    ```
 
 ## Core Principles
 
@@ -17,35 +45,6 @@ This repository contains the source for my personal portfolio. It's built with H
     - `content/ctf/`: A Git submodule pointing to my [CTF-Writeups](https://github.com/tham-le/CTF-Writeups) repository.
     - `content/notes/`: My personal notes and articles.
 - **Deployment**: Deployed on Firebase, with continuous deployment handled by GitHub Actions.
-
-## Running It Locally
-
-If you want to spin this up yourself:
-
-1.  **Clone it (with submodules):**
-    ```bash
-    git clone --recursive https://github.com/tham-le/thamle-portfolio.git
-    cd thamle-portfolio
-    ```
-
-2.  **Set up the environment:**
-    You'll need a GitHub personal access token to fetch repository data.
-    ```bash
-    cp .env.example .env
-    # Add your token to the .env file
-    ```
-
-3.  **Sync content:**
-    ```bash
-    ./scripts/sync.sh
-    ```
-
-4.  **Run Hugo's server:**
-    ```bash
-    hugo server
-    ```
-
-This is a living project, so expect it to change as I learn new things and build more stuff.
 
 ## Content Structure
 
