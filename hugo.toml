@@ -116,14 +116,14 @@ identifier = "linkedin"
 name = "LinkedIn"
 url = "https://linkedin.com/in/tham42"
 [menu.social.params]
-icon = "brand-linkedin"
+icon = "link"
 
 [[menu.social]]
 identifier = "email"
 name = "Email"
 url = "mailto:thamle.work@gmail.com"
 [menu.social.params]
-icon = "mail"
+icon = "messages"
 
 # Taxonomies for content organization
 [taxonomies]
