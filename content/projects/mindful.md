@@ -75,7 +75,6 @@ MindfulWealth is a financial assistant application designed to help users make m
 
 - [📂 **View Source Code**](https://github.com/tham-le/mindful) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/mindful/pulse) - Development activity and statistics
 
 ---
 

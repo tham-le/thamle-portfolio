@@ -1,6 +1,6 @@
 ---
 title: "api chaos"
-date: 2025-06-27T21:39:19+02:00
+date: 2025-06-27T22:01:32+02:00
 description: "api chaos writeup from CyberApocalypse2025 CTF - Web Exploitation challenge"
 categories:
     - "CTF Writeups"

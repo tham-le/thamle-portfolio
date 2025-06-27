@@ -62,7 +62,6 @@ All challenges are for educational purposes only. Use responsibly.
 
 - [📂 **View Source Code**](https://github.com/tham-le/Darkly) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/Darkly/pulse) - Development activity and statistics
 
 ---
 

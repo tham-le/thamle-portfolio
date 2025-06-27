@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Master Sync Script
-# Loads environment variables and syncs both projects and CTF writeups
+# Runs all sync operations in the correct order
 
 set -e
 
@@ -10,6 +10,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Logging functions
@@ -29,53 +30,152 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Load environment variables from .env file
-if [[ -f .env ]]; then
-    log_info "Loading environment variables from .env file..."
-    source .env
-    log_success "Environment variables loaded"
-else
-    log_error ".env file not found!"
-    log_info "Please create a .env file with your GitHub token:"
-    echo "GITHUB_TOKEN=your_github_token_here"
-    echo "GITHUB_USERNAME=tham-le"
-    exit 1
-fi
+log_step() {
+    echo -e "${CYAN}[STEP]${NC} $1"
+}
 
-# Verify GitHub token is set
-if [ -z "$GITHUB_TOKEN" ]; then
-    log_error "GITHUB_TOKEN not set in .env file"
-    log_info "Add your GitHub token to .env file: GITHUB_TOKEN=your_token_here"
-    exit 1
-fi
+# Function to check if script exists and is executable
+check_script() {
+    local script="$1"
+    if [[ ! -f "$script" ]]; then
+        log_error "Script not found: $script"
+        return 1
+    fi
+    if [[ ! -x "$script" ]]; then
+        log_warning "Script not executable: $script - making executable"
+        chmod +x "$script"
+    fi
+    return 0
+}
 
-log_info "Starting full portfolio sync..."
+# Function to run script with error handling
+run_script() {
+    local script="$1"
+    local description="$2"
+    
+    log_step "Running: $description"
+    
+    if check_script "$script"; then
+        if "$script"; then
+            log_success "Completed: $description"
+            return 0
+        else
+            log_error "Failed: $description"
+            return 1
+        fi
+    else
+        return 1
+    fi
+}
 
-# Sync projects from GitHub API
-log_info "Syncing projects from GitHub..."
-if ./scripts/sync-projects.sh; then
-    log_success "Projects synced successfully"
-else
-    log_error "Project sync failed"
-    exit 1
-fi
+# Main sync function
+main() {
+    log_info "Starting complete portfolio sync..."
+    echo ""
+    
+    local start_time=$(date +%s)
+    local failed_scripts=()
+    
+    # Step 1: Sync GitHub projects
+    if run_script "./sync-projects.sh" "GitHub Projects Sync"; then
+        echo ""
+    else
+        failed_scripts+=("sync-projects.sh")
+    fi
+    
+    # Step 2: Sync CTF writeups
+    if run_script "./sync-writeups.sh" "CTF Writeups Sync"; then
+        echo ""
+    else
+        failed_scripts+=("sync-writeups.sh")
+    fi
+    
+    # Step 3: Generate featured articles
+    if run_script "./generate-featured-articles.sh" "Featured Articles Generation"; then
+        echo ""
+    else
+        failed_scripts+=("generate-featured-articles.sh")
+    fi
+    
+    # Calculate duration
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
+    
+    # Summary
+    echo "=============================================="
+    log_info "Portfolio Sync Summary"
+    echo "=============================================="
+    
+    if [[ ${#failed_scripts[@]} -eq 0 ]]; then
+        log_success "All sync operations completed successfully!"
+        log_info "Duration: ${duration}s"
+        echo ""
+        log_info "Next steps:"
+        echo "  1. Review generated content"
+        echo "  2. Test with: hugo server -D"
+        echo "  3. Build with: hugo --minify"
+        echo "  4. Deploy when ready"
+    else
+        log_warning "Some operations failed:"
+        for script in "${failed_scripts[@]}"; do
+            echo "  - $script"
+        done
+        log_info "Duration: ${duration}s"
+        echo ""
+        log_info "Please check the errors above and re-run failed scripts individually"
+    fi
+    
+    echo "=============================================="
+}
 
-# Update CTF writeups submodule
-log_info "Updating CTF writeups submodule..."
-if git submodule update --remote content/ctf-external; then
-    log_success "CTF writeups submodule updated"
-else
-    log_warning "CTF writeups submodule update failed or no changes"
-fi
+# Show help
+show_help() {
+    echo "Portfolio Master Sync Script"
+    echo ""
+    echo "Usage: $0 [options]"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help     Show this help message"
+    echo "  --projects     Run only projects sync"
+    echo "  --writeups     Run only writeups sync"
+    echo "  --featured     Run only featured articles generation"
+    echo ""
+    echo "This script runs all sync operations in order:"
+    echo "  1. GitHub projects sync (./sync-projects.sh)"
+    echo "  2. CTF writeups sync (./sync-writeups.sh)"
+    echo "  3. Featured articles generation (./generate-featured-articles.sh)"
+    echo ""
+    echo "Configuration files:"
+    echo "  - config/projects-config.json"
+    echo "  - config/featured-articles.json"
+    echo ""
+}
 
-# Sync CTF writeups
-log_info "Processing CTF writeups..."
-if ./scripts/sync-writeups.sh; then
-    log_success "CTF writeups processed successfully"
-else
-    log_error "CTF writeups processing failed"
-    exit 1
-fi
-
-log_success "Full portfolio sync completed!"
-log_info "You can now run 'hugo server' to preview your site" 
+# Parse command line arguments
+case "${1:-}" in
+    -h|--help)
+        show_help
+        exit 0
+        ;;
+    --projects)
+        run_script "./sync-projects.sh" "GitHub Projects Sync"
+        exit $?
+        ;;
+    --writeups)
+        run_script "./sync-writeups.sh" "CTF Writeups Sync"
+        exit $?
+        ;;
+    --featured)
+        run_script "./generate-featured-articles.sh" "Featured Articles Generation"
+        exit $?
+        ;;
+    "")
+        main
+        ;;
+    *)
+        log_error "Unknown option: $1"
+        echo ""
+        show_help
+        exit 1
+        ;;
+esac 

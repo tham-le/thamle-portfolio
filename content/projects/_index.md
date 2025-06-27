@@ -1,13 +1,11 @@
 ---
-title: "Projects Portfolio"
-description: "Explore my software engineering projects - from web applications to system programming, showcasing diverse technical skills and innovative solutions."
-date: 2025-06-27T10:18:22+02:00
-draft: false
+title: "Projects"
+description: "Code & projects"
 ---
 
 # My Projects Portfolio
 
-Welcome to my project showcase! This collection represents my journey as a software engineer, featuring **14** projects that demonstrate my expertise across multiple technologies and domains.
+Welcome to my project showcase! This collection represents my journey as a software engineer, featuring **7** projects that demonstrate my expertise across multiple technologies and domains.
 
 ## Featured Highlights
 

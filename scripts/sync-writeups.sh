@@ -12,9 +12,9 @@ if [[ -f .env ]]; then
 fi
 
 # Configuration
-SOURCE_DIR="content/ctf-external"
-CONTENT_DIR="content/ctf"
-IMAGES_DIR="static/images/ctf"
+SOURCE_DIR="../content/ctf-external"
+CONTENT_DIR="../content/ctf"
+IMAGES_DIR="../static/images/ctf"
 
 # Colors for output
 RED='\033[0;31m'
@@ -351,7 +351,7 @@ process_ctf_writeups() {
                     # Add to challenges list for overview
                     challenges+=("$challenge_name|$category")
                 fi
-            done < <(find "$event_dir" \( -name "writeup.md" -o -name "README.md" \) -type f -print0)
+            done < <(find "$event_dir" \( -name "writeup.md" -o -name "README.md" -o -name "wu.md" \) -type f -print0)
             
             # Create event overview page
             if [[ ${#challenges[@]} -gt 0 ]]; then

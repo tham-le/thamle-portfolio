@@ -1,0 +1,66 @@
+{{ define "main" }}
+    {{/* Display the homepage content from _index.md */}}
+    {{ if .Content }}
+        <article class="main-article">
+            <div class="article-content">
+                {{ .Content }}
+            </div>
+        </article>
+    {{ end }}
+
+    {{/* Featured Articles Section - Simple Version */}}
+    {{ $featuredResource := resources.Get "config/featured-articles.json" }}
+    {{ if $featuredResource }}
+        {{ $featuredConfig := $featuredResource | transform.Unmarshal }}
+        {{ if $featuredConfig }}
+            <section class="featured-section">
+                <h2 class="featured-title">{{ $featuredConfig.title }}</h2>
+                <p class="featured-description">{{ $featuredConfig.description }}</p>
+                
+                <div class="featured-grid">
+                    {{ range $featuredConfig.articles }}
+                        {{ if .featured }}
+                            <article class="featured-card">
+                                {{/* Simple emoji placeholder - no image detection */}}
+                                <div class="featured-image">
+                                    <div class="featured-image-placeholder">
+                                        <span class="featured-emoji">{{ .emoji }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="featured-content">
+                                    <h3 class="featured-card-title">
+                                        <a href="{{ .url }}">{{ .title }}</a>
+                                    </h3>
+                                    <p class="featured-card-description">{{ .description }}</p>
+                                    {{ if $featuredConfig.settings.show_category }}
+                                        <span class="featured-category">{{ .category }}</span>
+                                    {{ end }}
+                                </div>
+                            </article>
+                        {{ end }}
+                    {{ end }}
+                </div>
+            </section>
+        {{ end }}
+    {{ end }}
+
+    {{/* Display the article list as before */}}
+    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
+    {{ $filtered := ($pages | intersect $notHidden) }}
+    {{ $pag := .Paginate ($filtered) }}
+
+    <section class="article-list">
+        {{ range $index, $element := $pag.Pages }}
+            {{ partial "article-list/default" . }}
+        {{ end }}
+    </section>
+
+    {{- partial "pagination.html" . -}}
+    {{- partial "footer/footer" . -}}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }} 

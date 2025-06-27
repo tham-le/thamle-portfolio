@@ -1,6 +1,6 @@
 ---
 title: "Late Night Bite"
-date: 2025-06-27T21:39:20+02:00
+date: 2025-06-27T22:01:33+02:00
 description: "Late Night Bite writeup from IrisCTF CTF - OSINT challenge"
 categories:
     - "CTF Writeups"
