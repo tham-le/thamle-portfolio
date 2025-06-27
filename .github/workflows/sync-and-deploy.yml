@@ -1,4 +1,4 @@
-name: Sync and Deploy Portfolio
+name: Sync, Build, and Deploy Portfolio
 
 on:
   workflow_dispatch:
@@ -9,15 +9,37 @@ on:
     - cron: '0 6 * * *'
 
 jobs:
-  sync-and-deploy:
+  sync-build-deploy:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: false  # We'll handle submodules manually
         token: ${{ secrets.TOKEN_GITHUB }}
+
+    - name: Setup Git for submodules
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+
+    - name: Initialize and update submodules
+      run: |
+        # Initialize submodules
+        git submodule init
+        
+        # Update theme submodule
+        git submodule update themes/hugo-theme-stack
+        
+        # Update CTF writeups submodule if it exists
+        if git submodule status content/ctf-external >/dev/null 2>&1; then
+          git submodule update content/ctf-external
+        else
+          echo "CTF writeups submodule not found, skipping..."
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
     - name: Setup environment
       run: |
@@ -29,12 +51,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y jq curl
-
-    - name: Update CTF writeups submodule
-      run: |
-        git submodule update --remote content/ctf-external || echo "No CTF submodule updates"
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
     - name: Sync all content
       run: |
@@ -49,8 +65,31 @@ jobs:
         hugo-version: '0.147.9'
         extended: true
     
-    - name: Build Hugo site
-      run: hugo --minify --environment production
+    - name: Test Hugo build
+      run: |
+        echo "🔍 Testing Hugo build..."
+        hugo --minify --environment production --verbose
+        echo "✅ Hugo build successful!"
+    
+    - name: Verify build output
+      run: |
+        echo "🔍 Verifying build output..."
+        if [ ! -d "public" ]; then
+          echo "❌ Public directory not created"
+          exit 1
+        fi
+        
+        if [ ! -f "public/index.html" ]; then
+          echo "❌ Index.html not generated"
+          exit 1
+        fi
+        
+        echo "✅ Build verification successful!"
+        echo "📊 Build statistics:"
+        echo "- Total files: $(find public -type f | wc -l)"
+        echo "- HTML files: $(find public -name "*.html" | wc -l)"
+        echo "- CSS files: $(find public -name "*.css" | wc -l)"
+        echo "- JS files: $(find public -name "*.js" | wc -l)"
     
     - name: Deploy to Firebase
       uses: FirebaseExtended/action-hosting-deploy@v0
