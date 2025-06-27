@@ -1,41 +1,51 @@
-# Tham Le Portfolio
+# My Digital Workbench
 
-Personal portfolio website built with Hugo, focusing on learning through building and documenting the process.
+This repository contains the source for my personal portfolio. It's built with Hugo and serves as a live, auto-updating collection of my work, thoughts, and experiments. I built it to be a transparent representation of my skills, not a static resume.
 
-## Philosophy
+## Core Principles
 
-This portfolio represents genuine learning and growth rather than marketing speak. It automatically syncs content from GitHub repositories and documents real problems solved through code.
+- **Show, Don't Tell**: The portfolio is powered by my actual project repositories. Content is synced from GitHub, so what you see is what I'm actively working on. No marketing fluff.
+- **Automate Everything**: I'm an engineer, so I automated the content updates. A GitHub Action runs periodically to pull in my latest projects and CTF writeups. The system should work for me, not the other way around.
+- **Learn in Public**: This site documents my process, including the dead ends and lessons learned. The goal is to build a body of work that reflects a real, ongoing learning process.
 
-## Features
+## How It Works
 
-- **Dynamic Content**: Projects auto-synced from GitHub API
-- **CTF Documentation**: Security challenge writeups from submodule
-- **Learning Focus**: Honest documentation of what was learned
-- **Clean Design**: Hugo Stack theme with minimal customization
+- **Engine**: [Hugo](https://gohugo.io/) (static site generator)
+- **Theme**: [Stack](https://github.com/CaiJimmy/hugo-theme-stack), with some light modifications.
+- **Content Sources**:
+    - `content/projects/`: Populated by a script that hits the GitHub API.
+    - `content/ctf/`: A Git submodule pointing to my [CTF-Writeups](https://github.com/tham-le/CTF-Writeups) repository.
+    - `content/notes/`: My personal notes and articles.
+- **Deployment**: Deployed on Firebase, with continuous deployment handled by GitHub Actions.
 
-## Setup
+## Running It Locally
 
-1. **Clone the repository**
-   ```bash
-   git clone --recursive https://github.com/tham-le/thamle-portfolio.git
-   cd thamle-portfolio
-   ```
+If you want to spin this up yourself:
 
-2. **Set up environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your GitHub token
-   ```
+1.  **Clone it (with submodules):**
+    ```bash
+    git clone --recursive https://github.com/tham-le/thamle-portfolio.git
+    cd thamle-portfolio
+    ```
 
-3. **Sync content**
-   ```bash
-   ./sync-all.sh
-   ```
+2.  **Set up the environment:**
+    You'll need a GitHub personal access token to fetch repository data.
+    ```bash
+    cp .env.example .env
+    # Add your token to the .env file
+    ```
 
-4. **Run locally**
-   ```bash
-   hugo server
-   ```
+3.  **Sync content:**
+    ```bash
+    ./scripts/sync.sh
+    ```
+
+4.  **Run Hugo's server:**
+    ```bash
+    hugo server
+    ```
+
+This is a living project, so expect it to change as I learn new things and build more stuff.
 
 ## Content Structure
 
@@ -48,30 +58,6 @@ This portfolio represents genuine learning and growth rather than marketing spea
 Required in `.env` file:
 - `GITHUB_TOKEN`: Personal access token for GitHub API
 - `GITHUB_USERNAME`: Your GitHub username (default: tham-le)
-
-## Deployment
-
-The site deploys automatically to Firebase Hosting via GitHub Actions when changes are pushed to main.
-
-## Content Philosophy
-
-- Document actual learning, not achievements
-- Show real code and real problems
-- Explain thought process and failures
-- Keep descriptions honest and concise
-
-## Local Development
-
-```bash
-# Start Hugo development server
-hugo server --buildDrafts --buildFuture
-
-# Sync content without building
-./sync-all.sh
-
-# Test sync functionality
-./test-sync.sh
-```
 
 ## License
 
