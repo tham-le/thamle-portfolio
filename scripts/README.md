@@ -8,16 +8,18 @@ This directory contains all the automation scripts for the portfolio.
 
 - **`sync-all.sh`** - Master script that runs all sync operations
   - Loads environment variables from `.env`
-  - Syncs projects from GitHub API
+  - Syncs featured projects from GitHub API
   - Updates CTF writeups submodule
   - Processes CTF writeups
 
 ### 📂 Individual Sync Scripts
 
-- **`sync-projects.sh`** - Syncs GitHub repositories to project pages
+- **`sync-projects.sh`** - Syncs selected GitHub repositories to project pages
+  - Uses `projects-config.json` for selective project sync
   - Fetches repository data from GitHub API
   - References images directly from GitHub
   - Creates Hugo-compatible markdown files
+  - Escapes README content to prevent markdown issues
   - Categorizes projects automatically
 
 - **`sync-writeups.sh`** - Processes CTF writeups from submodule
@@ -37,6 +39,48 @@ This directory contains all the automation scripts for the portfolio.
   - Tests sync operations
   - Validates content generation
 
+## Project Configuration
+
+### Featured Projects Selection
+
+Create `projects-config.json` in the project root to specify which projects to sync:
+
+```json
+{
+  "featured_projects": [
+    {
+      "name": "fractol",
+      "priority": 1,
+      "description": "Mathematical fractal visualization with multi-threading"
+    },
+    {
+      "name": "miniRT",
+      "priority": 2,
+      "description": "3D ray tracer rendering realistic scenes"
+    }
+  ],
+  "settings": {
+    "max_readme_lines": 30,
+    "escape_code_blocks": true,
+    "include_gallery": true,
+    "auto_categorize": true
+  }
+}
+```
+
+### Configuration Options
+
+- **`featured_projects`**: Array of projects to sync
+  - `name`: GitHub repository name
+  - `priority`: Display order (lower = higher priority)
+  - `description`: Override for generic GitHub descriptions
+
+- **`settings`**: Sync behavior configuration
+  - `max_readme_lines`: Maximum README lines to include (default: 30)
+  - `escape_code_blocks`: Prevent README code blocks from breaking markdown (default: true)
+  - `include_gallery`: Generate image galleries for projects (default: true)
+  - `auto_categorize`: Automatically categorize projects (default: true)
+
 ## Usage
 
 ### Quick Start
@@ -44,7 +88,7 @@ This directory contains all the automation scripts for the portfolio.
 # Run full sync
 ./scripts/sync-all.sh
 
-# Sync only projects
+# Sync only featured projects
 ./scripts/sync-projects.sh
 
 # Sync only CTF writeups
@@ -62,6 +106,25 @@ GITHUB_USERNAME=tham-le
 - `curl` - API requests
 - `jq` - JSON processing
 - `git` - Repository operations
+
+## Features
+
+### README Processing
+- **Code Block Escaping**: Prevents README code blocks from breaking Hugo markdown structure
+- **Content Truncation**: Limits README content to prevent overly long project pages
+- **Smart Formatting**: Preserves markdown structure while fixing common issues
+
+### Image Handling
+- **Direct GitHub References**: Images referenced directly from GitHub raw URLs
+- **Multi-Directory Search**: Searches common image directories (image, images, assets, etc.)
+- **Carousel Generation**: Automatically creates image carousels for projects with multiple images
+- **Branch Detection**: Automatically detects and uses correct default branch (main/master)
+
+### Project Curation
+- **Quality Over Quantity**: Only sync significant projects specified in config
+- **Custom Descriptions**: Override generic GitHub descriptions with meaningful ones
+- **Priority Ordering**: Control display order through priority settings
+- **Category Assignment**: Automatic categorization based on languages and descriptions
 
 ## Workflow Integration
 
