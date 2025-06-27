@@ -1,36 +1,17 @@
 ---
-title: "Notes & Insights"
-description: "Technical insights, industry observations, and thoughts on software engineering and cybersecurity"
-date: 2025-06-27
-draft: false
+title: "Notes"
+description: "A collection of notes on software development, security, and other technical topics."
 ---
 
-# Notes & Insights
+# Notes
 
-## Technical Thoughts & Industry Observations
+This section contains my thoughts on things I'm working on or learning. These are working notes, focused on technical details and practical insights.
 
-A collection of my writings on software engineering, cybersecurity trends, and technology insights. From deep technical analysis to industry commentary.
-
----
-
-## Featured Articles
-
-### 🔗 **Substack Publications**
-*[Link to your Substack profile when ready]*
-
-### 📝 **Recent Notes**
-*This section will be populated with your articles and insights*
+## Topics
+- **Software Engineering**: Observations on design patterns, system architecture, and performance.
+- **Cybersecurity**: Notes from CTF challenges, security tool analysis, and general best practices.
+- **Developer Tools**: Thoughts on tools and workflows that I find effective.
 
 ---
 
-## Topics I Write About
-
-**🛡️ Cybersecurity Trends** - Analysis of emerging threats and defense strategies  
-**⚡ Performance Engineering** - System optimization and scalability insights  
-**🏗️ Software Architecture** - Design patterns and architectural decisions  
-**🔧 Developer Tools** - Reviews and recommendations for productivity  
-**📊 Industry Analysis** - Technology trends and career insights
-
----
-
-*Coming soon: Regular technical insights and industry commentary* 
+*This section is actively being updated.* 
