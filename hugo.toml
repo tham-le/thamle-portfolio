@@ -3,6 +3,7 @@ languageCode = "en-us"
 theme = "hugo-theme-stack"
 title = "Tham Le - Learning Through Code"
 copyright = "© 2025 Tham Le. All rights reserved."
+ignoreFiles = ["README.md"]
 
 # Enhanced metadata for better SEO
 [params.meta]
