@@ -5,26 +5,6 @@
 
 set -e
 
-# Load environment variables from .env file if it exists
-if [[ -f .env ]]; then
-    source .env
-fi
-
-# Configuration
-GITHUB_USERNAME="${GITHUB_USERNAME:-tham-le}"
-PROJECTS_DIR="content/projects"
-IMAGES_DIR="static/images/projects"
-GITHUB_API="https://api.github.com"
-
-# Check for GitHub token
-if [ -z "$GITHUB_TOKEN" ]; then
-    log_warning "GITHUB_TOKEN not set in .env file. API rate limits may apply."
-    log_warning "Create a .env file with: GITHUB_TOKEN=your_github_token_here"
-    AUTH_HEADER=""
-else
-    AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
-fi
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -49,6 +29,29 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Load environment variables from .env file if it exists
+# Handle both running from scripts/ directory and root directory
+if [[ -f .env ]]; then
+    source .env
+elif [[ -f ../.env ]]; then
+    source ../.env
+fi
+
+# Configuration
+GITHUB_USERNAME="${GITHUB_USERNAME:-tham-le}"
+PROJECTS_DIR="../content/projects"
+IMAGES_DIR="../static/images/projects"
+GITHUB_API="https://api.github.com"
+
+# Check for GitHub token
+if [ -z "$GITHUB_TOKEN" ]; then
+    log_warning "GITHUB_TOKEN not set in .env file. API rate limits may apply."
+    log_warning "Create a .env file with: GITHUB_TOKEN=your_github_token_here"
+    AUTH_HEADER=""
+else
+    AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
+fi
+
 # Function to check if command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -71,54 +74,80 @@ check_dependencies() {
     log_success "All dependencies are available."
 }
 
+# Function to get default branch for repository
+get_default_branch() {
+    local repo_name="$1"
+    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}"
+    
+    local repo_info
+    if [ -n "$AUTH_HEADER" ]; then
+        repo_info=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url")
+    else
+        repo_info=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
+    fi
+    
+    if echo "$repo_info" | jq -e '.default_branch' >/dev/null 2>&1; then
+        echo "$repo_info" | jq -r '.default_branch'
+    else
+        echo "main"  # fallback
+    fi
+}
+
 # Function to get all images from GitHub repository (reference only, no download)
 get_repo_images() {
     local repo_name="$1"
     
-    # Look only in the "image" directory as specified by user
-    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/contents/image"
+    # Get the default branch for this repository
+    local default_branch=$(get_default_branch "$repo_name")
+    
+    # Search in multiple common image directories
+    local search_dirs=("image" "images" "assets" "screenshots" "docs" "media" "pics")
     local images_found=()
     local main_image=""
     
-    log_info "Finding images in repository: $repo_name/image" >&2
+    log_info "Finding images in repository: $repo_name (branch: $default_branch)" >&2
     
-    # Use authentication if available
-    local dir_contents
-    if [ -n "$AUTH_HEADER" ]; then
-        dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url" 2>/dev/null)
-    else
-        dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url" 2>/dev/null)
-    fi
-    
-    # Check if we got valid JSON array
-    if echo "$dir_contents" | jq -e 'type == "array"' >/dev/null 2>&1; then
-        # Find all image files and create GitHub raw URLs
-        local image_files=$(echo "$dir_contents" | jq -r '.[] | select(.type == "file" and (.name | test("\\.(png|jpg|jpeg|gif|svg|webp|bmp)$"; "i"))) | .name')
+    for dir in "${search_dirs[@]}"; do
+        local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/contents/${dir}"
         
-        while IFS= read -r image_file; do
-            if [ -n "$image_file" ]; then
-                local extension="${image_file##*.}"
-                local base_name="${image_file%.*}"
-                # Create GitHub raw URL for direct reference
-                local github_raw_url="https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repo_name}/main/image/${image_file}"
-                
-                log_success "Found image: image/$image_file" >&2
-                images_found+=("$github_raw_url")
-                
-                # Set main image (prefer screenshot, demo, preview, then first image)
-                if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
-                    main_image="$github_raw_url"
+        # Use authentication if available
+        local dir_contents
+        if [ -n "$AUTH_HEADER" ]; then
+            dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url" 2>/dev/null)
+        else
+            dir_contents=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url" 2>/dev/null)
+        fi
+        
+        # Check if we got valid JSON array (directory exists and has contents)
+        if echo "$dir_contents" | jq -e 'type == "array"' >/dev/null 2>&1; then
+            log_info "Checking directory: $dir" >&2
+            
+            # Find all image files and create GitHub raw URLs
+            local image_files=$(echo "$dir_contents" | jq -r '.[] | select(.type == "file" and (.name | test("\\.(png|jpg|jpeg|gif|svg|webp|bmp)$"; "i"))) | .name')
+            
+            while IFS= read -r image_file; do
+                if [ -n "$image_file" ]; then
+                    local extension="${image_file##*.}"
+                    local base_name="${image_file%.*}"
+                    # Create GitHub raw URL for direct reference with correct branch
+                    local github_raw_url="https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repo_name}/${default_branch}/${dir}/${image_file}"
+                    
+                    log_success "Found image: $dir/$image_file" >&2
+                    images_found+=("$github_raw_url")
+                    
+                    # Set main image (prefer screenshot, demo, preview, then first image)
+                    if [ -z "$main_image" ] || [[ "$base_name" =~ ^(screenshot|demo|preview|cover|banner)$ ]]; then
+                        main_image="$github_raw_url"
+                    fi
                 fi
-            fi
-        done <<< "$image_files"
-    fi
+            done <<< "$image_files"
+        fi
+    done
     
-    # If no images found, create placeholder URL
+    # If no images found, don't use placeholder - leave empty
     if [ ${#images_found[@]} -eq 0 ]; then
-        local placeholder_url="https://via.placeholder.com/400x200/667eea/ffffff?text=${repo_name// /+}"
-        main_image="$placeholder_url"
-        images_found=("$placeholder_url")
-        log_info "No images found, using placeholder for $repo_name" >&2
+        main_image=""
+        log_info "No images found for $repo_name - will skip image display" >&2
     fi
     
     # Return main image and all images (JSON format)
@@ -130,6 +159,12 @@ generate_gallery_html() {
     local images_json="$1"
     local main_image=$(echo "$images_json" | jq -r '.main')
     local all_images=$(echo "$images_json" | jq -r '.all[]')
+    
+    # Don't show gallery if no images or only empty/null images
+    if [ $(echo "$images_json" | jq -r '.all | length') -eq 0 ] || [ -z "$main_image" ]; then
+        echo ""
+        return
+    fi
     
     if [ $(echo "$images_json" | jq -r '.all | length') -le 1 ]; then
         # Single image - no gallery needed
@@ -143,7 +178,7 @@ generate_gallery_html() {
     
     # Generate gallery HTML with GitHub raw URLs
     while IFS= read -r image_url; do
-        if [ -n "$image_url" ] && [ "$image_url" != "null" ]; then
+        if [ -n "$image_url" ] && [ "$image_url" != "null" ] && [[ "$image_url" == https://* ]]; then
             local filename=$(basename "$image_url")
             local name="${filename%.*}"
             # Convert filename to readable title
@@ -268,8 +303,8 @@ create_project_content() {
 title: "$name"
 date: $created_at
 lastmod: $updated_at
-description: "$description"
-image: "$main_image"
+description: "$description"$(if [ -n "$main_image" ] && [[ "$main_image" == https://* ]]; then echo "
+image: \"$main_image\""; fi)
 categories:
     - "Projects"
     - "$category"

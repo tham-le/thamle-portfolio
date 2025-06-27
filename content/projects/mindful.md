@@ -3,7 +3,6 @@ title: "mindful"
 date: 2025-03-03T15:18:49Z
 lastmod: 2025-05-23T12:10:34Z
 description: "MindfulWealth is a financial assistant application designed to help users make mindful spending decisions and encourage saving and investing."
-image: "https://via.placeholder.com/400x200/667eea/ffffff?text=mindful"
 categories:
     - "Projects"
     - "Web Development"

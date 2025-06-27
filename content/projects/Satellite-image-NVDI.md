@@ -3,7 +3,6 @@ title: "Satellite-image-NVDI"
 date: 2024-06-08T19:01:10Z
 lastmod: 2024-06-08T19:04:18Z
 description: "No description available"
-image: "https://via.placeholder.com/400x200/667eea/ffffff?text=Satellite-image-NVDI"
 categories:
     - "Projects"
     - "Scripts & Tools"

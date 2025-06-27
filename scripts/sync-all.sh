@@ -53,7 +53,7 @@ log_info "Starting full portfolio sync..."
 
 # Sync projects from GitHub API
 log_info "Syncing projects from GitHub..."
-if ./sync-projects.sh; then
+if ./scripts/sync-projects.sh; then
     log_success "Projects synced successfully"
 else
     log_error "Project sync failed"
@@ -70,7 +70,7 @@ fi
 
 # Sync CTF writeups
 log_info "Processing CTF writeups..."
-if ./sync-writeups.sh; then
+if ./scripts/sync-writeups.sh; then
     log_success "CTF writeups processed successfully"
 else
     log_error "CTF writeups processing failed"
