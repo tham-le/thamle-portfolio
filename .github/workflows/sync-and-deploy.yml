@@ -1,0 +1,61 @@
+name: Sync and Deploy Portfolio
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  schedule:
+    # Daily sync at 6 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        token: ${{ secrets.TOKEN_GITHUB }}
+
+    - name: Setup environment
+      run: |
+        echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> .env
+        echo "GITHUB_USERNAME=tham-le" >> .env
+        echo "HUGO_ENV=production" >> .env
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq curl
+
+    - name: Update CTF writeups submodule
+      run: |
+        git submodule update --remote content/ctf-external || echo "No CTF submodule updates"
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+    - name: Sync all content
+      run: |
+        chmod +x ./sync-all.sh
+        ./sync-all.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+    
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v3
+      with:
+        hugo-version: '0.147.9'
+        extended: true
+    
+    - name: Build Hugo site
+      run: hugo --minify --environment production
+    
+    - name: Deploy to Firebase
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
+        projectId: 'thamle-portfolio'
+        channelId: live

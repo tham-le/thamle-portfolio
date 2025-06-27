@@ -1,23 +1,5 @@
 {
   "projects": {
     "default": "thamle-portfolio"
-  },
-  "targets": {
-    "thamle-portfolio": {
-      "hosting": {
-        "main": [
-          "thamle-portfolio"
-        ],
-        "ctf": [
-          "ctf-writeups"
-        ],
-        "ctf-flutter": [
-          "ctf-flutter-app"
-        ],
-        "project": [
-          "project-thamle-portfolio"
-        ]
-      }
-    }
   }
-}
+} 

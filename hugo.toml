@@ -1,0 +1,148 @@
+baseURL = "https://thamle.live/"
+languageCode = "en-us"
+theme = "hugo-theme-stack"
+title = "Tham Le - Learning Through Code"
+copyright = "© 2025 Tham Le. All rights reserved."
+
+# Enhanced metadata for better SEO
+[params.meta]
+description = "Software engineer learning through building, breaking, and understanding systems. From ocean science to code."
+keywords = ["Software Engineer", "Learning", "Python", "C++", "Cybersecurity", "System Programming", "CTF", "Projects"]
+author = "Tham Le"
+
+# Theme i18n support
+DefaultContentLanguage = "en"
+
+[menu]
+[[menu.main]]
+identifier = "home"
+name = "Home"
+url = "/"
+weight = 10
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 20
+[[menu.main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects/"
+weight = 30
+[[menu.main]]
+identifier = "ctf"
+name = "CTF Writeups"
+url = "/ctf/"
+weight = 40
+[[menu.main]]
+identifier = "notes"
+name = "Notes"
+url = "/notes/"
+weight = 50
+[[menu.main]]
+identifier = "resume"
+name = "Resume"
+url = "/ThamLE_resume.pdf"
+weight = 60
+[menu.main.params]
+newTab = true
+
+# Pagination
+[pagination]
+pagerSize = 12
+
+# Permalinks for different content types
+[permalinks]
+projects = "/projects/:slug/"
+ctf = "/ctf/:sections[1:]/:slug/"
+notes = "/notes/:slug/"
+
+# Main sections for homepage
+[params]
+mainSections = ["projects", "ctf", "notes"]
+featuredImageField = "image"
+rssFullContent = true
+favicon = "/favicon.ico"
+
+# Enhanced sidebar configuration
+[params.sidebar]
+emoji = "👨‍💻"
+subtitle = "Learning through building and breaking things"
+
+[params.sidebar.avatar]
+enabled = false
+local = true
+src = "images/tham_photo.jpg"
+
+# Color scheme configuration for dark mode
+[params.colorScheme]
+toggle = true
+default = "auto"
+
+# Footer configuration
+[params.footer]
+since = 2024
+customText = "Always learning, always building"
+
+# Date format
+[params.dateFormat]
+published = "Jan 02, 2006"
+lastUpdated = "Jan 02, 2006 15:04 MST"
+
+# Article configuration
+[params.article]
+math = true
+toc = true
+readingTime = true
+
+[params.article.license]
+enabled = true
+default = "Licensed under CC BY-NC-SA 4.0"
+
+# Comments (disabled for professional portfolio)
+[params.comments]
+enabled = false
+
+# Social links
+[[menu.social]]
+identifier = "github"
+name = "GitHub"
+url = "https://github.com/tham-le"
+[menu.social.params]
+icon = "brand-github"
+
+[[menu.social]]
+identifier = "linkedin"
+name = "LinkedIn"
+url = "https://linkedin.com/in/tham42"
+[menu.social.params]
+icon = "brand-linkedin"
+
+[[menu.social]]
+identifier = "email"
+name = "Email"
+url = "mailto:thamle.work@gmail.com"
+[menu.social.params]
+icon = "mail"
+
+# Taxonomies for content organization
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"
+
+# Markup configuration
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
+[markup.highlight]
+style = "github-dark"
+lineNos = true
+codeFences = true
+
+# Output formats
+[outputFormats]
+[outputFormats.RSS]
+mediatype = "application/rss"
+baseName = "feed"

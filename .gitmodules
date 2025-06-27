@@ -1,3 +1,6 @@
-[submodule "external-writeups"]
-	path = external-writeups
+[submodule "content/ctf-external"]
+	path = content/ctf-external
 	url = https://github.com/tham-le/CTF-Writeups.git
+[submodule "themes/hugo-theme-stack"]
+	path = themes/hugo-theme-stack
+	url = https://github.com/CaiJimmy/hugo-theme-stack.git
