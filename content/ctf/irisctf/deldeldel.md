@@ -1,6 +1,6 @@
 ---
 title: "deldeldel"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:20+02:00
 description: "deldeldel writeup from IrisCTF CTF - Digital Forensics challenge"
 categories:
     - "CTF Writeups"
@@ -13,7 +13,6 @@ tags:
 event: "IrisCTF"
 challenge: "deldeldel"
 category: "Digital Forensics"
-image: "/images/ctf/irisctf/deldeldel-screenshot.png"
 weight: 1
 ---
 
