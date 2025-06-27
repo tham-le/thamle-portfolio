@@ -449,58 +449,53 @@ update_projects_index() {
     local index_file="${PROJECTS_DIR}/_index.md"
     local total_projects=$(find "$PROJECTS_DIR" -name "*.md" -not -name "_index.md" | wc -l)
     
+    # Check if index file exists and has custom content
+    if [ -f "$index_file" ]; then
+        # Only update the project count if the file exists
+        # This preserves manually crafted content while keeping count current
+        log_info "Index file exists - preserving manual content, updating project count only"
+        
+        # Update the project count in existing file if it contains the pattern
+        if grep -q "featuring \*\*[0-9]\+\*\* projects" "$index_file"; then
+            sed -i "s/featuring \*\*[0-9]\+\*\* projects/featuring **$total_projects** projects/" "$index_file"
+            log_success "Updated project count to $total_projects in existing index"
+        else
+            log_info "Manual index file doesn't contain project count pattern - leaving unchanged"
+        fi
+        return
+    fi
+    
+    # Only create new index if none exists
     cat > "$index_file" << EOF
 ---
-title: "Projects Portfolio"
-description: "Explore my software engineering projects - from web applications to system programming, showcasing diverse technical skills and innovative solutions."
+title: "Projects"
+description: "Things I've built while learning"
 date: $(date -Iseconds)
 draft: false
 ---
 
-# My Projects Portfolio
+# Projects
 
-Welcome to my project showcase! This collection represents my journey as a software engineer, featuring **$total_projects** projects that demonstrate my expertise across multiple technologies and domains.
+These are things I've built while learning different technologies and solving problems. Each project taught me something new about programming, system design, or problem-solving.
 
-## Featured Highlights
+The projects are automatically synced from my GitHub repositories, so you're seeing the actual code I write and maintain.
 
-🚀 **Full-Stack Applications** - Modern web applications built with Python, JavaScript, and contemporary frameworks  
-🔧 **System Programming** - Low-level C/C++ projects showcasing performance optimization and system design  
-🛡️ **Cybersecurity Tools** - Security-focused projects and vulnerability research demonstrations  
-📱 **Cross-Platform Solutions** - Applications designed to work seamlessly across different platforms  
+## Learning Areas
 
-## Technical Stack Showcase
+**Systems Programming** - Working with C/C++, memory management, and performance optimization
 
-These projects collectively demonstrate my proficiency in:
-- **Backend**: Python (Django, FastAPI), C++, Node.js
-- **Frontend**: React, Vue.js, Three.js, modern CSS
-- **Systems**: Linux/UNIX programming, networking, multithreading
-- **DevOps**: Docker, CI/CD, cloud deployment
-- **Security**: Secure coding practices, penetration testing, cryptography
+**Web Development** - Full-stack applications, APIs, and user interfaces
 
-## Project Categories
+**Security & CTF** - Tools and solutions for cybersecurity challenges
 
-Each project is categorized and tagged for easy navigation. You can filter by:
-- **Web Development** - Full-stack web applications
-- **System Programming** - Low-level and performance-critical software
-- **Cybersecurity** - Security tools and research projects
-- **Graphics & Games** - Visual and interactive applications
-- **Data Science** - Data analysis and visualization tools
-- **Mobile Development** - Cross-platform mobile applications
+**Graphics & Visualization** - Mathematical rendering and interactive applications
 
 ---
 
-## Repository Integration
-
-All projects are automatically synced from my GitHub repositories, ensuring the latest updates and comprehensive documentation are always available.
-
-**[🔗 View All Repositories on GitHub](https://github.com/tham-le)**
-
----
-
-*Last updated: $(date '+%B %d, %Y at %H:%M')*
+*Projects are loaded dynamically from GitHub. If you don't see any below, the sync might be running or there could be an API issue.*
 EOF
 
-    log_success "Updated projects index with $total_projects projects"
+    log_success "Created new projects index with $total_projects projects"
 }
 
 # Main execution

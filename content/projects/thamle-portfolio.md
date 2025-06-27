@@ -1,17 +1,14 @@
 ---
 title: "thamle-portfolio"
 date: 2025-06-18T13:43:39Z
-lastmod: 2025-06-27T08:09:00Z
+lastmod: 2025-06-27T08:19:08Z
 description: "No description available"
 image: "/images/projects/thamle-portfolio.svg"
 categories:
     - "Projects"
-    - "Web Development"
+    - "Graphics & Games"
 tags:
-    - "CSS"
-    - "Dart"
     - "HTML"
-    - "JavaScript"
     - "SCSS"
     - "Shell"
     - "GitHub"
@@ -86,10 +83,7 @@ Required in `.env` file:
 
 ## Technologies Used
 
-- CSS
-- Dart
 - HTML
-- JavaScript
 - SCSS
 - Shell
 
