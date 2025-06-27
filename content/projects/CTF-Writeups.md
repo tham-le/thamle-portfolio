@@ -3,7 +3,7 @@ title: "CTF-Writeups"
 date: 2025-01-06T13:35:21Z
 lastmod: 2025-06-25T17:55:55Z
 description: "new year new me, il will make write-ups for every CTF that I participate"
-image: "/images/projects/CTF-Writeups.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=CTF-Writeups"
 categories:
     - "Projects"
     - "Cybersecurity"

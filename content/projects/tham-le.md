@@ -3,7 +3,7 @@ title: "tham-le"
 date: 2025-05-23T11:34:52Z
 lastmod: 2025-06-05T19:32:47Z
 description: "No description available"
-image: "/images/projects/tham-le.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=tham-le"
 categories:
     - "Projects"
     - "Scripts & Tools"

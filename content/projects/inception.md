@@ -3,7 +3,7 @@ title: "inception"
 date: 2023-12-20T21:07:19Z
 lastmod: 2025-05-15T12:46:18Z
 description: "No description available"
-image: "/images/projects/inception.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=inception"
 categories:
     - "Projects"
     - "Scripts & Tools"

@@ -3,7 +3,7 @@ title: "InnovHer-EMA"
 date: 2024-11-16T09:56:34Z
 lastmod: 2025-04-15T14:59:41Z
 description: "health management application designed to assist individuals suffering from rheumatic conditions."
-image: "/images/projects/InnovHer-EMA.svg"
+image: "https://via.placeholder.com/400x200/667eea/ffffff?text=InnovHer-EMA"
 categories:
     - "Projects"
     - "Web Development"
