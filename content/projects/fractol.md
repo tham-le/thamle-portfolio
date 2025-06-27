@@ -1,77 +1,57 @@
 ---
-title: "fractol"
-date: 2025-05-30T20:24:09Z
-lastmod: 2025-06-05T18:22:11Z
-description: "High-performance fractal visualization in C with multi-threading and advanced graphics"
+title: "Fractol Explorer"
+description: "A multi-threaded fractal renderer in C using MinilibX for graphics."
 image: "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp"
 categories:
     - "Projects"
     - "Graphics & Games"
 tags:
     - "C"
-    - "Makefile"
-    - "GitHub"
+    - "Graphics"
+    - "Performance"
+    - "Concurrency"
 links:
     - title: "GitHub Repository"
-      description: "View source code and documentation"
+      description: "Source code and technical documentation."
       website: "https://github.com/tham-le/fractol"
       image: "https://github.githubassets.com/favicons/favicon.svg"
 weight: 1
 stats:
-    stars: 0
-    forks: 0
     language: "C"
 ---
 
-## Overview
+## Project Overview
 
-High-performance fractal visualization in C with multi-threading and advanced graphics
+`Fractol` is a fractal visualization tool written in C. It uses the MinilibX graphics library for rendering and POSIX threads (pthreads) to accelerate calculations. The goal was to build a performant renderer while learning about graphics programming, concurrency, and numerical algorithms.
 
-## Project Details
+This project is an extension of the original 42 School assignment. It includes additional features beyond the base requirements.
 
-# Fractol - Advanced Fractal Explorer
+## Key Features & Implementation Details
 
-**High-performance fractal visualization in C with multi-threading and advanced graphics**
+-   **Fractal Sets**: Implements rendering for Mandelbrot, Julia, and Newton sets, plus a Barnsley Fern.
+-   **Multi-threaded Rendering**: Uses pthreads to parallelize the fractal calculations across multiple CPU cores. This significantly reduces render times, especially for high-iteration images. I implemented a work-stealing queue model where threads pull rows of pixels to compute.
+-   **Coloring Algorithms**: Implemented smooth coloring based on the iteration count to produce continuous gradients, which provides more detail than simple banding.
+-   **Image Export**: The rendered fractal can be exported to BMP format.
+-   **User Interaction**: The view is interactive, allowing zooming and panning to explore the fractals.
 
-> **Note:** This project extends the original 42 School fract-ol assignment with advanced features demonstrating systems programming, optimization, and graphics expertise. Please enjoy peer-learning at 42 - don't copy.
+## Technical Challenges
 
-## Technical Achievements
+-   **Concurrency**: Synchronizing threads to render different parts of the image without race conditions or deadlocks was a key challenge.
+-   **Performance Optimization**: I spent time profiling the code to identify bottlenecks in the calculation loop and memory allocation.
+-   **Graphics Programming**: Working with a low-level graphics library like MinilibX requires manual management of the frame buffer, event handling, and color representation.
 
-**Core Technologies:** C, MinilibX, POSIX threads, Computer Graphics
-**Performance:** Multi-threaded rendering with 2-8x speed improvements
-**Export Formats:** BMP, PPM with animation support
-
-## Visual Showcase
-
-**High-quality fractal renders demonstrating mathematical precision and artistic beauty:**
-
-<div align="center">
-
-### Mandelbrot Set - Color Variations
-<img src="image/mandelbrot-smooth-color.bmp" width="300" alt="Mandelbrot Smooth Colors"/> <img src="image/mandelbrot-fire.bmp" width="300" alt="Mandelbrot Fire Palette"/>
-
-### Newton Fractal - Advanced Mathematics
-<img src="image/Newton.bmp" width="300" alt="Newton Fractal"/> <img src="image/Newton-rainbow.bmp" width="300" alt="Newton Rainbow"/>
-
-### Julia Set Collection - Parameter Exploration
-<img src="image/julia-1.bmp" width="200" alt="Julia Set 1"/> <img src="image/julia_2.bmp" width="200" alt="Julia Set 2"/> <img src="image/julia_3.bmp" width="200" alt="Julia Set 3"/> <img src="image/julia_6.bmp" width="200" alt="Julia Set 6"/>
-
-### Barnsley Fern - Nature-Inspired Fractals
-<img src="image/barnley.bmp" width="400" alt="Barnsley Fern"/>
 ## Project Gallery
 
-{{< project-carousel images="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp" id="fractol" title="fractol Gallery" >}}
+{{< project-carousel images="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp" id="fractol" title="Fractol Gallery" >}}
 
 ## Technologies Used
 
 - C
-- Makefile
+- MinilibX
+- POSIX threads
 
 ## Links
 
 - [📂 **View Source Code**](https://github.com/tham-le/fractol) - Complete project repository
-
-
----
 
 *This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
