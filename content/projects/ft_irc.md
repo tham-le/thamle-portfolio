@@ -59,26 +59,6 @@ This project is an implementation of a basic IRC server, adhering to a subset of
 *   **Logging:** Logs server activity to a file.
 *   **Error Handling:** Implements several error replies as defined in the IRC specifications.
 
-## Compilation
-
-To compile the project, use the following command:
-
-```bash
-make
-```
-
-This will create an executable file named `ircserv` in the main directory.
-
-## Usage
-
-To run the IRC server, use the following command:
-
-```bash
-./ircserv <port> <password>
-```
-
-*   `<port>`:  The port number the server will listen on.
-
 ## Technologies Used
 
 - C++

@@ -2,10 +2,10 @@
 title: "inception"
 date: 2023-12-20T21:07:19Z
 lastmod: 2025-05-15T12:46:18Z
-description: "No description available"
+description: "Multi-container Docker infrastructure with WordPress"
 categories:
     - "Projects"
-    - "Scripts & Tools"
+    - "Other"
 tags:
     - "Dockerfile"
     - "Makefile"
@@ -25,7 +25,7 @@ stats:
 
 ## Overview
 
-No description available
+Multi-container Docker infrastructure with WordPress
 
 ## Project Details
 
@@ -59,25 +59,6 @@ This nested virtualization approach demonstrates advanced system administration 
   - Volume management for data persistence
   - Container networking
   - Health checks and automatic restarts
-
-## 🛠️ Prerequisites
-
-- Docker and Docker Compose
-- SSH access to a Linux Alpine VM
-- Basic understanding of containerization concepts
-
-## 🏗️ Architecture
-
-The project consists of four main services:
-
-1. **Nginx**: Acts as a reverse proxy, handling SSL termination and serving static content
-2. **WordPress**: The CMS running the website
-3. **MariaDB**: Database server for WordPress
-4. **Redis**: Caching system to improve performance
-
-## 🚀 Getting Started
-
-1. Clone the repository:
 
 ## Technologies Used
 

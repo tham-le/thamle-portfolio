@@ -58,27 +58,6 @@ High-performance fractal visualization in C with multi-threading and advanced gr
 
 ### Barnsley Fern - Nature-Inspired Fractals
 <img src="image/barnley.bmp" width="400" alt="Barnsley Fern"/>
-
-</div>
-
-*All images rendered in real-time with multi-threaded optimization*
-
-### Key Features Beyond Original Assignment
-- **Multi-threaded rendering** - Automatic CPU core detection and workload distribution
-- **8 fractal types** - Mandelbrot, Julia, Burning Ship, Newton, Tricorn, Barnsley Fern, Mandelbar, Multibrot
-- **13 optimized color palettes** - Real-time switching with smooth interpolation
-- **Advanced interactions** - Mouse panning, scroll zoom, parameter modification
-- **Export capabilities** - Image and animation export with timestamp management
-- **Configuration system** - Save/load views and settings
-- **Anti-aliasing** - Adaptive supersampling for quality rendering
-
-## Installation & Usage
-
-```bash
-# Clone and build
-git clone --recursive https://github.com/tham-le/fractol.git
-cd fractol
-make
 ## Project Gallery
 
 {{< project-carousel images="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp" id="fractol" title="fractol Gallery" >}}

@@ -17,6 +17,22 @@ Currently in Paris, I work primarily with **Python** and **C++**. At **Snowpack*
 
 ---
 
+## Featured Articles
+
+### **🎯 [Mathematical Fractal Visualization](/projects/fractol/)**
+High-performance C implementation with multi-threading and 8 fractal types. Features real-time rendering, color palette switching, and animation export capabilities.
+
+### **🌐 [3D Ray Tracer](/projects/minirt/)**
+Realistic scene rendering with shadows, reflections, and multiple light sources. Built from scratch in C, demonstrating advanced graphics programming and mathematical precision.
+
+### **🤖 [AI-Powered Mindfulness App](/projects/mindful/)**
+Full-stack financial wellness application with AI chat integration. Features multilingual support, Docker deployment, and responsive design for mindful spending decisions.
+
+### **🔒 [Latest CTF Writeups](/ctf/)**
+Recent security challenge solutions covering cryptography, web exploitation, and forensics. Each writeup documents the learning process and problem-solving approach.
+
+---
+
 ## What I'm Working On
 
 **🔧 Systems Programming**  
