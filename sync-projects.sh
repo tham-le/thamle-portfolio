@@ -312,7 +312,8 @@ image: "$main_image"
 categories:
     - "Projects"
     - "$category"
-tags:$(echo "$languages" | jq -r '.[] | "    - \"" + . + "\""')
+tags:
+$(echo "$languages" | jq -r '.[] | "    - \"" + . + "\""')
     - "GitHub"
 links:
     - title: "GitHub Repository"
