@@ -1,26 +1,48 @@
 ---
-title: "Projects"
-description: "Things I've built while learning"
-date: 2025-06-26
+title: "Projects Portfolio"
+description: "Explore my software engineering projects - from web applications to system programming, showcasing diverse technical skills and innovative solutions."
+date: 2025-06-27T10:18:22+02:00
 draft: false
 ---
 
-# Projects
+# My Projects Portfolio
 
-These are things I've built while learning different technologies and solving problems. Each project taught me something new about programming, system design, or problem-solving.
+Welcome to my project showcase! This collection represents my journey as a software engineer, featuring **14** projects that demonstrate my expertise across multiple technologies and domains.
 
-The projects are automatically synced from my GitHub repositories, so you're seeing the actual code I write and maintain.
+## Featured Highlights
 
-## Learning Areas
+🚀 **Full-Stack Applications** - Modern web applications built with Python, JavaScript, and contemporary frameworks  
+🔧 **System Programming** - Low-level C/C++ projects showcasing performance optimization and system design  
+🛡️ **Cybersecurity Tools** - Security-focused projects and vulnerability research demonstrations  
+📱 **Cross-Platform Solutions** - Applications designed to work seamlessly across different platforms  
 
-**Systems Programming** - Working with C/C++, memory management, and performance optimization
+## Technical Stack Showcase
 
-**Web Development** - Full-stack applications, APIs, and user interfaces
+These projects collectively demonstrate my proficiency in:
+- **Backend**: Python (Django, FastAPI), C++, Node.js
+- **Frontend**: React, Vue.js, Three.js, modern CSS
+- **Systems**: Linux/UNIX programming, networking, multithreading
+- **DevOps**: Docker, CI/CD, cloud deployment
+- **Security**: Secure coding practices, penetration testing, cryptography
 
-**Security & CTF** - Tools and solutions for cybersecurity challenges
+## Project Categories
 
-**Graphics & Visualization** - Mathematical rendering and interactive applications
+Each project is categorized and tagged for easy navigation. You can filter by:
+- **Web Development** - Full-stack web applications
+- **System Programming** - Low-level and performance-critical software
+- **Cybersecurity** - Security tools and research projects
+- **Graphics & Games** - Visual and interactive applications
+- **Data Science** - Data analysis and visualization tools
+- **Mobile Development** - Cross-platform mobile applications
 
 ---
 
-*Projects are loaded dynamically from GitHub. If you don't see any below, the sync might be running or there could be an API issue.*
+## Repository Integration
+
+All projects are automatically synced from my GitHub repositories, ensuring the latest updates and comprehensive documentation are always available.
+
+**[🔗 View All Repositories on GitHub](https://github.com/tham-le)**
+
+---
+
+*Last updated: June 27, 2025 at 10:18*
