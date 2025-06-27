@@ -1,13 +1,14 @@
 ---
 title: "thamle-portfolio"
 date: 2025-06-18T13:43:39Z
-lastmod: 2025-06-27T08:55:30Z
+lastmod: 2025-06-27T09:12:33Z
 description: "No description available"
 categories:
     - "Projects"
     - "Graphics & Games"
 tags:
     - "HTML"
+    - "Makefile"
     - "SCSS"
     - "Shell"
     - "GitHub"
@@ -83,6 +84,7 @@ Required in `.env` file:
 ## Technologies Used
 
 - HTML
+- Makefile
 - SCSS
 - Shell
 
