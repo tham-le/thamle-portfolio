@@ -1,0 +1,167 @@
+{{ define "main" }}
+<div class="ctf-listing">
+    <header class="page-header">
+        <h1>CTF Writeups</h1>
+        <p>Detailed solutions to cybersecurity challenges from various CTF competitions</p>
+    </header>
+
+    <div class="ctf-content">
+        {{ .Content }}
+        
+        <!-- Recent Writeups -->
+        <section class="recent-writeups">
+            <h2>Available Writeups</h2>
+            <div class="writeups-grid">
+                {{ $ctfPages := where .Site.RegularPages "Section" "ctf" }}
+                {{ range $ctfPages }}
+                <article class="writeup-card">
+                    <div class="card-header">
+                        {{ range .Params.ctf_events }}
+                            <span class="event-badge">{{ . | title | replaceRE "-" " " }}</span>
+                        {{ end }}
+                        {{ range .Params.categories }}
+                            <span class="category-badge category-{{ . }}">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                    <p class="writeup-excerpt">{{ .Params.description | default (.Summary | truncate 120) }}</p>
+                    <div class="card-footer">
+                        <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+                        <span class="reading-time">{{ .ReadingTime }} min read</span>
+                    </div>
+                </article>
+                {{ end }}
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.ctf-listing {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #667eea;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.recent-writeups h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.writeups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.writeup-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.writeup-card:hover {
+    transform: translateY(-3px);
+}
+
+.card-header {
+    margin-bottom: 15px;
+}
+
+.event-badge {
+    background: #667eea;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.category-badge {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+.category-web { background: #28a745; color: white; }
+.category-crypto { background: #ffc107; color: #212529; }
+.category-reverse { background: #dc3545; color: white; }
+.category-pwn { background: #6f42c1; color: white; }
+.category-forensics { background: #20c997; color: white; }
+.category-misc { background: #6c757d; color: white; }
+.category-binary { background: #fd7e14; color: white; }
+
+.writeup-card h3 {
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.writeup-card h3 a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.writeup-card h3 a:hover {
+    color: #667eea;
+}
+
+.writeup-excerpt {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 0.9rem;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .ctf-listing {
+        padding: 15px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .writeups-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+</style>
+{{ end }}

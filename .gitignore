@@ -1,69 +1,29 @@
-# Portfolio Project - Clean .gitignore
-
-# Firebase
-.firebase/
-firebase-debug.log*
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-.npm
+# Environment variables
 .env
-.env.*
+.env.local
+.env.*.local
 
-# Flutter/Dart
-.dart_tool/
-.packages
-build/
-pubspec.lock
-coverage/
-.flutter-plugins
-.flutter-plugins-dependencies
+# Hugo generated files
+public/
+resources/_gen/
 
-# IDEs
+# Temporary files
+.DS_Store
 .vscode/
-.idea/
-*.iml
-*.ipr
-*.iws
+*.tmp
+*.temp
 
-# Operating Systems
-.DS_Store
-Thumbs.db
-*~
+# Build artifacts
+/hugo_cache/
+.hugo_build.lock
 
-# Logs & Debug
+# Processed CTF Content (auto-generated)
+content/ctf/processed/
+
+# Development Files  
 *.log
-debug.log
+__pycache__/
 
-# Temporary & Backup files
-*.tmp
-*.bak
-*.backup
-*.swp
-*.swo
-
-# Development & Testing Files (Clean Production)
-temp-*/
-test-*.sh
-*-temp/
-*.tmp
-*.backup
+# IDEs & OS
 .DS_Store
-
-# External Sync Files - now handled as submodule
-!external-writeups-example/
-
-# Project Specific
-*.generated.*
-
-# Build/Deploy Artifacts
-ctf_site/deploy/
-deploy/
-dist/
-out/
-
-# Generated files
-sitemap.xml
-robots.txt
+temp-analysis/
