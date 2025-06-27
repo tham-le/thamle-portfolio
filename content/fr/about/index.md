@@ -1,11 +1,11 @@
 ---
 title: "À Propos"
-description: "Je suis un ingénieur logiciel avec une formation en océanographie. Je construis des choses pour comprendre comment elles fonctionnent."
+description: "Je suis une ingénieure logiciel avec une formation en océanographie. Je construis des choses pour comprendre comment elles fonctionnent."
 ---
 
 ## À Propos de Moi
 
-Je suis un ingénieur logiciel qui aime résoudre des problèmes. Mon parcours en océanographie computationnelle m'a appris à modéliser des systèmes complexes. J'ai fait la transition vers le génie logiciel car je me suis rendu compte que j'étais plus intéressé par la construction des outils de recherche que par leur utilisation.
+Je suis une ingénieure logiciel qui aime résoudre des problèmes. Mon parcours en océanographie computationnelle m'a appris à modéliser des systèmes complexes. J'ai fait la transition vers le génie logiciel car je me suis rendu compte que j'étais plus intéressée par la construction des outils de recherche que par leur utilisation.
 
 Ce site est une collection de mon travail et un journal de ce que j'apprends.
 
@@ -46,7 +46,7 @@ Ce site est une collection de mon travail et un journal de ce que j'apprends.
 *2022 – 2025*
 - Cursus par projets axé sur C/C++, la programmation système et les algorithmes.
 - Apprentissage par la pratique, le débogage et la collaboration. Pas de cours traditionnels.
-- Tuteur officiel pour la programmation en C.
+- Tutrice officielle pour la programmation en C.
 
 ### **Aix-Marseille Université - M.Sc, Sciences Marines**
 *2019 – 2021*

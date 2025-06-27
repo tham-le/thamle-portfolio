@@ -1,0 +1,41 @@
+{
+    "title": "🌟 Projets à la Une",
+    "description": "Une sélection de projets et d'articles techniques démontrant des compétences clés et des approches de résolution de problèmes.",
+    "settings": {
+        "show_category": true
+    },
+    "articles": [
+        {
+            "featured": true,
+            "title": "Visualisation Mathématique de Fractales",
+            "description": "Implémentation C haute performance avec multi-threading et 8 types de fractales. Rendu en temps réel, changement de palette de couleurs et exportation d'animations.",
+            "category": "Programmation Graphique",
+            "emoji": "🎯",
+            "url": "/projects/fractol-explorer/"
+        },
+        {
+            "featured": true,
+            "title": "Moteur de Lancer de Rayons 3D",
+            "description": "Rendu de scènes réalistes avec ombres, réflexions et sources de lumière multiples. Construit en C, démontrant une programmation graphique avancée et une précision mathématique.",
+            "category": "Graphisme Informatique",
+            "emoji": "🌐",
+            "url": "/projects/minirt/"
+        },
+        {
+            "featured": true,
+            "title": "Application de Pleine Conscience IA",
+            "description": "Application de bien-être financier full-stack avec intégration de chat IA. Support multilingue, déploiement Docker et conception adaptative.",
+            "category": "Développement Full-Stack",
+            "emoji": "🤖",
+            "url": "/projects/mindful/"
+        },
+        {
+            "featured": true,
+            "title": "Derniers Writeups de CTF",
+            "description": "Solutions récentes de défis de sécurité couvrant la cryptographie, l'exploitation web et l'investigation numérique. Chaque writeup documente le processus d'apprentissage.",
+            "category": "Cybersécurité",
+            "emoji": "🔒",
+            "url": "/ctf/"
+        }
+    ]
+} 

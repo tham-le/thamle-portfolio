@@ -8,8 +8,13 @@
         </article>
     {{ end }}
 
-    {{/* Featured Articles Section - Simple Version */}}
-    {{ $featuredResource := resources.Get "config/featured-articles.json" }}
+    {{/* Language-aware Featured Articles Section */}}
+    {{ $lang := .Site.Language.Lang }}
+    {{ $featuredPath := printf "config/featured-articles.%s.json" $lang }}
+    {{ $defaultFeaturedPath := "config/featured-articles.json" }}
+    
+    {{ $featuredResource := resources.Get $featuredPath | default (resources.Get $defaultFeaturedPath) }}
+
     {{ if $featuredResource }}
         {{ $featuredConfig := $featuredResource | transform.Unmarshal }}
         {{ if $featuredConfig }}
