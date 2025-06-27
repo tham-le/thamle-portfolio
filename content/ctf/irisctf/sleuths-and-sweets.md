@@ -1,6 +1,6 @@
 ---
 title: "Sleuths and Sweets"
-date: 2025-06-27T21:39:20+02:00
+date: 2025-06-27T22:01:33+02:00
 description: "Sleuths and Sweets writeup from IrisCTF CTF - OSINT challenge"
 categories:
     - "CTF Writeups"

@@ -71,7 +71,6 @@ _A scene demonstrating all supported geometric primitives._
 
 - [📂 **View Source Code**](https://github.com/tham-le/miniRT) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/miniRT/pulse) - Development activity and statistics
 
 ---
 

@@ -70,7 +70,6 @@ This nested virtualization approach demonstrates advanced system administration 
 
 - [📂 **View Source Code**](https://github.com/tham-le/inception) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/inception/pulse) - Development activity and statistics
 
 ---
 

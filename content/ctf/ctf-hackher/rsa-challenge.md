@@ -1,6 +1,6 @@
 ---
 title: "rsa challenge"
-date: 2025-06-27T21:39:19+02:00
+date: 2025-06-27T22:01:32+02:00
 description: "rsa challenge writeup from CTF_HackHer CTF - Cryptography challenge"
 categories:
     - "CTF Writeups"

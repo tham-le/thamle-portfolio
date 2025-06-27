@@ -67,7 +67,7 @@ favicon = "/favicon.ico"
 # Enhanced sidebar configuration
 [params.sidebar]
 emoji = "👨‍💻"
-subtitle = "Learning through building and breaking things"
+subtitle = "Building & learning"
 
 [params.sidebar.avatar]
 enabled = false

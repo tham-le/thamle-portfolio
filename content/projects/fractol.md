@@ -71,7 +71,6 @@ High-performance fractal visualization in C with multi-threading and advanced gr
 
 - [📂 **View Source Code**](https://github.com/tham-le/fractol) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/fractol/pulse) - Development activity and statistics
 
 ---
 

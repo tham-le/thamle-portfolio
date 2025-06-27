@@ -42,14 +42,14 @@ GITHUB_USERNAME="${GITHUB_USERNAME:-tham-le}"
 PROJECTS_DIR="../content/projects"
 IMAGES_DIR="../static/images/projects"
 GITHUB_API="https://api.github.com"
-CONFIG_FILE="../projects-config.json"
+PROJECTS_CONFIG="../config/projects-config.json"
 
 # Check for projects config file
-if [[ ! -f "$CONFIG_FILE" ]]; then
-    CONFIG_FILE="projects-config.json"
+if [[ ! -f "$PROJECTS_CONFIG" ]]; then
+    PROJECTS_CONFIG="projects-config.json"
 fi
 
-if [[ ! -f "$CONFIG_FILE" ]]; then
+if [[ ! -f "$PROJECTS_CONFIG" ]]; then
     log_error "projects-config.json not found. Please create it to specify which projects to sync."
     exit 1
 fi
@@ -344,8 +344,8 @@ create_project_content() {
     local gallery_html=$(generate_gallery_html "$images_data" "$name")
     
     # Get settings from config
-    local max_readme_lines=$(jq -r '.settings.max_readme_lines // 30' "$CONFIG_FILE")
-    local escape_code_blocks=$(jq -r '.settings.escape_code_blocks // true' "$CONFIG_FILE")
+    local max_readme_lines=$(jq -r '.settings.max_readme_lines // 30' "$PROJECTS_CONFIG")
+    local escape_code_blocks=$(jq -r '.settings.escape_code_blocks // true' "$PROJECTS_CONFIG")
     
     # Process README content with proper escaping
     local processed_readme=""
@@ -415,7 +415,6 @@ $(echo "$languages" | jq -r '.[] | "- " + .')
 
 - [📂 **View Source Code**]($html_url) - Complete project repository
 $(if [ -n "$homepage" ] && [ "$homepage" != "null" ]; then echo "- [🚀 **Live Demo**]($homepage) - See the project in action"; fi)
-- [📊 **Project Stats**]($html_url/pulse) - Development activity and statistics
 
 ---
 
@@ -427,11 +426,11 @@ EOF
 
 # Function to sync selected repositories from config
 sync_repositories() {
-    log_info "Loading project configuration from: $CONFIG_FILE"
+    log_info "Loading project configuration from: $PROJECTS_CONFIG"
     
     # Read featured projects from config
-    local featured_projects=$(jq -r '.featured_projects[] | @base64' "$CONFIG_FILE")
-    local total_projects=$(jq -r '.featured_projects | length' "$CONFIG_FILE")
+    local featured_projects=$(jq -r '.featured_projects[] | @base64' "$PROJECTS_CONFIG")
+    local total_projects=$(jq -r '.featured_projects | length' "$PROJECTS_CONFIG")
     
     log_info "Found $total_projects featured projects in configuration"
     
@@ -538,7 +537,7 @@ main() {
     log_success "Selective GitHub projects sync completed successfully!"
     log_info "Generated content files in: $PROJECTS_DIR"
     log_info "Images referenced directly from GitHub repositories"
-    log_info "Configuration used: $CONFIG_FILE"
+    log_info "Configuration used: $PROJECTS_CONFIG"
 }
 
 # Run main function

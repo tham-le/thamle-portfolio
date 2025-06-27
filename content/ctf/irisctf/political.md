@@ -1,6 +1,6 @@
 ---
 title: "Political"
-date: 2025-06-27T21:39:20+02:00
+date: 2025-06-27T22:01:33+02:00
 description: "Political writeup from IrisCTF CTF - Web Exploitation challenge"
 categories:
     - "CTF Writeups"

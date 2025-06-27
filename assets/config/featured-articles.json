@@ -1,0 +1,60 @@
+{
+  "title": "🌟 Featured Work",
+  "description": "Highlighted projects and writeups showcasing key technical skills and problem-solving approaches",
+  "articles": [
+    {
+      "title": "Mathematical Fractal Visualization",
+      "emoji": "🎯",
+      "url": "/projects/fractol/",
+      "description": "High-performance C implementation with multi-threading and 8 fractal types. Features real-time rendering, color palette switching, and animation export capabilities.",
+      "category": "Graphics Programming",
+      "featured": true
+    },
+    {
+      "title": "3D Ray Tracer",
+      "emoji": "🌐",
+      "url": "/projects/minirt/",
+      "description": "Realistic scene rendering with shadows, reflections, and multiple light sources. Built from scratch in C, demonstrating advanced graphics programming and mathematical precision.",
+      "category": "Computer Graphics",
+      "featured": true
+    },
+    {
+      "title": "AI-Powered Mindfulness App",
+      "emoji": "🤖",
+      "url": "/projects/mindful/",
+      "description": "Full-stack financial wellness application with AI chat integration. Features multilingual support, Docker deployment, and responsive design for mindful spending decisions.",
+      "category": "Full-Stack Development",
+      "featured": true
+    },
+    {
+      "title": "Latest CTF Writeups",
+      "emoji": "🔒",
+      "url": "/ctf/",
+      "description": "Recent security challenge solutions covering cryptography, web exploitation, and forensics. Each writeup documents the learning process and problem-solving approach.",
+      "category": "Cybersecurity",
+      "featured": true
+    },
+    {
+      "title": "IRC Server Implementation",
+      "emoji": "💬",
+      "url": "/projects/ft_irc/",
+      "description": "Multi-client IRC server built in C++ with channel management, user authentication, and bot integration. Demonstrates network programming and concurrent connection handling.",
+      "category": "Network Programming",
+      "featured": false
+    },
+    {
+      "title": "Docker Infrastructure Project",
+      "emoji": "🐳",
+      "url": "/projects/inception/",
+      "description": "Complete containerized web stack with NGINX, WordPress, and MariaDB. Custom Docker images with security hardening and automated deployment scripts.",
+      "category": "DevOps",
+      "featured": false
+    }
+  ],
+  "settings": {
+    "max_featured": 4,
+    "show_category": true,
+    "show_emoji": true,
+    "layout": "grid"
+  }
+} 

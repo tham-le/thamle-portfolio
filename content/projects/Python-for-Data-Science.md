@@ -66,7 +66,6 @@ This module focuses on using NumPy arrays and basic image processing with `matpl
 
 - [📂 **View Source Code**](https://github.com/tham-le/Python-for-Data-Science) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/Python-for-Data-Science/pulse) - Development activity and statistics
 
 ---
 

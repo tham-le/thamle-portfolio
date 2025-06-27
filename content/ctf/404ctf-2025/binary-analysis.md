@@ -1,6 +1,6 @@
 ---
 title: "binary analysis"
-date: 2025-06-27T21:39:19+02:00
+date: 2025-06-27T22:01:32+02:00
 description: "binary analysis writeup from 404CTF_2025 CTF - Binary Exploitation challenge"
 categories:
     - "CTF Writeups"

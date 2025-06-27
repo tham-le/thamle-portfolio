@@ -68,7 +68,6 @@ This project is an implementation of a basic IRC server, adhering to a subset of
 
 - [📂 **View Source Code**](https://github.com/tham-le/ft_irc) - Complete project repository
 
-- [📊 **Project Stats**](https://github.com/tham-le/ft_irc/pulse) - Development activity and statistics
 
 ---
 
