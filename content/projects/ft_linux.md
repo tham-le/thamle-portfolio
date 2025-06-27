@@ -3,7 +3,6 @@ title: "ft_linux"
 date: 2025-06-24T12:27:38Z
 lastmod: 2025-06-24T12:46:02Z
 description: "Linux_from_scatch"
-image: "https://via.placeholder.com/400x200/667eea/ffffff?text=ft_linux"
 categories:
     - "Projects"
     - "Other"

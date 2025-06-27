@@ -1,9 +1,8 @@
 ---
 title: "thamle-portfolio"
 date: 2025-06-18T13:43:39Z
-lastmod: 2025-06-27T08:51:54Z
+lastmod: 2025-06-27T08:55:30Z
 description: "No description available"
-image: "https://via.placeholder.com/400x200/667eea/ffffff?text=thamle-portfolio"
 categories:
     - "Projects"
     - "Graphics & Games"

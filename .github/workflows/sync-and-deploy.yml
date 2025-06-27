@@ -54,8 +54,8 @@ jobs:
 
     - name: Sync all content
       run: |
-        chmod +x ./sync-all.sh
-        ./sync-all.sh
+        chmod +x ./scripts/sync-all.sh
+        ./scripts/sync-all.sh
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
     
