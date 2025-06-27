@@ -1,6 +1,6 @@
 ---
 title: "404CTF_2025 CTF Writeups"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:19+02:00
 description: "Complete writeups from 404CTF_2025 CTF competition - 1 challenges solved across 1 categories"
 categories:
     - "CTF Writeups"

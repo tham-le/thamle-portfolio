@@ -1,6 +1,6 @@
 ---
 title: "IrisCTF CTF Writeups"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:20+02:00
 description: "Complete writeups from IrisCTF CTF competition - 6 challenges solved across 3 categories"
 categories:
     - "CTF Writeups"

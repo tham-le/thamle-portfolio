@@ -1,6 +1,6 @@
 ---
 title: "buffer overflow"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:20+02:00
 description: "buffer overflow writeup from HTBUniversity2024 CTF - Binary Exploitation challenge"
 categories:
     - "CTF Writeups"
@@ -13,7 +13,6 @@ tags:
 event: "HTBUniversity2024"
 challenge: "buffer overflow"
 category: "Binary Exploitation"
-image: "/images/ctf/htbuniversity2024/buffer-overflow-screenshot.png"
 weight: 1
 ---
 

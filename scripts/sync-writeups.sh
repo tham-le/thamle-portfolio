@@ -117,12 +117,53 @@ process_challenge() {
         body="$content"
     fi
     
-    # Create challenge page
+    # Look for actual images related to this challenge
+    local challenge_image=""
+    local challenge_dir=$(dirname "$writeup_file")
+    
+    # Check for common image names in the challenge directory
+    local image_candidates=(
+        "${challenge_dir}/screenshot.png"
+        "${challenge_dir}/image.png"
+        "${challenge_dir}/solve.png"
+        "${challenge_dir}/flag.png"
+        "${challenge_dir}/${challenge_slug}.png"
+        "${challenge_dir}/${challenge_name}.png"
+    )
+    
+    for img_path in "${image_candidates[@]}"; do
+        if [[ -f "$img_path" ]]; then
+            # Copy the image to the static directory
+            local dest_images_dir="${IMAGES_DIR}/${event_slug}"
+            mkdir -p "$dest_images_dir"
+            local img_filename="${challenge_slug}-$(basename "$img_path")"
+            cp "$img_path" "$dest_images_dir/$img_filename"
+            challenge_image="/images/ctf/${event_slug}/$img_filename"
+            log_success "Found and copied challenge image: $img_filename"
+            break
+        fi
+    done
+    
+    # Also check for any image in the challenge directory
+    if [[ -z "$challenge_image" ]]; then
+        local first_image=$(find "$challenge_dir" -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" -o -iname "*.webp" \) | head -1)
+        if [[ -n "$first_image" && -f "$first_image" ]]; then
+            local dest_images_dir="${IMAGES_DIR}/${event_slug}"
+            mkdir -p "$dest_images_dir"
+            local img_filename="${challenge_slug}-$(basename "$first_image")"
+            cp "$first_image" "$dest_images_dir/$img_filename"
+            challenge_image="/images/ctf/${event_slug}/$img_filename"
+            log_success "Found and copied challenge image: $img_filename"
+        fi
+    fi
+    
+    # Create challenge page with conditional image field
     cat > "$output_file" << EOF
 ---
 title: "$challenge_name"
 date: $(date -Iseconds)
-description: "$challenge_name writeup from $event CTF - $category challenge"
+description: "$challenge_name writeup from $event CTF - $category challenge"$(if [[ -n "$challenge_image" ]]; then echo "
+image: \"$challenge_image\""; fi)
 categories:
     - "CTF Writeups"
     - "$category"
@@ -134,7 +175,6 @@ tags:
 event: "$event"
 challenge: "$challenge_name"
 category: "$category"
-image: "/images/ctf/${event_slug}/${challenge_slug}-screenshot.png"
 weight: 1
 ---
 

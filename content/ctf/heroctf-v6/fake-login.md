@@ -1,6 +1,6 @@
 ---
 title: "fake login"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:20+02:00
 description: "fake login writeup from HeroCTF_v6 CTF - Web Exploitation challenge"
 categories:
     - "CTF Writeups"
@@ -13,7 +13,6 @@ tags:
 event: "HeroCTF_v6"
 challenge: "fake login"
 category: "Web Exploitation"
-image: "/images/ctf/heroctf-v6/fake-login-screenshot.png"
 weight: 1
 ---
 

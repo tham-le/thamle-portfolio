@@ -1,6 +1,6 @@
 ---
 title: "Tracem 1"
-date: 2025-06-27T10:45:40+02:00
+date: 2025-06-27T21:39:20+02:00
 description: "Tracem 1 writeup from IrisCTF CTF - Digital Forensics challenge"
 categories:
     - "CTF Writeups"
@@ -13,7 +13,6 @@ tags:
 event: "IrisCTF"
 challenge: "Tracem 1"
 category: "Digital Forensics"
-image: "/images/ctf/irisctf/tracem-1-screenshot.png"
 weight: 1
 ---
 
