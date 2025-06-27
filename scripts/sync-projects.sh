@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GitHub Projects Sync Script
-# Automatically syncs repositories from GitHub and creates Hugo content
+# Automatically syncs selected repositories from GitHub and creates Hugo content
 
 set -e
 
@@ -42,6 +42,17 @@ GITHUB_USERNAME="${GITHUB_USERNAME:-tham-le}"
 PROJECTS_DIR="../content/projects"
 IMAGES_DIR="../static/images/projects"
 GITHUB_API="https://api.github.com"
+CONFIG_FILE="../projects-config.json"
+
+# Check for projects config file
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    CONFIG_FILE="projects-config.json"
+fi
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    log_error "projects-config.json not found. Please create it to specify which projects to sync."
+    exit 1
+fi
 
 # Check for GitHub token
 if [ -z "$GITHUB_TOKEN" ]; then
@@ -72,6 +83,19 @@ check_dependencies() {
     fi
     
     log_success "All dependencies are available."
+}
+
+# Function to escape markdown content to prevent code block issues
+escape_readme_content() {
+    local content="$1"
+    local max_lines="${2:-30}"
+    
+    # Take only the first N lines to prevent overly long content
+    local trimmed_content=$(echo "$content" | head -n "$max_lines")
+    
+    # Escape code blocks by adding proper indentation
+    # This prevents README code blocks from breaking the Hugo markdown structure
+    echo "$trimmed_content" | sed 's/^```/    ```/g'
 }
 
 # Function to get default branch for repository
@@ -290,6 +314,7 @@ determine_category() {
 create_project_content() {
     local repo_data="$1"
     local readme_content="$2"
+    local config_description="$3"
     
     # Extract data from JSON
     local name=$(echo "$repo_data" | jq -r '.name')
@@ -302,6 +327,11 @@ create_project_content() {
     local forks_count=$(echo "$repo_data" | jq -r '.forks_count')
     local homepage=$(echo "$repo_data" | jq -r '.homepage // ""')
     
+    # Use config description if available and GitHub description is generic
+    if [ -n "$config_description" ] && [[ "$description" == "No description available" ]]; then
+        description="$config_description"
+    fi
+    
     # Get languages
     local languages=$(get_languages "$name")
     
@@ -312,6 +342,20 @@ create_project_content() {
     local images_data=$(get_repo_images "$name")
     local main_image=$(echo "$images_data" | jq -r '.main')
     local gallery_html=$(generate_gallery_html "$images_data" "$name")
+    
+    # Get settings from config
+    local max_readme_lines=$(jq -r '.settings.max_readme_lines // 30' "$CONFIG_FILE")
+    local escape_code_blocks=$(jq -r '.settings.escape_code_blocks // true' "$CONFIG_FILE")
+    
+    # Process README content with proper escaping
+    local processed_readme=""
+    if [ -n "$readme_content" ]; then
+        if [ "$escape_code_blocks" = "true" ]; then
+            processed_readme=$(escape_readme_content "$readme_content" "$max_readme_lines")
+        else
+            processed_readme=$(echo "$readme_content" | head -n "$max_readme_lines")
+        fi
+    fi
     
     # Create content file
     local content_file="${PROJECTS_DIR}/${name}.md"
@@ -349,10 +393,10 @@ stats:
 
 $description
 
-$(if [ -n "$readme_content" ]; then
+$(if [ -n "$processed_readme" ]; then
     echo "## Project Details"
     echo ""
-    echo "$readme_content" | head -50  # Limit README content
+    echo "$processed_readme"
 else
     echo "## Repository Information"
     echo ""
@@ -381,41 +425,26 @@ EOF
     log_success "Created project content: $content_file"
 }
 
-# Function to sync specific repositories
+# Function to sync selected repositories from config
 sync_repositories() {
-    log_info "Fetching repositories from GitHub..."
+    log_info "Loading project configuration from: $CONFIG_FILE"
     
-    # Get list of public repositories with authentication
-    local repos_data
-    if [ -n "$AUTH_HEADER" ]; then
-        repos_data=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" \
-            "${GITHUB_API}/users/${GITHUB_USERNAME}/repos?type=public&sort=updated&per_page=50")
-    else
-        repos_data=$(curl -s -H "Accept: application/vnd.github.v3+json" \
-            "${GITHUB_API}/users/${GITHUB_USERNAME}/repos?type=public&sort=updated&per_page=50")
-    fi
+    # Read featured projects from config
+    local featured_projects=$(jq -r '.featured_projects[] | @base64' "$CONFIG_FILE")
+    local total_projects=$(jq -r '.featured_projects | length' "$CONFIG_FILE")
     
-    # Check if API call was successful
-    if ! echo "$repos_data" | jq -e '.[0]' >/dev/null 2>&1; then
-        log_error "Failed to fetch repositories from GitHub API"
-        if echo "$repos_data" | jq -e '.message' >/dev/null 2>&1; then
-            local error_msg=$(echo "$repos_data" | jq -r '.message')
-            log_error "GitHub API Error: $error_msg"
-        fi
-        exit 1
-    fi
+    log_info "Found $total_projects featured projects in configuration"
     
-    local total_repos=$(echo "$repos_data" | jq -r '. | length')
-    log_info "Found $total_repos repositories"
-    
-    # Filter out forked repositories and process each repo
-    echo "$repos_data" | jq -c '.[] | select(.fork == false)' | while read -r repo; do
-        local name=$(echo "$repo" | jq -r '.name')
-        local description=$(echo "$repo" | jq -r '.description // "No description available"')
+    # Process each featured project
+    while IFS= read -r project_data; do
+        local project=$(echo "$project_data" | base64 -d)
+        local name=$(echo "$project" | jq -r '.name')
+        local priority=$(echo "$project" | jq -r '.priority')
+        local config_description=$(echo "$project" | jq -r '.description')
         
-        log_info "Processing repository: $name"
+        log_info "Processing featured project: $name (priority: $priority)"
         
-        # Get full repository data
+        # Get full repository data from GitHub
         local full_repo_data=$(get_repo_data "$name")
         
         # Check if repo data was retrieved successfully
@@ -427,11 +456,11 @@ sync_repositories() {
         # Get README content
         local readme_content=$(get_repo_readme "$name")
         
-        # Create content file (images are handled inside the function now)
-        create_project_content "$full_repo_data" "$readme_content"
+        # Create content file with config description
+        create_project_content "$full_repo_data" "$readme_content" "$config_description"
         
-        log_success "Synced: $name"
-    done
+        log_success "Synced featured project: $name"
+    done <<< "$featured_projects"
 }
 
 # Function to update projects index
@@ -459,16 +488,16 @@ update_projects_index() {
     cat > "$index_file" << EOF
 ---
 title: "Projects"
-description: "Things I've built while learning"
+description: "Featured projects showcasing learning and growth"
 date: $(date -Iseconds)
 draft: false
 ---
 
-# Projects
+# Featured Projects
 
-These are things I've built while learning different technologies and solving problems. Each project taught me something new about programming, system design, or problem-solving.
+These are carefully selected projects that represent key learning milestones and technical achievements. Each project demonstrates growth in different areas of software engineering.
 
-The projects are automatically synced from my GitHub repositories, so you're seeing the actual code I write and maintain.
+The projects are curated to show progression from foundational concepts to advanced implementations, focusing on quality over quantity.
 
 ## Learning Areas
 
@@ -480,17 +509,19 @@ The projects are automatically synced from my GitHub repositories, so you're see
 
 **Graphics & Visualization** - Mathematical rendering and interactive applications
 
+**DevOps & Infrastructure** - Containerization, deployment, and system architecture
+
 ---
 
-*Projects are loaded dynamically from GitHub. If you don't see any below, the sync might be running or there could be an API issue.*
+*Projects are selectively synced based on significance and learning value.*
 EOF
 
-    log_success "Created new projects index with $total_projects projects"
+    log_success "Created new projects index with $total_projects featured projects"
 }
 
 # Main execution
 main() {
-    log_info "Starting GitHub projects sync..."
+    log_info "Starting selective GitHub projects sync..."
     
     # Create directories if they don't exist
     mkdir -p "$PROJECTS_DIR"
@@ -498,15 +529,16 @@ main() {
     # Check dependencies
     check_dependencies
     
-    # Sync repositories
+    # Sync selected repositories from config
     sync_repositories
     
     # Update index
     update_projects_index
     
-    log_success "GitHub projects sync completed successfully!"
+    log_success "Selective GitHub projects sync completed successfully!"
     log_info "Generated content files in: $PROJECTS_DIR"
     log_info "Images referenced directly from GitHub repositories"
+    log_info "Configuration used: $CONFIG_FILE"
 }
 
 # Run main function

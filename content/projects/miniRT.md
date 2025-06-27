@@ -58,26 +58,6 @@ _The Cornell Box, a standard test for ray tracers._
 
 ![All Shapes](image/all-shapes.png)
 _A scene demonstrating all supported geometric primitives._
-
-![Candies](image/candies.png)
-_A colorful scene with multiple spheres and reflections._
-
-![Planet](image/planet.png)
-_A planetary scene with lighting and shadows._
-
-![Atom](image/atom.png)
-_An abstract representation of an atom._
-
-![Room Light](image/room-light.png)
-_A room scene with a bright light source._
-
-![Room Dark](image/room-dark.png)
-_The same room scene with a dimmer, more atmospheric lighting._
-
-![Dragon](image/dragon.png)
-_A majestic dragon, showcasing complex model rendering._
-
-## Installation
 ## Project Gallery
 
 {{< project-carousel images="https://raw.githubusercontent.com/tham-le/miniRT/master/image/all-shapes.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/atom.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/candies.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/cornell.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/planet.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/room-dark.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/room-light.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/teapot.png,https://raw.githubusercontent.com/tham-le/miniRT/master/image/wolf.png" id="minirt" title="miniRT Gallery" >}}
