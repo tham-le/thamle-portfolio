@@ -12,8 +12,14 @@ links:
     image: "https://github.githubassets.com/favicons/favicon.svg"
 categories:
   - "Projects"
-  - "Other"
+  - "Web Development"
 tags:
+    - "CSS"
+    - "Dockerfile"
+    - "HTML"
+    - "JavaScript"
+    - "Python"
+    - "Shell"
     - "GitHub"
 weight: 1
 stats:

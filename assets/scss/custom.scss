@@ -1,18 +1,239 @@
-[data-scheme="dark"] {
-    body {
-        color: #fff;
+.main-content-wide {
+    max-width: 1200px !important;
+}
+
+/* CSS-driven Carousel (Restored & Corrected) */
+.carousel-container-css {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    aspect-ratio: 16 / 9;
+    background-color: #2e2e33; /* Soft background for letterboxing */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.carousel-viewport {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar */
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-slide-css {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* This fits the whole image without cropping */
+    display: block;
+}
+
+.carousel-nav-css {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.carousel-dot-css {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+}
+
+.carousel-dot-css:hover, .carousel-viewport:has(+.carousel-nav-css a:hover) {
+    background-color: #fff;
+}
+
+/* --- Navigation & Caption --- */
+.carousel-caption {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    color: #111;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev-btn {
+    left: 1rem;
+}
+
+.carousel-next-btn {
+    right: 1rem;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.carousel-dot {
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+.carousel-dot.active, .carousel-dot:hover {
+    background-color: #fff;
+}
+
+.project-carousel {
+    --carousel-height: 50vh;
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+    height: var(--carousel-height);
+    border-radius: var(--radius);
+}
+
+.carousel-slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; // Use contain to show the whole image
+        object-position: center;
+        background-color: var(--card-background-color);
     }
 }
 
-/* Make article lists (like on /projects) a bit thinner for readability */
-.article-list--default,
-.article-list--tile {
-    max-width: 85%;
-    margin-left: auto;
-    margin-right: auto;
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none; // Let clicks pass through to elements below
 }
 
-/* When a project page has a carousel, make the whole content area wider */
-.main-content-wide {
-    max-width: 1200px !important; /* Use a wider layout for carousel pages */
+.carousel-btn {
+    pointer-events: all; // Make buttons clickable
+    background-color: rgba(var(--card-background-color-rgb), 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 1rem;
+    color: var(--content-color);
+
+    &:hover {
+        background-color: rgba(var(--card-background-color-rgb), 0.8);
+    }
+    
+    svg {
+        width: 24px;
+        height: 24px;
+    }
 }
+
+.carousel-dots {
+    position: absolute;
+    bottom: -30px; 
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    pointer-events: all;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s ease;
+
+    &.active {
+        background-color: var(--primary-color);
+    }
+}
+
+.section.project-list {
+    .article-link, .article-title {
+        color: var(--content-color);
+    }
+} 

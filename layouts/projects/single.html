@@ -1,3 +1,38 @@
+{{- define "head" -}}
+    {{- $ts := resources.Get "ts/carousel.ts" -}}
+    {{- if $ts -}}
+        {{- $js := $ts | js.Build (dict "minify" hugo.IsProduction) -}}
+        <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- end -}}
+    
+    {{/* Structured Data for SEO */}}
+    {{- with .Params.carousel -}}
+        {{- if gt (len .images) 0 -}}
+            <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": "{{ $.Page.Title }}",
+                "description": "{{ $.Page.Description | default $.Page.Summary }}",
+                "operatingSystem": "Any",
+                "applicationCategory": "Game",
+                {{- with $.Page.Params.url -}}
+                "url": "{{ . }}",
+                {{- end -}}
+                {{- with $.Page.Params.repo -}}
+                "codeRepository": "{{ . }}",
+                {{- end -}}
+                {{- $screenshots := slice -}}
+                {{- range .images -}}
+                    {{- $screenshots = $screenshots | append (printf "\"%s\"" .) -}}
+                {{- end -}}
+                "screenshot": [{{ delimit $screenshots ", " }}]
+            }
+            </script>
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
 {{- define "main" -}}
     {{/* 
         This is a custom single page layout for the 'projects' section.
@@ -9,7 +44,7 @@
 
     <div class="main-container {{ if $hasCarousel }}main-content-wide{{ end }}">
         {{ if $hasCarousel }}
-            {{ partial "project-carousel.html" .Params.carousel }}
+            {{ partial "project-carousel.html" . }}
         {{ end }}
 
         {{ partial "article/article.html" (dict "context" . "showFeatureImage" $showImage) }}
