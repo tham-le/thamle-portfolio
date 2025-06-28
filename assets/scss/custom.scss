@@ -249,13 +249,11 @@
     /* Tablet: 2 columns */
     @media (min-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
     }
     
     /* Desktop: 3 columns */
-    @media (min-width: 1024px) {
+    @media (min-width: 1200px) {
         grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
     }
     
     article {
@@ -270,4 +268,9 @@
             justify-content: space-between;
         }
     }
-} 
+}
+
+/* Hotfix for black text in dark mode */
+.article-content {
+    color: var(--body-text-color);
+}
