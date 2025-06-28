@@ -1,57 +1,123 @@
 ---
-title: "Fractol Explorer"
-description: "A multi-threaded fractal renderer in C using MinilibX for graphics."
+title: "fractol"
+date: 2025-05-30T20:24:09Z
+lastmod: 2025-06-05T18:22:11Z
+description: "High-performance fractal visualization in C with multi-threading and advanced graphics"
 image: "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp"
-categories:
-    - "Projects"
-    - "Graphics & Games"
-tags:
-    - "C"
-    - "Graphics"
-    - "Performance"
-    - "Concurrency"
+showFeatureImage: false
+carousel:
+  id: "fractol"
+  title: "fractol Gallery"
+  images:
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp"
+    - "https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp"
 links:
-    - title: "GitHub Repository"
-      description: "Source code and technical documentation."
-      website: "https://github.com/tham-le/fractol"
-      image: "https://github.githubassets.com/favicons/favicon.svg"
+  - title: "GitHub Repository"
+    description: "View source code and documentation"
+    website: "https://github.com/tham-le/fractol"
+    image: "https://github.githubassets.com/favicons/favicon.svg"
+categories:
+  - "Projects"
+  - "Graphics & Games"
+tags:
+    - "GitHub"
 weight: 1
 stats:
-    language: "C"
+    stars: 0
+    forks: 0
+    language: C
 ---
 
-## Project Overview
+# Fractol - Advanced Fractal Explorer
 
-`Fractol` is a fractal visualization tool written in C. It uses the MinilibX graphics library for rendering and POSIX threads (pthreads) to accelerate calculations. The goal was to build a performant renderer while learning about graphics programming, concurrency, and numerical algorithms.
+**High-performance fractal visualization in C with multi-threading and advanced graphics**
 
-This project is an extension of the original 42 School assignment. It includes additional features beyond the base requirements.
+> **Note:** This project extends the original 42 School fract-ol assignment with advanced features demonstrating systems programming, optimization, and graphics expertise. Please enjoy peer-learning at 42 - don't copy.
 
-## Key Features & Implementation Details
+## Technical Achievements
 
--   **Fractal Sets**: Implements rendering for Mandelbrot, Julia, and Newton sets, plus a Barnsley Fern.
--   **Multi-threaded Rendering**: Uses pthreads to parallelize the fractal calculations across multiple CPU cores. This significantly reduces render times, especially for high-iteration images. I implemented a work-stealing queue model where threads pull rows of pixels to compute.
--   **Coloring Algorithms**: Implemented smooth coloring based on the iteration count to produce continuous gradients, which provides more detail than simple banding.
--   **Image Export**: The rendered fractal can be exported to BMP format.
--   **User Interaction**: The view is interactive, allowing zooming and panning to explore the fractals.
+**Core Technologies:** C, MinilibX, POSIX threads, Computer Graphics
+**Performance:** Multi-threaded rendering with 2-8x speed improvements
+**Export Formats:** BMP, PPM with animation support
 
-## Technical Challenges
+## Visual Showcase
 
--   **Concurrency**: Synchronizing threads to render different parts of the image without race conditions or deadlocks was a key challenge.
--   **Performance Optimization**: I spent time profiling the code to identify bottlenecks in the calculation loop and memory allocation.
--   **Graphics Programming**: Working with a low-level graphics library like MinilibX requires manual management of the frame buffer, event handling, and color representation.
+**High-quality fractal renders demonstrating mathematical precision and artistic beauty:**
 
-## Project Gallery
+<div align="center">
 
-{{< project-carousel images="https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/barnley.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia-1.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_2.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_3.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/julia_6.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-fire.bmp,https://raw.githubusercontent.com/tham-le/fractol/main/image/mandelbrot-smooth-color.bmp" id="fractol" title="Fractol Gallery" >}}
+### Mandelbrot Set - Color Variations
+<img src="image/mandelbrot-smooth-color.bmp" width="300" alt="Mandelbrot Smooth Colors"/> <img src="image/mandelbrot-fire.bmp" width="300" alt="Mandelbrot Fire Palette"/>
 
-## Technologies Used
+### Newton Fractal - Advanced Mathematics
+<img src="image/Newton.bmp" width="300" alt="Newton Fractal"/> <img src="image/Newton-rainbow.bmp" width="300" alt="Newton Rainbow"/>
 
-- C
-- MinilibX
-- POSIX threads
+### Julia Set Collection - Parameter Exploration
+<img src="image/julia-1.bmp" width="200" alt="Julia Set 1"/> <img src="image/julia_2.bmp" width="200" alt="Julia Set 2"/> <img src="image/julia_3.bmp" width="200" alt="Julia Set 3"/> <img src="image/julia_6.bmp" width="200" alt="Julia Set 6"/>
 
-## Links
+### Barnsley Fern - Nature-Inspired Fractals
+<img src="image/barnley.bmp" width="400" alt="Barnsley Fern"/>
 
-- [📂 **View Source Code**](https://github.com/tham-le/fractol) - Complete project repository
+</div>
 
-*This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
+*All images rendered in real-time with multi-threaded optimization*
+
+### Key Features Beyond Original Assignment
+- **Multi-threaded rendering** - Automatic CPU core detection and workload distribution
+- **8 fractal types** - Mandelbrot, Julia, Burning Ship, Newton, Tricorn, Barnsley Fern, Mandelbar, Multibrot
+- **13 optimized color palettes** - Real-time switching with smooth interpolation
+- **Advanced interactions** - Mouse panning, scroll zoom, parameter modification
+- **Export capabilities** - Image and animation export with timestamp management
+- **Configuration system** - Save/load views and settings
+- **Anti-aliasing** - Adaptive supersampling for quality rendering
+
+## Installation & Usage
+
+```bash
+# Clone and build
+git clone --recursive https://github.com/tham-le/fractol.git
+cd fractol
+make
+
+# Run examples
+./fractol mandelbrot
+./fractol julia 0.285 0.01
+./fractol help
+```
+
+## Technical Implementation
+
+**Performance Optimizations:**
+- Multi-threading with POSIX threads for parallel computation
+- Efficient memory management and minimal overhead
+- Adaptive algorithms based on fractal complexity
+
+**Advanced Features:**
+- Real-time parameter modification and smooth transitions
+- Professional-grade color interpolation algorithms
+- Cross-platform compatibility and robust error handling
+
+**Interactive Controls:**
+- Mouse-based navigation (drag to pan, scroll to zoom)
+- Keyboard shortcuts for all features
+- Real-time performance toggling and comparison
+
+
+## Project Evolution
+
+Started as a 42 School assignment and evolved into a comprehensive fractal explorer showcasing:
+- Advanced C programming techniques
+- Multi-threaded application development
+- Graphics programming and mathematical computation
+- Software engineering best practices
+
+---
+
+**A demonstration of technical growth and practical application of computer science fundamentals.**

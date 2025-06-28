@@ -2,32 +2,25 @@
 title: "inception"
 date: 2023-12-20T21:07:19Z
 lastmod: 2025-05-15T12:46:18Z
-description: "Multi-container Docker infrastructure with WordPress"
-categories:
-    - "Projects"
-    - "Other"
-tags:
-    - "Dockerfile"
-    - "Makefile"
-    - "Shell"
-    - "GitHub"
+description: "No description available"
+image: ""
+showFeatureImage: true
 links:
-    - title: "GitHub Repository"
-      description: "View source code and documentation"
-      website: "https://github.com/tham-le/inception"
-      image: "https://github.githubassets.com/favicons/favicon.svg"
+  - title: "GitHub Repository"
+    description: "View source code and documentation"
+    website: "https://github.com/tham-le/inception"
+    image: "https://github.githubassets.com/favicons/favicon.svg"
+categories:
+  - "Projects"
+  - "Scripts & Tools"
+tags:
+    - "GitHub"
 weight: 1
 stats:
     stars: 0
     forks: 0
-    language: "Dockerfile"
+    language: Dockerfile
 ---
-
-## Overview
-
-Multi-container Docker infrastructure with WordPress
-
-## Project Details
 
 # Inception - Docker-based Web Infrastructure
 
@@ -60,17 +53,90 @@ This nested virtualization approach demonstrates advanced system administration 
   - Container networking
   - Health checks and automatic restarts
 
-## Technologies Used
+## 🛠️ Prerequisites
 
-- Dockerfile
-- Makefile
-- Shell
+- Docker and Docker Compose
+- SSH access to a Linux Alpine VM
+- Basic understanding of containerization concepts
 
-## Links
+## 🏗️ Architecture
 
-- [📂 **View Source Code**](https://github.com/tham-le/inception) - Complete project repository
+The project consists of four main services:
 
+1. **Nginx**: Acts as a reverse proxy, handling SSL termination and serving static content
+2. **WordPress**: The CMS running the website
+3. **MariaDB**: Database server for WordPress
+4. **Redis**: Caching system to improve performance
 
----
+## 🚀 Getting Started
 
-*This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd inception
+   ```
+
+2. Start the services:
+
+   ```bash
+   make up
+   ```
+
+3. Access the website at `https://localhost`
+
+## 🛠️ Available Commands
+
+- `make up`: Start all containers
+- `make down`: Stop all containers
+- `make re`: Restart all containers
+- `make fclean`: Remove all containers, images, and volumes (with confirmation)
+
+## 🔧 Configuration
+
+The project uses environment variables for sensitive configuration. Create a `.env` file in the `srcs` directory with the following variables:
+
+```
+MYSQL_ROOT_PASSWORD=your_root_password
+MYSQL_DATABASE=wordpress
+MYSQL_USER=wordpress_user
+MYSQL_PASSWORD=wordpress_password
+```
+
+## 📁 Project Structure
+
+```
+inception/
+├── srcs/
+│   ├── docker-compose.yml
+│   ├── requirements/
+│   │   ├── nginx/
+│   │   ├── wordpress/
+│   │   ├── mariadb/
+│   │   └── redis/
+│   └── .env
+├── Makefile
+└── README.md
+```
+
+## 🔒 Security Considerations
+
+- All services run in isolated containers
+- SSL/TLS encryption for secure communication
+- Environment variables for sensitive data
+- Persistent volumes for data storage
+
+## 🎯 Learning Outcomes
+
+This project demonstrates:
+
+- Docker containerization
+- Multi-container application orchestration
+- Web server configuration
+- Database management
+- Caching implementation
+- System administration skills
+
+## 📝 License
+
+This project is part of the 42 school curriculum.

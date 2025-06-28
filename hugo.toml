@@ -22,35 +22,35 @@ DefaultContentLanguage = "en"
         [languages.en.params]
             subtitle = "Building & learning"
         [[languages.en.menu.main]]
-            identifier = "home"
-            name = "Home"
-            url = "/"
-            weight = 10
+identifier = "home"
+name = "Home"
+url = "/"
+weight = 10
         [[languages.en.menu.main]]
-            identifier = "about"
-            name = "About"
-            url = "/about/"
-            weight = 20
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 20
         [[languages.en.menu.main]]
-            identifier = "projects"
-            name = "Projects"
-            url = "/projects/"
-            weight = 30
+identifier = "projects"
+name = "Projects"
+url = "/projects/"
+weight = 30
         [[languages.en.menu.main]]
-            identifier = "ctf"
-            name = "CTF Writeups"
-            url = "/ctf/"
-            weight = 40
+identifier = "ctf"
+name = "CTF Writeups"
+url = "/ctf/"
+weight = 40
         [[languages.en.menu.main]]
-            identifier = "notes"
-            name = "Notes"
-            url = "/notes/"
-            weight = 50
+identifier = "notes"
+name = "Notes"
+url = "/notes/"
+weight = 50
         [[languages.en.menu.main]]
-            identifier = "resume"
-            name = "Resume"
-            url = "/ThamLE_resume.pdf"
-            weight = 60
+identifier = "resume"
+name = "Resume"
+url = "/ThamLE_resume.pdf"
+weight = 60
             [languages.en.menu.main.params]
                 newTab = true
     [languages.fr]
@@ -90,10 +90,11 @@ DefaultContentLanguage = "en"
             url = "/ThamLE_resume.pdf"
             weight = 60
             [languages.fr.menu.main.params]
-                newTab = true
+newTab = true
 
 [menu]
     # This global menu is now handled within each language section
+    
 
 # Pagination
 [pagination]

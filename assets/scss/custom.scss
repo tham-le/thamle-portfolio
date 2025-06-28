@@ -1,5 +1,18 @@
 [data-scheme="dark"] {
     body {
-        color: var(--body-text-color);
+        color: #fff;
     }
-} 
+}
+
+/* Make article lists (like on /projects) a bit thinner for readability */
+.article-list--default,
+.article-list--tile {
+    max-width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* When a project page has a carousel, make the whole content area wider */
+.main-content-wide {
+    max-width: 1200px !important; /* Use a wider layout for carousel pages */
+}

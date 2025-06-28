@@ -1,6 +1,7 @@
 ---
 title: "Projects"
 description: "A selection of my software engineering projects."
+layout: "list"
 ---
 
 # Projects

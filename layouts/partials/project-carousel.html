@@ -1,0 +1,44 @@
+{{- $carouselData := . -}}
+{{- $images := $carouselData.images | default slice -}}
+{{- $title := $carouselData.title | default "Project Gallery" -}}
+{{- $id := $carouselData.id | default "carousel" -}}
+
+{{- if gt (len $images) 0 -}}
+<div class="project-carousel" id="carousel-{{ $id }}" data-carousel-id="{{ $id }}">
+    <div class="carousel-container">
+        <div class="carousel-slides">
+            {{- range $index, $image := $images -}}
+            {{- $filename := path.Base $image -}}
+            {{- $name := strings.TrimSuffix (path.Ext $filename) $filename -}}
+            {{- $imageTitle := $name | replaceRE "[-_]" " " | title -}}
+            <div class="carousel-slide{{ if eq $index 0 }} active{{ end }}" data-slide="{{ $index }}">
+                <img src="{{ $image }}" alt="{{ $imageTitle }}" title="{{ $imageTitle }}" loading="lazy" class="carousel-image" />
+                <div class="carousel-caption">
+                    <span class="image-title">{{ $imageTitle }}</span>
+                    <span class="image-counter">{{ add $index 1 }} / {{ len $images }}</span>
+                </div>
+            </div>
+            {{- end -}}
+        </div>
+
+        <!-- Navigation Controls -->
+        <button class="carousel-btn carousel-prev" onclick="changeSlide('{{ $id }}', -1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+        </button>
+        <button class="carousel-btn carousel-next" onclick="changeSlide('{{ $id }}', 1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+        </button>
+
+        <!-- Dots Indicator -->
+        <div class="carousel-dots">
+            {{- range $index, $image := $images -}}
+            <button class="carousel-dot{{ if eq $index 0 }} active{{ end }}" onclick="goToSlide('{{ $id }}', {{ $index }})" data-slide="{{ $index }}"></button>
+            {{- end -}}
+        </div>
+    </div>
+</div>
+{{- end -}} 

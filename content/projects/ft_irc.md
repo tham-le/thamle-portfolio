@@ -3,30 +3,24 @@ title: "ft_irc"
 date: 2024-01-04T20:10:12Z
 lastmod: 2025-06-05T18:21:43Z
 description: "Implementation of a basic IRC server, adhering to a subset of the IRC RFC specifications (primarily RFC 2810, 2811, 2812, 2813, and 7194)."
-categories:
-    - "Projects"
-    - "System Programming"
-tags:
-    - "C++"
-    - "Makefile"
-    - "GitHub"
+image: ""
+showFeatureImage: true
 links:
-    - title: "GitHub Repository"
-      description: "View source code and documentation"
-      website: "https://github.com/tham-le/ft_irc"
-      image: "https://github.githubassets.com/favicons/favicon.svg"
+  - title: "GitHub Repository"
+    description: "View source code and documentation"
+    website: "https://github.com/tham-le/ft_irc"
+    image: "https://github.githubassets.com/favicons/favicon.svg"
+categories:
+  - "Projects"
+  - "Other"
+tags:
+    - "GitHub"
 weight: 1
 stats:
     stars: 0
     forks: 0
-    language: "C++"
+    language: C++
 ---
-
-## Overview
-
-Implementation of a basic IRC server, adhering to a subset of the IRC RFC specifications (primarily RFC 2810, 2811, 2812, 2813, and 7194).
-
-## Project Details
 
 # ft_irc
 
@@ -59,16 +53,74 @@ This project is an implementation of a basic IRC server, adhering to a subset of
 *   **Logging:** Logs server activity to a file.
 *   **Error Handling:** Implements several error replies as defined in the IRC specifications.
 
-## Technologies Used
+## Compilation
 
-- C++
-- Makefile
+To compile the project, use the following command:
 
-## Links
+```bash
+make
+```
 
-- [📂 **View Source Code**](https://github.com/tham-le/ft_irc) - Complete project repository
+This will create an executable file named `ircserv` in the main directory.
 
+## Usage
 
----
+To run the IRC server, use the following command:
 
-*This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
+```bash
+./ircserv <port> <password>
+```
+
+*   `<port>`:  The port number the server will listen on.
+*   `<password>`: The server password required for clients to connect.
+
+Example:
+
+```bash
+./ircserv 6667 mysecretpassword
+```
+
+## Classes Description
+
+*   **`Ircserv`**: Represents the IRC server itself. Manages client connections, channels, and the main event loop.
+*   **`User`**: Represents a connected client. Stores user information (nickname, username, realname, etc.) and manages communication with the client.
+*   **`Channel`**: Represents an IRC channel. Stores channel information (name, topic, mode, etc.) and manages users within the channel.
+*   **`Command`**: Base class for handling IRC commands. Parses commands and calls the appropriate function.
+*   **`Config`**: Holds the server configuration parameters (port, password, etc.).
+
+## Implemented Commands
+
+The following IRC commands are implemented:
+
+*   `PASS`: Sets the connection password.
+*   `NICK`: Sets the user's nickname.
+*   `USER`: Sets the user's username, hostname, and realname.
+*   `JOIN`: Joins a channel.
+*   `PART`: Leaves a channel.
+*   `PRIVMSG`: Sends a private message to a user or channel.
+*   `PING`: Sends a ping to the server.
+*   `PONG`: Responds to a ping from the server.
+*   `QUIT`: Disconnects from the server.
+*   `LIST`: Lists available channels.
+*   `NAMES`: Lists users in a channel.
+*   `WHOIS`: Retrieves information about a user.
+*   `ADMIN`: Retrieves information about the server administrator.
+*   `INFO`: Retrieves server information.
+*   `VERSION`: Retrieves server version information.
+*   `KICK`: Kicks a user from a channel.
+*   `INVITE`: Invites a user to a channel.
+*   `TOPIC`: Sets or displays the channel topic.
+*   `MODE`: Sets or displays channel modes.
+*   `CAP`: Capability negotiation (minimal support).
+
+## Notes
+
+*   This project is a simplified implementation of an IRC server and does not implement the full IRC specification.
+*   Error handling is limited.
+*   The project adheres to the C++98 standard.
+
+## Authors
+
+*   [Christine Qin](https://github.com/cqin42) (cqin)
+*   [Tham Le](https://github.com/tham-le) (thi-le)
+*   [Yulia Boktaeva](https://github.com/yboktaeva) (yuboktae)

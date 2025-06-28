@@ -1,0 +1,17 @@
+{{- define "main" -}}
+    {{/* 
+        This is a custom single page layout for the 'projects' section.
+        It renders a carousel at the top if defined in the front matter.
+    */}}
+
+    {{ $hasCarousel := .Params.carousel }}
+    {{ $showImage := .Params.showFeatureImage | default (not $hasCarousel) }}
+
+    <div class="main-container {{ if $hasCarousel }}main-content-wide{{ end }}">
+        {{ if $hasCarousel }}
+            {{ partial "project-carousel.html" .Params.carousel }}
+        {{ end }}
+
+        {{ partial "article/article.html" (dict "context" . "showFeatureImage" $showImage) }}
+    </div>
+{{- end -}}

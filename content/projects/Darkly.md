@@ -3,30 +3,24 @@ title: "Darkly"
 date: 2024-08-31T13:45:57Z
 lastmod: 2025-06-05T18:18:59Z
 description: "Introduction to cyber security in the field of the Web"
-categories:
-    - "Projects"
-    - "Web Development"
-tags:
-    - "PHP"
-    - "Python"
-    - "GitHub"
+image: ""
+showFeatureImage: true
 links:
-    - title: "GitHub Repository"
-      description: "View source code and documentation"
-      website: "https://github.com/tham-le/Darkly"
-      image: "https://github.githubassets.com/favicons/favicon.svg"
+  - title: "GitHub Repository"
+    description: "View source code and documentation"
+    website: "https://github.com/tham-le/Darkly"
+    image: "https://github.githubassets.com/favicons/favicon.svg"
+categories:
+  - "Projects"
+  - "Web Development"
+tags:
+    - "GitHub"
 weight: 1
 stats:
     stars: 0
     forks: 0
-    language: "Python"
+    language: Python
 ---
-
-## Overview
-
-Introduction to cyber security in the field of the Web
-
-## Project Details
 
 # Darkly Repository
 
@@ -52,17 +46,3 @@ This repository demonstrates practical knowledge in identifying and exploiting s
 
 ## Note
 All challenges are for educational purposes only. Use responsibly.
-
-## Technologies Used
-
-- PHP
-- Python
-
-## Links
-
-- [📂 **View Source Code**](https://github.com/tham-le/Darkly) - Complete project repository
-
-
----
-
-*This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
