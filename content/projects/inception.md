@@ -14,6 +14,9 @@ categories:
   - "Projects"
   - "Scripts & Tools"
 tags:
+    - "Dockerfile"
+    - "Makefile"
+    - "Shell"
     - "GitHub"
 weight: 1
 stats:

@@ -27,6 +27,8 @@ categories:
   - "Projects"
   - "Graphics & Games"
 tags:
+    - "C"
+    - "Makefile"
     - "GitHub"
 weight: 1
 stats:

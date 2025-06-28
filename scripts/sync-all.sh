@@ -83,12 +83,8 @@ main() {
         failed_scripts+=("sync-projects.sh")
     fi
     
-    # Step 2: Sync CTF writeups
-    if run_script "./sync-writeups.sh" "CTF Writeups Sync"; then
-        echo ""
-    else
-        failed_scripts+=("sync-writeups.sh")
-    fi
+    # Step 2: CTF writeups are handled via submodule - no sync needed
+    log_info "CTF writeups are managed via git submodule - skipping sync"
     
     # Step 3: Generate featured articles
     if run_script "./generate-featured-articles.sh" "Featured Articles Generation"; then
@@ -142,7 +138,7 @@ show_help() {
     echo ""
     echo "This script runs all sync operations in order:"
     echo "  1. GitHub projects sync (./sync-projects.sh)"
-    echo "  2. CTF writeups sync (./sync-writeups.sh)"
+    echo "  2. CTF writeups (managed via git submodule)"
     echo "  3. Featured articles generation (./generate-featured-articles.sh)"
     echo ""
     echo "Configuration files:"
@@ -162,8 +158,9 @@ case "${1:-}" in
         exit $?
         ;;
     --writeups)
-        run_script "./sync-writeups.sh" "CTF Writeups Sync"
-        exit $?
+        log_info "CTF writeups are managed via git submodule in content/ctf/"
+        log_info "To update: git submodule update --remote content/ctf"
+        exit 0
         ;;
     --featured)
         run_script "./generate-featured-articles.sh" "Featured Articles Generation"

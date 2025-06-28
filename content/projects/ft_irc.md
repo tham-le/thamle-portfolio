@@ -12,8 +12,10 @@ links:
     image: "https://github.githubassets.com/favicons/favicon.svg"
 categories:
   - "Projects"
-  - "Other"
+  - "System Programming"
 tags:
+    - "C++"
+    - "Makefile"
     - "GitHub"
 weight: 1
 stats:

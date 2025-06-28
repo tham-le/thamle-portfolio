@@ -1,44 +1,33 @@
-{{- $carouselData := . -}}
-{{- $images := $carouselData.images | default slice -}}
-{{- $title := $carouselData.title | default "Project Gallery" -}}
-{{- $id := $carouselData.id | default "carousel" -}}
-
-{{- if gt (len $images) 0 -}}
-<div class="project-carousel" id="carousel-{{ $id }}" data-carousel-id="{{ $id }}">
-    <div class="carousel-container">
-        <div class="carousel-slides">
-            {{- range $index, $image := $images -}}
-            {{- $filename := path.Base $image -}}
-            {{- $name := strings.TrimSuffix (path.Ext $filename) $filename -}}
-            {{- $imageTitle := $name | replaceRE "[-_]" " " | title -}}
-            <div class="carousel-slide{{ if eq $index 0 }} active{{ end }}" data-slide="{{ $index }}">
-                <img src="{{ $image }}" alt="{{ $imageTitle }}" title="{{ $imageTitle }}" loading="lazy" class="carousel-image" />
-                <div class="carousel-caption">
-                    <span class="image-title">{{ $imageTitle }}</span>
-                    <span class="image-counter">{{ add $index 1 }} / {{ len $images }}</span>
-                </div>
+{{- with .Page.Params.carousel -}}
+    {{- $id := .id | default (printf "carousel-%d" now.Unix) -}}
+    <div id="carousel-{{ $id }}" class="project-carousel" data-carousel-id="{{ $id }}">
+        <div class="carousel-viewport">
+            <div class="carousel-slides">
+                {{- range .images -}}
+                    <div class="carousel-slide">
+                        <img src="{{ . | relURL }}" alt="Carousel image" loading="lazy" />
+                    </div>
+                {{- end -}}
             </div>
-            {{- end -}}
         </div>
-
-        <!-- Navigation Controls -->
-        <button class="carousel-btn carousel-prev" onclick="changeSlide('{{ $id }}', -1)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15,18 9,12 15,6"></polyline>
-            </svg>
-        </button>
-        <button class="carousel-btn carousel-next" onclick="changeSlide('{{ $id }}', 1)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-        </button>
-
-        <!-- Dots Indicator -->
-        <div class="carousel-dots">
-            {{- range $index, $image := $images -}}
-            <button class="carousel-dot{{ if eq $index 0 }} active{{ end }}" onclick="goToSlide('{{ $id }}', {{ $index }})" data-slide="{{ $index }}"></button>
-            {{- end -}}
+        <div class="carousel-controls">
+            <button class="carousel-btn carousel-prev-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M15 6l-6 6l6 6" />
+                </svg>
+            </button>
+            <div class="carousel-dots">
+                {{- range $index, $element := .images -}}
+                    <button class="carousel-dot" data-slide-to="{{ $index }}"></button>
+                {{- end -}}
+            </div>
+            <button class="carousel-btn carousel-next-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M9 6l6 6l-6 6" />
+                </svg>
+            </button>
         </div>
     </div>
-</div>
 {{- end -}} 

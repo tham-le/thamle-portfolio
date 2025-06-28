@@ -8,19 +8,18 @@ interface CarouselState {
 declare global {
     interface Window {
         carousels: { [key: string]: CarouselState };
-        initCarousel: (carouselId: string) => void;
-        changeSlide: (carouselId: string, direction: number) => void;
-        goToSlide: (carouselId: string, slideIndex: number) => void;
     }
 }
 
-// Initialize global objects
 (window as any).carousels = (window as any).carousels || {};
 
 function initCarousel(carouselId: string): void {
     if ((window as any).carousels[carouselId]) return;
     
-    const slides = document.querySelectorAll(`#carousel-${carouselId} .carousel-slide`);
+    const carouselElement = document.getElementById(`carousel-${carouselId}`);
+    if (!carouselElement) return;
+
+    const slides = carouselElement.querySelectorAll('.carousel-slide');
     
     (window as any).carousels[carouselId] = {
         currentSlide: 0,
@@ -29,21 +28,42 @@ function initCarousel(carouselId: string): void {
         autoPlayInterval: null
     };
     
-    startAutoPlay(carouselId);
+    const prevButton = carouselElement.querySelector('.carousel-prev-btn');
+    const nextButton = carouselElement.querySelector('.carousel-next-btn');
+    if (prevButton) prevButton.addEventListener('click', () => changeSlide(carouselId, -1));
+    if (nextButton) nextButton.addEventListener('click', () => changeSlide(carouselId, 1));
+
+    const dots = carouselElement.querySelectorAll('.carousel-dot');
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => goToSlide(carouselId, index));
+    });
+
+    carouselElement.addEventListener('mouseenter', () => stopAutoPlay(carouselId));
+    carouselElement.addEventListener('mouseleave', () => startAutoPlay(carouselId));
     
-    const carousel = document.getElementById(`carousel-${carouselId}`);
-    if (carousel) {
-        carousel.addEventListener('mouseenter', () => stopAutoPlay(carouselId));
-        carousel.addEventListener('mouseleave', () => startAutoPlay(carouselId));
+    updateCarouselUI(carouselId);
+    startAutoPlay(carouselId);
+}
+
+function updateCarouselUI(carouselId: string): void {
+    const carousel = (window as any).carousels[carouselId];
+    if (!carousel) return;
+
+    const slidesContainer = document.querySelector(`#carousel-${carouselId} .carousel-slides`) as HTMLElement;
+    const dots = document.querySelectorAll(`#carousel-${carouselId} .carousel-dot`);
+
+    if (slidesContainer) {
+        slidesContainer.style.transform = `translateX(-${carousel.currentSlide * 100}%)`;
     }
+
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === carousel.currentSlide);
+    });
 }
 
 function changeSlide(carouselId: string, direction: number): void {
     const carousel = (window as any).carousels[carouselId];
-    if (!carousel) {
-        initCarousel(carouselId);
-        return;
-    }
+    if (!carousel) return;
     
     const newSlide = (carousel.currentSlide + direction + carousel.totalSlides) % carousel.totalSlides;
     goToSlide(carouselId, newSlide);
@@ -51,23 +71,10 @@ function changeSlide(carouselId: string, direction: number): void {
 
 function goToSlide(carouselId: string, slideIndex: number): void {
     const carousel = (window as any).carousels[carouselId];
-    if (!carousel) {
-        initCarousel(carouselId);
-        return;
-    }
+    if (!carousel) return;
     
     carousel.currentSlide = slideIndex;
-    
-    const slides = document.querySelectorAll(`#carousel-${carouselId} .carousel-slide`);
-    const dots = document.querySelectorAll(`#carousel-${carouselId} .carousel-dot`);
-    
-    slides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === slideIndex);
-    });
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === slideIndex);
-    });
+    updateCarouselUI(carouselId);
     
     stopAutoPlay(carouselId);
     startAutoPlay(carouselId);
@@ -84,13 +91,12 @@ function startAutoPlay(carouselId: string): void {
 
 function stopAutoPlay(carouselId: string): void {
     const carousel = (window as any).carousels[carouselId];
-    if (!carousel || !carousel.autoPlayInterval) return;
-    
-    clearInterval(carousel.autoPlayInterval);
-    carousel.autoPlayInterval = null;
+    if (carousel && carousel.autoPlayInterval) {
+        clearInterval(carousel.autoPlayInterval);
+        carousel.autoPlayInterval = null;
+    }
 }
 
-// Auto-initialize all carousels on page load
 function initAllCarousels(): void {
     const carousels = document.querySelectorAll('.project-carousel[data-carousel-id]');
     carousels.forEach((carousel) => {
@@ -101,13 +107,6 @@ function initAllCarousels(): void {
     });
 }
 
-// Expose functions globally
-(window as any).initCarousel = initCarousel;
-(window as any).changeSlide = changeSlide;
-(window as any).goToSlide = goToSlide;
-
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initAllCarousels);
 
-// Export for module system
-export { initCarousel, changeSlide, goToSlide }; 
+export {}; 

@@ -12,8 +12,9 @@ links:
     image: "https://github.githubassets.com/favicons/favicon.svg"
 categories:
   - "Projects"
-  - "Scripts & Tools"
+  - "Data Science"
 tags:
+    - "Python"
     - "GitHub"
 weight: 1
 stats:

@@ -14,6 +14,8 @@ categories:
   - "Projects"
   - "Web Development"
 tags:
+    - "PHP"
+    - "Python"
     - "GitHub"
 weight: 1
 stats:
