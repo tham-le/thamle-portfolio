@@ -1,7 +1,6 @@
 ---
 title: "About Me"
 description: "An engineer's journey, from modeling oceans to building low-level systems."
-image: "/images/tham_photo.jpg" # Make sure you have an image at static/images/tham_photo.jpg
 ---
 
 I'm a software engineer based in Paris, with roots in Vietnam and a background in computational marine science. I speak English, French, and Vietnamese, and I'm passionate about building and understanding complex systems. You can find my full resume [here](/ThamLE_resume.pdf), see my code on [GitHub](https://github.com/tham-le), or contact me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com). Outside of work, I enjoy CTF competitions, reading source code, and exploring the math behind computer graphics.

@@ -1,7 +1,6 @@
 ---
 title: "À Propos de Moi"
 description: "Le parcours d'une ingénieure, de la modélisation des océans à la programmation de systèmes bas niveau."
-image: "/images/tham_photo.jpg" # Make sure you have an image at static/images/tham_photo.jpg
 ---
 
 Je suis une ingénieure logiciel basée à Paris, avec des racines au Vietnam et une formation en sciences marines computationnelles. Je parle français, anglais et vietnamien, et je suis passionnée par la construction et la compréhension de systèmes complexes. Vous pouvez trouver mon CV complet [ici](/ThamLE_resume.pdf), voir mon code sur [GitHub](https://github.com/tham-le), ou me contacter à [thamle.work@gmail.com](mailto:thamle.work@gmail.com). En dehors du travail, j'aime les compétitions CTF, lire du code source et explorer les mathématiques derrière l'infographie.

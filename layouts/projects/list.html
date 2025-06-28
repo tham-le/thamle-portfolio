@@ -7,31 +7,18 @@
             {{ end }}
         </header>
 
-        <div class="project-grid">
-            <div class="grid">
-                {{ $paginator := .Paginate (where .Site.RegularPages "Section" "projects") }}
-                {{ range $paginator.Pages }}
-                    <a href="{{ .Permalink }}" class="card-link">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-tags">
-                                    <span class="card-tag">Project</span>
-                                    {{ with .Params.tags }}
-                                        {{ range first 1 . }}
-                                            <span class="card-tag">{{ . }}</span>
-                                        {{ end }}
-                                    {{ end }}
-                                </div>
-                                <h3 class="card-title">{{ .Title }}</h3>
-                                <p class="card-description">{{ .Description }}</p>
-                            </div>
-                        </div>
-                    </a>
-                {{ end }}
-            </div>
-        </div>
 
-        {{ partial "pagination.html" . }}
+        {{/* Display projects as article list */}}
+        {{ $pages := where .Site.RegularPages "Section" "projects" }}
+        {{ $pag := .Paginate $pages }}
+
+        <section class="article-list">
+            {{ range $index, $element := $pag.Pages }}
+                {{ partial "article-list/default" . }}
+            {{ end }}
+        </section>
+
+        {{- partial "pagination.html" . -}}
     </div>
 
     {{/*
@@ -76,20 +63,7 @@
     {{ end }}
     */}}
 
-    {{/* Display the article list as before */}}
-    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
-    {{ $filtered := ($pages | intersect $notHidden) }}
-    {{ $pag := .Paginate ($filtered) }}
 
-    <section class="article-list">
-        {{ range $index, $element := $pag.Pages }}
-            {{ partial "article-list/default" . }}
-        {{ end }}
-    </section>
-
-    {{- partial "pagination.html" . -}}
-    {{- partial "footer/footer" . -}}
 {{ end }}
 
 {{ define "right-sidebar" }}
