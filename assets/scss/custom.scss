@@ -86,7 +86,7 @@
     transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.7);
     border: none;
-    color: #111;
+    color: var(--content-color);
     padding: 0;
     cursor: pointer;
     border-radius: 50%;
