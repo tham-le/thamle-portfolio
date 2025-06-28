@@ -4,7 +4,7 @@ description: "An engineer's journey, from modeling oceans to building low-level 
 ---
 
 <div class="language-toggle">
-    <a href="/about/fr/" class="language-btn">🇫🇷 Oui, je parle français</a>
+    <a href="/about-fr/" class="language-btn">🇫🇷 Oui, je parle français</a>
 </div>
 
 I'm a software engineer based in Paris, with roots in Vietnam and a background in computational marine science. I speak English, French, and Vietnamese, and I'm passionate about building and understanding complex systems. You can find my full resume [here](/thamle_resume.pdf), see my code on [GitHub](https://github.com/tham-le), or contact me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com). Outside of work, I enjoy CTF competitions, reading source code, and exploring the math behind computer graphics.
