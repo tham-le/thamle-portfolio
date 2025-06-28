@@ -8,8 +8,28 @@
     ],
     "rewrites": [
       {
-        "source": "!**/*.{css,js,png,jpg,jpeg,gif,ico,svg,woff,woff2,ttf,eot,pdf}",
+        "source": "/",
         "destination": "/index.html"
+      },
+      {
+        "source": "/about",
+        "destination": "/about/index.html"
+      },
+      {
+        "source": "/about-fr",
+        "destination": "/about-fr/index.html"
+      },
+      {
+        "source": "/projects",
+        "destination": "/projects/index.html"
+      },
+      {
+        "source": "/ctf",
+        "destination": "/ctf/index.html"
+      },
+      {
+        "source": "/notes",
+        "destination": "/notes/index.html"
       }
     ],
     "headers": [
@@ -37,6 +57,10 @@
           {
             "key": "Cache-Control",
             "value": "max-age=86400"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/pdf"
           }
         ]
       }
