@@ -6,32 +6,6 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/about",
-        "destination": "/about/index.html"
-      },
-      {
-        "source": "/about-fr",
-        "destination": "/about-fr/index.html"
-      },
-      {
-        "source": "/projects",
-        "destination": "/projects/index.html"
-      },
-      {
-        "source": "/ctf",
-        "destination": "/ctf/index.html"
-      },
-      {
-        "source": "/notes",
-        "destination": "/notes/index.html"
-      }
-    ],
     "headers": [
       {
         "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|ico)",
