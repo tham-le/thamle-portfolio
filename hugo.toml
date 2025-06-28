@@ -11,91 +11,6 @@ description = "Software engineer learning through building, breaking, and unders
 keywords = ["Software Engineer", "Learning", "Python", "C++", "Cybersecurity", "System Programming", "CTF", "Projects"]
 author = "Tham Le"
 
-# Theme i18n support
-DefaultContentLanguage = "en"
-
-[languages]
-    [languages.en]
-        languageName = "English"
-        weight = 1
-        title = "Tham Le - Learning Through Code"
-        [languages.en.params]
-            subtitle = "Building & learning"
-        [[languages.en.menu.main]]
-identifier = "home"
-name = "Home"
-url = "/"
-weight = 10
-        [[languages.en.menu.main]]
-identifier = "about"
-name = "About"
-url = "/about/"
-weight = 20
-        [[languages.en.menu.main]]
-identifier = "projects"
-name = "Projects"
-url = "/projects/"
-weight = 30
-        [[languages.en.menu.main]]
-identifier = "ctf"
-name = "CTF Writeups"
-url = "/ctf/"
-weight = 40
-        [[languages.en.menu.main]]
-identifier = "notes"
-name = "Notes"
-url = "/notes/"
-weight = 50
-        [[languages.en.menu.main]]
-identifier = "resume"
-name = "Resume"
-url = "/thamle_resume.pdf"
-weight = 60
-            [languages.en.menu.main.params]
-                newTab = true
-    [languages.fr]
-        languageName = "Français"
-        weight = 2
-        title = "Tham Le - Apprendre par le Code"
-        [languages.fr.params]
-            subtitle = "Construire & apprendre"
-        [[languages.fr.menu.main]]
-            identifier = "home"
-            name = "Accueil"
-            url = "/fr/"
-            weight = 10
-        [[languages.fr.menu.main]]
-            identifier = "about"
-            name = "À Propos"
-            url = "/fr/about/"
-            weight = 20
-        [[languages.fr.menu.main]]
-            identifier = "projects"
-            name = "Projets"
-            url = "/fr/projects/"
-            weight = 30
-        [[languages.fr.menu.main]]
-            identifier = "ctf"
-            name = "Writeups CTF"
-            url = "/fr/ctf/"
-            weight = 40
-        [[languages.fr.menu.main]]
-            identifier = "notes"
-            name = "Notes"
-            url = "/fr/notes/"
-            weight = 50
-        [[languages.fr.menu.main]]
-            identifier = "resume"
-            name = "CV"
-            url = "/thamle_resume.pdf"
-            weight = 60
-            [languages.fr.menu.main.params]
-newTab = true
-
-[menu]
-    # This global menu is now handled within each language section
-    
-
 # Pagination
 [pagination]
 pagerSize = 12
@@ -150,6 +65,45 @@ default = "Licensed under CC BY-NC-SA 4.0"
 # Comments (disabled for professional portfolio)
 [params.comments]
 enabled = false
+
+# Main menu
+[[menu.main]]
+identifier = "home"
+name = "Home"
+url = "/"
+weight = 10
+
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 20
+
+[[menu.main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects/"
+weight = 30
+
+[[menu.main]]
+identifier = "ctf"
+name = "CTF Writeups"
+url = "/ctf/"
+weight = 40
+
+[[menu.main]]
+identifier = "notes"
+name = "Notes"
+url = "/notes/"
+weight = 50
+
+[[menu.main]]
+identifier = "resume"
+name = "Resume"
+url = "/thamle_resume.pdf"
+weight = 60
+[menu.main.params]
+newTab = true
 
 # Social links
 [[menu.social]]

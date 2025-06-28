@@ -3,7 +3,11 @@ title: "About Me"
 description: "An engineer's journey, from modeling oceans to building low-level systems."
 ---
 
-I'm a software engineer based in Paris, with roots in Vietnam and a background in computational marine science. I speak English, French, and Vietnamese, and I'm passionate about building and understanding complex systems. You can find my full resume [here](/ThamLE_resume.pdf), see my code on [GitHub](https://github.com/tham-le), or contact me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com). Outside of work, I enjoy CTF competitions, reading source code, and exploring the math behind computer graphics.
+<div class="language-toggle">
+    <a href="/about/fr/" class="language-btn">🇫🇷 Oui, je parle français</a>
+</div>
+
+I'm a software engineer based in Paris, with roots in Vietnam and a background in computational marine science. I speak English, French, and Vietnamese, and I'm passionate about building and understanding complex systems. You can find my full resume [here](/thamle_resume.pdf), see my code on [GitHub](https://github.com/tham-le), or contact me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com). Outside of work, I enjoy CTF competitions, reading source code, and exploring the math behind computer graphics.
 
 ---
 
@@ -83,3 +87,30 @@ I learn a lot from reading the source code of open-source projects. It's the bes
 **Contact:** thamle.work@gmail.com  
 **Code:** [github.com/tham-le](https://github.com/tham-le)  
 **LinkedIn:** [linkedin.com/in/tham42](https://www.linkedin.com/in/tham42)
+
+<style>
+.language-toggle {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.language-btn {
+    display: inline-block;
+    background: var(--card-background);
+    color: var(--card-text-color-main);
+    border: 2px solid var(--accent-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.language-btn:hover {
+    background: var(--accent-color);
+    color: var(--accent-color-text);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+</style>
