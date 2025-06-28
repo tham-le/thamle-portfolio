@@ -21,7 +21,7 @@ Today, I continue that journey as an engineer. Every project is a new opportunit
 
 ## Experience
 
-### **C++ Development Engineer at Snowpack**
+### **C++ Development Engineer at Snowpack** 
 *August 2024 – July 2025*
 
 > Snowpack specializes in creating high-performance software SDKs designed to run on a multitude of platforms.
