@@ -9,26 +9,26 @@ Built with [Hugo](https://gohugo.io/) and deployed on [Firebase](https://firebas
 ## Local Development
 
 1.  **Clone the repository with submodules:**
-    ```bash
-    git clone --recursive https://github.com/tham-le/thamle-portfolio.git
-    cd thamle-portfolio
-    ```
+   ```bash
+   git clone --recursive https://github.com/tham-le/thamle-portfolio.git
+   cd thamle-portfolio
+   ```
 
 2.  **Set up environment variables:**
-    ```bash
+   ```bash
     # This is only needed if you want to sync projects from the GitHub API.
-    cp .env.example .env
+   cp .env.example .env
     # Add your GitHub token to .env
-    ```
+   ```
 
 3.  **Prepare content and run the server:**
-    ```bash
+   ```bash
     # Generate the local index files needed for the CTF section.
     python3 scripts/prepare_hugo.py
-    
+
     # Run the Hugo development server.
-    hugo server
-    ```
+   hugo server
+   ```
 
 ## Core Principles
 

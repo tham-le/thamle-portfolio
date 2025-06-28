@@ -5,6 +5,10 @@
 
 set -e
 
+# Make script path-independent by defining paths relative to the project root
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PROJECT_ROOT="$(realpath "${SCRIPT_DIR}/..")"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,28 +33,21 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Load environment variables from .env file if it exists
-# Handle both running from scripts/ directory and root directory
-if [[ -f .env ]]; then
-    source .env
-elif [[ -f ../.env ]]; then
-    source ../.env
+# Load environment variables from .env file in the project root
+if [[ -f "${PROJECT_ROOT}/.env" ]]; then
+    source "${PROJECT_ROOT}/.env"
 fi
 
 # Configuration
 GITHUB_USERNAME="${GITHUB_USERNAME:-tham-le}"
-PROJECTS_DIR="../content/projects"
-IMAGES_DIR="../static/images/projects"
+PROJECTS_DIR="${PROJECT_ROOT}/content/projects"
+IMAGES_DIR="${PROJECT_ROOT}/static/images/projects"
 GITHUB_API="https://api.github.com"
-PROJECTS_CONFIG="../config/projects-config.json"
+PROJECTS_CONFIG="${PROJECT_ROOT}/config/projects-config.json"
 
 # Check for projects config file
 if [[ ! -f "$PROJECTS_CONFIG" ]]; then
-    PROJECTS_CONFIG="projects-config.json"
-fi
-
-if [[ ! -f "$PROJECTS_CONFIG" ]]; then
-    log_error "projects-config.json not found. Please create it to specify which projects to sync."
+    log_error "projects-config.json not found at '${PROJECTS_CONFIG}'. Please ensure the file exists."
     exit 1
 fi
 
@@ -96,6 +93,79 @@ escape_readme_content() {
     # Escape code blocks by adding proper indentation
     # This prevents README code blocks from breaking the Hugo markdown structure
     echo "$trimmed_content" | sed 's/^```/    ```/g'
+}
+
+# Function to get repository data from GitHub API
+get_repo_data() {
+    local repo_name="$1"
+    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}"
+    
+    if [ -n "$AUTH_HEADER" ]; then
+        curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url"
+    else
+        curl -s -H "Accept: application/vnd.github.v3+json" "$api_url"
+    fi
+}
+
+# Function to get repository README
+get_repo_readme() {
+    local repo_name="$1"
+    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/readme"
+    
+    local readme_data
+    if [ -n "$AUTH_HEADER" ]; then
+        readme_data=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url")
+    else
+        readme_data=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
+    fi
+    
+    if echo "$readme_data" | jq -e '.content' >/dev/null 2>&1; then
+        echo "$readme_data" | jq -r '.content' | base64 -d
+    else
+        echo ""
+    fi
+}
+
+# Function to get programming language data
+get_languages() {
+    local repo_name="$1"
+    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/languages"
+    
+    if [ -n "$AUTH_HEADER" ]; then
+        curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url" | jq -r 'keys | .[]'
+    else
+        curl -s -H "Accept: application/vnd.github.v3+json" "$api_url" | jq -r 'keys | .[]'
+    fi
+}
+
+# Function to determine category based on repository data
+determine_category() {
+    local repo_name="$1"
+    local description="$2"
+    local languages="$3"
+    
+    # Convert to lowercase for easier matching
+    local desc_lower=$(echo "$description" | tr '[:upper:]' '[:lower:]')
+    local name_lower=$(echo "$repo_name" | tr '[:upper:]' '[:lower:]')
+    
+    # Category determination logic
+    if [[ "$desc_lower" == *"web"* ]] || [[ "$desc_lower" == *"react"* ]] || [[ "$desc_lower" == *"vue"* ]] || [[ "$desc_lower" == *"django"* ]] || [[ "$languages" == *"JavaScript"* ]] || [[ "$languages" == *"TypeScript"* ]]; then
+        echo "Web Development"
+    elif [[ "$desc_lower" == *"security"* ]] || [[ "$desc_lower" == *"ctf"* ]] || [[ "$name_lower" == *"security"* ]] || [[ "$name_lower" == *"ctf"* ]] || [[ "$name_lower" == *"darkly"* ]]; then
+        echo "Cybersecurity"
+    elif [[ "$desc_lower" == *"mobile"* ]] || [[ "$desc_lower" == *"android"* ]] || [[ "$desc_lower" == *"ios"* ]] || [[ "$languages" == *"Swift"* ]] || [[ "$languages" == *"Kotlin"* ]]; then
+        echo "Mobile Development"
+    elif [[ "$desc_lower" == *"data"* ]] || [[ "$desc_lower" == *"science"* ]] || [[ "$desc_lower" == *"analysis"* ]] || [[ "$languages" == *"Python"* ]]; then
+        echo "Data Science"
+    elif [[ "$desc_lower" == *"game"* ]] || [[ "$desc_lower" == *"graphics"* ]] || [[ "$desc_lower" == *"3d"* ]] || [[ "$name_lower" == *"rt"* ]] || [[ "$name_lower" == *"fractol"* ]]; then
+        echo "Graphics & Games"
+    elif [[ "$desc_lower" == *"system"* ]] || [[ "$desc_lower" == *"kernel"* ]] || [[ "$languages" == *"C"* ]] || [[ "$languages" == *"C++"* ]]; then
+        echo "System Programming"
+    elif [[ "$desc_lower" == *"script"* ]] || [[ "$desc_lower" == *"automation"* ]] || [[ "$desc_lower" == *"tool"* ]]; then
+        echo "Scripts & Tools"
+    else
+        echo "Other"
+    fi
 }
 
 # Function to get default branch for repository
@@ -178,250 +248,93 @@ get_repo_images() {
     jq -n --arg main "$main_image" --argjson all "$(printf '%s\n' "${images_found[@]}" | jq -R . | jq -s .)" '{main: $main, all: $all}'
 }
 
-# Function to generate gallery HTML for project
-generate_gallery_html() {
-    local images_json="$1"
-    local project_name="$2"
-    local main_image=$(echo "$images_json" | jq -r '.main')
-    local all_images=$(echo "$images_json" | jq -r '.all[]')
-    local image_count=$(echo "$images_json" | jq -r '.all | length')
-    
-    # Don't show gallery if no images or only empty/null images
-    if [ "$image_count" -eq 0 ] || [ -z "$main_image" ] || [ "$main_image" = "null" ]; then
-        echo ""
-        return
-    fi
-    
-    # For single image, just show it normally (no carousel needed)
-    if [ "$image_count" -eq 1 ]; then
-        echo ""
-        echo "## Project Image"
-        echo ""
-        local filename=$(basename "$main_image")
-        local name="${filename%.*}"
-        local title=$(echo "$name" | sed 's/[-_]/ /g' | sed 's/\b\w/\u&/g')
-        echo "<div class=\"single-project-image\">"
-        echo "<img src=\"$main_image\" alt=\"$title\" title=\"$title\" loading=\"lazy\" style=\"max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);\" />"
-        echo "</div>"
-        return
-    fi
-    
-    # For multiple images, use shortcode
-    echo ""
-    echo "## Project Gallery"
-    echo ""
-    
-    local carousel_id="${project_name// /-}"
-    carousel_id="${carousel_id,,}"  # Convert to lowercase
-    
-    # Create comma-separated list of images
-    local images_list=""
-    while IFS= read -r image_url; do
-        if [ -n "$image_url" ] && [ "$image_url" != "null" ] && [[ "$image_url" == https://* ]]; then
-            if [ -n "$images_list" ]; then
-                images_list="$images_list,$image_url"
-            else
-                images_list="$image_url"
-            fi
-        fi
-    done <<< "$all_images"
-    
-    # Generate shortcode call
-    echo "{{< project-carousel images=\"$images_list\" id=\"$carousel_id\" title=\"$project_name Gallery\" >}}"
-}
-
-# Function to download image from GitHub repository (now just gets URL)
-download_repo_image() {
+# Function to generate the complete Hugo content file for a project
+generate_hugo_content() {
     local repo_name="$1"
-    local images_data=$(get_repo_images "$repo_name")
-    echo "$images_data" | jq -r '.main'
-}
+    local repo_data="$2"
+    local project_config="$3"
+    local main_image="$4"
+    # Capture the rest of the arguments as the array of all image URLs
+    shift 4
+    local all_image_urls=("$@")
 
-# Function to get repository data from GitHub API
-get_repo_data() {
-    local repo_name="$1"
-    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}"
-    
-    if [ -n "$AUTH_HEADER" ]; then
-        curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url"
-    else
-        curl -s -H "Accept: application/vnd.github.v3+json" "$api_url"
-    fi
-}
-
-# Function to get repository README
-get_repo_readme() {
-    local repo_name="$1"
-    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/readme"
-    
-    local readme_data
-    if [ -n "$AUTH_HEADER" ]; then
-        readme_data=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url")
-    else
-        readme_data=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    fi
-    
-    if echo "$readme_data" | jq -e '.content' >/dev/null 2>&1; then
-        echo "$readme_data" | jq -r '.content' | base64 -d
-    else
-        echo ""
-    fi
-}
-
-# Function to get programming language data
-get_languages() {
-    local repo_name="$1"
-    local api_url="${GITHUB_API}/repos/${GITHUB_USERNAME}/${repo_name}/languages"
-    
-    if [ -n "$AUTH_HEADER" ]; then
-        curl -s -H "Accept: application/vnd.github.v3+json" -H "$AUTH_HEADER" "$api_url" | jq -r 'keys | @json'
-    else
-        curl -s -H "Accept: application/vnd.github.v3+json" "$api_url" | jq -r 'keys | @json'
-    fi
-}
-
-# Function to determine category based on repository data
-determine_category() {
-    local repo_name="$1"
-    local description="$2"
-    local languages="$3"
-    
-    # Convert to lowercase for easier matching
-    local desc_lower=$(echo "$description" | tr '[:upper:]' '[:lower:]')
-    local name_lower=$(echo "$repo_name" | tr '[:upper:]' '[:lower:]')
-    
-    # Category determination logic
-    if [[ "$desc_lower" == *"web"* ]] || [[ "$desc_lower" == *"react"* ]] || [[ "$desc_lower" == *"vue"* ]] || [[ "$desc_lower" == *"django"* ]] || [[ "$languages" == *"JavaScript"* ]] || [[ "$languages" == *"TypeScript"* ]]; then
-        echo "Web Development"
-    elif [[ "$desc_lower" == *"security"* ]] || [[ "$desc_lower" == *"ctf"* ]] || [[ "$name_lower" == *"security"* ]] || [[ "$name_lower" == *"ctf"* ]] || [[ "$name_lower" == *"darkly"* ]]; then
-        echo "Cybersecurity"
-    elif [[ "$desc_lower" == *"mobile"* ]] || [[ "$desc_lower" == *"android"* ]] || [[ "$desc_lower" == *"ios"* ]] || [[ "$languages" == *"Swift"* ]] || [[ "$languages" == *"Kotlin"* ]]; then
-        echo "Mobile Development"
-    elif [[ "$desc_lower" == *"data"* ]] || [[ "$desc_lower" == *"science"* ]] || [[ "$desc_lower" == *"analysis"* ]] || [[ "$languages" == *"Python"* ]]; then
-        echo "Data Science"
-    elif [[ "$desc_lower" == *"game"* ]] || [[ "$desc_lower" == *"graphics"* ]] || [[ "$desc_lower" == *"3d"* ]] || [[ "$name_lower" == *"rt"* ]] || [[ "$name_lower" == *"fractol"* ]]; then
-        echo "Graphics & Games"
-    elif [[ "$desc_lower" == *"system"* ]] || [[ "$desc_lower" == *"kernel"* ]] || [[ "$languages" == *"C"* ]] || [[ "$languages" == *"C++"* ]]; then
-        echo "System Programming"
-    elif [[ "$desc_lower" == *"script"* ]] || [[ "$desc_lower" == *"automation"* ]] || [[ "$desc_lower" == *"tool"* ]]; then
-        echo "Scripts & Tools"
-    else
-        echo "Other"
-    fi
-}
-
-# Function to create project content file
-create_project_content() {
-    local repo_data="$1"
-    local readme_content="$2"
-    local config_description="$3"
-    
     # Extract data from JSON
-    local name=$(echo "$repo_data" | jq -r '.name')
+    local project_name=$(echo "$repo_data" | jq -r '.name')
     local description=$(echo "$repo_data" | jq -r '.description // "No description available"')
     local html_url=$(echo "$repo_data" | jq -r '.html_url')
-    local created_at=$(echo "$repo_data" | jq -r '.created_at')
-    local updated_at=$(echo "$repo_data" | jq -r '.updated_at')
-    local language=$(echo "$repo_data" | jq -r '.language // "Unknown"')
-    local stargazers_count=$(echo "$repo_data" | jq -r '.stargazers_count')
-    local forks_count=$(echo "$repo_data" | jq -r '.forks_count')
+    local creation_date=$(echo "$repo_data" | jq -r '.created_at')
+    local last_mod_date=$(echo "$repo_data" | jq -r '.updated_at')
     local homepage=$(echo "$repo_data" | jq -r '.homepage // ""')
+    local languages=$(get_languages "$repo_name")
     
-    # Use config description if available and GitHub description is generic
-    if [ -n "$config_description" ] && [[ "$description" == "No description available" ]]; then
-        description="$config_description"
-    fi
-    
-    # Get languages
-    local languages=$(get_languages "$name")
-    
-    # Determine category
-    local category=$(determine_category "$name" "$description" "$languages")
-    
-    # Get all images for gallery (now returns GitHub URLs)
-    local images_data=$(get_repo_images "$name")
-    local main_image=$(echo "$images_data" | jq -r '.main')
-    local gallery_html=$(generate_gallery_html "$images_data" "$name")
-    
-    # Get settings from config
-    local max_readme_lines=$(jq -r '.settings.max_readme_lines // 30' "$PROJECTS_CONFIG")
-    local escape_code_blocks=$(jq -r '.settings.escape_code_blocks // true' "$PROJECTS_CONFIG")
-    
-    # Process README content with proper escaping
-    local processed_readme=""
-    if [ -n "$readme_content" ]; then
-        if [ "$escape_code_blocks" = "true" ]; then
-            processed_readme=$(escape_readme_content "$readme_content" "$max_readme_lines")
+    local project_file="${PROJECTS_DIR}/${project_name}.md"
+
+    # --- Front Matter Generation ---
+    {
+        echo "---"
+        echo "title: \"${project_name}\""
+        echo "date: ${creation_date}"
+        echo "lastmod: ${last_mod_date}"
+        echo "description: \"${description}\""
+        echo "image: \"${main_image}\""
+
+        # Add carousel section only if there are images
+        if [ ${#all_image_urls[@]} -gt 0 ]; then
+            local carousel_id="${project_name// /-}"
+            carousel_id="${carousel_id,,}"
+            echo "showFeatureImage: false"
+            echo "carousel:"
+            echo "  id: \"${carousel_id}\""
+            echo "  title: \"${project_name} Gallery\""
+            echo "  images:"
+            for img in "${all_image_urls[@]}"; do
+                echo "    - \"${img}\""
+            done
         else
-            processed_readme=$(echo "$readme_content" | head -n "$max_readme_lines")
+            echo "showFeatureImage: true"
         fi
+        
+        # Add links
+        echo "links:"
+        echo "  - title: \"GitHub Repository\""
+        echo "    description: \"View source code and documentation\""
+        echo "    website: \"${html_url}\""
+        echo "    image: \"https://github.githubassets.com/favicons/favicon.svg\""
+        if [ -n "$homepage" ] && [ "$homepage" != "null" ]; then 
+            echo "  - title: \"Live Demo\""
+            echo "    description: \"View the live application\""
+            echo "    website: \"${homepage}\""
+            echo "    image: \"${homepage}/favicon.ico\""
+        fi
+
+        # Add categories and tags
+        echo "categories:"
+        echo "  - \"Projects\""
+        local category=$(determine_category "$repo_name" "$description" "$languages")
+        echo "  - \"${category}\""
+        echo "tags:"
+        for lang in $languages; do
+            echo "    - \"${lang}\""
+        done
+        echo "    - \"GitHub\""
+
+        # Add other metadata
+        echo "weight: 1"
+        echo "stats:"
+        echo "    stars: $(echo "$repo_data" | jq -r '.stargazers_count')"
+        echo "    forks: $(echo "$repo_data" | jq -r '.forks_count')"
+        echo "    language: $(echo "$repo_data" | jq -r '.language // "Unknown"')"
+        echo "---"
+        echo ""
+    } > "$project_file"
+
+    # --- README Content ---
+    readme_content=$(get_repo_readme "$repo_name")
+    if [ -n "$readme_content" ]; then
+        # Remove the shortcode from the old README content before appending
+        readme_content=$(echo "$readme_content" | sed '/{{< project-carousel.*>}}/d')
+        echo "$readme_content" >> "$project_file"
     fi
-    
-    # Create content file
-    local content_file="${PROJECTS_DIR}/${name}.md"
-    
-    cat > "$content_file" << EOF
----
-title: "$name"
-date: $created_at
-lastmod: $updated_at
-description: "$description"$(if [ -n "$main_image" ] && [[ "$main_image" == https://* ]]; then echo "
-image: \"$main_image\""; fi)
-categories:
-    - "Projects"
-    - "$category"
-tags:
-$(echo "$languages" | jq -r '.[] | "    - \"" + . + "\""')
-    - "GitHub"
-links:
-    - title: "GitHub Repository"
-      description: "View source code and documentation"
-      website: "$html_url"
-      image: "https://github.githubassets.com/favicons/favicon.svg"$(if [ -n "$homepage" ] && [ "$homepage" != "null" ]; then echo "
-    - title: \"Live Demo\"
-      description: \"View the live application\"
-      website: \"$homepage\"
-      image: \"/favicon.ico\""; fi)
-weight: 1
-stats:
-    stars: $stargazers_count
-    forks: $forks_count
-    language: "$language"
----
-
-## Overview
-
-$description
-
-$(if [ -n "$processed_readme" ]; then
-    echo "## Project Details"
-    echo ""
-    echo "$processed_readme"
-else
-    echo "## Repository Information"
-    echo ""
-    echo "- **Primary Language**: $language"
-    echo "- **Created**: $(date -d "$created_at" '+%B %d, %Y')"
-    echo "- **Last Updated**: $(date -d "$updated_at" '+%B %d, %Y')"
-    echo "- **Stars**: $stargazers_count"
-    echo "- **Forks**: $forks_count"
-fi)$gallery_html
-
-## Technologies Used
-
-$(echo "$languages" | jq -r '.[] | "- " + .')
-
-## Links
-
-- [📂 **View Source Code**]($html_url) - Complete project repository
-$(if [ -n "$homepage" ] && [ "$homepage" != "null" ]; then echo "- [🚀 **Live Demo**]($homepage) - See the project in action"; fi)
-
----
-
-*This project is part of my software engineering portfolio. Feel free to explore the code and reach out if you have any questions!*
-EOF
-
-    log_success "Created project content: $content_file"
 }
 
 # Function to sync selected repositories from config
@@ -520,24 +433,38 @@ EOF
 
 # Main execution
 main() {
-    log_info "Starting selective GitHub projects sync..."
-    
-    # Create directories if they don't exist
+    log_info "Starting GitHub project synchronization..."
+    log_info "Reading projects from: ${YELLOW}${PROJECTS_CONFIG}${NC}"
+    log_info "Outputting content to: ${YELLOW}${PROJECTS_DIR}${NC}"
+
     mkdir -p "$PROJECTS_DIR"
-    
-    # Check dependencies
-    check_dependencies
-    
-    # Sync selected repositories from config
-    sync_repositories
-    
-    # Update index
-    update_projects_index
-    
-    log_success "Selective GitHub projects sync completed successfully!"
-    log_info "Generated content files in: $PROJECTS_DIR"
-    log_info "Images referenced directly from GitHub repositories"
-    log_info "Configuration used: $PROJECTS_CONFIG"
+
+    # Read projects from JSON config and process them
+    jq -c '.featured_projects[]' "$PROJECTS_CONFIG" | while read -r project_json; do
+        repo_name=$(echo "$project_json" | jq -r '.name')
+        
+        log_info "Processing repository: ${YELLOW}${repo_name}${NC}"
+        
+        repo_data=$(get_repo_data "$repo_name")
+        
+        if [ -z "$repo_data" ] || echo "$repo_data" | jq -e '.message == "Not Found"' > /dev/null; then
+            log_error "Repository not found or API error for ${repo_name}. Skipping."
+            continue
+        fi
+        
+        # --- Get all image URLs ---
+        images_json=$(get_repo_images "$repo_name")
+        main_image=$(echo "$images_json" | jq -r '.main')
+        all_image_urls=($(echo "$images_json" | jq -r '.all[]'))
+
+        # --- Generate Hugo Content ---
+        generate_hugo_content "$repo_name" "$repo_data" "$project_json" "$main_image" "${all_image_urls[@]}"
+
+        log_success "Successfully processed and created content for ${repo_name}"
+    done
+
+    log_info "Project synchronization complete."
+    log_success "All configured projects have been updated."
 }
 
 # Run main function
