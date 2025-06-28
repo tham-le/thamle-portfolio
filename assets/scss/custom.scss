@@ -271,6 +271,12 @@
 }
 
 /* Hotfix for black text in dark mode */
-.article-content {
+.article-content,
+.page-description,
+.main-article-content {
     color: var(--body-text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--card-text-color-main);
 }
