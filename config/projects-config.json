@@ -34,6 +34,11 @@
       "name": "Darkly",
       "priority": 7,
       "description": "Web security challenge solutions"
+    },
+    {
+      "name": "transcendence",
+      "priority": 8,
+      "description": "Real-time multiplayer Pong game with modern web technologies"
     }
   ],
   "settings": {
