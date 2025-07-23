@@ -4,6 +4,3 @@
 [submodule "themes/amethyst"]
 	path = themes/amethyst
 	url = https://github.com/64bitpandas/amethyst.git
-[submodule "content/ctf-events"]
-	path = content/ctf-events
-	url = git@github.com:tham-le/CTF-Writeups.git
