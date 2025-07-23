@@ -31,7 +31,7 @@
             {{ range .RegularPagesRecursive.ByTitle }}
               <div class="challenge-card">
                 <a href="{{ .RelPermalink }}" class="challenge-link">
-                  
+                  <h4>{{ .Title }}</h4>
                 </a>
                 <div class="challenge-meta">
                   {{ if .Params.difficulty }}
@@ -58,8 +58,10 @@
         {{ range .RegularPagesRecursive.ByDate.Reverse }}
           <li>
             <a href="{{ .RelPermalink }}">
-              
-              
+              {{ .Title }}
+              {{ if .Description }}
+                <small><p>{{ .Description }}</p></small>
+              {{ end }}
             </a>
             <div class="article-meta">
               {{ if not .Date.IsZero }}
