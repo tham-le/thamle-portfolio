@@ -1,20 +1,6 @@
 {{ define "main" }}
 <div class="main-content">
   <article>
-    <header>
-      <h1>{{ .Title }}</h1>
-      {{ with .Description }}
-        <p>{{ . }}</p>
-      {{ end }}
-      <div class="article-meta">
-        {{ if not .Date.IsZero }}
-          <small>
-            <time>{{ .Date.Format "Jan 2, 2006" }}</time>
-            &middot; {{ .ReadingTime }} min read
-          </small>
-        {{ end }}
-      </div>
-    </header>
     {{ .Content }}
   </article>
 </div>

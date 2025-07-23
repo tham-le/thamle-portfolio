@@ -1,12 +1,7 @@
 {{ define "main" }}
 <div class="main-content">
   <article>
-    <header>
-      <h1>{{ .Title }}</h1>
-      {{ with .Description }}
-        <p>{{ . }}</p>
-      {{ end }}
-    </header>
+    
     {{ .Content }}
   </article>
   
@@ -25,20 +20,18 @@
   <!-- Categories Section -->
   {{ if .Sections }}
     <div class="ctf-categories">
-      <h2>Challenge Categories</h2>
+      
       {{ range .Sections.ByTitle }}
         {{ if .RegularPagesRecursive }}
         <div class="category-section">
-          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          {{ with .Description }}
-            <p class="category-description">{{ . }}</p>
-          {{ end }}
+          
+          
           
           <div class="challenge-grid">
             {{ range .RegularPagesRecursive.ByTitle }}
               <div class="challenge-card">
                 <a href="{{ .RelPermalink }}" class="challenge-link">
-                  <h4>{{ .Title }}</h4>
+                  
                 </a>
                 <div class="challenge-meta">
                   {{ if .Params.difficulty }}
@@ -60,15 +53,13 @@
   <!-- All Writeups (Fallback) -->
   {{ if not .Sections }}
     <div class="all-writeups">
-      <h2>All Writeups</h2>
+      
       <ul class="article-list">
         {{ range .RegularPagesRecursive.ByDate.Reverse }}
           <li>
             <a href="{{ .RelPermalink }}">
-              {{ .Title }}
-              {{ if .Description }}
-                <small><p>{{ .Description }}</p></small>
-              {{ end }}
+              
+              
             </a>
             <div class="article-meta">
               {{ if not .Date.IsZero }}

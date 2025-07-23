@@ -1,36 +1,24 @@
 {{ define "main" }}
 <div class="main-content">
   <article>
-    <header>
-      <h1>{{ .Title }}</h1>
-      {{ with .Description }}
-        <p>{{ . }}</p>
-      {{ end }}
-    </header>
     {{ .Content }}
   </article>
-  
-  <!-- Challenge Writeups -->
-  {{ if .RegularPagesRecursive }}
-    <div class="challenge-grid">
-      {{ range .RegularPagesRecursive.ByTitle }}
-        <div class="challenge-card">
-          <a href="{{ .RelPermalink }}" class="challenge-link">
-            <h4>{{ .Title }}</h4>
-          </a>
-          <div class="challenge-meta">
-            {{ if .Params.difficulty }}
-              <span class="difficulty difficulty-{{ lower .Params.difficulty }}">{{ .Params.difficulty }}</span>
-            {{ end }}
-            {{ if .Params.points }}
-              <span class="points">{{ .Params.points }} pts</span>
-            {{ end }}
-          </div>
+  <ul class="article-list">
+    {{ range .RegularPagesRecursive.ByTitle }}
+      <li class="challenge-card">
+        <a href="{{ .RelPermalink }}" class="challenge-link">
+          <h4>{{ .Title }}</h4>
+        </a>
+        <div class="challenge-meta">
+          {{ if .Params.difficulty }}
+            <span class="difficulty difficulty-{{ lower .Params.difficulty }}">{{ .Params.difficulty }}</span>
+          {{ end }}
+          {{ if .Params.points }}
+            <span class="points">{{ .Params.points }} pts</span>
+          {{ end }}
         </div>
-      {{ end }}
-    </div>
-  {{ else }}
-    <p>This category contains challenges organized in subfolders. Please visit the main <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a> page to see all challenges.</p>
-  {{ end }}
+      </li>
+    {{ end }}
+  </ul>
 </div>
 {{ end }}
