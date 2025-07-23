@@ -1,6 +1,6 @@
 [submodule "content/ctf"]
 	path = content/ctf
 	url = https://github.com/tham-le/CTF-Writeups.git
-[submodule "themes/hugo-theme-stack"]
-	path = themes/hugo-theme-stack
-	url = https://github.com/CaiJimmy/hugo-theme-stack.git
+[submodule "themes/amethyst"]
+	path = themes/amethyst
+	url = https://github.com/64bitpandas/amethyst.git

@@ -1,150 +1,104 @@
 baseURL = "https://thamle.live/"
 languageCode = "en-us"
-theme = "hugo-theme-stack"
+theme = "amethyst"
 title = "Tham Le - Learning Through Code"
-copyright = "© 2025 Tham Le. All rights reserved."
-ignoreFiles = ["README.md"]
+disablePathToLower = true
+enableGitInfo = true
+ignoreFiles = ["/README\\.md$"]
 
-# Enhanced metadata for better SEO
-[params.meta]
-description = "Software engineer learning through building, breaking, and understanding systems. From ocean science to code."
-keywords = ["Software Engineer", "Learning", "Python", "C++", "Cybersecurity", "System Programming", "CTF", "Projects"]
-author = "Tham Le"
+mainSections = ["ctf-events"] # Added this line
 
-# Pagination
-[pagination]
-pagerSize = 12
-
-# Permalinks for different content types
-[permalinks]
-projects = "/projects/:slug/"
-notes = "/notes/:slug/"
-
-# Main sections for homepage
+# Amethyst theme settings
 [params]
-mainSections = ["projects", "ctf", "notes"]
-featuredImageField = "image"
-rssFullContent = true
-favicon = "/favicon.ico"
+  name = "Tham Le"
+  title = "👨‍💻 Tham Le - Learning Through Code"
+  description = "Software engineer learning through building, breaking, and understanding systems. From ocean science to code."
+  
+  # Theme features
+  enableLinkPreview = true
+  enableLatex = true
+  enableCodeBlockTitle = true
+  enableCodeBlockCopy = true
+  enableCallouts = true
+  enableFooter = true
+  enableContextualBacklinks = true
+  enableRecentNotes = true
+  enableGitHubEdit = true
+  enableMermaid = true
+  enableSPA = false # Single Page Application mode
 
-# Enhanced sidebar configuration
-[params.sidebar]
-emoji = "👨‍💻"
-subtitle = "Building & learning"
+  # GitHub settings
+  GitHubLink = "https://github.com/tham-le/thamle-portfolio" 
+  BookRepo = "https://github.com/tham-le/thamle-portfolio"
+  BookEditPath = "edit/main"
+  BookDateFormat = "January 2, 2006"
 
-[params.sidebar.avatar]
-enabled = false
-local = true
-src = "images/tham_photo.jpg"
+  # Sidebar and Table of Contents
+  BookToC = true # Show ToC on the right
+  BookSection = "/" # Render all sections in the menu
 
-# Color scheme configuration for dark mode
-[params.colorScheme]
-toggle = true
-default = "auto"
+  # Comments
+  BookComments = false
 
-# Footer configuration
-[params.footer]
-since = 2024
-customText = "Always learning, always building"
-
-# Date format
-[params.dateFormat]
-published = "Jan 02, 2006"
-lastUpdated = "Jan 02, 2006 15:04 MST"
-
-# Article configuration
-[params.article]
-math = true
-toc = true
-readingTime = true
-
-[params.article.license]
-enabled = true
-default = "Licensed under CC BY-NC-SA 4.0"
-
-# Comments (disabled for professional portfolio)
-[params.comments]
-enabled = false
+  # Footer links
+  [[params.links]]
+    link_name = "GitHub"
+    link = "https://github.com/tham-le"
+  [[params.links]]
+    link_name = "LinkedIn"
+    link = "https://linkedin.com/in/tham42"
+  [[params.links]]
+    link_name = "Email"
+    link = "mailto:thamle.work@gmail.com"
 
 # Main menu
 [[menu.main]]
-identifier = "home"
-name = "Home"
-url = "/"
-weight = 10
-
+  name = "Home"
+  url = "/"
+  weight = 10
 [[menu.main]]
-identifier = "about"
-name = "About"
-url = "/about/"
-weight = 20
-
+  name = "About"
+  url = "/about/"
+  weight = 20
 [[menu.main]]
-identifier = "projects"
-name = "Projects"
-url = "/projects/"
-weight = 30
-
+  name = "Projects"
+  url = "/projects/"
+  weight = 30
 [[menu.main]]
-identifier = "ctf"
-name = "CTF Writeups"
-url = "/ctf/"
-weight = 40
-
+  name = "CTF Writeups"
+  url = "/ctf-events/"
+  weight = 40
 [[menu.main]]
-identifier = "notes"
-name = "Notes"
-url = "/notes/"
-weight = 50
-
+  name = "Notes"
+  url = "/notes/"
+  weight = 50
 [[menu.main]]
-identifier = "resume"
-name = "Resume"
-url = "/thamle_resume.pdf"
-weight = 60
-[menu.main.params]
-newTab = true
-
-# Social links
-[[menu.social]]
-identifier = "github"
-name = "GitHub"
-url = "https://github.com/tham-le"
-[menu.social.params]
-icon = "brand-github"
-
-[[menu.social]]
-identifier = "linkedin"
-name = "LinkedIn"
-url = "https://linkedin.com/in/tham42"
-[menu.social.params]
-icon = "link"
-
-[[menu.social]]
-identifier = "email"
-name = "Email"
-url = "mailto:thamle.work@gmail.com"
-[menu.social.params]
-icon = "messages"
-
-# Taxonomies for content organization
+  name = "Resume"
+  url = "/thamle_resume.pdf"
+  weight = 60
+  
+# Taxonomies
 [taxonomies]
-category = "categories"
-tag = "tags"
-series = "series"
+  category = "categories"
+  tag = "tags"
 
-# Markup configuration
+# Markup
 [markup]
-[markup.goldmark]
-[markup.goldmark.renderer]
-unsafe = true
-[markup.highlight]
-style = "github-dark"
-lineNos = true
-codeFences = true
+  [markup.goldmark.renderer]
+    unsafe = true # Needed for mermaid/katex shortcodes
+  [markup.tableOfContents]
+    startLevel = 1
 
-# Output formats
-[outputFormats]
-[outputFormats.RSS]
-mediatype = "application/rss"
-baseName = "feed"
+# Permalinks
+[permalinks]
+  projects = "/projects/:slug/"
+  notes = "/notes/:slug/"
+  ctf-events = "/ctf-events/:slug/"
+
+[build]
+  writeStats = true
+  [build.buildStats]
+    enable = true
+  [[build.processing.js]]
+    source = "assets/ts/main.ts"
+    target = "js/main.js"

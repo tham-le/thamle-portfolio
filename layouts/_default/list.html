@@ -1,0 +1,33 @@
+{{ define "main" }}
+<div class="main-content">
+  <article>
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ with .Description }}
+        <p>{{ . }}</p>
+      {{ end }}
+    </header>
+    {{ .Content }}
+  </article>
+  <ul class="article-list">
+    {{ range .Pages.ByDate.Reverse }}
+      <li>
+        <a href="{{ .RelPermalink }}">
+          {{ .Title }}
+          {{ if .Description }}
+            <small><p>{{ .Description }}</p></small>
+          {{ end }}
+        </a>
+        <div class="article-meta">
+          {{ if not .Date.IsZero }}
+            <small>
+              <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+              &middot; {{ .ReadingTime }} min read
+            </small>
+          {{ end }}
+        </div>
+      </li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}

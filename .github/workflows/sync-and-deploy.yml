@@ -41,7 +41,12 @@ jobs:
       run: |
         chmod +x ./scripts/prepare_hugo.py
         python3 ./scripts/prepare_hugo.py
-    
+
+    - name: Optimize images
+      uses: calibreapp/image-actions@main
+      with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
       with:

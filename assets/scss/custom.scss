@@ -1,282 +1,319 @@
-.main-content-wide {
-    max-width: 1200px !important;
+.book-menu .toggle + label + ul {
+  display: none;
 }
 
-/* CSS-driven Carousel (Restored & Corrected) */
-.carousel-container-css {
-    position: relative;
-    width: 100%;
-    max-width: 900px;
-    margin: 2rem auto;
-    aspect-ratio: 16 / 9;
-    background-color: #2e2e33; /* Soft background for letterboxing */
-    border-radius: 8px;
-    overflow: hidden;
+.book-menu .toggle:checked + label + ul {
+  display: block;
 }
 
-.carousel-viewport {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Hide scrollbar */
-    width: 100%;
-    height: 100%;
+/* CTF Events Styling */
+.ctf-events {
+  margin-top: 2rem;
 }
 
-.carousel-viewport::-webkit-scrollbar {
-    display: none;
+.ctf-event {
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--body-background);
+  transition: all 0.2s ease;
 }
 
-.carousel-slide-css {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    width: 100%;
-    height: 100%;
+.ctf-event:hover {
+  border-color: var(--color-link);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* This fits the whole image without cropping */
-    display: block;
+.ctf-event h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 }
 
-.carousel-nav-css {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 0;
-    position: absolute;
-    bottom: 0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
+.ctf-event h2 a {
+  text-decoration: none;
+  color: var(--color-link);
 }
 
-.carousel-dot-css {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0,0,0,0.2);
-    transition: background-color 0.3s ease;
+.ctf-event h2 a:hover {
+  text-decoration: underline;
 }
 
-.carousel-dot-css:hover, .carousel-viewport:has(+.carousel-nav-css a:hover) {
-    background-color: #fff;
+.ctf-event p {
+  margin-bottom: 1rem;
+  color: var(--body-font-color);
 }
 
-/* --- Navigation & Caption --- */
-.carousel-caption {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
+.event-date {
+  margin-bottom: 0.5rem;
 }
 
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.7);
-    border: none;
-    color: var(--content-color);
-    padding: 0;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 10;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+.challenge-count {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  font-weight: 500;
 }
 
-.carousel-btn:hover {
-    background-color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.1);
+/* Fix header positioning and ensure proper spacing */
+.book-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  background: var(--body-background) !important;
+  border-bottom: 1px solid var(--gray-200) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
 }
 
-.carousel-prev-btn {
-    left: 1rem;
+/* Ensure body has proper top margin to account for fixed header */
+body {
+  padding-top: 60px !important;
 }
 
-.carousel-next-btn {
-    right: 1rem;
+/* Ensure main content has proper spacing */
+.main-content {
+  padding-top: 1rem !important;
+  margin-top: 0 !important;
 }
 
-.carousel-dots {
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
+/* Fix sidebar and main content layout completely */
+main.flex {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 
-.carousel-dot {
-    height: 12px;
-    width: 12px;
-    margin: 0 5px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.2);
+.book-menu {
+  position: fixed !important;
+  top: 60px !important;
+  left: 0 !important;
+  width: 280px !important;
+  height: calc(100vh - 60px) !important;
+  z-index: 100 !important;
+  overflow-y: auto !important;
+  background: var(--body-background) !important;
+  border-right: 1px solid var(--gray-200) !important;
 }
 
-.carousel-dot.active, .carousel-dot:hover {
-    background-color: #fff;
+/* Main content container - ensure proper spacing from sidebar */
+.book-page {
+  margin-left: 280px !important;
+  padding: 1rem 2rem !important;
+  min-height: calc(100vh - 60px) !important;
+  width: calc(100vw - 280px) !important;
+  max-width: calc(100vw - 280px) !important;
+  box-sizing: border-box !important;
 }
 
-.project-carousel {
-    --carousel-height: 50vh;
-    position: relative;
-    width: 100%;
-    margin-bottom: 1.5rem;
+/* Main content area inside the page */
+.main-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
-.carousel-viewport {
-    overflow: hidden;
-    width: 100%;
-    height: var(--carousel-height);
-    border-radius: var(--radius);
+.book-toc {
+  display: none !important;
 }
 
-.carousel-slides {
-    display: flex;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
+/* Responsive design - stack layout on smaller screens */
+@media (max-width: 1200px) {
+  .book-menu {
+    width: 250px !important;
+  }
+  
+  .book-page {
+    margin-left: 250px !important;
+    width: calc(100vw - 250px) !important;
+    max-width: calc(100vw - 250px) !important;
+    padding: 1rem !important;
+  }
 }
 
-.carousel-slide {
-    min-width: 100%;
-    height: 100%;
-    position: relative;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; // Use contain to show the whole image
-        object-position: center;
-        background-color: var(--card-background-color);
-    }
+@media (max-width: 768px) {
+  .book-menu {
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+    width: 280px !important;
+  }
+  
+  #menu-control:checked ~ main .book-menu {
+    transform: translateX(0) !important;
+  }
+  
+  .book-page {
+    margin-left: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 1rem !important;
+  }
 }
 
-.carousel-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: none; // Let clicks pass through to elements below
+/* CTF Event Page Styling */
+.ctf-stats {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--gray-100);
+  border-radius: 8px;
 }
 
-.carousel-btn {
-    pointer-events: all; // Make buttons clickable
-    background-color: rgba(var(--card-background-color-rgb), 0.5);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0 1rem;
-    color: var(--content-color);
-
-    &:hover {
-        background-color: rgba(var(--card-background-color-rgb), 0.8);
-    }
-    
-    svg {
-        width: 24px;
-        height: 24px;
-    }
+.stat-item {
+  text-align: center;
 }
 
-.carousel-dots {
-    position: absolute;
-    bottom: -30px; 
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    pointer-events: all;
+.stat-item strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--color-link);
 }
 
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: var(--secondary-color);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    padding: 0;
-    transition: background-color 0.3s ease;
-
-    &.active {
-        background-color: var(--primary-color);
-    }
+.stat-item span {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.section.project-list {
-    .article-link, .article-title {
-        color: var(--content-color);
-    }
+.ctf-categories {
+  margin-top: 2rem;
 }
 
-/* Grid layout for home page article list */
-.article-list {
-    display: grid;
-    gap: 2rem;
-    
-    /* Mobile: 1 column */
+.category-section {
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--body-background);
+}
+
+.category-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.category-section h3 a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.category-section h3 a:hover {
+  text-decoration: underline;
+}
+
+.category-description {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.challenge-card {
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 1rem;
+  background: var(--body-background);
+  transition: all 0.2s ease;
+}
+
+.challenge-card:hover {
+  border-color: var(--color-link);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.challenge-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.challenge-link:hover {
+  text-decoration: none;
+}
+
+.challenge-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: var(--color-link) !important;
+  font-weight: 600;
+}
+
+.challenge-link:hover h4 {
+  text-decoration: underline;
+  color: var(--color-link) !important;
+}
+
+/* Override any theme link styles for challenge cards */
+.challenge-card a,
+.challenge-card a:visited,
+.challenge-card a:link {
+  color: inherit !important;
+}
+
+.challenge-card h4 a,
+.challenge-card h4 a:visited,
+.challenge-card h4 a:link {
+  color: var(--color-link) !important;
+}
+
+.challenge-meta {
+  margin-top: 0.25rem;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.5rem;
+}
+
+.difficulty-easy {
+  background: #d4f8d4;
+  color: #2d5a2d;
+}
+
+.difficulty-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.difficulty-hard {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.difficulty-unknown {
+  background: var(--gray-200);
+  color: var(--gray-700);
+}
+
+.points {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ctf-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .challenge-grid {
     grid-template-columns: 1fr;
-    
-    /* Tablet: 2 columns */
-    @media (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    /* Desktop: 3 columns */
-    @media (min-width: 1200px) {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    article {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        
-        .article-details {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-    }
-}
-
-/* Hotfix for black text in dark mode */
-.article-content,
-.page-description,
-.main-article-content {
-    color: var(--body-text-color);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    color: var(--card-text-color-main);
+  }
 }

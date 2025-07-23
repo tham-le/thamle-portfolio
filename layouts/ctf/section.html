@@ -1,0 +1,87 @@
+{{ define "main" }}
+<div class="main-content">
+  <article>
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ with .Description }}
+        <p>{{ . }}</p>
+      {{ end }}
+    </header>
+    {{ .Content }}
+  </article>
+  
+  <!-- CTF Event Statistics -->
+  <div class="ctf-stats">
+    <div class="stat-item">
+      <strong>{{ len .RegularPagesRecursive }}</strong>
+      <span>Total Writeups</span>
+    </div>
+    <div class="stat-item">
+      <strong>{{ len .Sections }}</strong>
+      <span>Categories</span>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  {{ if .Sections }}
+    <div class="ctf-categories">
+      <h2>Challenge Categories</h2>
+      {{ range .Sections.ByTitle }}
+        {{ if .RegularPagesRecursive }}
+        <div class="category-section">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          {{ with .Description }}
+            <p class="category-description">{{ . }}</p>
+          {{ end }}
+          
+          <div class="challenge-grid">
+            {{ range .RegularPagesRecursive.ByTitle }}
+              <div class="challenge-card">
+                <a href="{{ .RelPermalink }}" class="challenge-link">
+                  <h4>{{ .Title }}</h4>
+                </a>
+                <div class="challenge-meta">
+                  {{ if .Params.difficulty }}
+                    <span class="difficulty difficulty-{{ lower .Params.difficulty }}">{{ .Params.difficulty }}</span>
+                  {{ end }}
+                  {{ if .Params.points }}
+                    <span class="points">{{ .Params.points }} pts</span>
+                  {{ end }}
+                </div>
+              </div>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  {{ end }}
+
+  <!-- All Writeups (Fallback) -->
+  {{ if not .Sections }}
+    <div class="all-writeups">
+      <h2>All Writeups</h2>
+      <ul class="article-list">
+        {{ range .RegularPagesRecursive.ByDate.Reverse }}
+          <li>
+            <a href="{{ .RelPermalink }}">
+              {{ .Title }}
+              {{ if .Description }}
+                <small><p>{{ .Description }}</p></small>
+              {{ end }}
+            </a>
+            <div class="article-meta">
+              {{ if not .Date.IsZero }}
+                <small>
+                  <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+                  &middot; {{ .ReadingTime }} min read
+                </small>
+              {{ end }}
+            </div>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+  {{ end }}
+</div>
+{{ end }}

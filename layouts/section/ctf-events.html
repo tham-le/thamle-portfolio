@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="main-content">
+  <article>
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ with .Description }}
+        <p>{{ . }}</p>
+      {{ end }}
+    </header>
+    
+    {{ .Content }}
+    
+    {{ if .Sections }}
+    <div class="ctf-events">
+      {{ range .Sections.ByDate.Reverse }}
+        <div class="ctf-event">
+          <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          {{ with .Description }}
+            <p>{{ . }}</p>
+          {{ end }}
+          {{ if .Date }}
+            <div class="event-date">
+              <small><time>{{ .Date.Format "January 2006" }}</time></small>
+            </div>
+          {{ end }}
+          {{ if .RegularPagesRecursive }}
+            <div class="challenge-count">
+              {{ len .RegularPagesRecursive }} writeup{{ if ne (len .RegularPagesRecursive) 1 }}s{{ end }}
+            </div>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+    {{ else }}
+      <p>No CTF events found.</p>
+    {{ end }}
+  </article>
+</div>
+{{ end }}

@@ -1,17 +1,19 @@
 ---
-title: "Notes"
-description: "A collection of notes on software development, security, and other technical topics."
+title: "Digital Garden"
+description: "A collection of interconnected notes, thoughts, and learning materials from my Obsidian vault"
+layout: "list"
+bookCollapseSection: true
 ---
 
-# Notes
+Welcome to my digital garden - a living collection of notes, thoughts, and learning materials that I maintain in Obsidian. This space contains:
 
-This section contains my thoughts on things I'm working on or learning. These are working notes, focused on technical details and practical insights.
+- **Technical concepts** and explanations
+- **Learning notes** from various topics  
+- **Reference materials** and documentation
+- **Interconnected thoughts** with backlinks
 
-## Topics
-- **Software Engineering**: Observations on design patterns, system architecture, and performance.
-- **Cybersecurity**: Notes from CTF challenges, security tool analysis, and general best practices.
-- **Developer Tools**: Thoughts on tools and workflows that I find effective.
+These notes are part of my continuous learning process and are organized in a way that promotes discovery and connection between ideas.
 
 ---
 
-*This section is actively being updated.* 
+*Last updated: This section is actively maintained and synchronized from my Obsidian vault.*

@@ -1,44 +1,44 @@
 {
   "featured_projects": [
     {
-      "name": "fractol",
+      "name": "ft_transcendence",
       "priority": 1,
+      "description": "Real-time multiplayer Pong game with modern web technologies"
+    },
+    {
+      "name": "fractol",
+      "priority": 2,
       "description": "Mathematical fractal visualization with multi-threading"
     },
     {
       "name": "miniRT",
-      "priority": 2,
+      "priority": 3,
       "description": "3D ray tracer rendering realistic scenes"
     },
     {
       "name": "mindful",
-      "priority": 3,
+      "priority": 4,
       "description": "AI-powered mindfulness companion with journaling"
     },
     {
       "name": "ft_irc",
-      "priority": 4,
+      "priority": 5,
       "description": "IRC server implementation in C++"
     },
     {
       "name": "inception",
-      "priority": 5,
+      "priority": 6,
       "description": "Multi-container Docker infrastructure with WordPress"
     },
     {
       "name": "Python-for-Data-Science",
-      "priority": 6,
+      "priority": 7,
       "description": "Data analysis and visualization projects"
     },
     {
       "name": "Darkly",
-      "priority": 7,
-      "description": "Web security challenge solutions"
-    },
-    {
-      "name": "transcendence",
       "priority": 8,
-      "description": "Real-time multiplayer Pong game with modern web technologies"
+      "description": "Web security challenge solutions"
     }
   ],
   "settings": {
