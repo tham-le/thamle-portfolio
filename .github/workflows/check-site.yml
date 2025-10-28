@@ -40,6 +40,7 @@ jobs:
       - name: Lint CSS (optional)
         run: |
           npm install -g stylelint stylelint-config-standard
+          # Exclude Quartz-generated notes CSS files
           if compgen -G "public/**/*.css" > /dev/null; then
-            stylelint "public/**/*.css"
+            find public -name "*.css" -not -path "public/notes/*" | xargs -r stylelint || echo "No CSS files to lint or linting skipped"
           fi

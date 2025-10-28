@@ -1,0 +1,11 @@
+# Ignore Quartz-generated notes (built separately in notes repo)
+public/notes/**
+
+# Ignore node modules
+node_modules/**
+
+# Ignore Hugo resources
+resources/**
+
+# Ignore Hugo cache
+hugo_cache/**
