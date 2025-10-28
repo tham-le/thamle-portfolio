@@ -7,6 +7,10 @@
 public/
 resources/_gen/
 
+# Quartz-built notes (deployed separately from notes repo)
+# Notes are built in the private notes repository and copied here
+public/notes/
+
 # Temporary files
 .DS_Store
 .vscode/
