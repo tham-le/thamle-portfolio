@@ -1,6 +1,6 @@
 # Portfolio Management Makefile
 
-.PHONY: help sync sync-projects sync-writeups build serve clean install
+.PHONY: help sync sync-projects sync-writeups build serve clean install deploy notes-check
 
 # Default target
 help:
@@ -13,6 +13,12 @@ help:
 	@echo "  make serve         - Start Hugo development server"
 	@echo "  make clean         - Clean build artifacts"
 	@echo "  make install       - Install dependencies"
+	@echo "  make deploy        - Build and deploy to Firebase"
+	@echo "  make notes-check   - Check if notes exist and are up to date"
+	@echo ""
+	@echo "Notes Integration:"
+	@echo "  Notes are built separately in the notes repository using Quartz."
+	@echo "  Run './deploy-to-portfolio.sh' in the notes repo to update them."
 	@echo ""
 
 # Sync all content
@@ -49,4 +55,26 @@ clean:
 # Install dependencies
 install:
 	@echo "📦 Installing dependencies..."
-	./scripts/setup.sh 
+	./scripts/setup.sh
+
+# Deploy to Firebase
+deploy: build
+	@echo "🚀 Deploying to Firebase..."
+	firebase deploy
+
+# Check if notes are present
+notes-check:
+	@echo "🔍 Checking notes status..."
+	@if [ -d "public/notes" ]; then \
+		FILE_COUNT=$$(find public/notes -type f | wc -l); \
+		echo "✓ Notes directory exists with $$FILE_COUNT files"; \
+		if [ -f "public/notes/index.html" ]; then \
+			echo "✓ Notes index.html found"; \
+		else \
+			echo "⚠️  Warning: notes/index.html not found"; \
+		fi \
+	else \
+		echo "⚠️  Notes directory not found at public/notes/"; \
+		echo "    Run './deploy-to-portfolio.sh' in your notes repository to deploy notes."; \
+	fi
+ 
