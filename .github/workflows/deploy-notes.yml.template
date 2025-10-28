@@ -1,0 +1,125 @@
+name: Deploy Notes to Portfolio
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  deploy-notes:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Notes Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper date handling
+      
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: |
+          npm ci
+          # If you haven't committed node_modules, Quartz dependencies will be installed
+          # If using npx, this will ensure npm is ready
+      
+      - name: 🏗️ Build Notes with Quartz
+        run: |
+          npx quartz build
+          echo "✓ Quartz build completed"
+          ls -la public/
+      
+      - name: 📥 Checkout Portfolio Repository
+        uses: actions/checkout@v4
+        with:
+          repository: tham-le/thamle-portfolio
+          token: ${{ secrets.PORTFOLIO_PAT }}
+          path: portfolio-repo
+          fetch-depth: 1
+      
+      - name: 🗑️ Clean Old Notes
+        run: |
+          if [ -d "portfolio-repo/public/notes" ]; then
+            echo "Removing old notes..."
+            rm -rf portfolio-repo/public/notes
+          fi
+          mkdir -p portfolio-repo/public/notes
+      
+      - name: 📋 Copy Built Notes
+        run: |
+          cp -r public/* portfolio-repo/public/notes/
+          echo "✓ Notes copied to portfolio"
+          
+          # Count files
+          FILE_COUNT=$(find portfolio-repo/public/notes -type f | wc -l)
+          echo "📊 Copied $FILE_COUNT files"
+      
+      - name: 🔍 Verify Deployment
+        run: |
+          echo "Verifying deployment structure..."
+          ls -la portfolio-repo/public/notes/
+          
+          if [ ! -f "portfolio-repo/public/notes/index.html" ]; then
+            echo "⚠️ Warning: index.html not found in notes directory"
+            exit 1
+          fi
+          
+          echo "✓ Deployment structure verified"
+      
+      - name: 📝 Commit and Push to Portfolio
+        run: |
+          cd portfolio-repo
+          
+          # Configure git
+          git config user.name "Notes Deployment Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are changes
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Changes detected, committing..."
+            git add public/notes/
+            git commit -m "🔄 Update notes from obsidian vault
+            
+            Auto-deployed from notes repository
+            Commit: ${{ github.sha }}
+            Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            
+            git push
+            echo "✓ Changes pushed to portfolio repository"
+          else
+            echo "ℹ️ No changes to commit"
+          fi
+      
+      - name: 📊 Deployment Summary
+        if: success()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Notes Successfully Deployed to Portfolio"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "📁 Repository: tham-le/thamle-portfolio"
+          echo "📍 Path: public/notes/"
+          echo "🌐 Will be live at: https://thamle.live/notes/"
+          echo ""
+          echo "Next: Portfolio repo needs to be deployed to Firebase"
+          echo "      (This happens automatically if you have Firebase CI/CD set up)"
+          echo ""
+      
+      - name: ❌ Deployment Failed
+        if: failure()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "❌ Notes Deployment Failed"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Please check the logs above for details."
+          echo "Common issues:"
+          echo "  - PORTFOLIO_PAT secret not set or invalid"
+          echo "  - Quartz build failed (check quartz.config.ts)"
+          echo "  - Portfolio repository not accessible"
+          echo ""
