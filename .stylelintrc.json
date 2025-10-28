@@ -1,0 +1,12 @@
+{
+  "extends": "stylelint-config-standard",
+  "ignoreFiles": [
+    "public/notes/**/*.css",
+    "node_modules/**/*.css",
+    "resources/**/*.css"
+  ],
+  "rules": {
+    "color-hex-length": "short",
+    "declaration-block-no-redundant-longhand-properties": null
+  }
+}
