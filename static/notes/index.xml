@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Tham Le&#039;s Notes</title>
+      <link>https://thamle.live/notes</link>
+      <description>Last 10 notes on Tham Le&#039;s Notes</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Welcome to My Notes</title>
+    <link>https://thamle.live/notes/</link>
+    <guid>https://thamle.live/notes/</guid>
+    <description><![CDATA[ Welcome to My Notes This is a collection of my learning notes, organized using Quartz. ]]></description>
+    <pubDate>Tue, 28 Oct 2025 14:01:31 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
