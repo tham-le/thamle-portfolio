@@ -1,0 +1,116 @@
+name: Sync, Build, and Deploy Portfolio
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  schedule:
+    # Daily sync at 6 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  sync-build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        token: ${{ secrets.TOKEN_GITHUB }}
+
+    - name: Setup environment
+      run: |
+        echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> .env
+        echo "GITHUB_USERNAME=tham-le" >> .env
+        echo "HUGO_ENV=production" >> .env
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq curl
+
+    - name: Sync all content
+      run: |
+        chmod +x ./scripts/sync-all.sh
+        ./scripts/sync-all.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+    # NOTE: Path fixing script no longer needed for subdomain deployment
+    # The notes will be served from notes.thamle.live root, so Quartz
+    # paths work correctly without modification
+    # - name: Fix Quartz HTML base paths
+    #   run: |
+    #     chmod +x ./scripts/fix-notes-paths.sh
+    #     ./scripts/fix-notes-paths.sh
+
+    # - name: Prepare CTF Content
+    #   run: |
+    #     chmod +x ./scripts/prepare_hugo.py
+    #     python3 ./scripts/prepare_hugo.py
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v3
+      with:
+        hugo-version: '0.129.0'
+        extended: true
+
+    - name: Test Hugo build
+      run: |
+        echo "🔍 Testing Hugo build..."
+        hugo --minify --environment production
+        echo "✅ Hugo build successful!"
+
+    - name: Verify build output
+      run: |
+        echo "🔍 Verifying build output..."
+        if [ ! -d "public" ]; then
+          echo "❌ Public directory not created"
+          exit 1
+        fi
+
+        if [ ! -f "public/index.html" ]; then
+          echo "❌ Index.html not generated"
+          exit 1
+        fi
+
+        echo "✅ Build verification successful!"
+        echo "📊 Build statistics:"
+        echo "- Total files: $(find public -type f | wc -l)"
+        echo "- HTML files: $(find public -name "*.html" | wc -l)"
+        echo "- CSS files: $(find public -name "*.css" | wc -l)"
+        echo "- JS files: $(find public -name "*.js" | wc -l)"
+
+    - name: Verify notes content
+      run: |
+        echo "🔍 Verifying notes content..."
+        if [ ! -d "static/notes" ]; then
+          echo "❌ Notes directory not found"
+          exit 1
+        fi
+
+        NOTES_COUNT=$(find static/notes -name "*.html" | wc -l)
+        echo "✅ Found $NOTES_COUNT HTML files in notes directory"
+
+        if [ $NOTES_COUNT -lt 50 ]; then
+          echo "⚠️  Warning: Expected more HTML files in notes"
+        fi
+
+    - name: Deploy Portfolio to Firebase
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
+        projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+        channelId: live
+        target: thamle-portfolio
+
+    - name: Deploy Notes to Subdomain
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
+        projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+        channelId: live
+        target: notes-thamle
