@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Kernel-Streaming-Filters</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Kernel-Streaming-Filters"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Kernel-Streaming-Filters"/><meta name="twitter:description" content="Why This Architecture Wins Modularity: Each filter does one job well Easy to test components in isolation Swap out filters without touching the rest of the graph Reusability: One Sample Rate converter works for all devices Microsoft-provided filters serve everyone Your hardware filter works with any..."/><meta property="og:description" content="Why This Architecture Wins Modularity: Each filter does one job well Easy to test components in isolation Swap out filters without touching the rest of the graph Reusability: One Sample Rate converter works for all devices Microsoft-provided filters serve everyone Your hardware filter works with any..."/><meta property="og:image:alt" content="Why This Architecture Wins Modularity: Each filter does one job well Easy to test components in isolation Swap out filters without touching the rest of the graph Reusability: One Sample Rate converter works for all devices Microsoft-provided filters serve everyone Your hardware filter works with any..."/><meta property="og:image" content="https://thamle.live/notes/static/og-image.png"/><meta property="og:image:url" content="https://thamle.live/notes/static/og-image.png"/><meta name="twitter:image" content="https://thamle.live/notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="thamle.live/notes"/><meta property="og:url" content="https://thamle.live/notes/Architecture/Windows-Audio-Drivers/Kernel-Streaming-Filters"/><meta property="twitter:url" content="https://thamle.live/notes/Architecture/Windows-Audio-Drivers/Kernel-Streaming-Filters"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Why This Architecture Wins Modularity: Each filter does one job well Easy to test components in isolation Swap out filters without touching the rest of the graph Reusability: One Sample Rate converter works for all devices Microsoft-provided filters serve everyone Your hardware filter works with any..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://thamle.live/notes/index.xml"/></head><body data-slug="Architecture/Windows-Audio-Drivers/Kernel-Streaming-Filters"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-7"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-7" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Architecture/Windows-Audio-Drivers/">Windows Audio Drivers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Kernel Streaming Filters</a></div></nav><h1 class="article-title">Kernel-Streaming-Filters</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-06T12:50:48.464Z">Nov 06, 2025</time><span>14 min read</span></p></div></div><article class="popover-hint"><h2 id="why-this-architecture-wins">Why This Architecture Wins<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-this-architecture-wins" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Modularity:</strong></p>
+<ul>
+<li>Each filter does one job well</li>
+<li>Easy to test components in isolation</li>
+<li>Swap out filters without touching the rest of the graph</li>
+</ul>
+<p><strong>Reusability:</strong></p>
+<ul>
+<li>One <a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a> converter works for all devices</li>
+<li>Microsoft-provided filters serve everyone</li>
+<li>Your hardware filter works with any application</li>
+</ul>
+<p><strong>Flexibility:</strong></p>
+<ul>
+<li><a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> builds optimal graphs for each scenario</li>
+<li>New filters can be added without breaking existing code</li>
+<li>Software and hardware filters mix seamlessly</li>
+</ul>
+<p><strong>Performance:</strong></p>
+<ul>
+<li>Filters run in <a href="../../Kernel-Mode" class="internal alias" data-slug="Kernel-Mode">Kernel Mode</a> for low latency</li>
+<li><a href="../../DMA" class="internal" data-slug="DMA">DMA</a> transfers happen without <a href="../../CPU" class="internal" data-slug="CPU">CPU</a> involvement</li>
+<li>Only instantiate filters you actually need</li>
+</ul>
+<h2 id="real-world-following-a-sound">Real World: Following a Sound<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-following-a-sound" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Let’s trace audio from Spotify to your speakers with real filter names:</p>
+<ol>
+<li><strong>Spotify</strong> → Outputs <a href="../../PCM" class="internal" data-slug="PCM">PCM</a> audio via <a href="../../WASAPI" class="internal" data-slug="WASAPI">WASAPI</a></li>
+<li><strong><a href="../../Audio-Engine" class="internal alias" data-slug="Audio-Engine">Audio Engine</a></strong> (Audiodg.exe) → Mixes with other apps</li>
+<li><strong><a href="../../KSEndpoint" class="internal" data-slug="KSEndpoint">KSEndpoint</a></strong> → Crosses into <a href="../../Kernel-Mode" class="internal alias" data-slug="Kernel-Mode">Kernel Mode</a></li>
+<li><strong><a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a></strong> → Builds a <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a></li>
+<li><strong>Format Converter Filter</strong> → Converts to hardware format if needed</li>
+<li><strong>Your WaveRT <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a></strong> → Your <a href="../../Architecture/Windows-Audio-Drivers/Port-Miniport-Driver" class="internal alias" data-slug="Architecture/Windows-Audio-Drivers/Port-Miniport-Driver">Port-Miniport Driver</a> pair</li>
+<li><strong>Your Miniport</strong> → Programs <a href="../../DMA" class="internal" data-slug="DMA">DMA</a> controller</li>
+<li><strong>Your Hardware</strong> → <a href="../../DAC" class="internal" data-slug="DAC">DAC</a> converts to analog</li>
+<li><strong>Your Speakers</strong> → Make sound waves</li>
+</ol>
+<p>The beauty: Steps 1 through 6 are the same for every audio device. Only steps 7 through 9 are hardware-specific, and that’s all you write.</p>
+<h2 id="debugging-filter-graphs">Debugging Filter Graphs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#debugging-filter-graphs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Windows provides tools to inspect <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a>:</p>
+<p><strong><a href="../../GraphEdit" class="internal" data-slug="GraphEdit">GraphEdit</a></strong> (older):</p>
+<ul>
+<li>Visual tool for building and testing graphs</li>
+<li>Shows all available filters</li>
+<li>Lets you manually connect filters</li>
+</ul>
+<p><strong><a href="../../KsStudio" class="internal" data-slug="KsStudio">KsStudio</a></strong> (newer):</p>
+<ul>
+<li>Specialized for <a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> filters</li>
+<li>Shows filter topology (pins, nodes, connections)</li>
+<li>Can inspect properties in real time</li>
+<li>Essential for debugging audio drivers</li>
+</ul>
+<p>These tools let you see exactly what <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a> Windows builds for your device.</p>
+<h2 id="common-filter-types-youll-encounter">Common Filter Types You’ll Encounter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-filter-types-youll-encounter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>System-Provided Filters:</strong></p>
+<ul>
+<li><strong><a href="../../KMixer" class="internal" data-slug="KMixer">KMixer</a></strong>: Kernel mixer (pre-Vista)</li>
+<li><strong><a href="../../Audio-Engine" class="internal alias" data-slug="Audio-Engine">Audio Engine</a></strong>: User-mode mixer (Vista+)</li>
+<li><strong><a href="../../SWMidi" class="internal" data-slug="SWMidi">SWMidi</a></strong>: Software <a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a> synthesizer</li>
+<li><strong><a href="../../DMusic" class="internal" data-slug="DMusic">DMusic</a></strong>: <a href="../../DirectMusic" class="internal" data-slug="DirectMusic">DirectMusic</a> software synth</li>
+<li><strong><a href="../../Redbook" class="internal" data-slug="Redbook">Redbook</a></strong>: CD audio playback</li>
+</ul>
+<p><strong>Your Hardware Filters:</strong></p>
+<ul>
+<li><strong>WaveRT</strong>: Wave playback/capture</li>
+<li><strong>Topology</strong>: Mixer controls and routing</li>
+<li><strong><a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a></strong>: Hardware <a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a> interface</li>
+<li><strong><a href="../../DMus" class="internal" data-slug="DMus">DMus</a></strong>: Advanced <a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a> with <a href="../../DLS" class="internal" data-slug="DLS">DLS</a></li>
+</ul>
+<p><strong>Format Converters:</strong></p>
+<ul>
+<li><a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a> converters</li>
+<li><a href="../../Bit-Depth" class="internal alias" data-slug="Bit-Depth">Bit Depth</a> converters</li>
+<li>Channel mixers (stereo to 5.1, etc.)</li>
+</ul>
+<h2 id="advanced-pin-categories-and-data-ranges">Advanced: Pin Categories and Data Ranges<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#advanced-pin-categories-and-data-ranges" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When you define a <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> in your filter, you specify what kinds of data it accepts using <a href="../../Data-Range" class="internal alias" data-slug="Data-Range">data ranges</a>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> KSDATARANGE_AUDIO PinDataRanges[] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .DataRange </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            .FormatSize </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> sizeof</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(KSDATARANGE_AUDIO),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            .MajorFormat </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> KSDATAFORMAT_TYPE_AUDIO,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            .SubFormat </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> KSDATAFORMAT_SUBTYPE_PCM,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            .Specifier </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> KSDATAFORMAT_SPECIFIER_WAVEFORMATEX</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MaximumChannels </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">              // Stereo</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MinimumBitsPerSample </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 16</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MaximumBitsPerSample </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 24</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MinimumSampleFrequency </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 44100</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">   // 44.1 kHz</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MaximumSampleFrequency </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 192000</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">   // 192 kHz</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">};</span></span></code></pre></figure>
+<p>This tells <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> what formats your <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> supports. <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> uses this to determine if filters are compatible and where format converters are needed.</p>
+<h2 id="the-topology-reveal">The Topology Reveal<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-topology-reveal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s the mind-bending part: your audio card’s mixer controls (volume, mute, bass, etc.) are exposed as a separate <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> called a Topology filter.</p>
+<p>This Topology filter doesn’t process audio data. Instead, it exposes <a href="../../Node" class="internal alias" data-slug="Node">nodes</a> that represent hardware controls. Applications use <a href="../../KSPROPERTY" class="internal" data-slug="KSPROPERTY">KSPROPERTY</a> calls to read and adjust these controls.</p>
+<p>So your audio card might be three filters:</p>
+<ol>
+<li><strong>WaveRT Filter</strong>: Handles audio streaming</li>
+<li><strong>Topology Filter</strong>: Exposes volume/mute/etc controls</li>
+<li><strong><a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a> Filter</strong>: Handles <a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a> I/O (if your card has <a href="../../MIDI" class="internal" data-slug="MIDI">MIDI</a>)</li>
+</ol>
+<p>Windows connects them logically to present a unified audio device to applications.</p>
+<h2 id="what-about-video-and-other-streaming">What About Video and Other Streaming?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-about-video-and-other-streaming" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> isn’t just for audio. The same architecture handles:</p>
+<ul>
+<li><strong>Video capture</strong> from webcams</li>
+<li><strong>Video playback</strong> to displays</li>
+<li><strong>TV tuner</strong> input</li>
+<li><strong>Any streaming media</strong></li>
+</ul>
+<p>The filter graph concept is universal. A video capture application builds a <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a> connecting camera filters, compression filters, and file writer filters. Same principles, different data.</p>
+<p>That’s why <a href="../../AVStream" class="internal" data-slug="AVStream">AVStream</a> exists alongside <a href="../../PortCls" class="internal" data-slug="PortCls">PortCls</a>. <a href="../../AVStream" class="internal" data-slug="AVStream">AVStream</a> is the general-purpose streaming framework. <a href="../../PortCls" class="internal" data-slug="PortCls">PortCls</a> is the audio-optimized specialization.</p>
+<h2 id="performance-considerations">Performance Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Why <a href="../../Kernel-Mode" class="internal alias" data-slug="Kernel-Mode">Kernel Mode</a>?</strong></p>
+<ul>
+<li>Low latency: No user-kernel boundary crossing for each audio buffer</li>
+<li>Direct <a href="../../DMA" class="internal" data-slug="DMA">DMA</a> access: Hardware writes directly to memory</li>
+<li>High priority scheduling: Audio can’t wait for lower-priority tasks</li>
+</ul>
+<p><strong>The Latency Chain:</strong></p>
+<ul>
+<li>Application <a href="../../Buffer" class="internal" data-slug="Buffer">Buffer</a> (user mode)</li>
+<li><a href="../../Audio-Engine" class="internal alias" data-slug="Audio-Engine">Audio Engine</a> processing</li>
+<li>Kernel boundary crossing</li>
+<li><a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a> processing</li>
+<li>Your driver’s <a href="../../DMA" class="internal" data-slug="DMA">DMA</a> buffer</li>
+<li>Hardware <a href="../../FIFO" class="internal" data-slug="FIFO">FIFO</a></li>
+<li><a href="../../DAC" class="internal" data-slug="DAC">DAC</a> conversion</li>
+<li>Speaker response time</li>
+</ul>
+<p>Each stage adds latency. Good driver design minimizes the driver’s contribution (typically 1 to 10 milliseconds).</p>
+<h2 id="the-wasapi-exclusive-mode-shortcut">The WASAPI Exclusive Mode Shortcut<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-wasapi-exclusive-mode-shortcut" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In <a href="../../WASAPI" class="internal" data-slug="WASAPI">WASAPI</a> exclusive mode, applications can bypass most of the <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a>:</p>
+<pre><code>Application
+    ↓
+[[WASAPI]] Exclusive Mode
+    ↓
+Your [[KS Filter]] (direct connection)
+    ↓
+Hardware
+</code></pre>
+<p>No <a href="../../Audio-Engine" class="internal alias" data-slug="Audio-Engine">Audio Engine</a>, no mixing, no format conversion. The application talks almost directly to your driver. This is for “pro audio” applications that need ultra-low latency and bit-perfect output.</p>
+<p>Your driver must support this by accepting the application’s native format directly.</p>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>You now understand the three key concepts:</p>
+<ol>
+<li><strong><a href="../../Architecture/Windows-Audio-Drivers/Port-Miniport-Driver" class="internal alias" data-slug="Architecture/Windows-Audio-Drivers/Port-Miniport-Driver">Port-Miniport Driver</a></strong>: How Microsoft and vendors split the work</li>
+<li><strong><a href="../../PortCls" class="internal" data-slug="PortCls">PortCls</a></strong>: The framework that makes driver development practical</li>
+<li><strong><a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a></strong>: The building blocks that form the audio pipeline</li>
+</ol>
+<p>These concepts form the foundation of Windows audio driver development. Your miniport driver creates a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> that plugs into Windows’ modular audio architecture.</p>
+<p>The next logical topics to explore:</p>
+<ul>
+<li><strong><a href="../../DMA" class="internal" data-slug="DMA">DMA</a> and Audio Buffers</strong>: How audio data actually moves through your driver</li>
+<li><strong><a href="../../IRQ" class="internal alias" data-slug="IRQ">Interrupt Handling</a></strong>: How your hardware tells the driver “buffer ready”</li>
+<li><strong><a href="../../WaveRT" class="internal" data-slug="WaveRT">WaveRT</a> Specifics</strong>: The modern approach to wave streaming</li>
+<li><strong><a href="../../KSPROPERTY" class="internal" data-slug="KSPROPERTY">KSPROPERTY</a></strong>: How applications control your hardware</li>
+<li><strong><a href="../../Power-Management" class="internal alias" data-slug="Power-Management">Power Management</a></strong>: Keeping audio working through sleep/wake</li>
+</ul>
+<p>Each of these topics builds on the foundation we’ve established here.</p>
+<h2 id="the-big-picture-takeaway">The Big Picture Takeaway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture-takeaway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> filters are Microsoft’s answer to “how do we make audio extensible, modular, and performant?”</p>
+<p>Instead of monolithic drivers doing everything, you have composable filters that each do one thing well. <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> assembles them into <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a> tailored to each scenario. Your driver contributes one or more filters to this ecosystem.</p>
+<p>The architecture is elegant: complex enough to handle any audio scenario, simple enough that writing a basic driver isn’t overwhelming. You focus on “here’s my hardware registers,” and Microsoft handles “here’s how to integrate with Windows.”</p>
+<h2 id="practical-advice-for-driver-writers">Practical Advice for Driver Writers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-advice-for-driver-writers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When designing your filter:</p>
+<p><strong>Keep It Simple:</strong></p>
+<ul>
+<li>One filter for wave playback/capture</li>
+<li>One filter for mixer topology</li>
+<li>Don’t try to be clever with fancy internal routing</li>
+</ul>
+<p><strong>Follow Conventions:</strong></p>
+<ul>
+<li>Use standard <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> categories</li>
+<li>Implement expected <a href="../../KSPROPERTY" class="internal alias" data-slug="KSPROPERTY">properties</a></li>
+<li>Match the patterns of existing drivers</li>
+</ul>
+<p><strong>Test With Real Applications:</strong></p>
+<ul>
+<li>Not just test apps, but Spotify, Discord, games</li>
+<li>See what <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a> <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> actually builds</li>
+<li>Use <a href="../../KsStudio" class="internal" data-slug="KsStudio">KsStudio</a> to inspect the results</li>
+</ul>
+<p><strong>Start With WaveRT:</strong></p>
+<ul>
+<li>It’s the modern standard</li>
+<li>Simpler than WaveCyclic or WavePCI</li>
+<li>Best documentation and examples</li>
+</ul>
+<h2 id="sources--verification">Sources &amp; Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources--verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>I verified technical details using:</p>
+<ul>
+<li>Microsoft Learn: Introduction to <a href="../../WDM" class="internal" data-slug="WDM">WDM</a> Audio Drivers</li>
+<li>Microsoft Learn: <a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> documentation</li>
+<li>Wikipedia: Windows legacy audio components (for <a href="../../KMixer" class="internal" data-slug="KMixer">KMixer</a> and historical context)</li>
+</ul>
+<p>To double-check this article:</p>
+<ul>
+<li>Search “Windows <a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> architecture”</li>
+<li>Search “<a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a> builder Windows audio”</li>
+<li>Search “<a href="../../KsStudio" class="internal" data-slug="KsStudio">KsStudio</a> utility Windows driver kit”</li>
+<li>Search “<a href="../../KSPROPERTY" class="internal" data-slug="KSPROPERTY">KSPROPERTY</a> <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> <a href="../../Node" class="internal" data-slug="Node">Node</a> topology Windows audio”---
+title: “WTF is a KS Filter?”
+tags: [windows, drivers, audio, kernel-streaming]
+aliases: [kernel streaming filter, KS filter graph, kernel streaming]
+date: 2025-10-09</li>
+</ul>
+<hr/>
+<h1 id="wtf-is-a-ks-filter">WTF is a KS Filter?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-a-ks-filter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>Think plumbing for audio streams, but in the kernel</em></p>
+<h2 id="the-water-pipe-analogy">The Water Pipe Analogy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-water-pipe-analogy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Imagine your house’s plumbing. Water flows from the city supply through various pipes, valves, and filters. Each component does one job: the water heater heats it, the filter cleans it, the pressure regulator controls flow. Connect them together in different ways, and you get hot water at your tap, cold water at your garden hose, or filtered water at your fridge.</p>
+<p>A <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> (Kernel Streaming filter) is the same idea, but for audio data. Each filter is a self-contained processing unit that does one thing: decode audio, adjust volume, mix streams, or send data to hardware. Connect filters together, and you get a complete audio pipeline from your application to your speakers.</p>
+<p>The genius is that Windows can mix and match these filters in different combinations to handle any audio scenario.</p>
+<h2 id="the-problem-audio-isnt-simple">The Problem: Audio Isn’t Simple<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-problem-audio-isnt-simple" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Getting audio from an application to your speakers involves a lot of steps:</p>
+<ul>
+<li>Decoding compressed audio (<a href="../../MP3" class="internal" data-slug="MP3">MP3</a>, <a href="../../AAC" class="internal" data-slug="AAC">AAC</a>, etc.)</li>
+<li><a href="../../Resampling" class="internal" data-slug="Resampling">Resampling</a> to match hardware sample rates</li>
+<li>Mixing multiple applications’ audio together</li>
+<li>Adjusting volume and applying effects</li>
+<li>Converting to the hardware’s native format</li>
+<li>Sending data to the <a href="../../DMA" class="internal" data-slug="DMA">DMA</a> controller</li>
+</ul>
+<p>You could write one monolithic driver to handle all of this. But that’s a nightmare to maintain, test, and extend. What if you want to add a new audio effect? Rewrite the whole thing?</p>
+<p><a href="../../Kernel-Streaming" class="internal alias" data-slug="Kernel-Streaming">Kernel Streaming</a> filters solve this by breaking the audio processing pipeline into modular, composable components.</p>
+<h2 id="what-is-a-ks-filter">What is a KS Filter?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-a-ks-filter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>A <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> is a <a href="../../Kernel-Mode" class="internal alias" data-slug="Kernel-Mode">Kernel Mode</a> driver object that encapsulates some number of related stream-processing functions. Conceptually, a stream undergoes processing as it flows along a data path containing some number of processing nodes. A set of related nodes is grouped together to form a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a>.</p>
+<p>Think of each filter as a black box with:</p>
+<p><strong><a href="../../Pin" class="internal alias" data-slug="Pin">Pins</a>:</strong> Connection points where audio streams enter and exit</p>
+<ul>
+<li>Input pins (<a href="../../Sink-Pin" class="internal alias" data-slug="Sink-Pin">sink pins</a>) receive data</li>
+<li>Output pins (<a href="../../Source-Pin" class="internal alias" data-slug="Source-Pin">source pins</a>) send data</li>
+<li>Pins have data format requirements (<a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a>, <a href="../../Bit-Depth" class="internal alias" data-slug="Bit-Depth">Bit Depth</a>, channels)</li>
+</ul>
+<p><strong><a href="../../Node" class="internal alias" data-slug="Node">Nodes</a>:</strong> Processing elements inside the filter</p>
+<ul>
+<li>Volume control nodes</li>
+<li><a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a> conversion nodes</li>
+<li>Channel mixer nodes</li>
+<li>Effect nodes</li>
+</ul>
+<p><strong>Connections:</strong> Internal routing between nodes and pins</p>
+<p>The functionality can be implemented in software or in hardware. A filter might represent a physical audio device or a pure software component.</p>
+<h2 id="the-filter-graph-connecting-filters-together">The Filter Graph: Connecting Filters Together<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-filter-graph-connecting-filters-together" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>More complex functions can be constructed in a modular way by cascading several filters together to form a <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a>.</p>
+<p>Picture this: you’re playing Spotify while on a Discord call. Here’s a simplified <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a>:</p>
+<pre><code>[Spotify App]      [Discord App]
+      ↓                  ↓
+[Decode Filter]    [Decode Filter]
+      ↓                  ↓
+      └─────→ [Mixer Filter] ←─────┘
+                     ↓
+              [Volume Filter]
+                     ↓
+              [Format Converter]
+                     ↓
+         [Your Audio Device Filter]
+                     ↓
+              [Your Speakers]
+</code></pre>
+<p>Each arrow represents a <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> to <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> connection. The output <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> of one filter connects to the input <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> of the next. Data flows downstream through the graph.</p>
+<p>The Windows audio system builds these graphs automatically based on what’s available and what’s needed. You don’t manually wire things up (usually).</p>
+<h2 id="how-filters-connect-pins-and-data-formats">How Filters Connect: Pins and Data Formats<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-filters-connect-pins-and-data-formats" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>For two filters to connect, their <a href="../../Pin" class="internal alias" data-slug="Pin">pins</a> must agree on a data format.</p>
+<p>The output <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> of the upstream filter is connected to the input <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> of the downstream filter. The data stream from the output <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> must have a data format that the input <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> can accept.</p>
+<p>Let’s say you have:</p>
+<ul>
+<li><strong>Filter A output pin:</strong> Can produce 48 kHz, 16-bit stereo</li>
+<li><strong>Filter B input pin:</strong> Accepts 48 kHz, 16-bit stereo</li>
+</ul>
+<p>Great, they connect directly.</p>
+<p>But what if:</p>
+<ul>
+<li><strong>Filter A output pin:</strong> Produces 44.1 kHz, 16-bit stereo</li>
+<li><strong>Filter B input pin:</strong> Only accepts 48 kHz, 16-bit stereo</li>
+</ul>
+<p>No direct connection. Windows will insert a <a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a> converter filter between them to bridge the gap. This is the magic of <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a>: the system automatically inserts the right filters to make everything work.</p>
+<p><a href="../../Buffer" class="internal alias" data-slug="Buffer">Data buffering</a> is typically required to smooth out momentary mismatches in the rates at which an output <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> produces data and an input <a href="../../Pin" class="internal" data-slug="Pin">Pin</a> consumes it.</p>
+<h2 id="port-miniport-pairs-are-ks-filters">Port-Miniport Pairs ARE KS Filters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#port-miniport-pairs-are-ks-filters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s where it all connects. Remember <a href="../../Architecture/Windows-Audio-Drivers/Port-Miniport-Driver" class="internal alias" data-slug="Architecture/Windows-Audio-Drivers/Port-Miniport-Driver">Port-Miniport Driver</a>s from earlier? Each <a href="../../Architecture/Windows-Audio-Drivers/Port-Miniport-Driver" class="internal alias" data-slug="Architecture/Windows-Audio-Drivers/Port-Miniport-Driver">Port-Miniport Driver</a> pair forms a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a>.</p>
+<p>When you create a WaveRT miniport driver and bind it to a WaveRT port driver from <a href="../../PortCls" class="internal" data-slug="PortCls">PortCls</a>, you’re creating a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a>. That filter has:</p>
+<ul>
+<li><strong>Input <a href="../../Pin" class="internal alias" data-slug="Pin">pins</a>:</strong> Where audio data enters (for playback devices)</li>
+<li><strong>Output <a href="../../Pin" class="internal alias" data-slug="Pin">pins</a>:</strong> Where audio data exits (for capture devices)</li>
+<li><strong><a href="../../Node" class="internal alias" data-slug="Node">Nodes</a>:</strong> Volume controls, mute switches, format converters</li>
+<li><strong>Internal connections:</strong> Routing between <a href="../../Node" class="internal alias" data-slug="Node">nodes</a> and <a href="../../Pin" class="internal alias" data-slug="Pin">pins</a></li>
+</ul>
+<p>A typical audio adapter might contain three miniport drivers: WaveRT, DMusUART, and Topology. Each of these three subdevice drivers takes the form of a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a>. The three filters together expose the complete functionality of the audio adapter.</p>
+<p>So when you write a miniport driver, you’re actually defining the structure of a <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a>. The port driver handles the generic <a href="../../KS-Filter" class="internal alias" data-slug="KS-Filter">KS Filter</a> mechanics, while your miniport provides the hardware-specific behavior.</p>
+<h2 id="the-two-kinds-of-filters">The Two Kinds of Filters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-two-kinds-of-filters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Hardware Filters:</strong></p>
+<ul>
+<li>Represent actual audio hardware</li>
+<li>Your audio card’s playback engine</li>
+<li>Your microphone’s capture interface</li>
+<li>Usually at the endpoints of a <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">Filter Graph</a></li>
+</ul>
+<p><strong>Software Filters:</strong></p>
+<ul>
+<li>Pure software processing</li>
+<li><a href="../../Sample-Rate" class="internal alias" data-slug="Sample-Rate">Sample Rate</a> converters</li>
+<li>Audio effects</li>
+<li>Format converters</li>
+<li>Can be inserted anywhere in the graph</li>
+</ul>
+<p>Windows mixes both kinds transparently. Your application doesn’t care if volume control happens in software or hardware.</p>
+<h2 id="filter-factories-the-template-pattern">Filter Factories: The Template Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#filter-factories-the-template-pattern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>An <a href="../../Adapter-Driver" class="internal alias" data-slug="Adapter-Driver">Adapter Driver</a> exposes a collection of <a href="../../Filter-Factory" class="internal alias" data-slug="Filter-Factory">filter factories</a> to the audio system. Each <a href="../../Filter-Factory" class="internal alias" data-slug="Filter-Factory">Filter Factory</a> is capable of instantiating filters of a particular type.</p>
+<p>Think of a <a href="../../Filter-Factory" class="internal alias" data-slug="Filter-Factory">Filter Factory</a> as a template. “I know how to create WaveRT playback filters.” When Windows needs one, it asks the factory to instantiate it.</p>
+<p>If your audio card has multiple identical outputs (like a professional audio interface with 8 stereo outputs), one <a href="../../Filter-Factory" class="internal alias" data-slug="Filter-Factory">Filter Factory</a> can create multiple filter instances, one for each hardware channel.</p>
+<h2 id="sysaudio-the-graph-builder">SysAudio: The Graph Builder<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysaudio-the-graph-builder" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>How do these <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a> get built? Meet the <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> system driver.</p>
+<p>The <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> system driver builds the <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a> that render and capture audio content. When an application wants to play audio, <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a>:</p>
+<ol>
+<li>Examines what filters are available</li>
+<li>Determines what format conversions are needed</li>
+<li>Figures out the optimal path from source to destination</li>
+<li>Instantiates the necessary filters</li>
+<li>Connects them together</li>
+<li>Starts the audio streaming</li>
+</ol>
+<p>The <a href="../../SysAudio" class="internal" data-slug="SysAudio">SysAudio</a> driver represents audio <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a> as virtual audio devices and registers each virtual audio device as an instance of a device interface. You see these as your “playback devices” in Windows settings, but behind the scenes, they’re actually <a href="../../Filter-Graph" class="internal alias" data-slug="Filter-Graph">filter graphs</a>.</p>
+<h2 id="the-stack-how-everything-fits-together">The Stack: How Everything Fits Together<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-stack-how-everything-fits-together" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Let’s see the complete audio stack from top to bottom:</p>
+<pre><code>┌─────────────────────────────┐
+│     Your Application        │
+│   (Spotify, Discord, etc.)  │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│   User-Mode Audio [[API|APIs]]    │
+│  ([[WASAPI]], [[DirectSound]], etc) │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│    [[Audio Engine]] (Vista+)    │
+│         or [[KMixer]]           │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│       [[SysAudio]] Driver       │
+│    (Builds [[Filter Graph|Filter Graphs]])   │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│    [[KS Filter]] Graph          │
+│  ┌────────┐    ┌────────┐  │
+│  │Filter 1│───→│Filter 2│  │
+│  └────────┘    └────────┘  │
+│       ↓            ↓        │
+│  ┌────────┐    ┌────────┐  │
+│  │Filter 3│───→│Filter 4│  │
+│  └────────┘    └────────┘  │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│   Your [[Port-Miniport Driver]] Filter │
+│  (Created by your driver)   │
+└─────────────┬───────────────┘
+              ↓
+┌─────────────────────────────┐
+│      Audio Hardware         │
+│   (Your sound card/chip)    │
+└─────────────────────────────┘
+</code></pre>
+<p>Your audio driver plugs into this ecosystem as one filter in a potentially long chain.</p>
+<h2 id="ks-vs-filter-drivers-dont-confuse-them">KS vs Filter Drivers: Don’t Confuse Them<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ks-vs-filter-drivers-dont-confuse-them" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s a trap: Windows has something called “filter drivers” that are completely unrelated to KS filters.</p>
+<p><strong>KS Filter:</strong> A stream processing component in the kernel streaming architecture (what we’ve been discussing)</p>
+<p><strong>Filter Driver:</strong> A WDM driver that sits in a driver stack and can intercept and modify I/O request packets</p>
+<p>These are different concepts that unfortunately share the word “filter.” A filter driver resides in a WDM driver stack and can intercept and modify the I/O request packets that propagate through the stack.</p>
+<p>When reading Windows driver documentation, context matters. If it’s about audio or video streaming, “filter” usually means KS filter. If it’s about driver stacks and IRPs, it means filter driver.</p>
+<h2 id="building-your-own-filter-the-miniport-approach">Building Your Own Filter: The Miniport Approach<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#building-your-own-filter-the-miniport-approach" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When you write a miniport driver for PortCls, you’re defining a KS filter. Here’s what you control:</p>
+<p><strong>Pin Descriptors:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PCPIN_DESCRIPTOR MiniportPins[] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Pin 0: Playback stream</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MaxGlobalInstanceCount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .MaxFilterInstanceCount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .DataFlow </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> KSPIN_DATAFLOW_IN,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Data flows INTO the filter</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .DataRangesCount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> SIZEOF_ARRAY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(PinDataRanges),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .DataRanges </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PinDataRanges</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // More pins...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">};</span></span></code></pre></figure>
+<p><strong>Node Descriptors:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PCNODE_DESCRIPTOR MiniportNodes[] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Node 0: Volume control</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .AutomationTable </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">VolumeNodeAutomation,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .Type </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">KSNODETYPE_VOLUME,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">KSAUDFNAME_VOLUME_CONTROL</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // More nodes...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">};</span></span></code></pre></figure>
+<p><strong>Connection Descriptors:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PCCONNECTION_DESCRIPTOR MiniportConnections[] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Connect pin 0 to volume node</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .FromNode </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PCFILTER_NODE,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .FromPin </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .ToNode </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Volume node</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        .ToPin </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // More connections...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">};</span></span></code></pre></figure>
+<p>These descriptors define your filter’s topology: what pins it has, what nodes it contains, and how they’re wired together. The port driver uses this information to expose your filter to the Windows audio system.</p>
+<h2 id="why-this-architecture-wins-1">Why This Architecture Wins<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-this-architecture-wins-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Modularity:</strong></p>
+<ul>
+<li>Each filter does</li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-2" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-1"><a href="#why-this-architecture-wins" data-for="why-this-architecture-wins">Why This Architecture Wins</a></li><li class="depth-1"><a href="#real-world-following-a-sound" data-for="real-world-following-a-sound">Real World: Following a Sound</a></li><li class="depth-1"><a href="#debugging-filter-graphs" data-for="debugging-filter-graphs">Debugging Filter Graphs</a></li><li class="depth-1"><a href="#common-filter-types-youll-encounter" data-for="common-filter-types-youll-encounter">Common Filter Types You’ll Encounter</a></li><li class="depth-1"><a href="#advanced-pin-categories-and-data-ranges" data-for="advanced-pin-categories-and-data-ranges">Advanced: Pin Categories and Data Ranges</a></li><li class="depth-1"><a href="#the-topology-reveal" data-for="the-topology-reveal">The Topology Reveal</a></li><li class="depth-1"><a href="#what-about-video-and-other-streaming" data-for="what-about-video-and-other-streaming">What About Video and Other Streaming?</a></li><li class="depth-1"><a href="#performance-considerations" data-for="performance-considerations">Performance Considerations</a></li><li class="depth-1"><a href="#the-wasapi-exclusive-mode-shortcut" data-for="the-wasapi-exclusive-mode-shortcut">The WASAPI Exclusive Mode Shortcut</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#the-big-picture-takeaway" data-for="the-big-picture-takeaway">The Big Picture Takeaway</a></li><li class="depth-1"><a href="#practical-advice-for-driver-writers" data-for="practical-advice-for-driver-writers">Practical Advice for Driver Writers</a></li><li class="depth-1"><a href="#sources--verification" data-for="sources--verification">Sources &amp; Verification</a></li><li class="depth-0"><a href="#wtf-is-a-ks-filter" data-for="wtf-is-a-ks-filter">WTF is a KS Filter?</a></li><li class="depth-1"><a href="#the-water-pipe-analogy" data-for="the-water-pipe-analogy">The Water Pipe Analogy</a></li><li class="depth-1"><a href="#the-problem-audio-isnt-simple" data-for="the-problem-audio-isnt-simple">The Problem: Audio Isn’t Simple</a></li><li class="depth-1"><a href="#what-is-a-ks-filter" data-for="what-is-a-ks-filter">What is a KS Filter?</a></li><li class="depth-1"><a href="#the-filter-graph-connecting-filters-together" data-for="the-filter-graph-connecting-filters-together">The Filter Graph: Connecting Filters Together</a></li><li class="depth-1"><a href="#how-filters-connect-pins-and-data-formats" data-for="how-filters-connect-pins-and-data-formats">How Filters Connect: Pins and Data Formats</a></li><li class="depth-1"><a href="#port-miniport-pairs-are-ks-filters" data-for="port-miniport-pairs-are-ks-filters">Port-Miniport Pairs ARE KS Filters</a></li><li class="depth-1"><a href="#the-two-kinds-of-filters" data-for="the-two-kinds-of-filters">The Two Kinds of Filters</a></li><li class="depth-1"><a href="#filter-factories-the-template-pattern" data-for="filter-factories-the-template-pattern">Filter Factories: The Template Pattern</a></li><li class="depth-1"><a href="#sysaudio-the-graph-builder" data-for="sysaudio-the-graph-builder">SysAudio: The Graph Builder</a></li><li class="depth-1"><a href="#the-stack-how-everything-fits-together" data-for="the-stack-how-everything-fits-together">The Stack: How Everything Fits Together</a></li><li class="depth-1"><a href="#ks-vs-filter-drivers-dont-confuse-them" data-for="ks-vs-filter-drivers-dont-confuse-them">KS vs Filter Drivers: Don’t Confuse Them</a></li><li class="depth-1"><a href="#building-your-own-filter-the-miniport-approach" data-for="building-your-own-filter-the-miniport-approach">Building Your Own Filter: The Miniport Approach</a></li><li class="depth-1"><a href="#why-this-architecture-wins-1" data-for="why-this-architecture-wins-1">Why This Architecture Wins</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../Architecture/README" class="internal">README</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

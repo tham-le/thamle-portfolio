@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Project -</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Project -"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Project -"/><meta name="twitter:description" content="🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap This is a 30-day intensive program to reforge a C/C++ developer into a Rust Multimedia Engineer."/><meta property="og:description" content="🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap This is a 30-day intensive program to reforge a C/C++ developer into a Rust Multimedia Engineer."/><meta property="og:image:alt" content="🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap This is a 30-day intensive program to reforge a C/C++ developer into a Rust Multimedia Engineer."/><meta property="og:image" content="https://thamle.live/notes/static/og-image.png"/><meta property="og:image:url" content="https://thamle.live/notes/static/og-image.png"/><meta name="twitter:image" content="https://thamle.live/notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="thamle.live/notes"/><meta property="og:url" content="https://thamle.live/notes/Languages/Rust-Learning/README"/><meta property="twitter:url" content="https://thamle.live/notes/Languages/Rust-Learning/README"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap This is a 30-day intensive program to reforge a C/C++ developer into a Rust Multimedia Engineer."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://thamle.live/notes/index.xml"/></head><body data-slug="Languages/Rust-Learning/README"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-90"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-90" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Languages/">Languages</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Languages/Rust-Learning/">Rust Learning</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Project  </a></div></nav><h1 class="article-title">Project -</h1><p show-comma="true" class="content-meta"><time datetime="2025-08-31T00:00:00.000Z">Aug 31, 2025</time><span>9 min read</span></p><ul class="tags"><li><a href="../../tags/project" class="internal tag-link">project</a></li><li><a href="../../tags/rust" class="internal tag-link">rust</a></li><li><a href="../../tags/learning" class="internal tag-link">learning</a></li><li><a href="../../tags/systems" class="internal tag-link">systems</a></li><li><a href="../../tags/multimedia" class="internal tag-link">multimedia</a></li></ul></div></div><article class="popover-hint"><h1 id="️-the-rust-multimedia--streaming-engineer-roadmap">🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-the-rust-multimedia--streaming-engineer-roadmap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>This is a 30-day intensive program to reforge a C/C++ developer into a Rust Multimedia Engineer. Our textbook is the <code>digital_video_introduction</code> repository. Our goal is not just to learn Rust, but to learn how to build the very guts of video technology with it.</strong></p>
+</blockquote>
+<hr/>
+<h2 id="week-1-rust-fundamentals-through-a-media-lens"><strong>Week 1: Rust Fundamentals Through a Media Lens</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-1-rust-fundamentals-through-a-media-lens" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>The Goal:</strong> Master Rust’s core concepts, but apply them <em>immediately</em> to the domain of digital video. We won’t be making <code>User</code> structs; we’ll be making <code>Pixel</code> and <code>Frame</code> structs. The fundamentals are the same, but the context is everything.</p>
+<hr/>
+<h3 id="day-1-the-pixel--the-toolchain"><strong><a href="../../Day-1" class="internal alias" data-slug="Day-1">Day 1</a>: The Pixel &amp; The Toolchain</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-1-the-pixel--the-toolchain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Set up your environment and handle the most basic unit of video: the pixel.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><a href="../../Languages/Rust-Learning/Rust_book_link" class="internal" data-slug="Languages/Rust-Learning/Rust_book_link">Rust_book_link</a>: Chapters 1, 2, 3.</li>
+<li><a href="../../digital_video_introduction" class="internal" data-slug="digital_video_introduction">digital_video_introduction</a>: Section “Basic terminology”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> Environment is perfect: <code>rustup</code>, <code>cargo</code>, <code>rust-analyzer</code> are installed.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create a <code>[[Rust - Structs]]</code> note. Inside, define and implement a <code>Pixel { r: u8, g: u8, b: u8 }</code> struct.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write a function that takes two <code>Pixel</code>s and blends them.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create a <code>[[Rust - Enums and Pattern Matching]]</code> note. Define an <code>enum ColorModel { RGB, YCbCr }</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write a basic program that creates a 10x10 “image” (a <code>Vec&lt;Pixel></code>) and fills it with a color.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-2-the-frame--the-borrow-checker"><strong>Day 2: The Frame &amp; The Borrow Checker</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-2-the-frame--the-borrow-checker" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Understand Rust’s ownership and borrowing by managing a full frame of video data.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>The Rust Book</code>: Chapter 4 (Ownership).</li>
+<li><code>digital_video_introduction</code>: Section “Basic terminology”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create a <code>struct Frame { width: u32, height: u32, pixels: Vec&lt;Pixel> }</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write a function that <em>borrows</em> a <code>Frame</code> (<code>&amp;Frame</code>) and calculates its average brightness. This function must NOT take ownership.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write a function that takes a <em>mutable borrow</em> of a <code>Frame</code> (<code>&amp;mut Frame</code>) and inverts its colors.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> In your <code>[[Rust - Ownership]]</code> note, explain why passing a raw pointer to a frame buffer in C is dangerous and how Rust’s borrow checker prevents that entire class of bugs.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-3-from-rgb-to-ycbcr---traits--generics"><strong>Day 3: From RGB to YCbCr - Traits &amp; Generics</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-3-from-rgb-to-ycbcr---traits--generics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Implement color model conversions using Rust’s core abstraction tools: traits.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>The Rust Book</code>: Chapter 10 (Generics, Traits, Lifetimes).</li>
+<li><code>digital_video_introduction</code>: Section “Converting between YCbCr and RGB”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Define a <code>trait ConvertibleColor</code> with methods like <code>to_ycbcr()</code> and <code>from_ycbcr()</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement this trait for your <code>Pixel</code> struct.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create new structs <code>YCbCrPixel { y: u8, cb: u8, cr: u8 }</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write a generic function that can operate on any <code>Frame</code> containing pixels that implement <code>ConvertibleColor</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write the conversion logic from the DVI repo as a pure Rust function.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-4-chroma-subsampling---slices--lifetimes"><strong>Day 4: Chroma Subsampling - Slices &amp; Lifetimes</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-4-chroma-subsampling---slices--lifetimes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Perform a real video compression technique while mastering slices and lifetimes.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>The Rust Book</code>: Re-read Chapter 4.3 (Slices) and 10.3 (Lifetimes).</li>
+<li><code>digital_video_introduction</code>: Section “Chroma subsampling”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function <code>subsample_420(y_plane: &amp;[u8], u_plane: &amp;[u8], v_plane: &amp;[u8])</code> that correctly downsamples the chroma planes.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function that takes slices of a frame’s pixel data to operate on a specific region, avoiding unnecessary copies.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Explained in your <code>[[Rust - Lifetimes]]</code> note how lifetimes would prevent you from returning a pointer to a subsampled chroma plane that outlives the original frame data.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-5-7-consolidation-project-i---a-simple-image-parserconverter"><strong>Day 5-7: Consolidation Project I - A Simple Image Parser/Converter</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-5-7-consolidation-project-i---a-simple-image-parserconverter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Build a command-line tool that can read a simple, uncompressed image format and apply the concepts from this week.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>The Rust Cookbook</code>: Recipes for File I/O and CLI arguments.</li>
+<li>The PPM image format spec (it’s one of the simplest raw image formats).</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Project Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> The CLI tool accepts an input file path and an output file path.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can parse a simple <code>P6 .ppm</code> file into your <code>Frame</code> struct.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can convert the frame from RGB to YCbCr.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can perform 4:2:0 chroma subsampling on the YCbCr data.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can write the modified image planes to separate output files (e.g., <code>output.y</code>, <code>output.u</code>, <code>output.v</code>).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All I/O operations use <code>Result</code> for robust <code>[[Rust - Error Handling (Result and Option)]]</code>.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="week-2-deconstructing-the-codec-pipeline"><strong>Week 2: Deconstructing the Codec Pipeline</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-2-deconstructing-the-codec-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>The Goal:</strong> Implement simplified versions of the core stages of a video codec. This week is a deep dive into the theory from <code>digital_video_introduction</code>, bringing it to life with Rust code.</p>
+<hr/>
+<h3 id="day-8-frame-types--inter-prediction"><strong>Day 8: Frame Types &amp; Inter Prediction</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-8-frame-types--inter-prediction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Model I, P, and B frames and implement a basic block-based motion search.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>digital_video_introduction</code>: Sections “Frame types” and “Temporal redundancy”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Created an <code>enum FrameType { I, P, B }</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function <code>find_best_match(block: &amp;[Pixel], search_area: &amp;Frame) -> (x, y)</code> that performs a simple Sum of Absolute Differences (SAD) search.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> The result of the function is a motion vector. Create a <code>struct MotionVector { x: i16, y: i16 }</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function to calculate the “residual” block by subtracting the matched block from the original.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-9-the-transform---implementing-a-dct"><strong>Day 9: The Transform - Implementing a DCT</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-9-the-transform---implementing-a-dct" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Understand and implement the Discrete Cosine Transform.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>digital_video_introduction</code>: Section “3rd step - transform”.</li>
+<li>Any online resource explaining the 1D and 2D DCT-II formulas.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function that performs a 1D DCT on a <code>Vec&lt;f64></code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Used the 1D function to write a function that performs a 2D DCT on an 8x8 block of pixel data (as a <code>[[f64; 8]; 8]</code> array).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote the inverse transform (IDCT) as well.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verified that <code>IDCT(DCT(block))</code> results in the original block (with some floating-point error).</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-10-quantization--entropy-coding"><strong>Day 10: Quantization &amp; Entropy Coding</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-10-quantization--entropy-coding" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Implement the lossy and lossless compression steps.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>digital_video_introduction</code>: Sections “4th step - quantization” and “5th step - entropy coding”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a function that performs quantization and de-quantization on an 8x8 DCT coefficients block, using a quantization matrix.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implemented a simple Run-Length Encoding (RLE) function for the quantized, zig-zag scanned coefficients.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Explored a Rust crate for Huffman or Arithmetic coding (like <code>huffman-compress</code>) and used it on the RLE output.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-11-14-consolidation-project-ii---the-toy-encoder"><strong>Day 11-14: Consolidation Project II - The “Toy” Encoder</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-11-14-consolidation-project-ii---the-toy-encoder" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Combine all the pieces from this week into a single program that performs a rudimentary intra-frame or inter-frame encode.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li>All your code from this week.</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Project Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> The program can take a single 8x8 block of pixel data.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Path A (Intra):</strong> It performs DCT <span>→</span> Quantization <span>→</span> RLE <span>→</span> Entropy Coding and writes the compressed bytes to a file.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Path B (Inter):</strong> Given two blocks, it finds a motion vector, calculates the residual, and then performs the DCT<span>→</span>Quant<span>→</span>… pipeline on the residual.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> You have a corresponding “Toy Decoder” that can read the file, reverse the process, and reconstruct the block.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> You can calculate the compression ratio you achieved.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="week-3-the-bitstream--container-sprint"><strong>Week 3: The Bitstream &amp; Container Sprint</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-3-the-bitstream--container-sprint" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>The Goal:</strong> Understand how compressed data is actually structured and packaged. This is where we move from abstract algorithms to parsing real-world data formats.</p>
+<hr/>
+<h3 id="day-15-17-bit-level-manipulation--parsing-with-nom"><strong>Day 15-17: Bit-Level Manipulation &amp; Parsing with <code>nom</code></strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-15-17-bit-level-manipulation--parsing-with-nom" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Learn to read and write data at the bit level and use a real parsing library.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li>The <code>bitvec</code> crate documentation.</li>
+<li>The <code>nom</code> crate documentation and tutorials.</li>
+<li><code>digital_video_introduction</code>: Section “6th step - bitstream format”.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Daily Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Used <code>bitvec</code> to write a sequence of variable-length codes to a <code>Vec&lt;u8></code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a <code>nom</code> parser to read a simple binary format (e.g., the header of your “Toy Encoder” file).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Studied the structure of an H.264 NAL unit header.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wrote a <code>nom</code> parser that can parse the NAL unit type from the first byte of a NAL unit.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-18-21-consolidation-project-iii---mp4-box-parser"><strong>Day 18-21: Consolidation Project III - MP4 Box Parser</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-18-21-consolidation-project-iii---mp4-box-parser" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Write a tool to inspect a real-world video container format. MP4 is built on “boxes” (or “atoms”), which is a perfect parsing exercise.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li>The ISO Base Media File Format specification (ISO/IEC 14496-12). Look for a summary online.</li>
+<li><code>ffmpeg</code> or <code>ffprobe</code> to validate your tool’s output.</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Project Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> The tool takes the path to an <code>.mp4</code> file.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can identify and parse the top-level boxes (<code>ftyp</code>, <code>moov</code>, <code>mdat</code>).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> For each box, it prints the 4-character code and its size.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> It can recursively descend into the <code>moov</code> box and print the hierarchy of boxes within it (e.g., <code>mvhd</code>, <code>trak</code>).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Your tool’s output for a given file roughly matches the structure shown by <code>ffprobe</code>.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="week-4-streaming-performance--job-prep"><strong>Week 4: Streaming, Performance, &amp; Job Prep</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-4-streaming-performance--job-prep" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>The Goal:</strong> Bridge the gap from file-based processing to live streaming and prepare for interviews.</p>
+<hr/>
+<h3 id="day-22-26-final-portfolio-project---a-streaming-tool"><strong>Day 22-26: Final Portfolio Project - A Streaming Tool</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-22-26-final-portfolio-project---a-streaming-tool" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Build your capstone project that you will show to employers.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>tokio</code> crate documentation.</li>
+<li><code>digital_video_introduction</code>: Section “Online streaming”.</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Project Ideas (Choose One): </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>A Simple HLS/DASH Segmenter:</strong> A tool that takes an MP4 file and, using your parser from last week, remuxes it into a series of <code>.ts</code> (transport stream) or fragmented <code>.m4s</code> segments suitable for ABR streaming.</li>
+<li><strong>A Bitstream Inspector:</strong> An enhanced version of your Week 3 project that can parse and display detailed information from H.264 NAL units (like SPS/PPS) or other video bitstreams.</li>
+<li><strong>A Basic RTP Server:</strong> A tool that reads video frames (from a file) and streams them over the network using the Real-time Transport Protocol (RTP).</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h3 id="day-27-30-performance-review--launch-sequence"><strong>Day 27-30: Performance, Review, &amp; Launch Sequence</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-27-30-performance-review--launch-sequence" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Objective:</strong> Profile your code, clean up your projects, and prepare to ace the interview.
+<strong>Primary Resources:</strong></p>
+<ul>
+<li><code>cargo bench</code> and <code>perf</code> (on Linux).</li>
+<li>The <code>criterion</code> crate for benchmarking.</li>
+</ul>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Final Checklist: Definition of Done </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> You have benchmarked the critical parts of your portfolio project and identified bottlenecks.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All your projects have high-quality <code>README.md</code> files on GitHub.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> You have contributed a small fix or documentation improvement to a Rust multimedia crate (<code>ffmpeg-next</code>, <code>gstreamer-rs</code>, etc.).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> In your vault, you have written detailed interview answers for:
+<ul>
+<li>“Explain the trade-offs between I, P, and B frames.&quot;</li>
+<li>&quot;How does Chroma Subsampling work and why is it effective?&quot;</li>
+<li>&quot;Describe the stages of a modern video codec pipeline.&quot;</li>
+<li>&quot;How would you parse a binary format like MP4 in Rust?”</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> You have updated your resume to say “Rust Developer” with a specialization in Multimedia Systems, and you have started applying for jobs.</li>
+</ul>
+</div>
+</blockquote></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-35" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#️-the-rust-multimedia--streaming-engineer-roadmap" data-for="️-the-rust-multimedia--streaming-engineer-roadmap">🗺️ The Rust Multimedia &amp; Streaming Engineer Roadmap</a></li><li class="depth-1"><a href="#week-1-rust-fundamentals-through-a-media-lens" data-for="week-1-rust-fundamentals-through-a-media-lens">Week 1: Rust Fundamentals Through a Media Lens</a></li><li class="depth-2"><a href="#day-1-the-pixel--the-toolchain" data-for="day-1-the-pixel--the-toolchain">Day 1: The Pixel &amp; The Toolchain</a></li><li class="depth-2"><a href="#day-2-the-frame--the-borrow-checker" data-for="day-2-the-frame--the-borrow-checker">Day 2: The Frame &amp; The Borrow Checker</a></li><li class="depth-2"><a href="#day-3-from-rgb-to-ycbcr---traits--generics" data-for="day-3-from-rgb-to-ycbcr---traits--generics">Day 3: From RGB to YCbCr - Traits &amp; Generics</a></li><li class="depth-2"><a href="#day-4-chroma-subsampling---slices--lifetimes" data-for="day-4-chroma-subsampling---slices--lifetimes">Day 4: Chroma Subsampling - Slices &amp; Lifetimes</a></li><li class="depth-2"><a href="#day-5-7-consolidation-project-i---a-simple-image-parserconverter" data-for="day-5-7-consolidation-project-i---a-simple-image-parserconverter">Day 5-7: Consolidation Project I - A Simple Image Parser/Converter</a></li><li class="depth-1"><a href="#week-2-deconstructing-the-codec-pipeline" data-for="week-2-deconstructing-the-codec-pipeline">Week 2: Deconstructing the Codec Pipeline</a></li><li class="depth-2"><a href="#day-8-frame-types--inter-prediction" data-for="day-8-frame-types--inter-prediction">Day 8: Frame Types &amp; Inter Prediction</a></li><li class="depth-2"><a href="#day-9-the-transform---implementing-a-dct" data-for="day-9-the-transform---implementing-a-dct">Day 9: The Transform - Implementing a DCT</a></li><li class="depth-2"><a href="#day-10-quantization--entropy-coding" data-for="day-10-quantization--entropy-coding">Day 10: Quantization &amp; Entropy Coding</a></li><li class="depth-2"><a href="#day-11-14-consolidation-project-ii---the-toy-encoder" data-for="day-11-14-consolidation-project-ii---the-toy-encoder">Day 11-14: Consolidation Project II - The “Toy” Encoder</a></li><li class="depth-1"><a href="#week-3-the-bitstream--container-sprint" data-for="week-3-the-bitstream--container-sprint">Week 3: The Bitstream &amp; Container Sprint</a></li><li class="depth-2"><a href="#day-15-17-bit-level-manipulation--parsing-with-nom" data-for="day-15-17-bit-level-manipulation--parsing-with-nom">Day 15-17: Bit-Level Manipulation &amp; Parsing with nom</a></li><li class="depth-2"><a href="#day-18-21-consolidation-project-iii---mp4-box-parser" data-for="day-18-21-consolidation-project-iii---mp4-box-parser">Day 18-21: Consolidation Project III - MP4 Box Parser</a></li><li class="depth-1"><a href="#week-4-streaming-performance--job-prep" data-for="week-4-streaming-performance--job-prep">Week 4: Streaming, Performance, &amp; Job Prep</a></li><li class="depth-2"><a href="#day-22-26-final-portfolio-project---a-streaming-tool" data-for="day-22-26-final-portfolio-project---a-streaming-tool">Day 22-26: Final Portfolio Project - A Streaming Tool</a></li><li class="depth-2"><a href="#day-27-30-performance-review--launch-sequence" data-for="day-27-30-performance-review--launch-sequence">Day 27-30: Performance, Review, &amp; Launch Sequence</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>
