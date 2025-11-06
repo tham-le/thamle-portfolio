@@ -33,11 +33,16 @@ for event_dir in "${CTF_DIR}"/*/; do
     if [ -f "${readme_file}" ]; then
       echo "Processing ${event_name}..."
 
+      # Convert event name to lowercase and replace underscores with dashes for image path
+      image_slug=$(echo "${event_name}" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
+      image_path="/images/ctf/${image_slug}/event-banner.svg"
+
       # Create _index.md with frontmatter and content from README
       {
         echo "---"
         echo "title: \"${event_name}\""
         echo "description: \"CTF Event: ${event_name}\""
+        echo "image: \"${image_path}\""
         echo "---"
         echo ""
         # Skip the first line (title) of README and include the rest
