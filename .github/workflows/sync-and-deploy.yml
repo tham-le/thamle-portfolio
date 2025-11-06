@@ -36,12 +36,17 @@ jobs:
         ./scripts/sync-all.sh
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-    
+
+    - name: Fix Quartz HTML base paths
+      run: |
+        chmod +x ./scripts/fix-notes-paths.sh
+        ./scripts/fix-notes-paths.sh
+
     # - name: Prepare CTF Content
     #   run: |
     #     chmod +x ./scripts/prepare_hugo.py
     #     python3 ./scripts/prepare_hugo.py
-    
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
       with:
