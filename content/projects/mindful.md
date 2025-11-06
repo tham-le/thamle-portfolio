@@ -30,106 +30,32 @@ stats:
 
 # MindfulWealth
 
-MindfulWealth is a financial assistant application designed to help users make mindful spending decisions and encourage saving and investing.
+An AI-powered financial assistant that helps users make mindful spending decisions and encourages saving and investing. Built with Flask, React, and Google's Gemini AI.
 
 ## Features
 
-- **AI-Powered Chat**: Interact with an AI financial assistant that helps you make better spending decisions
-- **Impulse Purchase Analysis**: Get insights on potential impulse purchases and their long-term financial impact
-- **Investment Projections**: See how your money could grow if invested instead of spent
-- **Multiple Personality Modes**: Choose between different advisor personalities (nice, funny, ironic)
-- **Multilingual Support**: Available in English and French
+- **AI Financial Assistant**: Chat interface for spending guidance and financial advice
+- **Impulse Purchase Analysis**: Long-term impact projections for purchases
+- **Investment Projections**: Compare spending vs. investing outcomes
+- **Personality Modes**: Choose between different advisor personalities (nice, funny, ironic)
+- **Multilingual**: English and French support
+- **Responsive Design**: Mobile and desktop optimized
 
-## Visual Overview
-
-![Chat Interface](img/chat_interface.png)
-*The intuitive chat interface.*
-
-![Dashboard in French](img/Dashboard%20inFrench.png)
-*Dashboard view in French, showcasing multilingual support.*
-
-![Mobile Responsive Dashboard](img/dasboard_mobile_responsive.png)
-*Mobile responsive design of the dashboard.*
-
-![Profile Settings](img/profil-setting.png)
-*User profile and personality settings.*
-
-## Getting Started
-
-### Prerequisites
-
-- Docker and Docker Compose (for production deployment)
-- Node.js 18+ and npm (for development)
-- Python 3.10+ (for development)
-- A valid Gemini API key from [Google AI Studio](https://ai.google.dev/)
-- lsof (required for checking open ports in deployment/development scripts)
-- A text editor such as nano or vi (used by the setup scripts)
-- Ensure you have proper Docker permissions (your user should be in the docker group or use sudo)
-
-### Quick Start
-
-For a quick start with all default settings, simply run:
+## Quick Start
 
 ```bash
-./start.sh
+./start.sh  # Production deployment with Docker
+./dev.sh    # Development setup
 ```
 
-This will set up and start the application in production mode.
-
-### Development Setup
-
-For local development:
-
-```bash
-./dev.sh
-```
-
-This script will guide you through setting up the development environment.
+Requires Docker/Docker Compose and a [Gemini API key](https://ai.google.dev/).
 
 ## Architecture
 
-MindfulWealth consists of two main components:
+**Backend**: Flask API with Google Gemini AI integration, user authentication, and financial data processing
 
-1. **Backend**: A Flask API that handles:
-   - User authentication
-   - Integration with Google's Gemini AI
-   - Financial data processing
-   - Database operations
+**Frontend**: React application with chat interface, dashboard, and settings management
 
-2. **Frontend**: A React application that provides:
-   - User interface for chat interactions
-   - Financial dashboard
-   - Settings management
-   - Responsive design for mobile and desktop
+**Deployment**: Dockerized with ports 80 (frontend), 3000 (alt frontend), 5000 (backend API)
 
-## Deployment
-
-For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
-
-### Port Configuration
-
-The application uses the following ports by default:
-
-- **Port 80**: Main frontend access
-- **Port 3000**: Alternative frontend access
-- **Port 5000**: Backend API
-
-If any of these ports are already in use on your system, see the deployment guide for configuration options.
-
-## Chat Functionality
-
-For information about the chat functionality and recent fixes, see [CHAT_FIXES.md](CHAT_FIXES.md).
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Google Gemini API for powering the AI assistant
-- Flask and React communities for their excellent frameworks
-- All contributors to this project
+*Screenshots and detailed setup instructions available in the [GitHub repository](https://github.com/tham-le/mindful).*
