@@ -50,6 +50,13 @@ jobs:
     #     chmod +x ./scripts/prepare_hugo.py
     #     python3 ./scripts/prepare_hugo.py
 
+    - name: Generate CTF index files
+      run: |
+        echo "🔧 Generating CTF _index.md files..."
+        chmod +x ./scripts/generate-ctf-indexes.sh
+        bash ./scripts/generate-ctf-indexes.sh
+        echo "✅ CTF index files generated!"
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
       with:
