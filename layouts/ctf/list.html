@@ -24,12 +24,20 @@
         {{ if or (gt (len $sections) 0) (gt (len $pages) 0) }}
             <hr>
             {{/* Dynamically set the heading based on the page's depth */}}
-            {{ if eq (len .Ancestors) 2 }}
+            {{/*
+                Depth 0: /ctf/ - Show "CTF Events"
+                Depth 1: /ctf/EventName/ - Show "Categories"
+                Depth 2+: /ctf/EventName/Category/ - Show "Challenges"
+            */}}
+            {{ $depth := len .Ancestors }}
+            {{ if eq $depth 0 }}
+                <h2>CTF Events</h2>
+            {{ else if eq $depth 1 }}
                 <h2>Categories</h2>
             {{ else }}
                 <h2>Challenges</h2>
             {{ end }}
-            
+
             <section class="article-list--compact">
                 {{/* List sub-directories (like categories or challenge folders) */}}
                 {{ range $sections }}
