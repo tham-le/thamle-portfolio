@@ -18,11 +18,11 @@ pagerSize = 12
 # Permalinks for different content types
 [permalinks]
 projects = "/projects/:slug/"
-notes = "/notes/:slug/"
+# notes = "/notes/:slug/"  # Disabled - notes now served from notes.thamle.live subdomain
 
 # Main sections for homepage
 [params]
-mainSections = ["projects", "ctf", "notes"]
+mainSections = ["projects", "ctf"]  # notes moved to notes.thamle.live subdomain
 featuredImageField = "image"
 rssFullContent = true
 favicon = "/favicon.ico"
@@ -94,8 +94,10 @@ weight = 40
 [[menu.main]]
 identifier = "notes"
 name = "Notes"
-url = "/notes/"
+url = "https://notes.thamle.live"
 weight = 50
+[menu.main.params]
+newTab = true
 
 [[menu.main]]
 identifier = "resume"
