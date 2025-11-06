@@ -113,4 +113,4 @@ jobs:
         firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
         projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
         channelId: live
-        target: notes-thamle
+        target: notes-tham

@@ -45,7 +45,7 @@
       ]
     },
     {
-      "site": "notes-thamle",
+      "site": "notes-tham",
       "public": "static/notes",
       "ignore": [
         "firebase.json",
