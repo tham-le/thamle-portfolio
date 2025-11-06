@@ -29,8 +29,14 @@ jobs:
       - name: Check for missing images
         run: |
           missing=0
-          for img in $(find public -type f -name '*.html' -exec grep -oE 'src="[^"]+"' {} \; | sed 's/src="//' | sed 's/"//'); do
+          for img in $(find public -type f -name '*.html' -not -path "public/notes/*" -exec grep -oE '<img[^>]+src="([^"]+)"' {} \; | sed -n 's/.*src="\([^"]*\)".*/\1/p'); do
+            # Skip external URLs
             if [[ "$img" =~ ^http ]]; then continue; fi
+            # Skip data URIs
+            if [[ "$img" =~ ^data: ]]; then continue; fi
+            # Skip JavaScript and CSS files (not images)
+            if [[ "$img" =~ \.(js|css)$ ]]; then continue; fi
+            # Check if file exists
             if [ ! -f "public/$img" ] && [ ! -f "public${img}" ]; then
               echo "Missing image: $img"; missing=1
             fi
