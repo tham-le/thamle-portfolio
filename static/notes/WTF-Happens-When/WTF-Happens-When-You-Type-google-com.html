@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF happens when you type google.com</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF happens when you type google.com"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF happens when you type google.com"/><meta name="twitter:description" content="Complete trace from URL to rendered page - DNS lookup, TCP handshake, HTTP request, page rendering"/><meta property="og:description" content="Complete trace from URL to rendered page - DNS lookup, TCP handshake, HTTP request, page rendering"/><meta property="og:image:alt" content="Complete trace from URL to rendered page - DNS lookup, TCP handshake, HTTP request, page rendering"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/WTF-Happens-When/WTF-Happens-When-You-Type-google-com"/><meta property="twitter:url" content="https://notes.thamle.live/WTF-Happens-When/WTF-Happens-When-You-Type-google-com"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Complete trace from URL to rendered page - DNS lookup, TCP handshake, HTTP request, page rendering"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="WTF-Happens-When/WTF-Happens-When-You-Type-google-com"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-254"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-254" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../WTF-Happens-When/">WTF Happens When</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF happens when you type google.com</a></div></nav><h1 class="article-title">WTF happens when you type google.com</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T00:00:00.000Z">Nov 07, 2025</time><span>14 min read</span></p><ul class="tags"><li><a href="../tags/networking" class="internal tag-link">networking</a></li><li><a href="../tags/dns" class="internal tag-link">dns</a></li><li><a href="../tags/tcp" class="internal tag-link">tcp</a></li><li><a href="../tags/http" class="internal tag-link">http</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-happens-when-you-type-googlecom-in-your-browser">WTF happens when you type <code>google.com</code> in your browser<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-happens-when-you-type-googlecom-in-your-browser" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>You type <code>google.com</code>, hit Enter, and a page appears. <strong>WTF just happened?</strong></p>
+<p>Let’s trace through <strong>every single layer</strong> of the network stack - from keyboard to pixels on screen.</p>
+<hr/>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#1-you-hit-enter" class="internal alias">You hit Enter</a></li>
+<li><a href="#2-browser-parses-the-url" class="internal alias">Browser parses the URL</a></li>
+<li><a href="#3-dns-lookup" class="internal alias">DNS lookup</a></li>
+<li><a href="#4-opening-a-socket" class="internal alias">Opening a socket</a></li>
+<li><a href="#5-tcp-connection-3-way-handshake" class="internal alias">TCP connection (3-way handshake)</a></li>
+<li><a href="#6-tls-handshake" class="internal alias">TLS handshake</a></li>
+<li><a href="#7-http-request" class="internal alias">HTTP request</a></li>
+<li><a href="#8-http-response" class="internal alias">HTTP response</a></li>
+<li><a href="#9-browser-rendering" class="internal alias">Browser rendering</a></li>
+<li><a href="#10-complete-timeline" class="internal alias">Complete timeline</a></li>
+</ol>
+<hr/>
+<h2 id="1-you-hit-enter">1. You hit Enter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-you-hit-enter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="browser-receives-keypress">Browser receives keypress<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#browser-receives-keypress" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Your browser (Chrome, Firefox, etc.) was waiting for keyboard input in its address bar.</p>
+<p><strong>Event flow:</strong></p>
+<ol>
+<li><strong>OS sends key event</strong> to browser process</li>
+<li><strong>Browser’s event loop</strong> receives it</li>
+<li><strong>Address bar handler</strong> detects Enter key</li>
+<li><strong>URL submission triggered</strong></li>
+</ol>
+<p>Before pressing Enter, the browser was showing <strong>autocomplete suggestions:</strong></p>
+<ul>
+<li>Searching browser history</li>
+<li>Checking bookmarks</li>
+<li>Querying search history</li>
+<li>Making requests to search engine API (if configured)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Concurrency/Event-Loop" class="internal" data-slug="Concurrency/Event-Loop">Event-Loop</a></p>
+<hr/>
+<h2 id="2-browser-parses-the-url">2. Browser parses the URL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-browser-parses-the-url" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The browser has the string: <code>google.com</code></p>
+<h3 id="is-it-a-url-or-search-term">Is it a URL or search term?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#is-it-a-url-or-search-term" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Browser checks:</strong></p>
+<ol>
+<li>Does it have a protocol? (<code>http://</code>, <code>https://</code>, <code>ftp://</code>)</li>
+<li>Does it look like a domain? (has <code>.com</code>, <code>.org</code>, etc.)</li>
+<li>Is it in the format <code>domain.tld</code>?</li>
+</ol>
+<p>For <code>google.com</code>:</p>
+<ul>
+<li>No protocol → <strong>Browser defaults to HTTPS</strong> (modern browsers)</li>
+<li>Has <code>.com</code> → Looks like a domain</li>
+<li>Result: Treat as URL <code>https://google.com/</code></li>
+</ul>
+<p>If you typed “cat videos”, browser would send it to the default search engine.</p>
+<h3 id="parse-the-url">Parse the URL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parse-the-url" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>https://google.com:443/search?q=hello
+  │      │          │    │      │
+  │      │          │    │      └─ Query string
+  │      │          │    └─ Path
+  │      │          └─ Port (443 = HTTPS default)
+  │      └─ Hostname
+  └─ Protocol
+</code></pre>
+<p><strong>For our case:</strong></p>
+<pre><code>Protocol: https
+Hostname: google.com
+Port: 443 (default for HTTPS)
+Path: / (default)
+</code></pre>
+<p><strong>See:</strong> <a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a></p>
+<h3 id="check-hsts-list">Check HSTS list<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#check-hsts-list" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>HSTS (HTTP Strict Transport Security):</strong></p>
+<p>Modern browsers have a <strong>preloaded list</strong> of domains that MUST use HTTPS.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">domain_in_hsts_list</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;google.com&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)) {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Force HTTPS even if user typed http://</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    use_https </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>Google.com is definitely in the HSTS list, so browser will <strong>always use HTTPS</strong>.</p>
+<p><strong>Why?</strong> Prevents <a href="../Man-in-the-Middle" class="internal" data-slug="Man-in-the-Middle">Man-in-the-Middle</a> attacks where attacker downgrades connection to HTTP.</p>
+<hr/>
+<h2 id="3-dns-lookup">3. DNS lookup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-dns-lookup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Browser needs the <strong>IP address</strong> of <code>google.com</code>.</p>
+<h3 id="check-caches-fastest-to-slowest">Check caches (fastest to slowest)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#check-caches-fastest-to-slowest" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Browser DNS cache:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Chrome: chrome://net-internals/#dns</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">google.com → </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">142.250</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">185.46</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (cached, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">TTL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: 299s)</span></span></code></pre></figure>
+<p><strong>2. Operating system cache:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># macOS</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">dscacheutil</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -cachedump</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -entries</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Host</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Linux: systemd-resolved</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resolvectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> status</span></span></code></pre></figure>
+<p><strong>3. hosts file:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># /etc/hosts</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">127.0.0.1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">       localhost</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">192.168.1.100</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">   myserver.local</span></span></code></pre></figure>
+<p>If <code>google.com</code> isn’t in any cache, browser makes a DNS query.</p>
+<p><strong>See:</strong> <a href="../Networking/DNS" class="internal" data-slug="Networking/DNS">DNS</a>, <a href="../localhost" class="internal" data-slug="localhost">localhost</a></p>
+<h3 id="dns-query">DNS query<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-query" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Browser calls OS function:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> addrinfo </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">result;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">getaddrinfo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;google.com&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;443&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">hints</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">result</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span></code></pre></figure>
+<p><strong>OS makes DNS query</strong> to configured DNS server (usually <a href="../ISP" class="internal" data-slug="ISP">ISP</a>’s DNS or 8.8.8.8).</p>
+<h3 id="recursive-dns-resolution">Recursive DNS resolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#recursive-dns-resolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Full DNS hierarchy:</strong></p>
+<pre><code>1. Browser → OS → Local DNS resolver (192.168.1.1)
+2. Local resolver → Root nameserver (.)
+   Response: &quot;Ask .com nameserver&quot;
+3. Local resolver → .com nameserver
+   Response: &quot;Ask google.com nameserver&quot;
+4. Local resolver → google.com nameserver (ns1.google.com)
+   Response: &quot;google.com = 142.250.185.46&quot;
+5. Local resolver → OS → Browser
+</code></pre>
+<p><strong>Actual DNS query packet:</strong></p>
+<pre><code>DNS Query (UDP port 53):
+Transaction ID: 0x1234
+Flags: Standard query
+Questions: 1
+  google.com: type A (IPv4 address), class IN
+
+DNS Response:
+Transaction ID: 0x1234
+Flags: Standard response, No error
+Answers: 1
+  google.com: type A, class IN, addr 142.250.185.46
+</code></pre>
+<p><strong>DNS uses UDP (not TCP):</strong></p>
+<ul>
+<li>UDP is connectionless (no handshake overhead)</li>
+<li>Single packet request/response</li>
+<li>If packet lost, client retries</li>
+</ul>
+<p><strong>TTL (Time To Live):</strong></p>
+<pre><code>google.com.  300  IN  A  142.250.185.46
+             └─ Cache for 300 seconds (5 minutes)
+</code></pre>
+<p><strong>See:</strong> <a href="../Networking/DNS" class="internal" data-slug="Networking/DNS">DNS</a>, <a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a></p>
+<hr/>
+<h2 id="4-opening-a-socket">4. Opening a socket<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-opening-a-socket" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Browser now has: <code>IP: 142.250.185.46, Port: 443</code></p>
+<h3 id="socket-api">Socket API<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#socket-api" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Browser (written in C++) calls:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> sockfd </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> socket</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(AF_INET, SOCK_STREAM, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span></code></pre></figure>
+<p><strong>What this does:</strong></p>
+<ol>
+<li><strong>System call</strong> enters kernel</li>
+<li><strong>Kernel allocates socket structure:</strong>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> socket {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> fd;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">              // File descriptor</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> type;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">            // SOCK_STREAM (TCP)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> state;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">           // Not connected yet</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> sock </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">sk;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">     // Protocol-specific data</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">};</span></span></code></pre></figure>
+</li>
+<li><strong>Returns file descriptor</strong> (e.g., <code>fd = 5</code>)</li>
+</ol>
+<p><strong>Socket is just a file descriptor!</strong></p>
+<ul>
+<li><code>fd 0, 1, 2</code>: stdin, stdout, stderr</li>
+<li><code>fd 3, 4, ...</code>: Files, sockets, pipes, etc.</li>
+</ul>
+<p><strong>See:</strong> <a href="../Networking/Socket-API" class="internal" data-slug="Networking/Socket-API">Socket-API</a>, <a href="../File-Descriptor" class="internal" data-slug="File-Descriptor">File-Descriptor</a></p>
+<h3 id="connect-to-remote-server">Connect to remote server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connect-to-remote-server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> sockaddr_in addr;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">addr.sin_family </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> AF_INET;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">addr.sin_port </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> htons</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">443</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">addr.sin_addr.s_addr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> inet_addr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;142.250.185.46&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">connect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(sockfd, (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> sockaddr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">addr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">sizeof</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(addr));</span></span></code></pre></figure>
+<p><strong>This triggers TCP 3-way handshake…</strong></p>
+<p><strong>See:</strong> <a href="../Networking/Socket-API" class="internal" data-slug="Networking/Socket-API">Socket-API</a>, <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a></p>
+<hr/>
+<h2 id="5-tcp-connection-3-way-handshake">5. TCP connection (3-way handshake)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-tcp-connection-3-way-handshake" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>TCP provides <strong>reliable, ordered delivery</strong> over unreliable IP.</p>
+<h3 id="3-way-handshake">3-way handshake<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-way-handshake" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Client (You)              Server (Google)
+     │                         │
+     │───── SYN ──────────────>│  &quot;Let's talk, my seq = 1000&quot;
+     │                         │
+     │&lt;──── SYN-ACK ───────────│  &quot;OK, my seq = 5000, ack = 1001&quot;
+     │                         │
+     │───── ACK ──────────────>│  &quot;Got it, ack = 5001&quot;
+     │                         │
+    (Connected!)
+</code></pre>
+<p><strong>Detailed packet structure:</strong></p>
+<p><strong>1. SYN packet (Client → Server):</strong></p>
+<pre><code>IP Header:
+  Source IP: 192.168.1.100 (your computer)
+  Dest IP: 142.250.185.46 (Google)
+
+TCP Header:
+  Source Port: 54321 (random ephemeral port)
+  Dest Port: 443 (HTTPS)
+  Sequence Number: 1000 (random ISN)
+  Flags: SYN
+  Window Size: 65535 (how much data you can receive)
+  Options: MSS=1460, SACK permitted, Timestamps
+</code></pre>
+<p><strong>2. SYN-ACK packet (Server → Client):</strong></p>
+<pre><code>TCP Header:
+  Source Port: 443
+  Dest Port: 54321
+  Sequence Number: 5000 (server's random ISN)
+  Acknowledgment: 1001 (client's seq + 1)
+  Flags: SYN, ACK
+  Window Size: 65535
+</code></pre>
+<p><strong>3. ACK packet (Client → Server):</strong></p>
+<pre><code>TCP Header:
+  Source Port: 54321
+  Dest Port: 443
+  Sequence Number: 1001
+  Acknowledgment: 5001 (server's seq + 1)
+  Flags: ACK
+</code></pre>
+<p><strong>Connection is now ESTABLISHED!</strong></p>
+<p><strong>See:</strong> <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a>, <a href="../Three-Way-Handshake" class="internal" data-slug="Three-Way-Handshake">Three-Way-Handshake</a></p>
+<h3 id="how-packets-travel-the-full-journey">How packets travel (the full journey)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-packets-travel-the-full-journey" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Sending a packet:</strong></p>
+<pre><code>Application (Browser)
+    ↓ write(sockfd, data, len)
+Transport Layer (TCP)
+    ↓ Add TCP header (source/dest port, seq, ack)
+Network Layer (IP)
+    ↓ Add IP header (source/dest IP, TTL, checksum)
+Link Layer (Ethernet/WiFi)
+    ↓ Add Ethernet header (source/dest MAC)
+Physical Layer
+    ↓ Electrical/radio signals
+</code></pre>
+<p><strong>Finding the path:</strong></p>
+<ol>
+<li>
+<p><strong>Check routing table:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ip route</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">default</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> via </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">192.168</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">.1.1 dev wlan0</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">192.168.1.0/24</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> dev wlan0 proto kernel scope link</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Is destination on local network?</strong></p>
+<ul>
+<li>If yes: Send directly</li>
+<li>If no: Send to <strong>default gateway</strong> (router)</li>
+</ul>
+</li>
+<li>
+<p><strong>For google.com (142.250.185.46):</strong></p>
+<ul>
+<li>Not on 192.168.1.0/24</li>
+<li>Send to gateway: 192.168.1.1</li>
+</ul>
+</li>
+</ol>
+<p><strong>See:</strong> <a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a>, <a href="../Networking/Networking" class="internal" data-slug="Networking/Networking">Networking</a></p>
+<h3 id="arp-address-resolution-protocol">ARP (Address Resolution Protocol)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#arp-address-resolution-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>To send packets on local network, need <strong>MAC address</strong> of gateway.</p>
+<p><strong>ARP Request (broadcast):</strong></p>
+<pre><code>Ethernet Frame:
+  Dest MAC: FF:FF:FF:FF:FF:FF (broadcast to everyone)
+  Source MAC: aa:bb:cc:dd:ee:ff (your NIC)
+  Type: ARP
+
+ARP Payload:
+  &quot;Who has IP 192.168.1.1? Tell aa:bb:cc:dd:ee:ff&quot;
+</code></pre>
+<p><strong>ARP Reply (from router):</strong></p>
+<pre><code>ARP Payload:
+  &quot;192.168.1.1 is at MAC 11:22:33:44:55:66&quot;
+</code></pre>
+<p><strong>Cached in ARP table:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> arp -a</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">192.168.1.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (192.168.1.1) at 11:22:33:44:55:66 [ether] on wlan0</span></span></code></pre></figure>
+<p><strong>See:</strong> <a href="../ARP" class="internal" data-slug="ARP">ARP</a></p>
+<h3 id="packet-forwarding-through-routers">Packet forwarding through routers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#packet-forwarding-through-routers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Each <a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a> on the path:</strong></p>
+<ol>
+<li><strong>Receives packet</strong> on input interface</li>
+<li><strong>Decrements TTL</strong> (Time To Live)
+<ul>
+<li>If TTL reaches 0: Drop packet, send ICMP “Time Exceeded”</li>
+</ul>
+</li>
+<li><strong>Looks up destination IP</strong> in routing table</li>
+<li><strong>Forwards packet</strong> to next hop</li>
+<li><strong>Rewrites source MAC</strong> (router’s outgoing interface MAC)</li>
+<li><strong>Rewrites dest MAC</strong> (next router’s MAC)</li>
+</ol>
+<p><strong>Example path:</strong></p>
+<pre><code>Your PC
+  → Home router (192.168.1.1)
+  → ISP router (10.x.x.x)
+  → Regional ISP router
+  → Internet backbone router
+  → Google's edge router
+  → Google's data center
+  → Google's load balancer
+  → Google web server
+</code></pre>
+<p><strong>Typical hop count:</strong> 10-20 routers</p>
+<p><strong>Check with traceroute:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> traceroute google.com</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  192.168</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">.1.1 </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">192.168.1.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)  </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2.103</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ms</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">2</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  10.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">.0.1 </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">10.0.0.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)  </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">15.234</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ms</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  ...</span></span></code></pre></figure>
+<p><strong>See:</strong> <a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a>, <a href="../ISP" class="internal" data-slug="ISP">ISP</a></p>
+<hr/>
+<h2 id="6-tls-handshake">6. TLS handshake<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-tls-handshake" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Now we have a TCP connection, but it’s <strong>unencrypted</strong>. Time for <strong>HTTPS</strong> (HTTP over TLS).</p>
+<h3 id="tls-13-handshake-modern">TLS 1.3 handshake (modern)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-13-handshake-modern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Client                                Server
+  │                                      │
+  │───── ClientHello ──────────────────>│
+  │  (Supported ciphers, random, key share)
+  │                                      │
+  │&lt;──── ServerHello ───────────────────│
+  │  (Chosen cipher, random, key share)
+  │&lt;──── Certificate ───────────────────│
+  │&lt;──── CertificateVerify ─────────────│
+  │&lt;──── Finished ──────────────────────│
+  │                                      │
+  │───── Finished ─────────────────────>│
+  │                                      │
+  (Encrypted application data)
+</code></pre>
+<p><strong>Faster than TLS 1.2!</strong> Only 1 round trip (1-RTT) instead of 2.</p>
+<h3 id="detailed-tls-steps">Detailed TLS steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#detailed-tls-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. ClientHello:</strong></p>
+<pre><code>TLS Record:
+  Version: TLS 1.3
+  Random: (32 bytes) - prevents replay attacks
+  Cipher Suites:
+    TLS_AES_128_GCM_SHA256
+    TLS_AES_256_GCM_SHA384
+    TLS_CHACHA20_POLY1305_SHA256
+  Extensions:
+    server_name: google.com (SNI - Server Name Indication)
+    supported_groups: x25519, secp256r1
+    key_share: (client's public key for ECDHE)
+</code></pre>
+<p><strong>2. ServerHello:</strong></p>
+<pre><code>TLS Record:
+  Version: TLS 1.3
+  Random: (32 bytes)
+  Cipher Suite: TLS_AES_128_GCM_SHA256 (chosen)
+  key_share: (server's public key)
+</code></pre>
+<p><strong>3. Certificate:</strong></p>
+<pre><code>Certificate Chain:
+  1. google.com (end entity)
+  2. GTS CA 1C3 (intermediate)
+  3. GTS Root R1 (root CA)
+
+Certificate for google.com:
+  Issued to: google.com
+  Issued by: GTS CA 1C3
+  Valid: 2024-10-01 to 2025-01-01
+  Public Key: (2048-bit RSA or 256-bit ECDSA)
+  Signature: (signed by CA's private key)
+</code></pre>
+<p><strong>Browser verifies certificate:</strong></p>
+<pre><code>1. Check signature chain (is it signed by trusted CA?)
+2. Check validity period (not expired?)
+3. Check domain name (matches google.com?)
+4. Check revocation status (CRL or OCSP)
+</code></pre>
+<p><strong>4. Derive shared secret:</strong></p>
+<p>Both sides use <strong>ECDHE (Elliptic Curve Diffie-Hellman)</strong>:</p>
+<pre><code>Client has:
+  - Client private key (random)
+  - Server public key (from ServerHello)
+  → Compute shared secret
+
+Server has:
+  - Server private key (random)
+  - Client public key (from ClientHello)
+  → Compute shared secret
+
+Both get the same shared secret!
+</code></pre>
+<p><strong>5. Derive encryption keys:</strong></p>
+<pre><code>Master Secret = HKDF(shared_secret, client_random, server_random)
+
+Client Write Key = HKDF(Master Secret, &quot;client write&quot;)
+Server Write Key = HKDF(Master Secret, &quot;server write&quot;)
+</code></pre>
+<p><strong>6. Finished messages:</strong></p>
+<p>Both sides send encrypted “Finished” message to verify handshake succeeded.</p>
+<p><strong>Connection is now encrypted!</strong></p>
+<p><strong>See:</strong> <a href="../HTTPS" class="internal" data-slug="HTTPS">HTTPS</a>, <a href="../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a>, <a href="../Fundamentals/Encryption" class="internal" data-slug="Fundamentals/Encryption">Encryption</a></p>
+<hr/>
+<h2 id="7-http-request">7. HTTP request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-http-request" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Browser is finally ready to send the HTTP request!</p>
+<h3 id="http11-request">HTTP/1.1 request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http11-request" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>GET / HTTP/1.1
+Host: google.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) Chrome/120.0.0.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+</code></pre>
+<p><strong>(Blank line signals end of headers)</strong></p>
+<p><strong>Header breakdown:</strong></p>
+<ul>
+<li><strong><code>GET /</code></strong> - Request the root path</li>
+<li><strong><code>HTTP/1.1</code></strong> - Protocol version</li>
+<li><strong><code>Host: google.com</code></strong> - Required (server might host multiple domains)</li>
+<li><strong><code>User-Agent:</code></strong> - Browser identification</li>
+<li><strong><code>Accept:</code></strong> - What content types browser understands</li>
+<li><strong><code>Accept-Encoding:</code></strong> - Browser supports gzip/brotli compression</li>
+<li><strong><code>Connection: keep-alive</code></strong> - Reuse TCP connection for multiple requests</li>
+</ul>
+<p><strong>See:</strong> <a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a></p>
+<h3 id="http2-or-http3">HTTP/2 or HTTP/3?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http2-or-http3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Modern browsers prefer:</strong></p>
+<ul>
+<li><strong>HTTP/2:</strong> Binary protocol, multiplexing (multiple requests on 1 TCP connection)</li>
+<li><strong>HTTP/3:</strong> Uses QUIC (UDP-based), even faster</li>
+</ul>
+<p><strong>Browser negotiates during TLS handshake</strong> (ALPN - Application-Layer Protocol Negotiation).</p>
+<p><strong>See:</strong> <a href="../HTTP-2" class="internal" data-slug="HTTP-2">HTTP-2</a>, <a href="../QUIC" class="internal" data-slug="QUIC">QUIC</a></p>
+<h3 id="sending-the-request">Sending the request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sending-the-request" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Browser encrypts HTTP request</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">encrypted_data </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> tls_encrypt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(http_request);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Writes to socket</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">write</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(sockfd, encrypted_data, len);</span></span></code></pre></figure>
+<p><strong>TCP breaks it into segments:</strong></p>
+<pre><code>TCP Segment 1:
+  Sequence: 1001
+  Data: (first 1460 bytes)
+
+TCP Segment 2:
+  Sequence: 2461
+  Data: (rest of data)
+</code></pre>
+<p><strong>IP wraps each segment in IP packet, sends over network.</strong></p>
+<hr/>
+<h2 id="8-http-response">8. HTTP response<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-http-response" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Google’s server receives the request, processes it, and sends a response.</p>
+<h3 id="http11-response">HTTP/1.1 response<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http11-response" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>HTTP/1.1 200 OK
+Date: Thu, 07 Nov 2024 10:00:00 GMT
+Server: gws
+Content-Type: text/html; charset=UTF-8
+Content-Length: 12345
+Content-Encoding: gzip
+Set-Cookie: NID=....; expires=Fri, 06-May-2025 10:00:00 GMT; path=/; domain=.google.com; HttpOnly
+Cache-Control: private, max-age=0
+X-Frame-Options: SAMEORIGIN
+
+&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+  &lt;title>Google&lt;/title>
+  ...
+&lt;/head>
+&lt;body>
+  ...
+&lt;/body>
+&lt;/html>
+</code></pre>
+<p><strong>Response breakdown:</strong></p>
+<ul>
+<li><strong><code>HTTP/1.1 200 OK</code></strong> - Success!</li>
+<li><strong><code>Content-Type: text/html</code></strong> - It’s HTML</li>
+<li><strong><code>Content-Length: 12345</code></strong> - Size in bytes</li>
+<li><strong><code>Content-Encoding: gzip</code></strong> - Compressed</li>
+<li><strong><code>Set-Cookie:</code></strong> - Store this cookie for future requests</li>
+</ul>
+<p><strong>Common status codes:</strong></p>
+<pre><code>200 OK              - Success
+301 Moved Permanently - Redirect (permanent)
+302 Found           - Redirect (temporary)
+304 Not Modified    - Use cached version
+400 Bad Request     - Malformed request
+401 Unauthorized    - Authentication required
+403 Forbidden       - Access denied
+404 Not Found       - Resource doesn't exist
+500 Internal Server Error - Server crashed
+503 Service Unavailable - Server overloaded
+</code></pre>
+<p><strong>See:</strong> <a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a></p>
+<h3 id="tcp-receives-data">TCP receives data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tcp-receives-data" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>1. Server sends TCP segments
+2. Client receives segments
+3. Client sends ACK for each segment
+4. TCP reassembles data in order
+5. Delivers complete HTTP response to browser
+</code></pre>
+<p><strong>If packet is lost:</strong></p>
+<pre><code>1. Client doesn't send ACK
+2. Server's retransmission timeout fires (RTO)
+3. Server resends segment
+4. Client ACKs it
+</code></pre>
+<p><strong>TCP congestion control</strong> (see <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a>):</p>
+<ul>
+<li><strong>Slow start:</strong> Exponentially increase sending rate</li>
+<li><strong>Congestion avoidance:</strong> Linearly increase</li>
+<li><strong>Fast retransmit:</strong> Resend on 3 duplicate ACKs</li>
+</ul>
+<p><strong>See:</strong> <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a></p>
+<hr/>
+<h2 id="9-browser-rendering">9. Browser rendering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-browser-rendering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Browser now has the HTML. Time to <strong>render</strong> it!</p>
+<h3 id="rendering-pipeline">Rendering pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rendering-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>HTML → Parse → DOM Tree
+CSS  → Parse → CSSOM Tree
+                 ↓
+            Render Tree
+                 ↓
+              Layout
+                 ↓
+              Paint
+                 ↓
+            Composite
+                 ↓
+             Display!
+</code></pre>
+<h3 id="step-1-parse-html--dom-tree">Step 1: Parse HTML → DOM tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-1-parse-html--dom-tree" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>HTML:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="html" data-theme="github-light github-dark"><code data-language="html" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;!</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">DOCTYPE</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> html</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">html</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">head</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">title</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">>Google&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">title</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">head</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">div</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> id</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;search&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">input</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;text&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  &lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">html</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span></code></pre></figure>
+<p><strong>DOM tree:</strong></p>
+<pre><code>Document
+ ├─ html
+ │  ├─ head
+ │  │  └─ title → &quot;Google&quot;
+ │  └─ body
+ │     └─ div#search
+ │        └─ input
+</code></pre>
+<p><strong>Parser is forgiving:</strong></p>
+<ul>
+<li>Unclosed tags? Browser fixes them</li>
+<li>Invalid HTML? Browser does its best</li>
+<li>No “syntax error” in HTML</li>
+</ul>
+<h3 id="step-2-parse-css--cssom-tree">Step 2: Parse CSS → CSSOM tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2-parse-css--cssom-tree" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>CSS:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="css" data-theme="github-light github-dark"><code data-language="css" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  margin</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  font-family</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">Arial</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">sans-serif</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">div</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#search</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  width</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">600</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  margin</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> auto</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  width</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">%</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  padding</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">10</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>CSSOM tree:</strong></p>
+<pre><code>body: {
+  margin: 0,
+  font-family: Arial
+}
+div#search: {
+  width: 600px,
+  margin: 100px auto
+}
+input: {
+  width: 100%,
+  padding: 10px
+}
+</code></pre>
+<h3 id="step-3-combine--render-tree">Step 3: Combine → Render tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3-combine--render-tree" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Render tree</strong> = DOM + CSSOM (only visible elements)</p>
+<pre><code>RenderBody
+ └─ RenderDiv (width: 600px, margin: 100px auto)
+    └─ RenderInput (width: 100%, padding: 10px)
+</code></pre>
+<p>Elements with <code>display: none</code> are excluded.</p>
+<h3 id="step-4-layout-reflow">Step 4: Layout (Reflow)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4-layout-reflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Calculate exact position and size</strong> of each element.</p>
+<pre><code>RenderBody: x=0, y=0, width=1920px, height=1080px
+ └─ RenderDiv: x=660, y=100, width=600px, height=50px
+    └─ RenderInput: x=660, y=100, width=600px, height=50px
+</code></pre>
+<p><strong>Layout is recursive</strong> (top-down):</p>
+<ol>
+<li>Calculate parent size</li>
+<li>Calculate child sizes (relative to parent)</li>
+<li>Calculate child positions</li>
+</ol>
+<p><strong>Expensive operation!</strong> Avoid triggering layout in JavaScript.</p>
+<h3 id="step-5-paint">Step 5: Paint<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-5-paint" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Generate drawing commands</strong> for each element:</p>
+<pre><code>PaintCommands:
+1. FillRect(x=0, y=0, w=1920, h=1080, color=#ffffff) // Background
+2. DrawText(x=660, y=100, text=&quot;Google&quot;, font=Arial)
+3. DrawRect(x=660, y=150, w=600, h=50, border=#ddd)  // Input border
+4. FillRect(x=670, y=160, w=580, h=30, color=#fff)   // Input background
+</code></pre>
+<h3 id="step-6-composite">Step 6: Composite<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-6-composite" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Modern browsers use GPU compositing:</strong></p>
+<ol>
+<li>
+<p><strong>Create layers</strong> for elements that:</p>
+<ul>
+<li>Have <code>position: fixed</code> or <code>position: absolute</code></li>
+<li>Have CSS transforms/animations</li>
+<li>Have <code>will-change</code> property</li>
+<li>Use <code>&lt;video></code> or <code>&lt;canvas></code></li>
+</ul>
+</li>
+<li>
+<p><strong>Rasterize</strong> each layer (convert to pixels)</p>
+</li>
+<li>
+<p><strong>Upload textures to GPU</strong></p>
+</li>
+<li>
+<p><strong>Composite layers</strong> using GPU</p>
+<ul>
+<li>Apply transforms, opacity, clipping</li>
+<li>Combine layers in correct order</li>
+</ul>
+</li>
+</ol>
+<p><strong>Result:</strong> Final image sent to screen!</p>
+<p><strong>See:</strong> <a href="../GPU-Rendering" class="internal" data-slug="GPU-Rendering">GPU-Rendering</a></p>
+<h3 id="loading-additional-resources">Loading additional resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#loading-additional-resources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>While parsing HTML, browser encounters:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="html" data-theme="github-light github-dark"><code data-language="html" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">link</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> rel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;stylesheet&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> href</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;style.css&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">script</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;app.js&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">>&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">script</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">img</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;logo.png&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">></span></span></code></pre></figure>
+<p><strong>Browser makes parallel requests:</strong></p>
+<ul>
+<li>Each resource triggers DNS → TCP → HTTP flow</li>
+<li>Browser limits concurrent connections (usually 6 per domain)</li>
+<li>Uses HTTP/2 multiplexing if available</li>
+</ul>
+<p><strong>Blocking resources:</strong></p>
+<ul>
+<li><strong>CSS blocks rendering</strong> (page waits for CSS before painting)</li>
+<li><strong>JavaScript blocks parsing</strong> (unless <code>async</code> or <code>defer</code>)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a></p>
+<h3 id="javascript-execution">JavaScript execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#javascript-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>When <code>&lt;script></code> tag is encountered:</strong></p>
+<ol>
+<li><strong>Pause HTML parsing</strong></li>
+<li><strong>Download JS file</strong> (if external)</li>
+<li><strong>Parse JavaScript</strong> → AST (Abstract Syntax Tree)</li>
+<li><strong>Compile to bytecode</strong> (V8 engine)</li>
+<li><strong>Execute JavaScript</strong></li>
+<li><strong>Resume HTML parsing</strong></li>
+</ol>
+<p><strong>JavaScript can modify DOM:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">document.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">getElementById</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'search'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).style.display </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'none'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></figure>
+<p>This triggers <strong>reflow + repaint</strong> (expensive!).</p>
+<p><strong>See:</strong> <a href="../JavaScript-Engine" class="internal" data-slug="JavaScript-Engine">JavaScript-Engine</a></p>
+<hr/>
+<h2 id="10-complete-timeline">10. Complete timeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-complete-timeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Putting it all together:</p>
+<pre><code>Time    Event
+0ms     User presses Enter
+1ms     Browser parses URL
+2ms     DNS lookup (cached)
+5ms     Open socket
+10ms    TCP SYN →
+40ms    TCP SYN-ACK ← (30ms network RTT)
+45ms    TCP ACK →
+50ms    TLS ClientHello →
+80ms    TLS ServerHello ← (30ms RTT)
+85ms    HTTP GET request →
+115ms   HTTP response starts ← (30ms RTT)
+120ms   Full HTML received
+125ms   Parse HTML → DOM
+130ms   CSS requested
+160ms   CSS received
+165ms   Construct render tree
+170ms   Layout (reflow)
+175ms   Paint
+180ms   Composite on GPU
+185ms   First paint!
+200ms   JavaScript downloaded
+210ms   JavaScript executed
+220ms   Images loaded
+250ms   Page fully loaded
+</code></pre>
+<p><strong>Total: ~250ms</strong> (heavily depends on network latency, server speed, page size)</p>
+<p><strong>Latency breakdown:</strong></p>
+<ul>
+<li>DNS: ~5ms (cached)</li>
+<li>TCP handshake: 1 RTT (~30ms)</li>
+<li>TLS handshake: 1 RTT (~30ms)</li>
+<li>HTTP request/response: 1 RTT (~30ms)</li>
+<li>Rendering: ~50ms</li>
+<li>Total: ~145ms minimum (3 RTTs + rendering)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Latency" class="internal" data-slug="Latency">Latency</a></p>
+<hr/>
+<h2 id="key-takeaways">Key takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-complete-stack">The complete stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-complete-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>You (keystroke)
+    ↓
+Browser (parse URL)
+    ↓
+DNS (resolve domain → IP)
+    ↓
+TCP (3-way handshake)
+    ↓
+TLS (encrypted tunnel)
+    ↓
+HTTP (request/response)
+    ↓
+Browser (render HTML)
+    ↓
+Screen (pixels!)
+</code></pre>
+<h3 id="network-layers-osi-model">Network layers (OSI model)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-layers-osi-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Application:  HTTP, DNS
+Transport:    TCP, UDP
+Network:      IP, ICMP
+Link:         Ethernet, WiFi, ARP
+Physical:     Cables, radio waves
+</code></pre>
+<p><strong>See:</strong> <a href="../OSI-Model" class="internal" data-slug="OSI-Model">OSI-Model</a></p>
+<h3 id="performance-bottlenecks">Performance bottlenecks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-bottlenecks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Latency (round-trip time):</strong></p>
+<ul>
+<li>Each network round trip adds 30-100ms</li>
+<li>TCP: 1 RTT</li>
+<li>TLS: 1 RTT (TLS 1.3) or 2 RTT (TLS 1.2)</li>
+<li>HTTP: 1 RTT per request</li>
+</ul>
+<p><strong>Optimization:</strong></p>
+<ul>
+<li><strong>HTTP/2:</strong> Multiplexing (many requests on 1 TCP connection)</li>
+<li><strong>HTTP/3:</strong> QUIC (no TCP handshake, 0-RTT)</li>
+<li><strong>CDN:</strong> Serve content closer to user</li>
+<li><strong>Caching:</strong> DNS, HTTP, browser cache</li>
+</ul>
+<p><strong>Bandwidth (throughput):</strong></p>
+<ul>
+<li>Less important for small pages</li>
+<li>Critical for images, videos, large files</li>
+</ul>
+<p><strong>See:</strong> <a href="../Latency" class="internal" data-slug="Latency">Latency</a>, <a href="../Networking/C10k-Problem" class="internal" data-slug="Networking/C10k-Problem">C10k-Problem</a></p>
+<hr/>
+<h2 id="related-concepts">Related concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#related-concepts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="networking">Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#networking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> - Transmission Control Protocol</li>
+<li><a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a> - User Datagram Protocol</li>
+<li><a href="../Networking/DNS" class="internal" data-slug="Networking/DNS">DNS</a> - Domain Name System</li>
+<li><a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a> - Hypertext Transfer Protocol</li>
+<li><a href="../HTTPS" class="internal" data-slug="HTTPS">HTTPS</a> - HTTP over TLS</li>
+<li><a href="../Networking/Socket-API" class="internal" data-slug="Networking/Socket-API">Socket-API</a> - Socket programming</li>
+<li><a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a> - Packet forwarding</li>
+<li><a href="../ISP" class="internal" data-slug="ISP">ISP</a> - Internet Service Provider</li>
+</ul>
+<h3 id="systems">Systems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#systems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a> - Network stack in OS</li>
+<li><a href="../System-Call" class="internal" data-slug="System-Call">System-Call</a> - Socket system calls</li>
+<li><a href="../File-Descriptor" class="internal" data-slug="File-Descriptor">File-Descriptor</a> - Sockets are file descriptors</li>
+</ul>
+<h3 id="performance">Performance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../Latency" class="internal" data-slug="Latency">Latency</a> - Network round-trip time</li>
+<li><a href="../Networking/C10k-Problem" class="internal" data-slug="Networking/C10k-Problem">C10k-Problem</a> - Handling many connections</li>
+<li><a href="../Non-Blocking-IO" class="internal" data-slug="Non-Blocking-IO">Non-Blocking-IO</a> - Async networking</li>
+</ul>
+<hr/>
+<h2 id="further-reading">Further reading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#further-reading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Books:</strong></p>
+<ul>
+<li>“Computer Networks” (Tanenbaum)</li>
+<li>“TCP/IP Illustrated” (Stevens)</li>
+<li>“High Performance Browser Networking” (Grigorik)</li>
+</ul>
+<p><strong>RFCs (Standards):</strong></p>
+<ul>
+<li>RFC 791: IP</li>
+<li>RFC 793: TCP</li>
+<li>RFC 1035: DNS</li>
+<li>RFC 7540: HTTP/2</li>
+<li>RFC 8446: TLS 1.3</li>
+<li>RFC 9000: QUIC</li>
+</ul>
+<p><strong>Original inspiration:</strong></p>
+<ul>
+<li><a href="https://github.com/alex/what-happens-when" class="external">github.com/alex/what-happens-when<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<h2 id="the-big-picture">The Big Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Every web request involves:</strong></p>
+<pre><code>7 layers of abstraction
+20+ routers
+3-5 round trips
+Millions of lines of code
+Billions of transistors
+</code></pre>
+<p><strong>And it happens in ~100-300ms.</strong></p>
+<p><strong>This is modern networking. This is systems programming.</strong></p>
+<p><strong>Now you know WTF happens when you type <code>google.com</code>.</strong></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-109" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-happens-when-you-type-googlecom-in-your-browser" data-for="wtf-happens-when-you-type-googlecom-in-your-browser">WTF happens when you type google.com in your browser</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#1-you-hit-enter" data-for="1-you-hit-enter">1. You hit Enter</a></li><li class="depth-2"><a href="#browser-receives-keypress" data-for="browser-receives-keypress">Browser receives keypress</a></li><li class="depth-1"><a href="#2-browser-parses-the-url" data-for="2-browser-parses-the-url">2. Browser parses the URL</a></li><li class="depth-2"><a href="#is-it-a-url-or-search-term" data-for="is-it-a-url-or-search-term">Is it a URL or search term?</a></li><li class="depth-2"><a href="#parse-the-url" data-for="parse-the-url">Parse the URL</a></li><li class="depth-2"><a href="#check-hsts-list" data-for="check-hsts-list">Check HSTS list</a></li><li class="depth-1"><a href="#3-dns-lookup" data-for="3-dns-lookup">3. DNS lookup</a></li><li class="depth-2"><a href="#check-caches-fastest-to-slowest" data-for="check-caches-fastest-to-slowest">Check caches (fastest to slowest)</a></li><li class="depth-2"><a href="#dns-query" data-for="dns-query">DNS query</a></li><li class="depth-2"><a href="#recursive-dns-resolution" data-for="recursive-dns-resolution">Recursive DNS resolution</a></li><li class="depth-1"><a href="#4-opening-a-socket" data-for="4-opening-a-socket">4. Opening a socket</a></li><li class="depth-2"><a href="#socket-api" data-for="socket-api">Socket API</a></li><li class="depth-2"><a href="#connect-to-remote-server" data-for="connect-to-remote-server">Connect to remote server</a></li><li class="depth-1"><a href="#5-tcp-connection-3-way-handshake" data-for="5-tcp-connection-3-way-handshake">5. TCP connection (3-way handshake)</a></li><li class="depth-2"><a href="#3-way-handshake" data-for="3-way-handshake">3-way handshake</a></li><li class="depth-2"><a href="#how-packets-travel-the-full-journey" data-for="how-packets-travel-the-full-journey">How packets travel (the full journey)</a></li><li class="depth-2"><a href="#arp-address-resolution-protocol" data-for="arp-address-resolution-protocol">ARP (Address Resolution Protocol)</a></li><li class="depth-2"><a href="#packet-forwarding-through-routers" data-for="packet-forwarding-through-routers">Packet forwarding through routers</a></li><li class="depth-1"><a href="#6-tls-handshake" data-for="6-tls-handshake">6. TLS handshake</a></li><li class="depth-2"><a href="#tls-13-handshake-modern" data-for="tls-13-handshake-modern">TLS 1.3 handshake (modern)</a></li><li class="depth-2"><a href="#detailed-tls-steps" data-for="detailed-tls-steps">Detailed TLS steps</a></li><li class="depth-1"><a href="#7-http-request" data-for="7-http-request">7. HTTP request</a></li><li class="depth-2"><a href="#http11-request" data-for="http11-request">HTTP/1.1 request</a></li><li class="depth-2"><a href="#http2-or-http3" data-for="http2-or-http3">HTTP/2 or HTTP/3?</a></li><li class="depth-2"><a href="#sending-the-request" data-for="sending-the-request">Sending the request</a></li><li class="depth-1"><a href="#8-http-response" data-for="8-http-response">8. HTTP response</a></li><li class="depth-2"><a href="#http11-response" data-for="http11-response">HTTP/1.1 response</a></li><li class="depth-2"><a href="#tcp-receives-data" data-for="tcp-receives-data">TCP receives data</a></li><li class="depth-1"><a href="#9-browser-rendering" data-for="9-browser-rendering">9. Browser rendering</a></li><li class="depth-2"><a href="#rendering-pipeline" data-for="rendering-pipeline">Rendering pipeline</a></li><li class="depth-2"><a href="#step-1-parse-html--dom-tree" data-for="step-1-parse-html--dom-tree">Step 1: Parse HTML → DOM tree</a></li><li class="depth-2"><a href="#step-2-parse-css--cssom-tree" data-for="step-2-parse-css--cssom-tree">Step 2: Parse CSS → CSSOM tree</a></li><li class="depth-2"><a href="#step-3-combine--render-tree" data-for="step-3-combine--render-tree">Step 3: Combine → Render tree</a></li><li class="depth-2"><a href="#step-4-layout-reflow" data-for="step-4-layout-reflow">Step 4: Layout (Reflow)</a></li><li class="depth-2"><a href="#step-5-paint" data-for="step-5-paint">Step 5: Paint</a></li><li class="depth-2"><a href="#step-6-composite" data-for="step-6-composite">Step 6: Composite</a></li><li class="depth-2"><a href="#loading-additional-resources" data-for="loading-additional-resources">Loading additional resources</a></li><li class="depth-2"><a href="#javascript-execution" data-for="javascript-execution">JavaScript execution</a></li><li class="depth-1"><a href="#10-complete-timeline" data-for="10-complete-timeline">10. Complete timeline</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key takeaways</a></li><li class="depth-2"><a href="#the-complete-stack" data-for="the-complete-stack">The complete stack</a></li><li class="depth-2"><a href="#network-layers-osi-model" data-for="network-layers-osi-model">Network layers (OSI model)</a></li><li class="depth-2"><a href="#performance-bottlenecks" data-for="performance-bottlenecks">Performance bottlenecks</a></li><li class="depth-1"><a href="#related-concepts" data-for="related-concepts">Related concepts</a></li><li class="depth-2"><a href="#networking" data-for="networking">Networking</a></li><li class="depth-2"><a href="#systems" data-for="systems">Systems</a></li><li class="depth-2"><a href="#performance" data-for="performance">Performance</a></li><li class="depth-1"><a href="#further-reading" data-for="further-reading">Further reading</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The Big Picture</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Mathematics for Computer Science</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Mathematics for Computer Science"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Mathematics for Computer Science"/><meta name="twitter:description" content="Essential mathematical foundations for computer science - discrete math, probability, linear algebra, and more"/><meta property="og:description" content="Essential mathematical foundations for computer science - discrete math, probability, linear algebra, and more"/><meta property="og:image:alt" content="Essential mathematical foundations for computer science - discrete math, probability, linear algebra, and more"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Theory/Mathematics-for-CS"/><meta property="twitter:url" content="https://notes.thamle.live/Theory/Mathematics-for-CS"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Essential mathematical foundations for computer science - discrete math, probability, linear algebra, and more"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Theory/Mathematics-for-CS"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-244"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-244" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Theory/">Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Mathematics for Computer Science</a></div></nav><h1 class="article-title">Mathematics for Computer Science</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T00:00:00.000Z">Nov 07, 2025</time><span>17 min read</span></p><ul class="tags"><li><a href="../tags/theory" class="internal tag-link">theory</a></li><li><a href="../tags/mathematics" class="internal tag-link">mathematics</a></li><li><a href="../tags/roadmap" class="internal tag-link">roadmap</a></li></ul></div></div><article class="popover-hint"><h1 id="mathematics-for-computer-science">Mathematics for Computer Science<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mathematics-for-computer-science" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Mathematics</strong> is the language of computer science. Understanding it helps you:</p>
+<ul>
+<li><strong>Analyze algorithms</strong> - Prove correctness, measure complexity</li>
+<li><strong>Design systems</strong> - Apply mathematical models</li>
+<li><strong>Understand theory</strong> - Grasp <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> and <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a></li>
+<li><strong>Solve problems</strong> - Use mathematical reasoning</li>
+</ul>
+<p>This is the <strong>foundation layer</strong> beneath all of computer science.</p>
+<hr/>
+<h2 id="why-study-mathematics-for-cs">Why Study Mathematics for CS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-study-mathematics-for-cs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="for-systems-programmers">For Systems Programmers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#for-systems-programmers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Direct benefits:</strong></p>
+<ul>
+<li><strong>Algorithm analysis</strong> - Understand Big-O, prove correctness</li>
+<li><strong>Optimization</strong> - Use calculus for performance tuning</li>
+<li><strong>Cryptography</strong> - Number theory for security</li>
+<li><strong>Networking</strong> - Probability for reliability analysis</li>
+<li><strong>Graphics</strong> - Linear algebra for transformations</li>
+<li><strong>Machine learning</strong> - Statistics, linear algebra, calculus</li>
+</ul>
+<p><strong>Example:</strong> Understanding modular arithmetic helps you design hash functions that minimize collisions.</p>
+<hr/>
+<h2 id="-core-areas">📚 Core Areas<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-core-areas" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-discrete-mathematics">1. Discrete Mathematics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-discrete-mathematics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Foundation for CS</strong> - Logic, sets, graphs, combinatorics</p>
+<h3 id="2-probability--statistics">2. Probability &amp; Statistics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-probability--statistics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Randomized algorithms</strong> - Expected running time, probabilistic analysis</p>
+<h3 id="3-linear-algebra">3. Linear Algebra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-linear-algebra" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Machine learning, graphics</strong> - Matrices, vector spaces, eigenvalues</p>
+<h3 id="4-calculus">4. Calculus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-calculus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Optimization</strong> - Limits, derivatives, gradient descent</p>
+<h3 id="5-number-theory">5. Number Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-number-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cryptography</strong> - Primes, modular arithmetic, RSA</p>
+<hr/>
+<h2 id="-phase-1-discrete-mathematics-8-12-weeks">🎯 Phase 1: Discrete Mathematics (8-12 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-1-discrete-mathematics-8-12-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-logic">1.1 Logic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-logic" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Propositional logic:</strong></p>
+<pre><code>Operators: ¬ (NOT), ∧ (AND), ∨ (OR), → (IMPLIES), ↔ (IFF)
+
+Example:
+P: &quot;It is raining&quot;
+Q: &quot;I have an umbrella&quot;
+P → Q: &quot;If it is raining, then I have an umbrella&quot;
+</code></pre>
+<p><strong>Truth tables:</strong></p>
+<pre><code>P | Q | P ∧ Q | P ∨ Q | P → Q | P ↔ Q
+0 | 0 |   0   |   0   |   1   |   1
+0 | 1 |   0   |   1   |   1   |   0
+1 | 0 |   0   |   1   |   0   |   0
+1 | 1 |   1   |   1   |   1   |   1
+</code></pre>
+<p><strong>Predicate logic:</strong></p>
+<pre><code>∀x P(x): For all x, P(x) is true
+∃x P(x): There exists x such that P(x) is true
+
+Example:
+∀x (x > 0 → x² > 0): &quot;All positive numbers have positive squares&quot;
+∃x (x² = 2): &quot;There exists a number whose square is 2&quot;
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> correctness proofs</li>
+<li>Formal verification</li>
+<li>Database query languages (SQL uses predicate logic)</li>
+</ul>
+<hr/>
+<h3 id="12-proof-techniques">1.2 Proof Techniques<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-proof-techniques" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Direct proof:</strong></p>
+<pre><code>Theorem: If n is even, then n² is even.
+Proof:
+  Let n = 2k for some integer k.
+  Then n² = (2k)² = 4k² = 2(2k²).
+  Since 2k² is an integer, n² is even. ∎
+</code></pre>
+<p><strong>Proof by contradiction:</strong></p>
+<pre><code>Theorem: √2 is irrational.
+Proof:
+  Assume √2 = p/q (rational, in lowest terms).
+  Then 2 = p²/q², so 2q² = p².
+  Thus p² is even, so p is even. Let p = 2k.
+  Then 2q² = 4k², so q² = 2k².
+  Thus q² is even, so q is even.
+  But this contradicts p/q being in lowest terms. ∎
+</code></pre>
+<p><strong>Proof by induction:</strong></p>
+<pre><code>Theorem: 1 + 2 + ... + n = n(n+1)/2
+
+Proof:
+  Base case: n=1: 1 = 1(2)/2 = 1 ✓
+
+  Inductive step: Assume true for n=k.
+  Show true for n=k+1:
+    1 + 2 + ... + k + (k+1)
+    = k(k+1)/2 + (k+1)        [by hypothesis]
+    = (k+1)(k/2 + 1)
+    = (k+1)(k+2)/2            ✓
+</code></pre>
+<p><strong>Other techniques:</strong></p>
+<ul>
+<li>Contrapositive: (P → Q) ≡ (¬Q → ¬P)</li>
+<li>Counterexample</li>
+<li>Construction</li>
+</ul>
+<p><strong>Practice:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Prove algorithm correctness</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Prove invariants in loops</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Prove theorems about data structures</li>
+</ul>
+<hr/>
+<h3 id="13-sets-and-relations">1.3 Sets and Relations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-sets-and-relations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Sets:</strong></p>
+<pre><code>A = {1, 2, 3}
+B = {2, 3, 4}
+
+A ∪ B = {1, 2, 3, 4}  (union)
+A ∩ B = {2, 3}         (intersection)
+A - B = {1}            (difference)
+A × B = {(1,2), (1,3), (1,4), (2,2), ...}  (Cartesian product)
+</code></pre>
+<p><strong>Power set:</strong></p>
+<pre><code>P(A) = all subsets of A
+P({1, 2}) = {∅, {1}, {2}, {1, 2}}
+|P(A)| = 2^|A|
+</code></pre>
+<p><strong>Relations:</strong></p>
+<pre><code>R ⊆ A × B
+
+Example: &quot;Less than&quot; on integers
+R = {(x, y) | x &lt; y}
+
+Properties:
+- Reflexive: xRx for all x
+- Symmetric: xRy → yRx
+- Transitive: xRy ∧ yRz → xRz
+- Antisymmetric: xRy ∧ yRx → x=y
+</code></pre>
+<p><strong>Equivalence relations:</strong> Reflexive, symmetric, transitive</p>
+<ul>
+<li>Equality</li>
+<li>Congruence modulo n</li>
+</ul>
+<p><strong>Partial orders:</strong> Reflexive, antisymmetric, transitive</p>
+<ul>
+<li>≤ on numbers</li>
+<li>⊆ on sets</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Database relations</li>
+<li>Type systems in programming languages</li>
+<li>Ordering in data structures</li>
+</ul>
+<hr/>
+<h3 id="14-functions">1.4 Functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-functions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Types:</strong></p>
+<pre><code>Injective (one-to-one): f(x) = f(y) → x = y
+Surjective (onto): ∀y ∃x: f(x) = y
+Bijective: Both injective and surjective
+</code></pre>
+<p><strong>Composition:</strong></p>
+<pre><code>(f ∘ g)(x) = f(g(x))
+</code></pre>
+<p><strong>Inverse:</strong></p>
+<pre><code>f⁻¹(y) = x ⟺ f(x) = y
+(Only exists if f is bijective)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Hash functions (should be uniform)</li>
+<li>Encryption (must be bijective)</li>
+<li>Data transformations</li>
+</ul>
+<hr/>
+<h3 id="15-combinatorics">1.5 Combinatorics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-combinatorics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Counting principles:</strong></p>
+<p><strong>Permutations (order matters):</strong></p>
+<pre><code>P(n, k) = n! / (n-k)!
+
+Example: Arrange 3 books from 5
+P(5, 3) = 5! / 2! = 60
+</code></pre>
+<p><strong>Combinations (order doesn’t matter):</strong></p>
+<pre><code>C(n, k) = n! / (k!(n-k)!)
+
+Example: Choose 3 books from 5
+C(5, 3) = 5! / (3!2!) = 10
+</code></pre>
+<p><strong>Binomial theorem:</strong></p>
+<pre><code>(x + y)ⁿ = Σ C(n,k) xᵏ yⁿ⁻ᵏ
+</code></pre>
+<p><strong>Pigeonhole principle:</strong></p>
+<pre><code>If n items are placed into m containers, and n > m,
+then at least one container has > 1 item.
+
+Example: Any 13 people include at least 2 born in same month.
+</code></pre>
+<p><strong>Inclusion-exclusion:</strong></p>
+<pre><code>|A ∪ B| = |A| + |B| - |A ∩ B|
+|A ∪ B ∪ C| = |A| + |B| + |C| - |A∩B| - |A∩C| - |B∩C| + |A∩B∩C|
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Algorithm analysis (counting operations)</li>
+<li>Probability (sample spaces)</li>
+<li>Hashing (birthday paradox)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a></p>
+<hr/>
+<h3 id="16-graph-theory">1.6 Graph Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16-graph-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Definitions:</strong></p>
+<pre><code>Graph G = (V, E)
+V = vertices (nodes)
+E = edges (connections)
+
+Types:
+- Directed vs undirected
+- Weighted vs unweighted
+- Cyclic vs acyclic (DAG)
+</code></pre>
+<p><strong>Graph properties:</strong></p>
+<pre><code>Degree: Number of edges connected to vertex
+Path: Sequence of vertices connected by edges
+Cycle: Path that starts and ends at same vertex
+Connected: Path exists between any two vertices
+Tree: Connected acyclic graph
+</code></pre>
+<p><strong>Graph algorithms:</strong></p>
+<ul>
+<li><strong>Traversal:</strong> DFS, BFS</li>
+<li><strong>Shortest path:</strong> Dijkstra, Bellman-Ford</li>
+<li><strong>MST:</strong> Kruskal, Prim</li>
+<li><strong>Matching:</strong> Hungarian algorithm</li>
+<li><strong>Coloring:</strong> Graph coloring (NP-hard)</li>
+</ul>
+<p><strong>Graph theory theorems:</strong></p>
+<p><strong>Handshaking lemma:</strong></p>
+<pre><code>Σ deg(v) = 2|E|
+(Sum of degrees = twice the edges)
+</code></pre>
+<p><strong>Euler’s formula (planar graphs):</strong></p>
+<pre><code>V - E + F = 2
+(Vertices - Edges + Faces = 2)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Network routing (shortest paths)</li>
+<li>Social networks (graph analysis)</li>
+<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> (control flow graphs)</li>
+<li><a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a> (process dependencies)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a>, <a href="../Networking/Networking" class="internal" data-slug="Networking/Networking">Networking</a></p>
+<hr/>
+<h3 id="17-recurrence-relations">1.7 Recurrence Relations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#17-recurrence-relations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Solving recurrences:</strong></p>
+<p><strong>Example - Fibonacci:</strong></p>
+<pre><code>F(n) = F(n-1) + F(n-2)
+F(0) = 0, F(1) = 1
+
+Characteristic equation:
+r² = r + 1
+r = (1 ± √5) / 2
+
+Closed form:
+F(n) = (φⁿ - ψⁿ) / √5
+where φ = (1+√5)/2, ψ = (1-√5)/2
+</code></pre>
+<p><strong>Linear recurrences:</strong></p>
+<pre><code>T(n) = a₁T(n-1) + a₂T(n-2) + ... + aₖT(n-k) + f(n)
+
+Homogeneous: f(n) = 0
+Non-homogeneous: f(n) ≠ 0
+</code></pre>
+<p><strong>Master theorem:</strong> See <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a></p>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Algorithm analysis</li>
+<li>Dynamic programming</li>
+<li>Time complexity</li>
+</ul>
+<hr/>
+<h2 id="-phase-2-probability--statistics-6-8-weeks">🎯 Phase 2: Probability &amp; Statistics (6-8 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-2-probability--statistics-6-8-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-probability-basics">2.1 Probability Basics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-probability-basics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Sample space:</strong> Set of all possible outcomes</p>
+<pre><code>Rolling a die: Ω = {1, 2, 3, 4, 5, 6}
+</code></pre>
+<p><strong>Probability:</strong></p>
+<pre><code>P(E) = |E| / |Ω|    (for equally likely outcomes)
+
+Axioms:
+1. 0 ≤ P(E) ≤ 1
+2. P(Ω) = 1
+3. P(A ∪ B) = P(A) + P(B) if A ∩ B = ∅
+</code></pre>
+<p><strong>Conditional probability:</strong></p>
+<pre><code>P(A | B) = P(A ∩ B) / P(B)
+
+&quot;Probability of A given B&quot;
+</code></pre>
+<p><strong>Independence:</strong></p>
+<pre><code>A and B are independent if:
+P(A ∩ B) = P(A) · P(B)
+</code></pre>
+<p><strong>Bayes’ theorem:</strong></p>
+<pre><code>P(A | B) = P(B | A) · P(A) / P(B)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Spam filtering (Bayesian)</li>
+<li>Network reliability</li>
+<li>Randomized algorithms</li>
+</ul>
+<hr/>
+<h3 id="22-random-variables">2.2 Random Variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-random-variables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Discrete random variable:</strong></p>
+<pre><code>X: Ω → ℝ
+
+Example: X = &quot;sum of two dice&quot;
+X can be 2, 3, ..., 12
+</code></pre>
+<p><strong>Probability mass function (PMF):</strong></p>
+<pre><code>P(X = k) = probability X equals k
+
+Σ P(X = k) = 1
+</code></pre>
+<p><strong>Continuous random variable:</strong></p>
+<pre><code>Probability density function (PDF): f(x)
+
+P(a ≤ X ≤ b) = ∫ₐᵇ f(x) dx
+</code></pre>
+<p><strong>Expected value:</strong></p>
+<pre><code>E[X] = Σ k · P(X = k)    (discrete)
+E[X] = ∫ x · f(x) dx     (continuous)
+
+&quot;Average value&quot;
+
+Linearity: E[aX + bY] = aE[X] + bE[Y]
+</code></pre>
+<p><strong>Variance:</strong></p>
+<pre><code>Var(X) = E[(X - E[X])²]
+       = E[X²] - (E[X])²
+
+&quot;Measure of spread&quot;
+
+Standard deviation: σ = √Var(X)
+</code></pre>
+<hr/>
+<h3 id="23-distributions">2.3 Distributions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-distributions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Uniform distribution:</strong></p>
+<pre><code>All outcomes equally likely
+P(X = k) = 1/n
+E[X] = (n+1)/2 for X ∈ {1, 2, ..., n}
+</code></pre>
+<p><strong>Bernoulli distribution:</strong></p>
+<pre><code>Single trial, success/failure
+P(X = 1) = p (success)
+P(X = 0) = 1-p (failure)
+E[X] = p
+</code></pre>
+<p><strong>Binomial distribution:</strong></p>
+<pre><code>n independent Bernoulli trials
+P(X = k) = C(n,k) · pᵏ · (1-p)ⁿ⁻ᵏ
+E[X] = np
+Var(X) = np(1-p)
+
+Example: Flip coin 10 times, count heads
+</code></pre>
+<p><strong>Geometric distribution:</strong></p>
+<pre><code>Trials until first success
+P(X = k) = (1-p)ᵏ⁻¹ · p
+E[X] = 1/p
+
+Example: Roll die until you get 6
+</code></pre>
+<p><strong>Poisson distribution:</strong></p>
+<pre><code>Rare events in fixed interval
+P(X = k) = (λᵏ e⁻ᵏ) / k!
+E[X] = Var(X) = λ
+
+Example: Network packets arriving per second
+</code></pre>
+<p><strong>Normal (Gaussian) distribution:</strong></p>
+<pre><code>Bell curve
+f(x) = (1 / σ√(2π)) · e^(-(x-μ)²/(2σ²))
+E[X] = μ
+Var(X) = σ²
+
+Central Limit Theorem: Sum of many random variables → Normal
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Performance analysis (normal distribution for latency)</li>
+<li>Network traffic modeling (Poisson)</li>
+<li>Randomized algorithms (binomial)</li>
+</ul>
+<hr/>
+<h3 id="24-probabilistic-analysis">2.4 Probabilistic Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-probabilistic-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Expected running time:</strong></p>
+<pre><code>Example - Randomized QuickSort:
+E[T(n)] = O(n log n)
+
+Even though worst case is O(n²),
+random pivot makes expected case O(n log n).
+</code></pre>
+<p><strong>Las Vegas vs Monte Carlo:</strong></p>
+<ul>
+<li><strong>Las Vegas:</strong> Always correct, random runtime (e.g., randomized quicksort)</li>
+<li><strong>Monte Carlo:</strong> Random correctness, fixed runtime (e.g., primality testing)</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Algorithm analysis</li>
+<li>Hash table collision analysis</li>
+<li>Load balancing</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a> (randomized algorithms)</p>
+<hr/>
+<h3 id="25-statistics">2.5 Statistics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-statistics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Descriptive statistics:</strong></p>
+<pre><code>Mean: x̄ = (Σ xᵢ) / n
+Median: Middle value when sorted
+Mode: Most frequent value
+Range: max - min
+Quartiles: Q1 (25%), Q2 (50% = median), Q3 (75%)
+</code></pre>
+<p><strong>Hypothesis testing:</strong></p>
+<pre><code>Null hypothesis H₀: No effect
+Alternative hypothesis H₁: There is an effect
+
+p-value: Probability of seeing data if H₀ is true
+If p &lt; 0.05, reject H₀
+</code></pre>
+<p><strong>Confidence intervals:</strong></p>
+<pre><code>95% confidence interval: [x̄ - 1.96σ/√n, x̄ + 1.96σ/√n]
+&quot;We're 95% confident the true mean is in this range&quot;
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Performance benchmarking</li>
+<li>A/B testing</li>
+<li>Experimental analysis</li>
+</ul>
+<hr/>
+<h2 id="-phase-3-linear-algebra-6-8-weeks">🎯 Phase 3: Linear Algebra (6-8 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-3-linear-algebra-6-8-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-vectors-and-matrices">3.1 Vectors and Matrices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-vectors-and-matrices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vectors:</strong></p>
+<pre><code>v = [v₁, v₂, ..., vₙ]
+
+Operations:
+v + w = [v₁+w₁, v₂+w₂, ..., vₙ+wₙ]
+c·v = [c·v₁, c·v₂, ..., c·vₙ]
+v·w = v₁w₁ + v₂w₂ + ... + vₙwₙ   (dot product)
+</code></pre>
+<p><strong>Matrices:</strong></p>
+<pre><code>A = [aᵢⱼ]  (m × n matrix)
+
+Addition: A + B = [aᵢⱼ + bᵢⱼ]
+Scalar mult: c·A = [c·aᵢⱼ]
+Multiplication: (AB)ᵢⱼ = Σₖ aᵢₖ·bₖⱼ
+Transpose: Aᵀ has aᵢⱼᵀ = aⱼᵢ
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>A = [1 2]    B = [5 6]
+    [3 4]        [7 8]
+
+AB = [1·5+2·7  1·6+2·8] = [19 22]
+     [3·5+4·7  3·6+4·8]   [43 50]
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Graphics transformations</li>
+<li>Machine learning (neural networks)</li>
+<li>Computer vision</li>
+</ul>
+<hr/>
+<h3 id="32-vector-spaces">3.2 Vector Spaces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-vector-spaces" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vector space:</strong> Set with addition and scalar multiplication</p>
+<p><strong>Subspace:</strong> Subset closed under operations</p>
+<p><strong>Linear independence:</strong></p>
+<pre><code>Vectors v₁, v₂, ..., vₙ are linearly independent if:
+c₁v₁ + c₂v₂ + ... + cₙvₙ = 0 implies c₁ = c₂ = ... = cₙ = 0
+</code></pre>
+<p><strong>Basis:</strong> Linearly independent set that spans the space</p>
+<p><strong>Dimension:</strong> Number of vectors in basis</p>
+<p><strong>Example:</strong></p>
+<pre><code>ℝ³ has standard basis: {[1,0,0], [0,1,0], [0,0,1]}
+Dimension = 3
+</code></pre>
+<hr/>
+<h3 id="33-linear-transformations">3.3 Linear Transformations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-linear-transformations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Linear transformation T: V → W:</strong></p>
+<pre><code>T(v + w) = T(v) + T(w)
+T(c·v) = c·T(v)
+</code></pre>
+<p><strong>Matrix representation:</strong></p>
+<pre><code>T(v) = Av
+
+Example - Rotation by θ:
+R(θ) = [cos θ  -sin θ]
+       [sin θ   cos θ]
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Computer graphics (rotations, scaling, translations)</li>
+<li>Signal processing</li>
+<li>Data compression</li>
+</ul>
+<hr/>
+<h3 id="34-determinants">3.4 Determinants<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-determinants" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Determinant:</strong> Scalar value that encodes certain properties</p>
+<p><strong>2×2 matrix:</strong></p>
+<pre><code>det([a b]) = ad - bc
+    [c d]
+</code></pre>
+<p><strong>Properties:</strong></p>
+<pre><code>det(AB) = det(A) · det(B)
+det(Aᵀ) = det(A)
+det(I) = 1
+A is invertible ⟺ det(A) ≠ 0
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Check if matrix is invertible</li>
+<li>Calculate volume (parallelepiped)</li>
+<li>Solve systems of equations (Cramer’s rule)</li>
+</ul>
+<hr/>
+<h3 id="35-eigenvalues-and-eigenvectors">3.5 Eigenvalues and Eigenvectors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-eigenvalues-and-eigenvectors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Eigenvector:</strong> Vector that doesn’t change direction under transformation</p>
+<pre><code>Av = λv
+
+v = eigenvector
+λ = eigenvalue
+</code></pre>
+<p><strong>Finding eigenvalues:</strong></p>
+<pre><code>det(A - λI) = 0  (characteristic equation)
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>A = [2 1]
+    [1 2]
+
+det([2-λ  1  ]) = (2-λ)² - 1 = λ² - 4λ + 3 = 0
+   [1    2-λ]
+
+λ = 3 or λ = 1
+</code></pre>
+<p><strong>Diagonalization:</strong></p>
+<pre><code>A = PDP⁻¹
+where D is diagonal (eigenvalues on diagonal)
+and P has eigenvectors as columns
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>PageRank (Google’s algorithm)</li>
+<li>Principal Component Analysis (PCA)</li>
+<li>Stability analysis in systems</li>
+</ul>
+<hr/>
+<h3 id="36-singular-value-decomposition-svd">3.6 Singular Value Decomposition (SVD)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-singular-value-decomposition-svd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decomposition:</strong></p>
+<pre><code>A = UΣVᵀ
+
+U, V: Orthogonal matrices
+Σ: Diagonal matrix (singular values)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Image compression</li>
+<li>Recommender systems</li>
+<li>Data analysis (PCA)</li>
+</ul>
+<hr/>
+<h2 id="-phase-4-calculus-6-8-weeks">🎯 Phase 4: Calculus (6-8 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-4-calculus-6-8-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-limits">4.1 Limits<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-limits" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Limit:</strong></p>
+<pre><code>lim f(x) = L
+x→a
+
+&quot;f(x) approaches L as x approaches a&quot;
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>lim (x² - 1)/(x - 1) = lim (x+1)(x-1)/(x-1) = lim (x+1) = 2
+x→1                    x→1                     x→1
+</code></pre>
+<p><strong>Continuity:</strong> f is continuous at a if lim f(x) = f(a)
+x→a</p>
+<hr/>
+<h3 id="42-derivatives">4.2 Derivatives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-derivatives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Derivative:</strong> Rate of change</p>
+<pre><code>f'(x) = lim [f(x+h) - f(x)] / h
+        h→0
+</code></pre>
+<p><strong>Rules:</strong></p>
+<pre><code>(xⁿ)' = n·xⁿ⁻¹
+(eˣ)' = eˣ
+(ln x)' = 1/x
+(sin x)' = cos x
+(cos x)' = -sin x
+
+(f + g)' = f' + g'
+(f·g)' = f'·g + f·g'
+(f∘g)' = f'(g(x))·g'(x)  (chain rule)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Optimization (find min/max)</li>
+<li>Gradient descent (machine learning)</li>
+<li>Physics simulations</li>
+</ul>
+<hr/>
+<h3 id="43-optimization">4.3 Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Critical points:</strong></p>
+<pre><code>f'(x) = 0  or  f'(x) undefined
+
+Local minimum: f'(x) = 0 and f''(x) > 0
+Local maximum: f'(x) = 0 and f''(x) &lt; 0
+</code></pre>
+<p><strong>Example - Minimize cost:</strong></p>
+<pre><code>Cost function: C(x) = x² - 4x + 10
+
+C'(x) = 2x - 4 = 0
+x = 2 (minimum)
+
+C(2) = 6 (minimum cost)
+</code></pre>
+<p><strong>Gradient descent:</strong></p>
+<pre><code>Minimize f(x) by iterating:
+xₙ₊₁ = xₙ - α·∇f(xₙ)
+
+α = learning rate
+∇f = gradient (partial derivatives)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> optimization</li>
+<li>Machine learning training</li>
+<li>Parameter tuning</li>
+</ul>
+<hr/>
+<h3 id="44-integration">4.4 Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Integral:</strong> Area under curve</p>
+<pre><code>∫ f(x) dx = F(x) + C
+
+where F'(x) = f(x)
+</code></pre>
+<p><strong>Definite integral:</strong></p>
+<pre><code>∫ₐᵇ f(x) dx = F(b) - F(a)
+</code></pre>
+<p><strong>Rules:</strong></p>
+<pre><code>∫ xⁿ dx = xⁿ⁺¹/(n+1) + C
+∫ eˣ dx = eˣ + C
+∫ 1/x dx = ln|x| + C
+∫ sin x dx = -cos x + C
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Probability (continuous distributions)</li>
+<li>Physics (displacement from velocity)</li>
+<li>Expected value calculations</li>
+</ul>
+<hr/>
+<h3 id="45-multivariable-calculus">4.5 Multivariable Calculus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-multivariable-calculus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Partial derivatives:</strong></p>
+<pre><code>∂f/∂x: Derivative with respect to x (hold y constant)
+
+Example: f(x, y) = x²y + y²
+∂f/∂x = 2xy
+∂f/∂y = x² + 2y
+</code></pre>
+<p><strong>Gradient:</strong></p>
+<pre><code>∇f = [∂f/∂x, ∂f/∂y, ...]
+
+Direction of steepest ascent
+</code></pre>
+<p><strong>Chain rule (multivariate):</strong></p>
+<pre><code>dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Machine learning (backpropagation)</li>
+<li>Optimization (gradient descent)</li>
+<li>Physics simulations</li>
+</ul>
+<hr/>
+<h2 id="-phase-5-number-theory-4-6-weeks">🎯 Phase 5: Number Theory (4-6 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-5-number-theory-4-6-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-divisibility">5.1 Divisibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-divisibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Division algorithm:</strong></p>
+<pre><code>a = bq + r where 0 ≤ r &lt; b
+
+a: dividend
+b: divisor
+q: quotient
+r: remainder
+</code></pre>
+<p><strong>GCD (Greatest Common Divisor):</strong></p>
+<pre><code>gcd(a, b) = largest d such that d | a and d | b
+
+Euclidean algorithm:
+gcd(a, b) = gcd(b, a mod b)
+gcd(a, 0) = a
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>gcd(48, 18) = gcd(18, 12) = gcd(12, 6) = gcd(6, 0) = 6
+</code></pre>
+<p><strong>Extended Euclidean algorithm:</strong></p>
+<pre><code>Find x, y such that ax + by = gcd(a, b)
+</code></pre>
+<hr/>
+<h3 id="52-modular-arithmetic">5.2 Modular Arithmetic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-modular-arithmetic" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Congruence:</strong></p>
+<pre><code>a ≡ b (mod n) ⟺ n | (a - b)
+
+&quot;a and b have same remainder when divided by n&quot;
+</code></pre>
+<p><strong>Properties:</strong></p>
+<pre><code>(a + b) mod n = ((a mod n) + (b mod n)) mod n
+(a · b) mod n = ((a mod n) · (b mod n)) mod n
+(aᵏ) mod n = ((a mod n)ᵏ) mod n
+</code></pre>
+<p><strong>Modular inverse:</strong></p>
+<pre><code>a⁻¹ mod n satisfies: a · a⁻¹ ≡ 1 (mod n)
+
+Exists if gcd(a, n) = 1
+
+Example: 3⁻¹ mod 7 = 5 because 3·5 = 15 ≡ 1 (mod 7)
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Hash functions</li>
+<li>Cryptography (RSA)</li>
+<li>Random number generators</li>
+</ul>
+<hr/>
+<h3 id="53-primes">5.3 Primes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-primes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Prime number:</strong> p > 1 with only divisors 1 and p</p>
+<p><strong>Fundamental Theorem of Arithmetic:</strong></p>
+<pre><code>Every integer > 1 has unique prime factorization
+
+Example: 60 = 2² · 3 · 5
+</code></pre>
+<p><strong>Infinitely many primes:</strong></p>
+<pre><code>Proof by Euclid (contradiction)
+</code></pre>
+<p><strong>Prime number theorem:</strong></p>
+<pre><code>π(n) ≈ n / ln n
+
+where π(n) = number of primes ≤ n
+</code></pre>
+<p><strong>Primality testing:</strong></p>
+<ul>
+<li>Trial division: O(√n)</li>
+<li>Miller-Rabin: O(k log³ n), probabilistic</li>
+<li>AKS: O(log⁶ n), deterministic</li>
+</ul>
+<hr/>
+<h3 id="54-cryptography">5.4 Cryptography<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-cryptography" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>RSA algorithm:</strong></p>
+<pre><code>Key generation:
+1. Choose primes p, q
+2. n = p·q
+3. φ(n) = (p-1)(q-1)
+4. Choose e with gcd(e, φ(n)) = 1
+5. Find d with e·d ≡ 1 (mod φ(n))
+
+Public key: (n, e)
+Private key: (n, d)
+
+Encryption: c = mᵉ mod n
+Decryption: m = cᵈ mod n
+</code></pre>
+<p><strong>Security:</strong> Relies on factoring being hard (NP-intermediate)</p>
+<p><strong>Diffie-Hellman key exchange:</strong></p>
+<pre><code>Alice and Bob agree on public p, g
+Alice chooses secret a, sends A = gᵃ mod p
+Bob chooses secret b, sends B = gᵇ mod p
+
+Shared secret: K = Aᵇ = Bᵃ = gᵃᵇ mod p
+</code></pre>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>HTTPS (TLS/SSL)</li>
+<li>SSH</li>
+<li>Blockchain</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> (computational hardness)</p>
+<hr/>
+<h2 id="-essential-topics-summary">📚 Essential Topics Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-essential-topics-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="must-know-core">Must Know (Core)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#must-know-core" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> Logic and proofs</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Sets, relations, functions</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Combinatorics (permutations, combinations)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Basic probability</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Graph theory basics</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Modular arithmetic</li>
+</ul>
+<h3 id="should-know-important">Should Know (Important)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#should-know-important" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Recurrence relations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Random variables, distributions</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Linear algebra (matrices, vectors)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Calculus (derivatives, optimization)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Number theory (GCD, primes)</li>
+</ul>
+<h3 id="nice-to-know-advanced">Nice to Know (Advanced)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nice-to-know-advanced" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Abstract algebra</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Real analysis</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Topology</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Category theory</li>
+</ul>
+<hr/>
+<h2 id="-recommended-books">📖 Recommended Books<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-recommended-books" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Discrete Mathematics:</strong></p>
+<ol>
+<li><strong>“Discrete Mathematics and Its Applications”</strong> (Rosen) ⭐ Best</li>
+<li>”Concrete Mathematics” (Graham, Knuth, Patashnik) - Advanced</li>
+<li>”Mathematics for Computer Science” (Lehman, Leighton, Meyer) - Free online</li>
+</ol>
+<p><strong>Probability:</strong></p>
+<ol>
+<li>“Introduction to Probability” (Blitzstein, Hwang)</li>
+<li>“Probability and Statistics” (DeGroot, Schervish)</li>
+</ol>
+<p><strong>Linear Algebra:</strong></p>
+<ol>
+<li>“Linear Algebra Done Right” (Axler)</li>
+<li>“Introduction to Linear Algebra” (Strang)</li>
+</ol>
+<p><strong>Calculus:</strong></p>
+<ol>
+<li>“Calculus” (Stewart)</li>
+<li>“Calculus” (Spivak) - More rigorous</li>
+</ol>
+<p><strong>Number Theory:</strong></p>
+<ol>
+<li>“Elementary Number Theory” (Burton)</li>
+<li>“A Classical Introduction to Modern Number Theory” (Ireland, Rosen)</li>
+</ol>
+<hr/>
+<h2 id="-learning-strategy">🎯 Learning Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-learning-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-understand-through-examples">1. Understand Through Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-understand-through-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For each concept:</p>
+<ol>
+<li><strong>Concrete example</strong> - See it in action</li>
+<li><strong>Formal definition</strong> - Precise statement</li>
+<li><strong>Proof</strong> - Why it’s true</li>
+<li><strong>Application</strong> - Where it’s used</li>
+</ol>
+<h3 id="2-practice-problem-solving">2. Practice Problem-Solving<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-practice-problem-solving" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Resources:</strong></p>
+<ul>
+<li>MIT OpenCourseWare (6.042J: Mathematics for CS)</li>
+<li>Project Euler (math + programming)</li>
+<li>Art of Problem Solving (competition math)</li>
+</ul>
+<h3 id="3-connect-to-cs">3. Connect to CS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-connect-to-cs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Math → CS connections:</strong></p>
+<ul>
+<li>Logic → <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> verification</li>
+<li>Probability → Algorithm analysis</li>
+<li>Linear algebra → Machine learning</li>
+<li>Calculus → Optimization</li>
+<li>Graph theory → <a href="../Networking/Networking" class="internal" data-slug="Networking/Networking">Networking</a>, <a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a></li>
+</ul>
+<hr/>
+<h2 id="-connections-to-computer-science">🔗 Connections to Computer Science<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-connections-to-computer-science" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="algorithm-analysis">Algorithm Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#algorithm-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mathematics used:</strong></p>
+<ul>
+<li><strong>Big-O:</strong> Limits, asymptotic analysis</li>
+<li><strong>Recurrences:</strong> Solving recursive time complexity</li>
+<li><strong>Probability:</strong> Expected running time, randomized algorithms</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a>, <a href="../DSA/Big-O-Notation" class="internal" data-slug="DSA/Big-O-Notation">Big-O-Notation</a></p>
+<h3 id="cryptography">Cryptography<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cryptography" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mathematics used:</strong></p>
+<ul>
+<li><strong>Number theory:</strong> Primes, modular arithmetic, RSA</li>
+<li><strong>Probability:</strong> Security proofs</li>
+<li><strong>Abstract algebra:</strong> Elliptic curves</li>
+</ul>
+<h3 id="machine-learning">Machine Learning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#machine-learning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mathematics used:</strong></p>
+<ul>
+<li><strong>Linear algebra:</strong> Neural networks, PCA</li>
+<li><strong>Calculus:</strong> Gradient descent, backpropagation</li>
+<li><strong>Probability:</strong> Bayesian methods, probabilistic models</li>
+<li><strong>Statistics:</strong> Hypothesis testing, confidence intervals</li>
+</ul>
+<h3 id="graphics">Graphics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graphics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mathematics used:</strong></p>
+<ul>
+<li><strong>Linear algebra:</strong> Transformations, projections</li>
+<li><strong>Calculus:</strong> Curves, surfaces</li>
+<li><strong>Geometry:</strong> Collision detection</li>
+</ul>
+<h3 id="theory">Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mathematics used:</strong></p>
+<ul>
+<li><strong>Logic:</strong> Formal verification, proof systems</li>
+<li><strong>Combinatorics:</strong> Counting problems</li>
+<li><strong>Graph theory:</strong> Complexity classes</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a></p>
+<hr/>
+<h2 id="-study-plan-24-32-weeks">📅 Study Plan (24-32 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-study-plan-24-32-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="weeks-1-12-discrete-mathematics">Weeks 1-12: Discrete Mathematics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-1-12-discrete-mathematics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Week 1-2: Logic, proofs</li>
+<li>Week 3-4: Sets, relations, functions</li>
+<li>Week 5-6: Combinatorics</li>
+<li>Week 7-8: Graph theory</li>
+<li>Week 9-10: Recurrences</li>
+<li>Week 11-12: Review, practice</li>
+</ul>
+<h3 id="weeks-13-20-probability--linear-algebra">Weeks 13-20: Probability &amp; Linear Algebra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-13-20-probability--linear-algebra" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Week 13-14: Probability basics</li>
+<li>Week 15-16: Random variables, distributions</li>
+<li>Week 17-18: Vectors, matrices</li>
+<li>Week 19-20: Eigenvalues, SVD</li>
+</ul>
+<h3 id="weeks-21-28-calculus">Weeks 21-28: Calculus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-21-28-calculus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Week 21-22: Limits, derivatives</li>
+<li>Week 23-24: Optimization</li>
+<li>Week 25-26: Integration</li>
+<li>Week 27-28: Multivariable calculus</li>
+</ul>
+<h3 id="weeks-29-32-number-theory-optional">Weeks 29-32: Number Theory (Optional)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-29-32-number-theory-optional" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Week 29-30: Divisibility, GCD, modular arithmetic</li>
+<li>Week 31-32: Primes, cryptography</li>
+</ul>
+<hr/>
+<h2 id="-study-tips">💡 Study Tips<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-study-tips" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-practice-regularly">1. Practice Regularly<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-practice-regularly" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Daily practice:</strong></p>
+<ul>
+<li>Solve 2-3 problems per day</li>
+<li>Prove theorems yourself</li>
+<li>Work through examples</li>
+</ul>
+<h3 id="2-build-intuition">2. Build Intuition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-build-intuition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Visualization:</strong></p>
+<ul>
+<li>Draw graphs</li>
+<li>Plot functions</li>
+<li>Visualize transformations</li>
+</ul>
+<h3 id="3-connect-to-code">3. Connect to Code<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-connect-to-code" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Implement mathematical concepts:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> gcd</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(a, b):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> b:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a, b </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> b, a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">%</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> b</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> a</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> matrix_multiply</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(A, B):</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # Implement matrix multiplication</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    pass</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> gradient_descent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(f, grad_f, x0, alpha, iterations):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> _ </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(iterations):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> alpha </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> grad_f(x)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x</span></span></code></pre></figure>
+<h3 id="4-learn-prerequisites">4. Learn Prerequisites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-learn-prerequisites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Some topics build on others:</p>
+<pre><code>Logic → Proofs → All other topics
+Sets → Relations → Functions → Discrete Math
+Derivatives → Optimization → Machine Learning
+</code></pre>
+<hr/>
+<h2 id="-exercises--practice">🎯 Exercises &amp; Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-exercises--practice" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="discrete-math">Discrete Math<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#discrete-math" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Prove De Morgan’s laws using truth tables</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Solve combinatorics problems (Project Euler)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement graph algorithms (DFS, BFS)</li>
+</ul>
+<h3 id="probability">Probability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#probability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Calculate expected value of dice games</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Simulate random processes (Monte Carlo)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Analyze hash table collision probability</li>
+</ul>
+<h3 id="linear-algebra">Linear Algebra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#linear-algebra" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement matrix operations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Apply PCA to dataset</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Visualize linear transformations</li>
+</ul>
+<h3 id="calculus">Calculus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#calculus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Find minima of functions analytically</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement gradient descent</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize practical problems</li>
+</ul>
+<h3 id="number-theory">Number Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#number-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Euclidean algorithm</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement RSA encryption</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Solve modular arithmetic problems</li>
+</ul>
+<hr/>
+<h2 id="the-big-takeaway">The Big Takeaway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-takeaway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>Mathematics provides:</strong></p>
+<ul>
+<li><strong>Precision</strong> - Formal language for CS</li>
+<li><strong>Proof techniques</strong> - Verify correctness</li>
+<li><strong>Analysis tools</strong> - Measure efficiency</li>
+<li><strong>Problem-solving</strong> - Structured reasoning</li>
+</ul>
+<p><strong>Practical value for systems programmers:</strong></p>
+<ul>
+<li>Analyze algorithm complexity (discrete math)</li>
+<li>Optimize performance (calculus)</li>
+<li>Ensure security (number theory)</li>
+<li>Understand randomized algorithms (probability)</li>
+</ul>
+<p><strong>Connection to practice:</strong></p>
+<ul>
+<li>Every algorithm has mathematical analysis</li>
+<li>Every <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> uses formal methods</li>
+<li>Every cryptographic system uses number theory</li>
+<li>Every optimization uses calculus</li>
+</ul>
+<p><strong>The mindset shift:</strong> From “make it work” to “prove it works, analyze how well”</p>
+</blockquote>
+<p><strong>Mathematics is the foundation. Computer science is the application.</strong></p>
+<p>See also: <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a>, <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a>, <a href="../DSA/DSA-Roadmap" class="internal" data-slug="DSA/DSA-Roadmap">DSA-Roadmap</a>, <a href="../Book-Notes/CSAPP-Notes" class="internal" data-slug="Book-Notes/CSAPP-Notes">CSAPP-Notes</a></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-104" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#mathematics-for-computer-science" data-for="mathematics-for-computer-science">Mathematics for Computer Science</a></li><li class="depth-1"><a href="#why-study-mathematics-for-cs" data-for="why-study-mathematics-for-cs">Why Study Mathematics for CS?</a></li><li class="depth-2"><a href="#for-systems-programmers" data-for="for-systems-programmers">For Systems Programmers</a></li><li class="depth-1"><a href="#-core-areas" data-for="-core-areas">📚 Core Areas</a></li><li class="depth-2"><a href="#1-discrete-mathematics" data-for="1-discrete-mathematics">1. Discrete Mathematics</a></li><li class="depth-2"><a href="#2-probability--statistics" data-for="2-probability--statistics">2. Probability &amp; Statistics</a></li><li class="depth-2"><a href="#3-linear-algebra" data-for="3-linear-algebra">3. Linear Algebra</a></li><li class="depth-2"><a href="#4-calculus" data-for="4-calculus">4. Calculus</a></li><li class="depth-2"><a href="#5-number-theory" data-for="5-number-theory">5. Number Theory</a></li><li class="depth-1"><a href="#-phase-1-discrete-mathematics-8-12-weeks" data-for="-phase-1-discrete-mathematics-8-12-weeks">🎯 Phase 1: Discrete Mathematics (8-12 weeks)</a></li><li class="depth-2"><a href="#11-logic" data-for="11-logic">1.1 Logic</a></li><li class="depth-2"><a href="#12-proof-techniques" data-for="12-proof-techniques">1.2 Proof Techniques</a></li><li class="depth-2"><a href="#13-sets-and-relations" data-for="13-sets-and-relations">1.3 Sets and Relations</a></li><li class="depth-2"><a href="#14-functions" data-for="14-functions">1.4 Functions</a></li><li class="depth-2"><a href="#15-combinatorics" data-for="15-combinatorics">1.5 Combinatorics</a></li><li class="depth-2"><a href="#16-graph-theory" data-for="16-graph-theory">1.6 Graph Theory</a></li><li class="depth-2"><a href="#17-recurrence-relations" data-for="17-recurrence-relations">1.7 Recurrence Relations</a></li><li class="depth-1"><a href="#-phase-2-probability--statistics-6-8-weeks" data-for="-phase-2-probability--statistics-6-8-weeks">🎯 Phase 2: Probability &amp; Statistics (6-8 weeks)</a></li><li class="depth-2"><a href="#21-probability-basics" data-for="21-probability-basics">2.1 Probability Basics</a></li><li class="depth-2"><a href="#22-random-variables" data-for="22-random-variables">2.2 Random Variables</a></li><li class="depth-2"><a href="#23-distributions" data-for="23-distributions">2.3 Distributions</a></li><li class="depth-2"><a href="#24-probabilistic-analysis" data-for="24-probabilistic-analysis">2.4 Probabilistic Analysis</a></li><li class="depth-2"><a href="#25-statistics" data-for="25-statistics">2.5 Statistics</a></li><li class="depth-1"><a href="#-phase-3-linear-algebra-6-8-weeks" data-for="-phase-3-linear-algebra-6-8-weeks">🎯 Phase 3: Linear Algebra (6-8 weeks)</a></li><li class="depth-2"><a href="#31-vectors-and-matrices" data-for="31-vectors-and-matrices">3.1 Vectors and Matrices</a></li><li class="depth-2"><a href="#32-vector-spaces" data-for="32-vector-spaces">3.2 Vector Spaces</a></li><li class="depth-2"><a href="#33-linear-transformations" data-for="33-linear-transformations">3.3 Linear Transformations</a></li><li class="depth-2"><a href="#34-determinants" data-for="34-determinants">3.4 Determinants</a></li><li class="depth-2"><a href="#35-eigenvalues-and-eigenvectors" data-for="35-eigenvalues-and-eigenvectors">3.5 Eigenvalues and Eigenvectors</a></li><li class="depth-2"><a href="#36-singular-value-decomposition-svd" data-for="36-singular-value-decomposition-svd">3.6 Singular Value Decomposition (SVD)</a></li><li class="depth-1"><a href="#-phase-4-calculus-6-8-weeks" data-for="-phase-4-calculus-6-8-weeks">🎯 Phase 4: Calculus (6-8 weeks)</a></li><li class="depth-2"><a href="#41-limits" data-for="41-limits">4.1 Limits</a></li><li class="depth-2"><a href="#42-derivatives" data-for="42-derivatives">4.2 Derivatives</a></li><li class="depth-2"><a href="#43-optimization" data-for="43-optimization">4.3 Optimization</a></li><li class="depth-2"><a href="#44-integration" data-for="44-integration">4.4 Integration</a></li><li class="depth-2"><a href="#45-multivariable-calculus" data-for="45-multivariable-calculus">4.5 Multivariable Calculus</a></li><li class="depth-1"><a href="#-phase-5-number-theory-4-6-weeks" data-for="-phase-5-number-theory-4-6-weeks">🎯 Phase 5: Number Theory (4-6 weeks)</a></li><li class="depth-2"><a href="#51-divisibility" data-for="51-divisibility">5.1 Divisibility</a></li><li class="depth-2"><a href="#52-modular-arithmetic" data-for="52-modular-arithmetic">5.2 Modular Arithmetic</a></li><li class="depth-2"><a href="#53-primes" data-for="53-primes">5.3 Primes</a></li><li class="depth-2"><a href="#54-cryptography" data-for="54-cryptography">5.4 Cryptography</a></li><li class="depth-1"><a href="#-essential-topics-summary" data-for="-essential-topics-summary">📚 Essential Topics Summary</a></li><li class="depth-2"><a href="#must-know-core" data-for="must-know-core">Must Know (Core)</a></li><li class="depth-2"><a href="#should-know-important" data-for="should-know-important">Should Know (Important)</a></li><li class="depth-2"><a href="#nice-to-know-advanced" data-for="nice-to-know-advanced">Nice to Know (Advanced)</a></li><li class="depth-1"><a href="#-recommended-books" data-for="-recommended-books">📖 Recommended Books</a></li><li class="depth-1"><a href="#-learning-strategy" data-for="-learning-strategy">🎯 Learning Strategy</a></li><li class="depth-2"><a href="#1-understand-through-examples" data-for="1-understand-through-examples">1. Understand Through Examples</a></li><li class="depth-2"><a href="#2-practice-problem-solving" data-for="2-practice-problem-solving">2. Practice Problem-Solving</a></li><li class="depth-2"><a href="#3-connect-to-cs" data-for="3-connect-to-cs">3. Connect to CS</a></li><li class="depth-1"><a href="#-connections-to-computer-science" data-for="-connections-to-computer-science">🔗 Connections to Computer Science</a></li><li class="depth-2"><a href="#algorithm-analysis" data-for="algorithm-analysis">Algorithm Analysis</a></li><li class="depth-2"><a href="#cryptography" data-for="cryptography">Cryptography</a></li><li class="depth-2"><a href="#machine-learning" data-for="machine-learning">Machine Learning</a></li><li class="depth-2"><a href="#graphics" data-for="graphics">Graphics</a></li><li class="depth-2"><a href="#theory" data-for="theory">Theory</a></li><li class="depth-1"><a href="#-study-plan-24-32-weeks" data-for="-study-plan-24-32-weeks">📅 Study Plan (24-32 weeks)</a></li><li class="depth-2"><a href="#weeks-1-12-discrete-mathematics" data-for="weeks-1-12-discrete-mathematics">Weeks 1-12: Discrete Mathematics</a></li><li class="depth-2"><a href="#weeks-13-20-probability--linear-algebra" data-for="weeks-13-20-probability--linear-algebra">Weeks 13-20: Probability &amp; Linear Algebra</a></li><li class="depth-2"><a href="#weeks-21-28-calculus" data-for="weeks-21-28-calculus">Weeks 21-28: Calculus</a></li><li class="depth-2"><a href="#weeks-29-32-number-theory-optional" data-for="weeks-29-32-number-theory-optional">Weeks 29-32: Number Theory (Optional)</a></li><li class="depth-1"><a href="#-study-tips" data-for="-study-tips">💡 Study Tips</a></li><li class="depth-2"><a href="#1-practice-regularly" data-for="1-practice-regularly">1. Practice Regularly</a></li><li class="depth-2"><a href="#2-build-intuition" data-for="2-build-intuition">2. Build Intuition</a></li><li class="depth-2"><a href="#3-connect-to-code" data-for="3-connect-to-code">3. Connect to Code</a></li><li class="depth-2"><a href="#4-learn-prerequisites" data-for="4-learn-prerequisites">4. Learn Prerequisites</a></li><li class="depth-1"><a href="#-exercises--practice" data-for="-exercises--practice">🎯 Exercises &amp; Practice</a></li><li class="depth-2"><a href="#discrete-math" data-for="discrete-math">Discrete Math</a></li><li class="depth-2"><a href="#probability" data-for="probability">Probability</a></li><li class="depth-2"><a href="#linear-algebra" data-for="linear-algebra">Linear Algebra</a></li><li class="depth-2"><a href="#calculus" data-for="calculus">Calculus</a></li><li class="depth-2"><a href="#number-theory" data-for="number-theory">Number Theory</a></li><li class="depth-1"><a href="#the-big-takeaway" data-for="the-big-takeaway">The Big Takeaway</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Theory/Algorithm-Theory" class="internal">Algorithm Theory Roadmap</a></li><li><a href="../Theory/Theory-of-Computation" class="internal">Theory of Computation Roadmap</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>
