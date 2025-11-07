@@ -10,61 +10,61 @@
     <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
     <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
     <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:54 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:24:15 GMT</pubDate>
   </item><item>
     <title>Welcome to My Notes</title>
     <link>https://notes.thamle.live/</link>
     <guid>https://notes.thamle.live/</guid>
     <description><![CDATA[ Welcome to My Notes This is a collection of my learning notes, organized using Quartz. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>README</title>
     <link>https://notes.thamle.live/README</link>
     <guid>https://notes.thamle.live/README</guid>
     <description><![CDATA[ 🚀 Systems Programming Mastery From Theory to Production: A Complete Knowledge Base for Modern Systems Development 🎯 Quick Start 🔥 New Here? Start With These: PriorityArticleImpactTime🥇 MUSTasync - The async/await revolutionGame changer20min🥇 MUSTEvent Loop - High-performance server engineEssent... ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>README</title>
     <link>https://notes.thamle.live/Roadmaps/README</link>
     <guid>https://notes.thamle.live/Roadmaps/README</guid>
     <description><![CDATA[ 00-Roadmaps Learning paths and progress tracking for systems development. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>The-Complete-Systems-Developer-Roadmap</title>
     <link>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</link>
     <guid>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</guid>
     <description><![CDATA[ Phase 1: The Foundations - “How a Computer Actually Works” Goal: Build a solid mental model of the machine. No complex code yet. Pure concepts. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>README</title>
     <link>https://notes.thamle.live/Systems/README</link>
     <guid>https://notes.thamle.live/Systems/README</guid>
     <description><![CDATA[ 03-Systems Operating systems and systems programming concepts. Contents Process vs. Thread vs. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
-  </item><item>
-    <title>README</title>
-    <link>https://notes.thamle.live/Networking/README</link>
-    <guid>https://notes.thamle.live/Networking/README</guid>
-    <description><![CDATA[ 05-Networking Network protocols, communication patterns, and internet fundamentals. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>Transport Layer</title>
     <link>https://notes.thamle.live/Networking/Transport-Layer</link>
     <guid>https://notes.thamle.live/Networking/Transport-Layer</guid>
     <description><![CDATA[ WTF is the Transport Layer? It’s the difference between “I don’t care if you got my message” and “I need to know you got every single byte” The Delivery Service Analogy You need to send something to a friend. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>Transport-Protocols</title>
     <link>https://notes.thamle.live/Networking/Transport-Protocols</link>
     <guid>https://notes.thamle.live/Networking/Transport-Protocols</guid>
     <description><![CDATA[ WTF are Transport Protocols? It’s the menu of options for getting your data from point A to point B, with different tradeoffs The Shipping Company Analogy You need to send a package across the country. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item><item>
     <title>Ethernet</title>
     <link>https://notes.thamle.live/Networking/Ethernet</link>
     <guid>https://notes.thamle.live/Networking/Ethernet</guid>
     <description><![CDATA[ Ethernet It’s the reason your computer can talk to your router without screaming into the void The Office Memo Analogy Imagine an office where everyone sits in cubicles. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 10:53:01 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
+  </item><item>
+    <title>Network-Buffer</title>
+    <link>https://notes.thamle.live/Networking/Network-Buffer</link>
+    <guid>https://notes.thamle.live/Networking/Network-Buffer</guid>
+    <description><![CDATA[ WTF is a Network Buffer? The plumbing between your code and the wire In our last few articles, we built a simple echo server. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 12:23:24 GMT</pubDate>
   </item>
     </channel>
   </rss>

@@ -1,27 +1,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
     <loc>https://notes.thamle.live/Architecture/Media/Media-Container-vs-Codec</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.104Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/README</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.104Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Kernel-Streaming-Filters</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.104Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Port-Miniport-Article</loc>
     <lastmod>2025-10-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Port-Miniport-Driver</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.105Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/PortCls-Article</loc>
     <lastmod>2025-10-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Windows-Audio-Stack-Overview</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.105Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Driver-Model</loc>
-    <lastmod>2025-11-07T10:53:01.706Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.105Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Book-Notes/CSAPP-Notes</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -30,7 +30,7 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Book-Notes/_Book-Template</loc>
-    <lastmod>2025-11-07T10:53:54.031Z</lastmod>
+    <lastmod>2025-11-07T12:24:15.018Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Callback-Hell</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -48,7 +48,7 @@
     <lastmod>2025-07-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/README</loc>
-    <lastmod>2025-11-07T10:53:01.707Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.105Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/async</loc>
     <lastmod>2025-08-09T00:00:00.000Z</lastmod>
@@ -59,10 +59,25 @@
     <loc>https://notes.thamle.live/DSA/Big-O-Notation</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/DSA/Common-Interview-Problems</loc>
+    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/DSA/DSA-Roadmap</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/DSA/Data-Structures-Fundamentals</loc>
+    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/DSA/Dynamic-Programming</loc>
+    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/DSA/Graph-Algorithms</loc>
+    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/DSA/Pattern-Recognition</loc>
+    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/DSA/Sorting-Algorithms</loc>
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Debugging/Debugging-Segfaults</loc>
@@ -87,7 +102,7 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/FFI</loc>
-    <lastmod>2025-11-07T10:53:01.708Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.107Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/FFmpeg</loc>
     <lastmod>2025-10-01T00:00:00.000Z</lastmod>
@@ -120,13 +135,13 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/README</loc>
-    <lastmod>2025-11-07T10:53:01.709Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.108Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Rule-of-Three</loc>
-    <lastmod>2025-11-07T10:53:01.709Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.108Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Scancode</loc>
-    <lastmod>2025-11-07T10:53:01.709Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.108Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Systems-Programming</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -144,7 +159,7 @@
     <lastmod>2025-09-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Virtual-Keyboard</loc>
-    <lastmod>2025-11-07T10:53:01.709Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.108Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/WTF-Physical-vs-Virtual-Keyboards</loc>
     <lastmod>2025-10-14T00:00:00.000Z</lastmod>
@@ -162,10 +177,10 @@
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/INDEX</loc>
-    <lastmod>2025-11-07T10:53:01.710Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.109Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/LEARNING-GUIDE</loc>
-    <lastmod>2025-11-07T10:53:01.710Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.109Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Assembly</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -192,10 +207,10 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/README</loc>
-    <lastmod>2025-11-07T10:53:01.711Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.110Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-Learning/Day_1-Installation</loc>
-    <lastmod>2025-11-07T10:53:01.711Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.110Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-Learning/Key_Repeats</loc>
     <lastmod>2025-10-03T00:00:00.000Z</lastmod>
@@ -207,7 +222,7 @@
     <lastmod>2025-08-31T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-Learning/Rust_book_link</loc>
-    <lastmod>2025-11-07T10:53:01.711Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.110Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-Learning/use_and_as_in_Rust</loc>
     <lastmod>2025-10-01T00:00:00.000Z</lastmod>
@@ -231,13 +246,13 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/DNS</loc>
-    <lastmod>2025-11-07T10:53:01.711Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.110Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Encapsulation</loc>
     <lastmod>2025-10-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Ethernet</loc>
-    <lastmod>2025-11-07T10:53:01.712Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.111Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/HTTP</loc>
     <lastmod>2025-10-22T00:00:00.000Z</lastmod>
@@ -252,10 +267,10 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Network-Buffer</loc>
-    <lastmod>2025-11-07T10:53:01.712Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.111Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Network-Layer</loc>
-    <lastmod>2025-11-07T10:53:01.712Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.111Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Networking</loc>
     <lastmod>2025-08-09T00:00:00.000Z</lastmod>
@@ -270,7 +285,7 @@
     <lastmod>2025-10-23T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/README</loc>
-    <lastmod>2025-11-07T10:53:01.713Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.111Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Router</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -285,10 +300,10 @@
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Transport-Layer</loc>
-    <lastmod>2025-11-07T10:53:01.713Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.112Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Transport-Protocols</loc>
-    <lastmod>2025-11-07T10:53:01.713Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.112Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/UDP</loc>
     <lastmod>2025-10-19T00:00:00.000Z</lastmod>
@@ -312,16 +327,16 @@
     <lastmod>2025-10-24T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/README</loc>
-    <lastmod>2025-11-07T10:53:01.714Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.113Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Roadmaps/README</loc>
-    <lastmod>2025-11-07T10:53:01.714Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.113Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Roadmaps/Systems-Developer-Roadmap</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</loc>
-    <lastmod>2025-11-07T10:53:01.714Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.113Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/Context-Switch</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -333,7 +348,7 @@
     <lastmod>2025-08-01T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/README</loc>
-    <lastmod>2025-11-07T10:53:01.714Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.113Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Theory/Algorithm-Theory</loc>
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
@@ -357,5 +372,5 @@
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/</loc>
-    <lastmod>2025-11-07T10:53:01.715Z</lastmod>
+    <lastmod>2025-11-07T12:23:24.114Z</lastmod>
   </url></urlset>
