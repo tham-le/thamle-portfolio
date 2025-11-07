@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is a Computer?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is a Computer?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is a Computer?"/><meta name="twitter:description" content="Building a complete working computer from logic gates - the full story from switches to programs"/><meta property="og:description" content="Building a complete working computer from logic gates - the full story from switches to programs"/><meta property="og:image:alt" content="Building a complete working computer from logic gates - the full story from switches to programs"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Hardware/Computer"/><meta property="twitter:url" content="https://notes.thamle.live/Hardware/Computer"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Building a complete working computer from logic gates - the full story from switches to programs"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Hardware/Computer"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-132"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-132" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Hardware/">Hardware</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is a Computer?</a></div></nav><h1 class="article-title">WTF is a Computer?</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T00:00:00.000Z">Nov 07, 2025</time><span>15 min read</span></p><ul class="tags"><li><a href="../tags/hardware" class="internal tag-link">hardware</a></li><li><a href="../tags/cpu" class="internal tag-link">cpu</a></li><li><a href="../tags/fundamentals" class="internal tag-link">fundamentals</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-a-computer">WTF is a Computer?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-a-computer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Let’s build a real, working computer from scratch.</strong></p>
+<p>Starting with <a href="../Hardware/Logic-Gate" class="internal" data-slug="Hardware/Logic-Gate">Logic-Gate</a>s, we’ll build:</p>
+<ol>
+<li>Memory (registers, RAM)</li>
+<li>ALU (arithmetic)</li>
+<li>Control unit</li>
+<li>Complete CPU</li>
+<li>Run actual programs</li>
+</ol>
+<p><strong>No magic. No hand-waving. Every piece explained.</strong></p>
+<p>This is the answer to <strong>“But How Do It Know?”</strong></p>
+<hr/>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#1-review-what-we-have-so-far" class="internal alias">Review: What we have so far</a></li>
+<li><a href="#2-building-memory" class="internal alias">Building memory</a></li>
+<li><a href="#3-building-the-alu" class="internal alias">Building the ALU</a></li>
+<li><a href="#4-building-control-logic" class="internal alias">Building control logic</a></li>
+<li><a href="#5-the-complete-cpu" class="internal alias">The complete CPU</a></li>
+<li><a href="#6-running-a-program" class="internal alias">Running a program</a></li>
+<li><a href="#7-making-it-faster" class="internal alias">Making it faster</a></li>
+</ol>
+<hr/>
+<h2 id="1-review-what-we-have-so-far">1. Review: What we have so far<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-review-what-we-have-so-far" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="building-blocks">Building blocks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#building-blocks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>We can build from <a href="../Hardware/Transistor" class="internal" data-slug="Hardware/Transistor">Transistor</a>s:</strong></p>
+<p><strong>Basic gates:</strong></p>
+<ul>
+<li>NOT (inverter)</li>
+<li>AND, OR, NAND, NOR</li>
+<li>XOR, XNOR</li>
+</ul>
+<p><strong>Arithmetic:</strong></p>
+<ul>
+<li>Half adder (A + B)</li>
+<li>Full adder (A + B + Carry)</li>
+<li>8-bit adder (chain full adders)</li>
+</ul>
+<p><strong>Selection:</strong></p>
+<ul>
+<li>Multiplexer (choose input)</li>
+<li>Decoder (activate output)</li>
+</ul>
+<p><strong>Memory:</strong></p>
+<ul>
+<li>SR latch</li>
+<li>D latch</li>
+<li>D flip-flop</li>
+</ul>
+<p><strong>See:</strong> <a href="../Hardware/Logic-Gate" class="internal" data-slug="Hardware/Logic-Gate">Logic-Gate</a></p>
+<hr/>
+<h2 id="2-building-memory">2. Building memory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-building-memory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="register-stores-one-number">Register (stores one number)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#register-stores-one-number" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>8-bit register = 8 D flip-flops:</strong></p>
+<pre><code>         Clock
+            │
+D[7:0] ─┬───┼───[FF]─── Q[7]
+        ├───┼───[FF]─── Q[6]
+        ├───┼───[FF]─── Q[5]
+        ├───┼───[FF]─── Q[4]
+        ├───┼───[FF]─── Q[3]
+        ├───┼───[FF]─── Q[2]
+        ├───┼───[FF]─── Q[1]
+        └───┴───[FF]─── Q[0]
+</code></pre>
+<p><strong>Operations:</strong></p>
+<ul>
+<li><strong>Clock pulse:</strong> Store D into register</li>
+<li><strong>Always outputs:</strong> Current value on Q</li>
+</ul>
+<p><strong>Add enable signal:</strong></p>
+<pre><code>Enable ──┐
+         ├─[AND]── Clock'
+Clock ───┘         │
+                [FF...]
+</code></pre>
+<ul>
+<li>Enable=1, Clock=pulse → Store</li>
+<li>Enable=0 → Hold (ignore clock)</li>
+</ul>
+<p><strong>This is a CPU register!</strong></p>
+<hr/>
+<h3 id="register-file-multiple-registers">Register file (multiple registers)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#register-file-multiple-registers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>CPU needs many registers:</strong></p>
+<pre><code>Register File (8 registers × 8 bits)
+
+Write Data[7:0] ────────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+                        │     │     │     │     │     │     │     │
+Write Enable ───[DEC]───┤     │     │     │     │     │     │     │
+Write Addr[2:0] ─┘      │     │     │     │     │     │     │     │
+                        ▼     ▼     ▼     ▼     ▼     ▼     ▼     ▼
+                      [R0]  [R1]  [R2]  [R3]  [R4]  [R5]  [R6]  [R7]
+                        │     │     │     │     │     │     │     │
+Read Addr A[2:0] ───[MUX]────┴─────┴─────┴─────┴─────┴─────┴─────┘
+                     │
+                     └──── Read Data A[7:0]
+
+Read Addr B[2:0] ───[MUX]──(same)──── Read Data B[7:0]
+</code></pre>
+<p><strong>Operations:</strong></p>
+<ul>
+<li><strong>Write:</strong> Decoder enables one register, stores Write Data</li>
+<li><strong>Read A:</strong> Multiplexer selects one register → Read Data A</li>
+<li><strong>Read B:</strong> Second multiplexer → Read Data B (two reads at once!)</li>
+</ul>
+<p><strong>Example:</strong> 8 registers × 8 bits = 64 bits total storage</p>
+<p><strong>x86-64 has 16 registers × 64 bits = 1024 bits</strong></p>
+<p><strong>See:</strong> <a href="../Register" class="internal" data-slug="Register">Register</a></p>
+<hr/>
+<h3 id="ram-random-access-memory">RAM (Random Access Memory)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ram-random-access-memory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Need lots of memory (KB, MB, GB)!</strong></p>
+<p><strong>One memory cell (1 bit):</strong></p>
+<pre><code>Write Data ───┬─[AND]─┬─[SR Latch]─── Read Data
+              │       │
+Write Enable ─┴       │
+                      │
+Read Enable ──────────┴─[Buffer]
+</code></pre>
+<p><strong>Memory array (8 bits × 4 addresses):</strong></p>
+<pre><code>Address[1:0] ──[Decoder]─┬─ Enable[0] ─[Cell 0]
+                         ├─ Enable[1] ─[Cell 1]
+                         ├─ Enable[2] ─[Cell 2]
+                         └─ Enable[3] ─[Cell 3]
+
+Write Data[7:0] ─────────────┬──────────────────────
+                             │(to all cells)
+Read Data[7:0] ──────────────┴──────────────────────
+                             (from selected cell)
+</code></pre>
+<p><strong>Scale up:</strong></p>
+<ul>
+<li>2-bit address → 4 locations</li>
+<li>16-bit address → 65,536 locations (64KB)</li>
+<li>32-bit address → 4GB</li>
+</ul>
+<p><strong>Modern DRAM:</strong> Uses capacitors (smaller), needs refresh.</p>
+<p><strong>See:</strong> <a href="../Fundamentals/Memory" class="internal" data-slug="Fundamentals/Memory">Memory</a>, <a href="../DRAM" class="internal" data-slug="DRAM">DRAM</a></p>
+<hr/>
+<h2 id="3-building-the-alu">3. Building the ALU<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-building-the-alu" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Arithmetic Logic Unit - the brain!</strong></p>
+<h3 id="adder-8-bit">Adder (8-bit)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adder-8-bit" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Built from 8 full adders:</strong></p>
+<pre><code>A[7:0] ─┬─[FA]─[FA]─[FA]─[FA]─[FA]─[FA]─[FA]─[FA]─┬─ Sum[7:0]
+B[7:0] ─┘   │    │    │    │    │    │    │    │  │
+Cin ────────┴────┴────┴────┴────┴────┴────┴────┴──┴─ Cout
+            (Carry ripples left)
+</code></pre>
+<p><strong>Problem:</strong> Slow (carry ripple delay)</p>
+<p><strong>Solution (for now):</strong> Accept it. Real CPUs use carry-lookahead.</p>
+<hr/>
+<h3 id="subtractor">Subtractor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#subtractor" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A - B = A + (-B) = A + (NOT B) + 1</strong></p>
+<p><strong>Two’s complement:</strong></p>
+<pre><code>NOT B ─── Flip all bits
+   +1 ─── Add 1
+  = -B ─── Negative of B
+</code></pre>
+<p><strong>Circuit:</strong></p>
+<pre><code>A[7:0] ────────────┬─[Adder]─── Result[7:0]
+                   │
+B[7:0] ──[NOT]─────┤  (invert B if subtracting)
+                   │
+Sub flag ──────────┴─ Cin (1 for subtract, 0 for add)
+</code></pre>
+<p><strong>If Sub=1:</strong></p>
+<ul>
+<li>NOT B (flips all bits)</li>
+<li>Cin=1 (adds 1)</li>
+<li>Result = A + NOT B + 1 = A - B ✓</li>
+</ul>
+<hr/>
+<h3 id="logic-operations">Logic operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#logic-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>AND, OR, XOR:</strong> Bit-by-bit operations</p>
+<pre><code>A[7:0] ──┬─[AND]─┬─ A &amp; B
+B[7:0] ──┤       │
+         │       │
+         ├─[OR]──┼─ A | B
+         │       │
+         └─[XOR]─┴─ A ^ B
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>A = 10110010
+B = 11001100
+
+A AND B = 10000000  (both 1)
+A OR  B = 11111110  (either 1)
+A XOR B = 01111110  (different)
+</code></pre>
+<hr/>
+<h3 id="shifter">Shifter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#shifter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Shift left/right:</strong></p>
+<pre><code>Shift Left by 1:
+  Input:  10110010
+  Output: 01100100  (multiply by 2)
+
+Shift Right by 1:
+  Input:  10110010
+  Output: 01011001  (divide by 2)
+</code></pre>
+<p><strong>Circuit (barrel shifter):</strong></p>
+<pre><code>A[7:0] ──[MUX]── B[7:0]
+         │ │
+      0  │ └─ A[6:0], 0    (shift left 1)
+      1  └─── A[7:1], 0    (shift right 1)
+
+Shift amount selects MUX
+</code></pre>
+<p><strong>Multi-bit shifts:</strong> Chain multiple 1-bit shifters.</p>
+<hr/>
+<h3 id="complete-alu">Complete ALU<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complete-alu" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Combines all operations:</strong></p>
+<pre><code>A[7:0] ─────┬────────────┐
+            │            │
+B[7:0] ─────┼────────────┤
+            │            │
+            ├─[Adder]────┤
+            ├─[AND]──────┤
+            ├─[OR]───────┤
+            ├─[XOR]──────┤
+            ├─[Shifter]──┤
+            │            │
+Op[2:0] ────┴─[MUX]──────┴─── Result[7:0]
+                │
+                ├──── Zero flag (Result == 0)
+                ├──── Carry flag
+                └──── Negative flag (bit 7)
+</code></pre>
+<p><strong>Operation codes:</strong></p>
+<pre><code>Op  │ Operation
+────┼────────────
+000 │ A + B
+001 │ A - B
+010 │ A AND B
+011 │ A OR B
+100 │ A XOR B
+101 │ NOT A
+110 │ A &lt;&lt; 1
+111 │ A >> 1
+</code></pre>
+<p><strong>Flags (status outputs):</strong></p>
+<ul>
+<li><strong>Zero (Z):</strong> Result is all zeros</li>
+<li><strong>Carry (C):</strong> Addition overflowed</li>
+<li><strong>Negative (N):</strong> Bit 7 is 1</li>
+<li><strong>Overflow (V):</strong> Signed overflow</li>
+</ul>
+<p><strong>See:</strong> <a href="../ALU" class="internal" data-slug="ALU">ALU</a></p>
+<hr/>
+<h2 id="4-building-control-logic">4. Building control logic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-building-control-logic" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="instruction-format">Instruction format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instruction-format" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Simple 16-bit instruction:</strong></p>
+<pre><code>┌────────┬────────┬────────┬────────┐
+│ Opcode │  Reg1  │  Reg2  │  Reg3  │
+│ 4 bits │ 3 bits │ 3 bits │ 6 bits │
+└────────┴────────┴────────┴────────┘
+
+Example:
+ADD R1, R2, R3  →  R1 = R2 + R3
+
+Binary: 0001 001 010 011 000000
+        │    │   │   │
+        │    │   │   └─ R3 (src2)
+        │    │   └─ R2 (src1)
+        │    └─ R1 (dest)
+        └─ ADD (opcode 0001)
+</code></pre>
+<p><strong>Instruction set:</strong></p>
+<pre><code>Opcode │ Instruction    │ Meaning
+───────┼────────────────┼───────────────
+0000   │ NOP            │ No operation
+0001   │ ADD R1,R2,R3   │ R1 = R2 + R3
+0010   │ SUB R1,R2,R3   │ R1 = R2 - R3
+0011   │ AND R1,R2,R3   │ R1 = R2 &amp; R3
+0100   │ OR R1,R2,R3    │ R1 = R2 | R3
+0101   │ XOR R1,R2,R3   │ R1 = R2 ^ R3
+0110   │ NOT R1,R2      │ R1 = ~R2
+0111   │ MOV R1,R2      │ R1 = R2
+1000   │ LOAD R1,[R2]   │ R1 = memory[R2]
+1001   │ STORE [R1],R2  │ memory[R1] = R2
+1010   │ JMP addr       │ PC = addr
+1011   │ JZ addr        │ if (Z) PC = addr
+1100   │ JNZ addr       │ if (!Z) PC = addr
+1101   │ HALT           │ Stop
+</code></pre>
+<hr/>
+<h3 id="instruction-decoder">Instruction decoder<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instruction-decoder" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Converts opcode to control signals:</strong></p>
+<pre><code>Instruction[15:12] ──[Decoder]──┬─ ALU_Op[2:0]
+  (Opcode)                       ├─ Reg_Write_Enable
+                                 ├─ Mem_Read
+                                 ├─ Mem_Write
+                                 ├─ PC_Inc
+                                 ├─ PC_Load
+                                 └─ Halt
+</code></pre>
+<p><strong>Truth table (simplified):</strong></p>
+<pre><code>Opcode │ Operation │ ALU_Op │ RegWrite │ MemRead │ MemWrite
+───────┼───────────┼────────┼──────────┼─────────┼─────────
+0001   │ ADD       │ 000    │ 1        │ 0       │ 0
+0010   │ SUB       │ 001    │ 1        │ 0       │ 0
+1000   │ LOAD      │ ---    │ 1        │ 1       │ 0
+1001   │ STORE     │ ---    │ 0        │ 0       │ 1
+</code></pre>
+<p><strong>Built entirely from gates!</strong></p>
+<hr/>
+<h3 id="program-counter-pc">Program Counter (PC)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#program-counter-pc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Holds address of next instruction:</strong></p>
+<pre><code>        ┌─────────────┐
+        │  Register   │
+        │  (16 bits)  │
+        └─────────────┘
+             │
+             ├──── Address[15:0]
+             │
+PC_Inc ──┬───┤
+         │   │
+PC_Load ─┼───┴─[Adder +1]
+         │      [Mux]
+         │        │
+Jump_Addr────────┘
+</code></pre>
+<p><strong>Operations:</strong></p>
+<ul>
+<li><strong>PC_Inc:</strong> PC = PC + 1 (next instruction)</li>
+<li><strong>PC_Load:</strong> PC = Jump_Addr (jump/branch)</li>
+</ul>
+<hr/>
+<h2 id="5-the-complete-cpu">5. The complete CPU<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-the-complete-cpu" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="block-diagram">Block diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#block-diagram" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌───────────────────────────────────────────────────┐
+│                      CPU                          │
+├───────────────────────────────────────────────────┤
+│                                                   │
+│  ┌──────────┐        ┌─────────────┐             │
+│  │    PC    │───────>│   Memory    │             │
+│  └──────────┘        │  (RAM/ROM)  │             │
+│       │              └─────────────┘             │
+│       │                     │                     │
+│       │              ┌──────▼──────┐              │
+│       │              │ Instruction │              │
+│       │              │  Register   │              │
+│       │              └──────┬──────┘              │
+│       │                     │                     │
+│       │              ┌──────▼──────┐              │
+│       │              │   Decoder   │              │
+│       │              └──────┬──────┘              │
+│       │                     │(control signals)    │
+│       │                     │                     │
+│  ┌────▼────────────────┐   │                     │
+│  │  Register File      │◄──┤                     │
+│  │  R0, R1, ..., R7    │   │                     │
+│  └────┬────────┬───────┘   │                     │
+│       │        │           │                     │
+│  ┌────▼────────▼───┐       │                     │
+│  │      ALU        │◄──────┘                     │
+│  │  (Add,Sub,etc)  │                             │
+│  └────────┬─────────┘                             │
+│           │                                       │
+│           └────────────────────────┐              │
+│                                    │              │
+└────────────────────────────────────┼──────────────┘
+                                     ▼
+                               Output/Memory
+</code></pre>
+<hr/>
+<h3 id="data-path">Data path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>How data flows:</strong></p>
+<p><strong>1. Fetch:</strong></p>
+<pre><code>PC → Memory → Instruction Register
+PC = PC + 1
+</code></pre>
+<p><strong>2. Decode:</strong></p>
+<pre><code>Instruction Register → Decoder → Control Signals
+</code></pre>
+<p><strong>3. Execute:</strong></p>
+<pre><code>Register File → (read registers) → ALU → (compute)
+ALU → Register File (write back)
+</code></pre>
+<p><strong>4. Memory (if LOAD/STORE):</strong></p>
+<pre><code>Register → Memory Address
+Memory → Register (LOAD)
+Register → Memory (STORE)
+</code></pre>
+<hr/>
+<h3 id="control-signals">Control signals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#control-signals" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decoder generates these signals each cycle:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Signal</th><th>Purpose</th></tr></thead><tbody><tr><td>RegWriteEnable</td><td>Write ALU result to register</td></tr><tr><td>MemRead</td><td>Read from memory</td></tr><tr><td>MemWrite</td><td>Write to memory</td></tr><tr><td>ALU_Op[2:0]</td><td>Which ALU operation</td></tr><tr><td>PC_Src</td><td>0=PC+1, 1=Jump address</td></tr></tbody></table></div>
+<p><strong>Example - ADD R1, R2, R3:</strong></p>
+<pre><code>1. Fetch: Read instruction from memory[PC], PC++
+2. Decode:
+   - Opcode = 0001 (ADD)
+   - Reg1 = 001 (R1, dest)
+   - Reg2 = 010 (R2, src1)
+   - Reg3 = 011 (R3, src2)
+3. Execute:
+   - Read R2 → ALU input A
+   - Read R3 → ALU input B
+   - ALU_Op = 000 (ADD)
+   - ALU computes A + B
+4. Writeback:
+   - RegWriteEnable = 1
+   - Write ALU result → R1
+</code></pre>
+<p><strong>All happens in one clock cycle!</strong> (Simple CPU)</p>
+<hr/>
+<h2 id="6-running-a-program">6. Running a program<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-running-a-program" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="example-program-sum-two-numbers">Example program: Sum two numbers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-program-sum-two-numbers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Assembly code:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Sum program: computes 5 + 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MOV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R1, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">      ; R1 = 5</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MOV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R2, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">      ; R2 = 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">ADD</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R3, R1, R2 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; R3 = R1 + R2 = 8</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">HALT           </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Stop</span></span></code></pre></figure>
+<p><strong>Machine code (binary):</strong></p>
+<pre><code>Address │ Binary                │ Instruction
+────────┼───────────────────────┼──────────────
+0000    │ 0111 001 000 00000101 │ MOV R1, 5
+0001    │ 0111 010 000 00000011 │ MOV R2, 3
+0002    │ 0001 011 001 010 0000 │ ADD R3,R1,R2
+0003    │ 1101 000 000 00000000 │ HALT
+</code></pre>
+<p><strong>Load into memory:</strong></p>
+<pre><code>Memory:
+[0000] = 0111 001 000 00000101
+[0001] = 0111 010 000 00000011
+[0002] = 0001 011 001 010 0000
+[0003] = 1101 000 000 00000000
+</code></pre>
+<hr/>
+<h3 id="execution-trace">Execution trace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#execution-trace" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Clock cycle 0:</strong></p>
+<pre><code>PC = 0000
+Fetch: Instruction = 0111 001 000 00000101
+Decode: MOV R1, 5
+Execute: R1 = 5
+PC = 0001
+</code></pre>
+<p><strong>Clock cycle 1:</strong></p>
+<pre><code>PC = 0001
+Fetch: Instruction = 0111 010 000 00000011
+Decode: MOV R2, 3
+Execute: R2 = 3
+PC = 0002
+</code></pre>
+<p><strong>Clock cycle 2:</strong></p>
+<pre><code>PC = 0002
+Fetch: Instruction = 0001 011 001 010 0000
+Decode: ADD R3, R1, R2
+Execute:
+  Read R1 = 5 → ALU input A
+  Read R2 = 3 → ALU input B
+  ALU: 5 + 3 = 8
+  Write R3 = 8
+PC = 0003
+</code></pre>
+<p><strong>Clock cycle 3:</strong></p>
+<pre><code>PC = 0003
+Fetch: Instruction = 1101 000 000 00000000
+Decode: HALT
+Execute: Stop clock
+</code></pre>
+<p><strong>Final state:</strong></p>
+<pre><code>R1 = 5
+R2 = 3
+R3 = 8  ✓ Correct!
+</code></pre>
+<p><strong>Program executed in 4 clock cycles!</strong></p>
+<hr/>
+<h3 id="more-complex-example-loop">More complex example: Loop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#more-complex-example-loop" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Assembly code:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Count from 0 to 5</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MOV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R1, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        ; Counter = 0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MOV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R2, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        ; Limit = 5</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">loop</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">ADD</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R1, R1, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    ; Counter++</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">SUB</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R3, R1, R2   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; R3 = Counter - Limit</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">JNZ</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> loop</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">         ; if (R3 != 0) goto loop</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">HALT</span></span></code></pre></figure>
+<p><strong>Execution:</strong></p>
+<pre><code>Cycle  │ R1 │ R2 │ R3 │ Z │ Action
+───────┼────┼────┼────┼───┼────────────
+0      │ 0  │ 5  │ -  │ - │ MOV R1, 0
+1      │ 0  │ 5  │ -  │ - │ MOV R2, 5
+2      │ 1  │ 5  │ -  │ - │ ADD R1 (1)
+3      │ 1  │ 5  │ -4 │ 0 │ SUB R3
+4      │ 1  │ 5  │ -4 │ 0 │ JNZ (jump!)
+5      │ 2  │ 5  │ -4 │ 0 │ ADD R1 (2)
+6      │ 2  │ 5  │ -3 │ 0 │ SUB R3
+7      │ 2  │ 5  │ -3 │ 0 │ JNZ (jump!)
+...
+18     │ 5  │ 5  │  0 │ 1 │ SUB R3
+19     │ 5  │ 5  │  0 │ 1 │ JNZ (don't jump, Z=1)
+20     │ 5  │ 5  │  0 │ 1 │ HALT
+</code></pre>
+<p><strong>Loop executed 5 times!</strong></p>
+<p><strong>This is programming at the hardware level.</strong></p>
+<hr/>
+<h2 id="7-making-it-faster">7. Making it faster<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-making-it-faster" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-problem-everything-is-slow">The problem: Everything is slow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-problem-everything-is-slow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Our simple CPU:</strong></p>
+<ul>
+<li>1 instruction per clock cycle</li>
+<li>Slow clock (gates take time)</li>
+<li>Memory is slow</li>
+</ul>
+<p><strong>Modern CPUs:</strong></p>
+<ul>
+<li>5+ GHz clock (5 billion cycles/second)</li>
+<li>4+ instructions per cycle</li>
+<li>Out-of-order execution</li>
+<li>Branch prediction</li>
+</ul>
+<p><strong>How?</strong></p>
+<hr/>
+<h3 id="pipelining">Pipelining<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pipelining" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Idea:</strong> Overlap instructions like assembly line.</p>
+<p><strong>Without pipeline:</strong></p>
+<pre><code>Instruction 1: [Fetch][Decode][Execute][Memory][Writeback]
+Instruction 2:                                             [Fetch][Decode][Execute][Memory][Writeback]
+
+Total: 10 cycles for 2 instructions
+</code></pre>
+<p><strong>With pipeline:</strong></p>
+<pre><code>Instruction 1: [Fetch][Decode][Execute][Memory][Writeback]
+Instruction 2:        [Fetch][Decode][Execute][Memory][Writeback]
+Instruction 3:               [Fetch][Decode][Execute][Memory][Writeback]
+Instruction 4:                      [Fetch][Decode][Execute][Memory][Writeback]
+
+Total: 8 cycles for 4 instructions
+</code></pre>
+<p><strong>Throughput:</strong> 1 instruction per cycle (after filling pipeline)!</p>
+<p><strong>Problem:</strong> Hazards (dependencies, branches)</p>
+<p><strong>See:</strong> <a href="../CPU-Pipeline" class="internal" data-slug="CPU-Pipeline">CPU-Pipeline</a></p>
+<hr/>
+<h3 id="caching">Caching<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#caching" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Problem:</strong> Memory (DRAM) is 100× slower than CPU.</p>
+<p><strong>Solution:</strong> Cache (SRAM) - small, fast memory on CPU.</p>
+<p><strong>Hierarchy:</strong></p>
+<pre><code>L1 Cache:  32 KB, 4 cycles,  per-core
+L2 Cache: 256 KB, 12 cycles, per-core
+L3 Cache:  16 MB, 40 cycles, shared
+RAM:       16 GB, 100 cycles
+Disk:       1 TB, 10,000,000 cycles
+</code></pre>
+<p><strong>Locality:</strong></p>
+<ul>
+<li><strong>Temporal:</strong> Access again soon → Keep in cache</li>
+<li><strong>Spatial:</strong> Access nearby → Fetch cache line (64 bytes)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">; i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">; i</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> array</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[i];</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Array in cache, very fast!</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>See:</strong> <a href="../Cache" class="internal" data-slug="Cache">Cache</a>, <a href="../Memory-Hierarchy" class="internal" data-slug="Memory-Hierarchy">Memory-Hierarchy</a></p>
+<hr/>
+<h3 id="superscalar-execution">Superscalar execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#superscalar-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Idea:</strong> Execute multiple instructions at once.</p>
+<p><strong>Modern CPU has multiple ALUs:</strong></p>
+<pre><code>         Fetch
+          │
+        Decode
+          │
+     ┌────┼────┐
+     │    │    │
+   ALU1 ALU2 Load/Store
+     │    │    │
+     └────┼────┘
+          │
+      Writeback
+</code></pre>
+<p><strong>Example:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">ADD</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R1, R2, R3   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; ALU1</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MUL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R4, R5, R6   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; ALU2 (parallel!)</span></span></code></pre></figure>
+<p><strong>Both execute simultaneously!</strong></p>
+<p><strong>See:</strong> <a href="../Superscalar" class="internal" data-slug="Superscalar">Superscalar</a></p>
+<hr/>
+<h3 id="branch-prediction">Branch prediction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#branch-prediction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Problem:</strong> Branches stall pipeline.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">JNZ</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> loop</span></span></code></pre></figure>
+<p><strong>Don’t know if branch taken until Execute stage!</strong></p>
+<p><strong>Solution:</strong> Predict!</p>
+<p><strong>Simple predictor:</strong></p>
+<ul>
+<li><strong>Predict taken:</strong> If branch usually loops</li>
+<li><strong>Predict not taken:</strong> If branch usually falls through</li>
+</ul>
+<p><strong>Modern:</strong> Complex predictors (98% accuracy!)</p>
+<p><strong>Wrong prediction:</strong> Flush pipeline, restart (expensive)</p>
+<p><strong>See:</strong> <a href="../Branch-Prediction" class="internal" data-slug="Branch-Prediction">Branch-Prediction</a></p>
+<hr/>
+<h3 id="out-of-order-execution">Out-of-order execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#out-of-order-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Idea:</strong> Execute instructions in different order for efficiency.</p>
+<p><strong>Program order:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">LOAD R1, [R2]    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Slow (memory access)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">ADD</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R3, R1, R4   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Depends on R1 (stalled!)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">MUL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> R5, R6, R7   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">; Independent!</span></span></code></pre></figure>
+<p><strong>Out-of-order:</strong></p>
+<pre><code>1. Issue LOAD R1, [R2]  (starts memory read)
+2. Issue MUL R5, R6, R7 (execute while waiting!)
+3. Wait for LOAD to finish
+4. Issue ADD R3, R1, R4
+</code></pre>
+<p><strong>Executes faster!</strong></p>
+<p><strong>See:</strong> <a href="../Out-of-Order-Execution" class="internal" data-slug="Out-of-Order-Execution">Out-of-Order-Execution</a></p>
+<hr/>
+<h2 id="the-big-picture">The big picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="from-gates-to-programs">From gates to programs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#from-gates-to-programs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>The complete stack:</strong></p>
+<pre><code>Physics (semiconductors)
+  ↓
+Transistors (switches)
+  ↓
+Logic Gates (AND, OR, NOT)
+  ↓
+Combinational Logic (Adders, Muxes)
+  ↓
+Sequential Logic (Registers, Memory)
+  ↓
+Functional Units (ALU, Control)
+  ↓
+CPU (Fetch-Decode-Execute)
+  ↓
+Machine Code (binary instructions)
+  ↓
+Assembly Language (mnemonics)
+  ↓
+C/C++/Rust (compiled)
+  ↓
+Python/JavaScript (interpreted)
+  ↓
+Your Program
+</code></pre>
+<p><strong>Every layer hides complexity of layer below.</strong></p>
+<hr/>
+<h3 id="transistor-count">Transistor count<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transistor-count" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Our simple 8-bit CPU:</strong></p>
+<ul>
+<li>8 registers × 8 bits = 64 flip-flops × 6 transistors = ~400</li>
+<li>ALU: ~1000 transistors</li>
+<li>Control logic: ~500 transistors</li>
+<li>Total: ~2000 transistors</li>
+</ul>
+<p><strong>Intel 4004 (1971):</strong></p>
+<ul>
+<li>First commercial CPU</li>
+<li>2,300 transistors</li>
+<li>4-bit</li>
+<li>740 kHz</li>
+<li>Could execute our simple programs!</li>
+</ul>
+<p><strong>Apple M2 Ultra (2023):</strong></p>
+<ul>
+<li>134 billion transistors</li>
+<li>24 cores × 64-bit</li>
+<li>3.5 GHz</li>
+<li>67,000,000× more transistors!</li>
+</ul>
+<p><strong>But fundamentally the same design.</strong></p>
+<hr/>
+<h3 id="clock-speed-evolution">Clock speed evolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#clock-speed-evolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>1971: Intel 4004       740 kHz
+1985: Intel 386          16 MHz
+1993: Pentium           60 MHz
+2000: Pentium 4        1.5 GHz
+2006: Core 2 Duo       2.4 GHz
+2020: Ryzen 9 5950X    4.9 GHz
+2024: Intel Core Ultra 5.8 GHz
+
+~10,000× faster in 50 years
+</code></pre>
+<p><strong>Why not 100 GHz?</strong></p>
+<ul>
+<li>Power consumption (P ∝ f × V²)</li>
+<li>Heat dissipation</li>
+<li>Speed of light (signals can’t cross chip in 1 cycle!)</li>
+</ul>
+<p><strong>Solution:</strong> More cores, not faster clock.</p>
+<hr/>
+<h2 id="key-takeaways">Key takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="its-all-gates">It’s all gates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#its-all-gates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Every operation - addition, memory access, control flow - is implemented with logic gates.</strong></p>
+<p><strong>Gates are built from transistors.</strong></p>
+<p><strong>Transistors are just switches.</strong></p>
+<p><strong>Programming:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> b</span></span></code></pre></figure>
+<p><strong>Reality:</strong></p>
+<pre><code>1. Compiler → ADD instruction
+2. CPU fetches instruction from memory (gates)
+3. Decoder activates control signals (gates)
+4. Registers output A and B (flip-flops = gates)
+5. ALU adds A + B (full adders = gates)
+6. Result written to register (flip-flops = gates)
+</code></pre>
+<p><strong>All gates. All switches. All in nanoseconds.</strong></p>
+<hr/>
+<h3 id="the-abstraction-tower">The abstraction tower<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-abstraction-tower" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Each layer provides interface to layer above:</strong></p>
+<ul>
+<li><strong>Gates:</strong> AND, OR, NOT</li>
+<li><strong>Arithmetic:</strong> ADD, SUB, MUL</li>
+<li><strong>CPU:</strong> Instructions (fetch-decode-execute)</li>
+<li><strong>Assembly:</strong> Mnemonics (ADD, MOV, JMP)</li>
+<li><strong>C:</strong> Functions, variables, control flow</li>
+<li><strong>Python:</strong> Objects, methods, high-level</li>
+</ul>
+<p><strong>You write Python. CPU executes gates.</strong></p>
+<p><strong>The tower connects them.</strong></p>
+<hr/>
+<h3 id="the-answer">The answer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-answer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>”But How Do It Know?”</strong></p>
+<p><strong>It doesn’t know anything.</strong></p>
+<p><strong>It’s switches, following rules:</strong></p>
+<ul>
+<li>IF input A AND input B are high, output is high</li>
+<li>IF opcode is 0001, enable ALU add operation</li>
+<li>IF clock pulse, store data in flip-flop</li>
+</ul>
+<p><strong>No understanding. No intelligence. Just rules.</strong></p>
+<p><strong>But from billions of simple rules, emerges:</strong></p>
+<ul>
+<li>Operating systems</li>
+<li>Web browsers</li>
+<li>Video games</li>
+<li>Artificial intelligence</li>
+<li>This text you’re reading</li>
+</ul>
+<p><strong>All from switches.</strong></p>
+<p><strong>All from gates.</strong></p>
+<p><strong>All from sand.</strong></p>
+<hr/>
+<h2 id="related-concepts">Related concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#related-concepts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../Hardware/Transistor" class="internal" data-slug="Hardware/Transistor">Transistor</a> - The fundamental switch</li>
+<li><a href="../Hardware/Logic-Gate" class="internal" data-slug="Hardware/Logic-Gate">Logic-Gate</a> - Building blocks</li>
+<li><a href="../Fundamentals/CPU" class="internal" data-slug="Fundamentals/CPU">CPU</a> - Modern processor architecture</li>
+<li><a href="../ALU" class="internal" data-slug="ALU">ALU</a> - Arithmetic and logic</li>
+<li><a href="../Register" class="internal" data-slug="Register">Register</a> - Fast storage</li>
+<li><a href="../Cache" class="internal" data-slug="Cache">Cache</a> - Memory hierarchy</li>
+<li><a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a> - Low-level programming</li>
+<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> - High-level to machine code</li>
+</ul>
+<hr/>
+<h2 id="further-reading">Further reading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#further-reading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Books:</strong></p>
+<ul>
+<li><strong>“But How Do It Know?”</strong> (J. Clark Scott) ⭐ Best introduction</li>
+<li>”Code” (Charles Petzold) - From telegraph to computer</li>
+<li>”Computer Organization and Design” (Patterson &amp; Hennessy)</li>
+<li>“The Elements of Computing Systems” (Nisan &amp; Schocken)</li>
+</ul>
+<p><strong>Projects:</strong></p>
+<ul>
+<li><strong>Ben Eater’s 8-bit computer</strong> (YouTube) - Build real computer</li>
+<li><strong>nand2tetris</strong> - Build computer in simulator</li>
+<li><strong>Logisim</strong> - Design and test circuits</li>
+<li><strong>FPGA projects</strong> - Program real hardware</li>
+</ul>
+<p><strong>See:</strong> <a href="../Book-Notes/CSAPP-Notes" class="internal" data-slug="Book-Notes/CSAPP-Notes">CSAPP-Notes</a> (Chapters 4-5: Processor Architecture)</p>
+<hr/>
+<h2 id="the-miracle">The miracle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-miracle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Modern computers:</strong></p>
+<ul>
+<li>Billions of transistors</li>
+<li>Switching billions of times per second</li>
+<li>Running millions of programs simultaneously</li>
+<li>All perfectly synchronized</li>
+<li>99.9999% reliable</li>
+<li>Fits in your pocket</li>
+</ul>
+<p><strong>And it all works because:</strong></p>
+<ol>
+<li>We can make tiny switches (transistors)</li>
+<li>We can combine switches into gates</li>
+<li>We can combine gates into circuits</li>
+<li>We can combine circuits into CPUs</li>
+<li>We can program CPUs with instructions</li>
+</ol>
+<p><strong>Each layer builds on the last.</strong></p>
+<p><strong>Each layer hides complexity.</strong></p>
+<p><strong>That’s how computers work.</strong></p>
+<p><strong>That’s how it knows.</strong></p>
+<p><strong>It’s switches all the way down.</strong></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-53" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-a-computer" data-for="wtf-is-a-computer">WTF is a Computer?</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#1-review-what-we-have-so-far" data-for="1-review-what-we-have-so-far">1. Review: What we have so far</a></li><li class="depth-2"><a href="#building-blocks" data-for="building-blocks">Building blocks</a></li><li class="depth-1"><a href="#2-building-memory" data-for="2-building-memory">2. Building memory</a></li><li class="depth-2"><a href="#register-stores-one-number" data-for="register-stores-one-number">Register (stores one number)</a></li><li class="depth-2"><a href="#register-file-multiple-registers" data-for="register-file-multiple-registers">Register file (multiple registers)</a></li><li class="depth-2"><a href="#ram-random-access-memory" data-for="ram-random-access-memory">RAM (Random Access Memory)</a></li><li class="depth-1"><a href="#3-building-the-alu" data-for="3-building-the-alu">3. Building the ALU</a></li><li class="depth-2"><a href="#adder-8-bit" data-for="adder-8-bit">Adder (8-bit)</a></li><li class="depth-2"><a href="#subtractor" data-for="subtractor">Subtractor</a></li><li class="depth-2"><a href="#logic-operations" data-for="logic-operations">Logic operations</a></li><li class="depth-2"><a href="#shifter" data-for="shifter">Shifter</a></li><li class="depth-2"><a href="#complete-alu" data-for="complete-alu">Complete ALU</a></li><li class="depth-1"><a href="#4-building-control-logic" data-for="4-building-control-logic">4. Building control logic</a></li><li class="depth-2"><a href="#instruction-format" data-for="instruction-format">Instruction format</a></li><li class="depth-2"><a href="#instruction-decoder" data-for="instruction-decoder">Instruction decoder</a></li><li class="depth-2"><a href="#program-counter-pc" data-for="program-counter-pc">Program Counter (PC)</a></li><li class="depth-1"><a href="#5-the-complete-cpu" data-for="5-the-complete-cpu">5. The complete CPU</a></li><li class="depth-2"><a href="#block-diagram" data-for="block-diagram">Block diagram</a></li><li class="depth-2"><a href="#data-path" data-for="data-path">Data path</a></li><li class="depth-2"><a href="#control-signals" data-for="control-signals">Control signals</a></li><li class="depth-1"><a href="#6-running-a-program" data-for="6-running-a-program">6. Running a program</a></li><li class="depth-2"><a href="#example-program-sum-two-numbers" data-for="example-program-sum-two-numbers">Example program: Sum two numbers</a></li><li class="depth-2"><a href="#execution-trace" data-for="execution-trace">Execution trace</a></li><li class="depth-2"><a href="#more-complex-example-loop" data-for="more-complex-example-loop">More complex example: Loop</a></li><li class="depth-1"><a href="#7-making-it-faster" data-for="7-making-it-faster">7. Making it faster</a></li><li class="depth-2"><a href="#the-problem-everything-is-slow" data-for="the-problem-everything-is-slow">The problem: Everything is slow</a></li><li class="depth-2"><a href="#pipelining" data-for="pipelining">Pipelining</a></li><li class="depth-2"><a href="#caching" data-for="caching">Caching</a></li><li class="depth-2"><a href="#superscalar-execution" data-for="superscalar-execution">Superscalar execution</a></li><li class="depth-2"><a href="#branch-prediction" data-for="branch-prediction">Branch prediction</a></li><li class="depth-2"><a href="#out-of-order-execution" data-for="out-of-order-execution">Out-of-order execution</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The big picture</a></li><li class="depth-2"><a href="#from-gates-to-programs" data-for="from-gates-to-programs">From gates to programs</a></li><li class="depth-2"><a href="#transistor-count" data-for="transistor-count">Transistor count</a></li><li class="depth-2"><a href="#clock-speed-evolution" data-for="clock-speed-evolution">Clock speed evolution</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key takeaways</a></li><li class="depth-2"><a href="#its-all-gates" data-for="its-all-gates">It’s all gates</a></li><li class="depth-2"><a href="#the-abstraction-tower" data-for="the-abstraction-tower">The abstraction tower</a></li><li class="depth-2"><a href="#the-answer" data-for="the-answer">The answer</a></li><li class="depth-1"><a href="#related-concepts" data-for="related-concepts">Related concepts</a></li><li class="depth-1"><a href="#further-reading" data-for="further-reading">Further reading</a></li><li class="depth-1"><a href="#the-miracle" data-for="the-miracle">The miracle</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Hardware/Logic-Gate" class="internal">WTF is a Logic Gate?</a></li><li><a href="../Hardware/Transistor" class="internal">WTF is a Transistor?</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

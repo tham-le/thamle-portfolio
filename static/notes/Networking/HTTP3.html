@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is HTTP/3?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is HTTP/3?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is HTTP/3?"/><meta name="twitter:description" content="Understanding HTTP/3 - the next generation web protocol built on QUIC"/><meta property="og:description" content="Understanding HTTP/3 - the next generation web protocol built on QUIC"/><meta property="og:image:alt" content="Understanding HTTP/3 - the next generation web protocol built on QUIC"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Networking/HTTP3"/><meta property="twitter:url" content="https://notes.thamle.live/Networking/HTTP3"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Understanding HTTP/3 - the next generation web protocol built on QUIC"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Networking/HTTP3"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-195"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-195" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Networking/">Networking</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is HTTP/3?</a></div></nav><h1 class="article-title">WTF is HTTP/3?</h1><p show-comma="true" class="content-meta"><time datetime="2025-10-24T00:00:00.000Z">Oct 24, 2025</time><span>11 min read</span></p><ul class="tags"><li><a href="../tags/networking" class="internal tag-link">networking</a></li><li><a href="../tags/protocols" class="internal tag-link">protocols</a></li><li><a href="../tags/web" class="internal tag-link">web</a></li><li><a href="../tags/quic" class="internal tag-link">quic</a></li><li><a href="../tags/http3" class="internal tag-link">http3</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-http-and-http3">WTF is HTTP and HTTP/3?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-http-and-http3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>How the web went from polite dinner parties to chaotic food delivery on rocket scooters</em></p>
+<h2 id="the-restaurant-evolution">The Restaurant Evolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-restaurant-evolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Let me tell you a story about three restaurants, all serving the same food but with wildly different service models.</p>
+<p><strong>Restaurant HTTP/1.1</strong> is old school. You sit down, order an appetizer, and wait. The waiter brings it out. You finish. You order your main course. You wait again. Want dessert? Better finish that entrée first. One thing at a time, no exceptions. This is <strong>sequential ordering</strong>, and it’s painfully slow when you’re hungry for ten different things.</p>
+<p><strong>Restaurant HTTP/2</strong> had a breakthrough. You can now order everything at once! Appetizer, main course, dessert, drinks—all on one ticket. The kitchen gets busy, and here’s the cool part: they can work on multiple dishes simultaneously. But there’s a catch. The waiter insists on delivering your food <em>in the exact order you wrote it down</em>. If your appetizer gets delayed because the chef burned it, your perfectly ready main course sits under a heat lamp getting soggy. Everything waits for that first item. This is <strong>head of line blocking</strong>, and it’s the villain of our story.</p>
+<p><strong>Restaurant HTTP/3</strong> said “screw the rules” and hired a fleet of delivery drivers. Each dish gets its own driver on their own scooter. If one driver crashes and drops your appetizer, who cares? The other drivers keep zooming along with your main course and dessert. They arrive independently, whenever they’re ready. No waiting, no blocking, pure chaos that somehow works better.</p>
+<p>That’s the evolution of HTTP in a nutshell.</p>
+<h2 id="the-problem-head-of-line-blocking">The Problem: Head of Line Blocking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-problem-head-of-line-blocking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s what actually happens under the hood, and why HTTP/2’s solution wasn’t enough.</p>
+<h3 id="http11-application-layer-blocking"><a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a>/1.1: Application Layer Blocking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http11-application-layer-blocking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In HTTP/1.1, you open a <a href="../TCP-Connection" class="internal alias" data-slug="TCP-Connection">TCP Connection</a> and send one request at a time. Want to load a webpage with 50 images? You either:</p>
+<ul>
+<li>Send requests sequentially (glacially slow)</li>
+<li>Open 6-8 parallel TCP connections (expensive, wasteful)</li>
+</ul>
+<p>Browsers chose option two, which is why your browser opens multiple connections to the same server. It’s a workaround, not a solution.</p>
+<h3 id="http2-we-fixed-it-or-did-we">HTTP/2: We Fixed It! (Or Did We?)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http2-we-fixed-it-or-did-we" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>HTTP/2 introduced <strong>multiplexing</strong>. Multiple requests and responses share a single TCP connection, broken into small frames that interleave. Stream 1 sends a few frames, Stream 2 sends some, back to Stream 1. Beautiful!</p>
+<p>But here’s the problem: <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> doesn’t know about streams. It just sees a sequential byte stream that <em>must</em> arrive in order.</p>
+<p>Imagine you’re sending three streams over HTTP/2:</p>
+<ul>
+<li>Stream 1: <code>index.html</code></li>
+<li>Stream 2: <code>style.css</code></li>
+<li>Stream 3: <code>app.js</code></li>
+</ul>
+<p>These get broken into TCP segments and sent:</p>
+<pre><code>[S1-chunk1] [S2-chunk1] [S3-chunk1] [S1-chunk2] [S2-chunk2] ...
+</code></pre>
+<p>Now imagine <code>S2-chunk1</code> (part of your CSS file) gets lost in the network. TCP notices the gap and says “whoa, hold up everyone.” Even though <code>S3-chunk1</code> arrived perfectly fine and could be processed, TCP blocks it. The CSS chunk needs to be retransmitted and received <em>before</em> anything else can proceed.</p>
+<p>This is <strong>TCP-level head of line blocking</strong>, and it’s worse than HTTP/1.1’s problem because now you’ve put all your eggs in one basket. One lost packet blocks <em>every</em> stream on the connection.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>The Fundamental Issue </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>HTTP/2 solved head of line blocking at the application layer, but TCP still enforces strict ordering at the transport layer. You can’t fix this without changing the transport protocol itself.</p>
+</div>
+</blockquote>
+<p>At 2% packet loss (which is terrible, but not uncommon on mobile networks), HTTP/1.1 with its multiple connections can actually outperform HTTP/2. That’s embarrassing.</p>
+<h2 id="enter-quic-tcps-rebellious-younger-sibling">Enter QUIC: TCP’s Rebellious Younger Sibling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enter-quic-tcps-rebellious-younger-sibling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is where things get interesting. Google looked at this mess and asked a heretical question: “What if we just… didn’t use TCP?”</p>
+<p><a href="../QUIC" class="internal" data-slug="QUIC">QUIC</a> (Quick UDP Internet Connections) is a transport protocol built on top of <a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a>, and it’s the foundation of HTTP/3. Yes, UDP—that “unreliable” protocol everyone tells you not to use for anything serious. The irony is delicious.</p>
+<h3 id="why-udp">Why UDP?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-udp" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>TCP is implemented in the operating system kernel. Changing it means updating billions of devices, navigating decades of ossified middleboxes, and convincing everyone that your changes won’t break the internet. It’s a political and technical nightmare.</p>
+<p>UDP, on the other hand, is a thin wrapper around <a href="../Networking/IP" class="internal" data-slug="Networking/IP">IP</a>. It’s basically “here’s a packet, good luck.” No guarantees, no ordering, no reliability. But that’s exactly what makes it perfect: it’s a blank canvas.</p>
+<p>QUIC implements all the good parts of TCP (reliability, congestion control, flow control) in <strong>userspace</strong>, where you can iterate fast and deploy changes without kernel updates. It’s TCP, but better, and you can ship updates like a regular application.</p>
+<h3 id="connection-ids-the-secret-sauce">Connection IDs: The Secret Sauce<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connection-ids-the-secret-sauce" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Here’s one of QUIC’s cleverest ideas.</p>
+<p>TCP identifies connections using a 5-tuple:</p>
+<pre><code>(source IP, source port, dest IP, dest port, protocol)
+</code></pre>
+<p>Change any of these, and the connection dies. Switch from WiFi to cellular? New IP address means new connection, which means a new <a href="../Three-Way-Handshake" class="internal alias" data-slug="Three-Way-Handshake">Three-Way Handshake</a>, new <a href="../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a> handshake, losing all your state. This is the <strong>parking lot problem</strong>: you walk to your car, your phone clings to weak WiFi, and everything grinds to a halt until you manually disable WiFi.</p>
+<p>QUIC uses <strong>Connection IDs</strong> instead. The server hands out these identifiers to the client during the handshake. The connection ID is carried in every packet header. When your IP address changes, you just keep using the same Connection ID, and the server recognizes you immediately.</p>
+<pre><code>Client on WiFi (192.168.1.5) → Server
+[Connection ID: 0xABCD1234]
+
+*Client switches to cellular (10.2.45.99)*
+
+Client on Cellular (10.2.45.99) → Server  
+[Connection ID: 0xABCD1234]
+
+Server: &quot;Oh hey, I know you! Welcome back.&quot;
+</code></pre>
+<p>No new handshake. No lost state. The connection just <strong>migrates</strong> seamlessly. This is huge for mobile devices that constantly switch networks.</p>
+<h3 id="independent-streams-the-real-win">Independent Streams: The Real Win<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#independent-streams-the-real-win" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>This is where QUIC solves head of line blocking for good.</p>
+<p>In QUIC, streams are <strong>first-class citizens</strong>. The protocol understands that Stream 1, Stream 2, and Stream 3 are independent. When a packet from Stream 2 gets lost, QUIC only blocks Stream 2 until the retransmission arrives. Streams 1 and 3 keep flowing.</p>
+<p>Think back to our delivery driver analogy. Each stream has its own driver. One crashes? The others don’t even notice.</p>
+<p>Here’s how it works technically:</p>
+<p>Each QUIC packet contains frames, and frames belong to specific streams:</p>
+<pre><code>QUIC Packet #1: [Stream 1 frame] [Stream 2 frame]
+QUIC Packet #2: [Stream 3 frame] [Stream 1 frame]  
+QUIC Packet #3: [Stream 2 frame] [Stream 3 frame]
+</code></pre>
+<p>Packet #2 gets lost? No problem:</p>
+<ul>
+<li>Stream 3 and Stream 1 frames from other packets are delivered immediately</li>
+<li>Stream 3 and Stream 1 frames from Packet #2 get retransmitted</li>
+<li>No other streams blocked</li>
+</ul>
+<p>QUIC keeps a separate reassembly buffer for each stream. Lost packets only affect their own stream’s buffer.</p>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>The Key Insight </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>TCP treats everything as one monolithic byte stream. QUIC understands that modern applications need multiple independent streams and builds that understanding into the transport layer.</p>
+</div>
+</blockquote>
+<h3 id="0-rtt-instant-reconnection">0-RTT: Instant Reconnection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#0-rtt-instant-reconnection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Remember how TCP needs a three-way handshake before sending data? And then TLS adds another roundtrip for encryption setup? That’s <strong>2 RTT</strong> (Round Trip Times) before your first byte of application data goes out.</p>
+<p>QUIC with <a href="../TLS-1.3" class="internal alias" data-slug="TLS-1.3">TLS 1.3</a> can do <strong>1-RTT</strong> for first connections:</p>
+<pre><code>Client → Server: [ClientHello + Connection Setup]
+Client ← Server: [ServerHello + Handshake]
+Client → Server: [Application Data]  ← First data here
+</code></pre>
+<p>For <strong>repeat connections</strong>, QUIC supports <strong>0-RTT</strong>. The client caches crypto parameters from the previous connection and immediately sends encrypted application data in its very first packet:</p>
+<pre><code>Client → Server: [Cached params + Application Data]  ← Data in first packet!
+Client ← Server: [Confirmation + Response Data]
+</code></pre>
+<p>Zero roundtrips. Your data goes out instantly. This is as fast as physics allows.</p>
+<p>The catch? 0-RTT data isn’t protected against replay attacks. If an attacker captures your 0-RTT packet, they can replay it to the server. That’s why 0-RTT should only be used for <strong>idempotent</strong> operations (GET requests, not POST requests that change state).</p>
+<h3 id="built-in-encryption">Built-In Encryption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#built-in-encryption" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>One more thing: QUIC mandates <a href="../TLS-1.3" class="internal alias" data-slug="TLS-1.3">TLS 1.3</a> encryption. There is no unencrypted QUIC. Every connection is secure by default.</p>
+<p>TCP leaves encryption as an optional layer on top (TLS/SSL). QUIC integrates it deeply into the protocol. Most of the packet header is encrypted, hiding metadata from prying eyes. Only the absolute minimum (Connection ID, packet number) is visible.</p>
+<p>This is great for privacy but annoying for network administrators who relied on deep packet inspection. Can’t make everyone happy.</p>
+<h2 id="http3-http-over-quic">HTTP/3: HTTP Over QUIC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#http3-http-over-quic" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>So what is HTTP/3, exactly?</p>
+<p>It’s HTTP semantics (methods, headers, status codes) mapped onto QUIC instead of TCP. That’s it. Everything you know about HTTP still applies. The difference is the transport layer.</p>
+<p>HTTP/3 is defined in RFC 9114, published in June 2022. It uses the ALPN token “h3” during the TLS handshake to negotiate that both sides speak HTTP/3.</p>
+<h3 id="header-compression-qpack">Header Compression: QPACK<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#header-compression-qpack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>HTTP/2 used <a href="../HPACK" class="internal" data-slug="HPACK">HPACK</a> for header compression, which maintains a dynamic compression dictionary. The problem? That dictionary needs to be updated <em>in order</em>. If a packet updating the dictionary gets lost, everything blocks waiting for it. Head of line blocking strikes again!</p>
+<p>HTTP/3 uses QPACK (RFC 9204), a modified compression scheme designed for QUIC’s independent streams. QPACK allows the decoder to process headers even when dictionary updates are delayed, avoiding blocking.</p>
+<h3 id="discovery-alt-svc">Discovery: Alt-Svc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#discovery-alt-svc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How does a browser know a server supports HTTP/3?</p>
+<p>Servers advertise HTTP/3 support using the <code>Alt-Svc</code> (Alternative Service) HTTP header:</p>
+<pre><code>Alt-Svc: h3=&quot;:443&quot;; ma=86400
+</code></pre>
+<p>This tells the client “hey, I also speak HTTP/3 on UDP port 443.” The client can keep using the current HTTP/2 connection but might try HTTP/3 next time.</p>
+<p>If QUIC connection establishment fails (UDP blocked, for example), clients should fall back to TCP-based HTTP versions.</p>
+<h2 id="the-tradeoffs">The Tradeoffs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-tradeoffs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Nothing is free. HTTP/3 and QUIC come with costs.</p>
+<h3 id="udp-gets-no-respect">UDP Gets No Respect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#udp-gets-no-respect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Some ISPs and corporate firewalls block or throttle UDP traffic. They’re used to TCP for everything important, and UDP is treated with suspicion (thanks, DDoS attacks). In these environments, QUIC connections simply fail, and you fall back to HTTP/2 or HTTP/1.1.</p>
+<p>This is improving as HTTP/3 adoption grows, but it’s still a real problem in enterprise networks.</p>
+<h3 id="cpu-overhead">CPU Overhead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cpu-overhead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>QUIC requires more CPU than TCP, especially on the server side. Why?</p>
+<ul>
+<li>Encryption is mandatory and happens in userspace (not offloaded to hardware)</li>
+<li>More complex packet processing (stream management, packet number spaces)</li>
+<li>Loss detection and congestion control reimplemented in userspace</li>
+</ul>
+<p>For high-traffic servers, this can be significant. Hardware acceleration for QUIC is coming, but it’s not ubiquitous yet.</p>
+<h3 id="middlebox-mayhem">Middlebox Mayhem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#middlebox-mayhem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>QUIC encrypts almost everything, which breaks traditional traffic shaping, QoS, and inspection tools. Network operators who relied on seeing TCP headers and doing smart routing are now blind.</p>
+<p>This is a feature for privacy but a headache for network management. The IETF has tried to balance this with some visible signals (ECN marks, spin bit for RTT measurement), but it’s still contentious.</p>
+<h3 id="0-rtt-replay-attacks">0-RTT Replay Attacks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#0-rtt-replay-attacks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>We mentioned this earlier: 0-RTT data is vulnerable to replay attacks. An attacker can capture and resend the same 0-RTT packet. The server must be designed to handle this, typically by only allowing idempotent operations in 0-RTT.</p>
+<p>0-RTT also doesn’t provide forward secrecy. If the session resumption secret is compromised, 0-RTT data from resumed connections can be decrypted.</p>
+<h2 id="the-big-picture">The Big Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>As of September 2024, HTTP/3 is supported by over 95% of major browsers and 34% of the top 10 million websites. Adoption is growing fast.</p>
+<p>Why does this matter?</p>
+<p><strong>For users:</strong> Faster page loads, especially on mobile networks and high-latency connections. Seamless network switching. Better performance on lossy networks.</p>
+<p><strong>For developers:</strong> Lower latency, better multiplexing, built-in encryption, connection migration for mobile apps. You get modern transport for free.</p>
+<p><strong>For the internet:</strong> QUIC’s userspace implementation means the transport layer can finally evolve again. We’re not stuck with 1970s-era TCP forever. Future innovations like QUIC Datagram extension (RFC 9221) are already enabling new use cases, like carrying UDP traffic through HTTP proxies (used by iCloud Private Relay).</p>
+<h3 id="whats-next">What’s Next?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Now that you understand how HTTP/3 fixes head of line blocking with QUIC’s independent streams, you might be wondering: how do you actually <em>use</em> this in your applications? Should you rewrite everything for HTTP/3?</p>
+<p>Short answer: you probably don’t need to. Most HTTP clients and servers are adding HTTP/3 support transparently. Your web framework, your cloud provider, your CDN—they’re handling this for you.</p>
+<p>But understanding what’s happening underneath makes you a better engineer. You’ll know why your mobile app suddenly got faster, or why that flaky network doesn’t destroy your user experience anymore.</p>
+<p>The web just got a major upgrade, and most people won’t even notice. That’s how it should be.</p>
+<hr/>
+<h2 id="sources--verification">Sources &amp; Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources--verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>I verified the following during writing:</p>
+<ul>
+<li>HTTP/3 specification: RFC 9114</li>
+<li>QPACK header compression: RFC 9204</li>
+<li>TCP head-of-line blocking mechanics and HTTP/2 limitations</li>
+<li>QUIC 0-RTT characteristics and security implications</li>
+<li>QUIC connection migration using Connection IDs</li>
+<li>HTTP/3 adoption statistics</li>
+<li>CPU overhead and UDP blocking challenges</li>
+</ul>
+<p>To double-check technical details:</p>
+<ul>
+<li><code>&quot;RFC 9114 HTTP/3 specification&quot;</code></li>
+<li><code>&quot;QUIC connection migration Connection ID&quot;</code></li>
+<li><code>&quot;TCP head-of-line blocking HTTP/2&quot;</code></li>
+<li><code>&quot;QUIC 0-RTT security replay attacks&quot;</code></li>
+<li><code>&quot;HTTP/3 adoption statistics 2024&quot;</code></li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-80" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-http-and-http3" data-for="wtf-is-http-and-http3">WTF is HTTP and HTTP/3?</a></li><li class="depth-1"><a href="#the-restaurant-evolution" data-for="the-restaurant-evolution">The Restaurant Evolution</a></li><li class="depth-1"><a href="#the-problem-head-of-line-blocking" data-for="the-problem-head-of-line-blocking">The Problem: Head of Line Blocking</a></li><li class="depth-2"><a href="#http11-application-layer-blocking" data-for="http11-application-layer-blocking">HTTP/1.1: Application Layer Blocking</a></li><li class="depth-2"><a href="#http2-we-fixed-it-or-did-we" data-for="http2-we-fixed-it-or-did-we">HTTP/2: We Fixed It! (Or Did We?)</a></li><li class="depth-1"><a href="#enter-quic-tcps-rebellious-younger-sibling" data-for="enter-quic-tcps-rebellious-younger-sibling">Enter QUIC: TCP’s Rebellious Younger Sibling</a></li><li class="depth-2"><a href="#why-udp" data-for="why-udp">Why UDP?</a></li><li class="depth-2"><a href="#connection-ids-the-secret-sauce" data-for="connection-ids-the-secret-sauce">Connection IDs: The Secret Sauce</a></li><li class="depth-2"><a href="#independent-streams-the-real-win" data-for="independent-streams-the-real-win">Independent Streams: The Real Win</a></li><li class="depth-2"><a href="#0-rtt-instant-reconnection" data-for="0-rtt-instant-reconnection">0-RTT: Instant Reconnection</a></li><li class="depth-2"><a href="#built-in-encryption" data-for="built-in-encryption">Built-In Encryption</a></li><li class="depth-1"><a href="#http3-http-over-quic" data-for="http3-http-over-quic">HTTP/3: HTTP Over QUIC</a></li><li class="depth-2"><a href="#header-compression-qpack" data-for="header-compression-qpack">Header Compression: QPACK</a></li><li class="depth-2"><a href="#discovery-alt-svc" data-for="discovery-alt-svc">Discovery: Alt-Svc</a></li><li class="depth-1"><a href="#the-tradeoffs" data-for="the-tradeoffs">The Tradeoffs</a></li><li class="depth-2"><a href="#udp-gets-no-respect" data-for="udp-gets-no-respect">UDP Gets No Respect</a></li><li class="depth-2"><a href="#cpu-overhead" data-for="cpu-overhead">CPU Overhead</a></li><li class="depth-2"><a href="#middlebox-mayhem" data-for="middlebox-mayhem">Middlebox Mayhem</a></li><li class="depth-2"><a href="#0-rtt-replay-attacks" data-for="0-rtt-replay-attacks">0-RTT Replay Attacks</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The Big Picture</a></li><li class="depth-2"><a href="#whats-next" data-for="whats-next">What’s Next?</a></li><li class="depth-1"><a href="#sources--verification" data-for="sources--verification">Sources &amp; Verification</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

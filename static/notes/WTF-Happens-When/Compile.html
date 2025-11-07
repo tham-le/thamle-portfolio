@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF happens when you compile code</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF happens when you compile code"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF happens when you compile code"/><meta name="twitter:description" content="Complete trace from C code to executable - preprocessing, compilation, assembly, linking"/><meta property="og:description" content="Complete trace from C code to executable - preprocessing, compilation, assembly, linking"/><meta property="og:image:alt" content="Complete trace from C code to executable - preprocessing, compilation, assembly, linking"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/WTF-Happens-When/Compile"/><meta property="twitter:url" content="https://notes.thamle.live/WTF-Happens-When/Compile"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Complete trace from C code to executable - preprocessing, compilation, assembly, linking"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="WTF-Happens-When/Compile"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-264"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-264" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../WTF-Happens-When/">WTF Happens When</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF happens when you compile code</a></div></nav><h1 class="article-title">WTF happens when you compile code</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T00:00:00.000Z">Nov 07, 2025</time><span>12 min read</span></p><ul class="tags"><li><a href="../tags/compiler" class="internal tag-link">compiler</a></li><li><a href="../tags/systems" class="internal tag-link">systems</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li><li><a href="../tags/include" class="internal tag-link">include</a></li><li><a href="../tags/define" class="internal tag-link">define</a></li><li><a href="../tags/if" class="internal tag-link">if</a></li><li><a href="../tags/ifdef" class="internal tag-link">ifdef</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-happens-when-you-compile-helloc">WTF happens when you compile <code>hello.c</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-happens-when-you-compile-helloc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>You type <code>gcc hello.c</code> and get an executable. <strong>WTF just happened?</strong></p>
+<p>Let’s trace through <strong>every single step</strong> from source code to machine code.</p>
+<hr/>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#1-you-run-gcc" class="internal alias">You run gcc</a></li>
+<li><a href="#2-phase-1-preprocessing" class="internal alias">Phase 1: Preprocessing</a></li>
+<li><a href="#3-phase-2-compilation" class="internal alias">Phase 2: Compilation</a></li>
+<li><a href="#4-phase-3-assembly" class="internal alias">Phase 3: Assembly</a></li>
+<li><a href="#5-phase-4-linking" class="internal alias">Phase 4: Linking</a></li>
+<li><a href="#6-you-run-the-program" class="internal alias">You run the program</a></li>
+<li><a href="#7-behind-the-scenes" class="internal alias">Behind the scenes</a></li>
+<li><a href="#8-complete-timeline" class="internal alias">Complete timeline</a></li>
+</ol>
+<hr/>
+<h2 id="1-you-run-gcc">1. You run gcc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-you-run-gcc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="your-source-code">Your source code<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#your-source-code" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>hello.c:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &lt;stdio.h></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#define</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> MESSAGE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Hello, world!&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(MESSAGE </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<h3 id="the-gcc-command">The gcc command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-gcc-command" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc hello.c -o hello</span></span></code></pre></figure>
+<p><strong>What gcc actually is:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">gcc </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> driver program</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    ↓</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Orchestrates:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> cpp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (preprocessor)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> cc1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (compiler)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> as</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">     (assembler)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> ld</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">     (linker)</span></span></code></pre></figure>
+<p><strong>gcc is NOT the compiler!</strong> It’s a <strong>driver</strong> that calls the real tools.</p>
+<p><strong>See:</strong> <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a></p>
+<h3 id="see-all-phases">See all phases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#see-all-phases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc -v hello.c -o hello</span></span></code></pre></figure>
+<p>Output shows:</p>
+<pre><code>/usr/lib/gcc/.../cc1 -E hello.c   (preprocessor)
+/usr/lib/gcc/.../cc1 hello.c      (compiler)
+as -o hello.o hello.s             (assembler)
+ld hello.o -o hello               (linker)
+</code></pre>
+<p><strong>See:</strong> <a href="../Book-Notes/CSAPP-Notes" class="internal" data-slug="Book-Notes/CSAPP-Notes">CSAPP-Notes</a> for compilation pipeline.</p>
+<hr/>
+<h2 id="2-phase-1-preprocessing">2. Phase 1: Preprocessing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-phase-1-preprocessing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Preprocessor</strong> (<code>cpp</code>) handles directives starting with <code>#</code>.</p>
+<h3 id="run-preprocessor-manually">Run preprocessor manually<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#run-preprocessor-manually" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc -E hello.c -o hello.i</span></span></code></pre></figure>
+<p><strong>Or:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cpp hello.c -o hello.i</span></span></code></pre></figure>
+<h3 id="what-preprocessing-does">What preprocessing does<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-preprocessing-does" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Remove comments:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // This is a comment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>2. Expand <a href=".././tags/include" class="tag-link internal alias" data-slug="tags/include">include</a>:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &lt;stdio.h></span></span></code></pre></figure>
+<p>Replaced with <strong>entire contents</strong> of <code>/usr/include/stdio.h</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Thousands of lines...</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">extern</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> char</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">__restrict </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">__format</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, ...);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">extern</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> scanf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> char</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">__restrict </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">__format</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, ...);</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// ...</span></span></code></pre></figure>
+<p><strong>stdio.h includes other headers:</strong></p>
+<pre><code>stdio.h
+  → stddef.h
+    → stdint.h
+  → sys/types.h
+    → sys/cdefs.h
+</code></pre>
+<p><strong>Result:</strong> <code>hello.i</code> is ~800+ lines (even though <code>hello.c</code> is 7 lines!)</p>
+<p><strong>3. Expand <a href=".././tags/define" class="tag-link internal alias" data-slug="tags/define">define</a> macros:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#define</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> MESSAGE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Hello, world!&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(MESSAGE </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello, world!&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span></code></pre></figure>
+<p><strong>4. Evaluate <a href=".././tags/if" class="tag-link internal alias" data-slug="tags/if">if</a> / <a href=".././tags/ifdef" class="tag-link internal alias" data-slug="tags/ifdef">ifdef</a>:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#ifdef</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> DEBUG</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Debug mode</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#endif</span></span></code></pre></figure>
+<p>If <code>DEBUG</code> is not defined, entire block is removed.</p>
+<p><strong>5. String concatenation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello, world!&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span></span></code></pre></figure>
+<p>Becomes:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello, world!</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span></span></code></pre></figure>
+<h3 id="result-helloi">Result: hello.i<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#result-helloi" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>hello.i (simplified):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// ... 800 lines of stdio.h declarations ...</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello, world!</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Pure C code, no preprocessor directives.</strong></p>
+<p><strong>See:</strong> <a href="../Preprocessor" class="internal" data-slug="Preprocessor">Preprocessor</a></p>
+<hr/>
+<h2 id="3-phase-2-compilation">3. Phase 2: Compilation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-phase-2-compilation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Compiler</strong> (<code>cc1</code>) converts C code to <strong>assembly language</strong>.</p>
+<h3 id="run-compiler-manually">Run compiler manually<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#run-compiler-manually" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc -S hello.i -o hello.s</span></span></code></pre></figure>
+<p><strong>Or:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /usr/lib/gcc/.../cc1 hello.i -o hello.s</span></span></code></pre></figure>
+<h3 id="what-compilation-does">What compilation does<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-compilation-does" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Compiler has many phases:</strong></p>
+<pre><code>C code
+  ↓
+Lexical Analysis (Lexer)
+  ↓
+Syntax Analysis (Parser)
+  ↓
+Semantic Analysis
+  ↓
+Intermediate Representation (IR)
+  ↓
+Optimization
+  ↓
+Code Generation
+  ↓
+Assembly code
+</code></pre>
+<p>Let’s trace each phase…</p>
+<h3 id="31-lexical-analysis-lexer">3.1 Lexical Analysis (Lexer)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-lexical-analysis-lexer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Breaks source into tokens</strong> (smallest units).</p>
+<p><strong>Input:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello, world!</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span></code></pre></figure>
+<p><strong>Output (tokens):</strong></p>
+<pre><code>IDENTIFIER: &quot;printf&quot;
+LPAREN: &quot;(&quot;
+STRING_LITERAL: &quot;Hello, world!\n&quot;
+RPAREN: &quot;)&quot;
+SEMICOLON: &quot;;&quot;
+</code></pre>
+<p><strong>Lexer uses finite automaton</strong> (DFA).</p>
+<p><strong>See:</strong> <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> (automata theory)</p>
+<h3 id="32-syntax-analysis-parser">3.2 Syntax Analysis (Parser)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-syntax-analysis-parser" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Builds Abstract Syntax Tree (AST)</strong> from tokens.</p>
+<p><strong>Input (tokens):</strong></p>
+<pre><code>IDENTIFIER(&quot;printf&quot;), LPAREN, STRING_LITERAL(&quot;Hello, world!\n&quot;), RPAREN, SEMICOLON
+</code></pre>
+<p><strong>Output (AST):</strong></p>
+<pre><code>FunctionCall
+├─ Function: &quot;printf&quot;
+└─ Arguments
+   └─ StringLiteral: &quot;Hello, world!\n&quot;
+</code></pre>
+<p><strong>Parser uses context-free grammar (CFG).</strong></p>
+<p><strong>Example grammar rule:</strong></p>
+<pre><code>statement → expression ;
+expression → identifier ( argument_list )
+argument_list → argument | argument , argument_list
+</code></pre>
+<p><strong>See:</strong> <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> (CFG, pushdown automata)</p>
+<h3 id="33-semantic-analysis">3.3 Semantic Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-semantic-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Checks types and semantics.</strong></p>
+<p><strong>Type checking:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;hello&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Error: Can't assign string to int</span></span></code></pre></figure>
+<p><strong>Function signature checking:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hello&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">           // OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Format: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">%d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">printf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">                  // Error: printf requires at least 1 argument</span></span></code></pre></figure>
+<p><strong>Undeclared variables:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Error: 'x' undeclared</span></span></code></pre></figure>
+<p><strong>Builds symbol table:</strong></p>
+<pre><code>Symbol Table:
+  printf: function (char*, ...) → int
+  main:   function () → int
+</code></pre>
+<h3 id="34-intermediate-representation-ir">3.4 Intermediate Representation (IR)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-intermediate-representation-ir" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Compiler generates platform-independent IR.</strong></p>
+<p><strong>Example - LLVM IR:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="llvm" data-theme="github-light github-dark"><code data-language="llvm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>define i32 @main() {</span></span>
+<span data-line><span>entry:</span></span>
+<span data-line><span>  %0 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i32 0, i32 0))</span></span>
+<span data-line><span>  ret i32 0</span></span>
+<span data-line><span>}</span></span>
+<span data-line> </span>
+<span data-line><span>@.str = private unnamed_addr constant [15 x i8] c&quot;Hello, world!\0A\00&quot;</span></span></code></pre></figure>
+<p><strong>Three-address code (TAC) form:</strong></p>
+<pre><code>t1 = address_of(&quot;Hello, world!\n&quot;)
+call printf, t1
+return 0
+</code></pre>
+<p><strong>Why IR?</strong></p>
+<ul>
+<li><strong>Multiple frontends:</strong> C, C++, Rust → same IR</li>
+<li><strong>Multiple backends:</strong> x86, ARM, RISC-V</li>
+<li><strong>Optimization:</strong> Easier on IR than assembly</li>
+</ul>
+<p><strong>See:</strong> <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>, <a href="../LLVM" class="internal" data-slug="LLVM">LLVM</a></p>
+<h3 id="35-optimization">3.5 Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Compiler applies optimizations:</strong></p>
+<p><strong>Dead code elimination:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // x is never used</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></figure>
+<p><strong>Constant folding:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 3</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> +</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 4</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> *</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 23</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></figure>
+<p><strong>Loop unrolling:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">; i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">; i</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> arr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[i];</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> arr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> arr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> arr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> arr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span></code></pre></figure>
+<p><strong>Function inlining:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Before</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> square</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> x</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x; }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> y </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> square</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> y </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 5</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> *</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></figure>
+<p><strong>Optimization levels:</strong></p>
+<ul>
+<li><code>-O0</code>: No optimization (fast compilation, slow code)</li>
+<li><code>-O1</code>: Basic optimization</li>
+<li><code>-O2</code>: Recommended for production</li>
+<li><code>-O3</code>: Aggressive optimization (may increase code size)</li>
+<li><code>-Os</code>: Optimize for size</li>
+<li><code>-Og</code>: Optimize for debugging</li>
+</ul>
+<p><strong>See:</strong> <a href="../Compiler-Optimization" class="internal" data-slug="Compiler-Optimization">Compiler-Optimization</a></p>
+<h3 id="36-code-generation">3.6 Code Generation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-code-generation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Generate assembly for target architecture.</strong></p>
+<p><strong>Target:</strong> x86-64 (amd64)</p>
+<p><strong>Assembly output:</strong></p>
+<p><strong>hello.s:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .file   &quot;hello.c&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    .text</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">section    .rodata</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">LC0:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .string &quot;Hello, world!&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    .text</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .globl  main</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .type   main, @function</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">main:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">LFB0:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    pushq   %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    movq</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rsp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    leaq    .LC0(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">), %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rdi</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    call</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    puts@PLT</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    popq    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    ret</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">LFE0:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .size   main, .-main</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .ident  &quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">GCC:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (Ubuntu </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">11.2</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">11.2</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .section    .note.GNU-stack,&quot;&quot;,@progbits</span></span></code></pre></figure>
+<p><strong>Assembly breakdown:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">main:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    pushq   %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">            # Save old frame pointer</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    movq</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rsp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">      # Set up new frame pointer</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    leaq    .LC0(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">), %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rdi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Load address of &quot;Hello, world!&quot; into rdi</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">                              # (rdi = first argument register)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    call</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    puts@PLT       </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"> # Call puts (compiler optimized printf→puts)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # Return 0 (eax = return value register)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    popq    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">            # Restore old frame pointer</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    ret</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">                     # Return to caller</span></span></code></pre></figure>
+<p><strong>Why puts instead of printf?</strong></p>
+<p>Compiler optimized <code>printf(&quot;Hello, world!\n&quot;)</code> → <code>puts(&quot;Hello, world!&quot;)</code> (faster, no format parsing).</p>
+<p><strong>See:</strong> <a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a>, <a href="../Calling-Convention" class="internal" data-slug="Calling-Convention">Calling-Convention</a></p>
+<hr/>
+<h2 id="4-phase-3-assembly">4. Phase 3: Assembly<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-phase-3-assembly" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Assembler</strong> (<code>as</code>) converts assembly to <strong>machine code</strong> (object file).</p>
+<h3 id="run-assembler-manually">Run assembler manually<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#run-assembler-manually" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> as hello.s -o hello.o</span></span></code></pre></figure>
+<h3 id="what-assembly-does">What assembly does<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-assembly-does" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Converts mnemonics to binary:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Assembly</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">pushq   %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Machine code (hex)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">55</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Binary</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">01010101</span></span></code></pre></figure>
+<p><strong>Each instruction → opcode + operands:</strong></p>
+<pre><code>mov rax, 42
+ │   │    │
+ │   │    └─ Immediate value (42)
+ │   └─ Destination register (rax)
+ └─ Opcode (mov)
+
+Encoding: 48 c7 c0 2a 00 00 00
+</code></pre>
+<p><strong>See:</strong> <a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a>, <a href="../Machine-Code" class="internal" data-slug="Machine-Code">Machine-Code</a></p>
+<h3 id="object-file-format-elf">Object file format: ELF<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#object-file-format-elf" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>hello.o is an ELF object file:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> file hello.o</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">hello.o:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ELF </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">64</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">-bit LSB relocatable, x86-64</span></span></code></pre></figure>
+<p><strong>View with readelf:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> readelf -h hello.o</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">ELF</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Header:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  Class:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">                             ELF64</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  Data:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">                              2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'s complement, little endian</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  Type:                              REL (Relocatable file)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  Machine:                           Advanced Micro Devices X86-64</span></span></code></pre></figure>
+<p><strong>Object file contains:</strong></p>
+<ol>
+<li><strong>Code section (<code>.text</code>):</strong> Machine code</li>
+<li><strong>Data section (<code>.data</code>):</strong> Initialized global variables</li>
+<li><strong>Read-only data (<code>.rodata</code>):</strong> String literals</li>
+<li><strong>BSS section (<code>.bss</code>):</strong> Uninitialized globals</li>
+<li><strong>Symbol table:</strong> Functions, variables</li>
+<li><strong>Relocation table:</strong> Addresses to fix during linking</li>
+</ol>
+<p><strong>See:</strong> <a href="../ELF" class="internal" data-slug="ELF">ELF</a></p>
+<h3 id="view-sections">View sections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#view-sections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> objdump -d hello.o</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">hello.o:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">     file format elf64-x86-64</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Disassembly</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> of section .text:</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">0000000000000000</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">mai</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">n</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">></span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">   0:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">   55</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">                      push   %rbp</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">   1:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">   48</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 89</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> e5                mov    %rsp,%rbp</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">   4:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">   48</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 8</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">d </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">d </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    lea    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0x0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">%rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">,%rdi</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">   b:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">   e8 </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          call   </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">10</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">main+0x1</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0></span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  10:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">   b8 </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 00</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          mov    </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$0x0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">,%eax</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  15:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">   5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">d                      pop    %rbp</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  16:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">   c3                      ret</span></span></code></pre></figure>
+<p><strong>Notice:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">lea</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    0x0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rdi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # Address is 0x0 (placeholder!)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">call</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">   10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> &lt;main+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0x10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">>   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"> # Call target is wrong!</span></span></code></pre></figure>
+<p><strong>Addresses aren’t final yet</strong> - that’s the linker’s job.</p>
+<p><strong>Relocation entries:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> readelf -r hello.o</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Relocation</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> section '.rela.text'</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> at offset </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">x... contains </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> entries:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  Offset</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          Info           Type           Symbol's Name + Addend</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">000000000007  000a00000002 R_X86_64_PC32     .rodata - 4</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">00000000000c  000b00000004 R_X86_64_PLT32    puts - 4</span></span></code></pre></figure>
+<p><strong>Linker will fill these in.</strong></p>
+<p><strong>See:</strong> <a href="../ELF" class="internal" data-slug="ELF">ELF</a>, <a href="../Relocation" class="internal" data-slug="Relocation">Relocation</a></p>
+<hr/>
+<h2 id="5-phase-4-linking">5. Phase 4: Linking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-phase-4-linking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Linker</strong> (<code>ld</code>) combines object files and libraries into executable.</p>
+<h3 id="run-linker-manually">Run linker manually<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#run-linker-manually" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ld hello.o -o hello </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    -dynamic-linker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /lib64/ld-linux-x86-64.so.2 </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    /usr/lib/x86_64-linux-gnu/crt1.o </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    /usr/lib/x86_64-linux-gnu/crti.o </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    -lc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    /usr/lib/x86_64-linux-gnu/crtn.o</span></span></code></pre></figure>
+<p><strong>(Normally gcc does this for you)</strong></p>
+<h3 id="what-linking-does">What linking does<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-linking-does" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Linker combines:</strong></p>
+<pre><code>hello.o           (your code)
+crt1.o            (C runtime startup)
+crti.o, crtn.o    (initialization/finalization)
+libc.so.6         (C standard library)
+
+    ↓ Link ↓
+
+hello             (executable)
+</code></pre>
+<h3 id="51-symbol-resolution">5.1 Symbol resolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-symbol-resolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>hello.o references external symbols:</strong></p>
+<pre><code>Undefined symbols:
+  puts          (from libc)
+</code></pre>
+<p><strong>Linker finds puts in libc.so:</strong></p>
+<pre><code>libc.so.6:
+  puts @ 0x... (address in library)
+</code></pre>
+<p><strong>Symbol table after linking:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> nm hello</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">0000000000401000</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> T main</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">                 U</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> puts@GLIBC_2.2.5</span></span></code></pre></figure>
+<p><code>T</code> = defined in this file (Text section)
+<code>U</code> = undefined (will be resolved at runtime)</p>
+<p><strong>See:</strong> <a href="../Symbol-Table" class="internal" data-slug="Symbol-Table">Symbol-Table</a></p>
+<h3 id="52-relocation">5.2 Relocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-relocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Fix up addresses in code.</strong></p>
+<p><strong>Before linking (object file):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">lea</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    0x0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rdi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # Placeholder address</span></span></code></pre></figure>
+<p><strong>After linking (executable):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">lea</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    0x2004</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rdi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Actual address of string</span></span></code></pre></figure>
+<p><strong>Relocation types:</strong></p>
+<ul>
+<li><strong>R_X86_64_PC32:</strong> PC-relative (relative to instruction pointer)</li>
+<li><strong>R_X86_64_PLT32:</strong> Procedure Linkage Table (for function calls)</li>
+<li><strong>R_X86_64_GOTPCREL:</strong> Global Offset Table (for variables)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Relocation" class="internal" data-slug="Relocation">Relocation</a>, <a href="../PLT-GOT" class="internal" data-slug="PLT-GOT">PLT-GOT</a></p>
+<h3 id="53-memory-layout">5.3 Memory layout<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-memory-layout" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Linker assigns final addresses:</strong></p>
+<pre><code>0x00400000: [ELF header]
+0x00400040: [Program headers]
+0x00401000: [.text section]    ← Code
+0x00402000: [.rodata section]  ← String literals
+0x00403000: [.data section]    ← Initialized globals
+0x00404000: [.bss section]     ← Uninitialized globals
+</code></pre>
+<p><strong>View with:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> readelf -S hello</span></span></code></pre></figure>
+<p><strong>See:</strong> <a href="../ELF" class="internal" data-slug="ELF">ELF</a>, <a href="../Virtual-Memory" class="internal" data-slug="Virtual-Memory">Virtual-Memory</a></p>
+<h3 id="54-entry-point">5.4 Entry point<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-entry-point" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Linker sets entry point</strong> (where program starts):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> readelf -h hello </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Entry</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  Entry</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> point address:               </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0x401040</span></span></code></pre></figure>
+<p><strong>Entry point is <code>_start</code>, NOT <code>main</code>!</strong></p>
+<pre><code>_start (in crt1.o)
+  ↓
+__libc_start_main
+  ↓
+main
+</code></pre>
+<p><strong>See:</strong> <a href="../C-Runtime" class="internal" data-slug="C-Runtime">C-Runtime</a></p>
+<h3 id="55-dynamic-linking">5.5 Dynamic linking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#55-dynamic-linking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Modern programs use shared libraries</strong> (<code>.so</code> files).</p>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>✅ Smaller executables</li>
+<li>✅ Code sharing in memory</li>
+<li>✅ Library updates without recompiling</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>❌ Slower startup (load libraries)</li>
+<li>❌ “DLL hell” (version conflicts)</li>
+</ul>
+<p><strong>Executable specifies interpreter:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> readelf -l hello </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> interpreter</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]</span></span></code></pre></figure>
+<p><strong>Dynamic linker runs at program startup</strong> to load shared libraries.</p>
+<p><strong>See:</strong> <a href="../Dynamic-Linking" class="internal" data-slug="Dynamic-Linking">Dynamic-Linking</a>, <a href="../Shared-Library" class="internal" data-slug="Shared-Library">Shared-Library</a></p>
+<h3 id="static-vs-dynamic-linking">Static vs dynamic linking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#static-vs-dynamic-linking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Static linking:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc -static hello.c -o hello</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ls -lh hello</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">-rwxr-xr-x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> user user </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">870</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">K Nov </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">7</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:00 hello  # Large!</span></span></code></pre></figure>
+<p><strong>Dynamic linking:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gcc hello.c -o hello</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ls -lh hello</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">-rwxr-xr-x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> user user </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">16</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">K Nov </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">7</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:00 hello  # Small!</span></span></code></pre></figure>
+<p><strong>Static:</strong> All libraries embedded in executable.
+<strong>Dynamic:</strong> Libraries loaded at runtime.</p>
+<hr/>
+<h2 id="6-you-run-the-program">6. You run the program<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-you-run-the-program" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ./hello</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Hello,</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> world!</span></span></code></pre></figure>
+<h3 id="execution-flow">Execution flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#execution-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Shell forks and calls execve(“./hello”)</strong></li>
+<li><strong>Kernel loads ELF</strong></li>
+<li><strong>Kernel starts dynamic linker</strong> (<code>/lib64/ld-linux-x86-64.so.2</code>)</li>
+<li><strong>Dynamic linker loads <code>libc.so.6</code></strong></li>
+<li><strong>Dynamic linker resolves symbols</strong> (<code>puts</code>)</li>
+<li><strong>Dynamic linker jumps to <code>_start</code></strong></li>
+<li><strong><code>_start</code> calls <code>__libc_start_main</code></strong></li>
+<li><strong><code>__libc_start_main</code> calls <code>main</code></strong></li>
+<li><strong><code>main</code> calls <code>puts</code></strong></li>
+<li><strong><code>puts</code> writes to stdout (fd 1)</strong></li>
+<li><strong>Kernel writes to terminal</strong></li>
+<li><strong><code>main</code> returns 0</strong></li>
+<li><strong><code>exit(0)</code> cleans up and terminates</strong></li>
+</ol>
+<p><strong>See:</strong> <a href="../WTF-Happens-When-You-Run-A-Program" class="internal" data-slug="WTF-Happens-When-You-Run-A-Program">WTF-Happens-When-You-Run-A-Program</a> for full details.</p>
+<hr/>
+<h2 id="7-behind-the-scenes">7. Behind the scenes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-behind-the-scenes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="compiler-optimization-examples">Compiler optimization examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#compiler-optimization-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>-O0 (no optimization):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">main:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    pushq   %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    movq</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rsp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    subq    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$16</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rsp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">               # Allocate stack space</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)          </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"> # Store 42 to stack</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">), %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">          # Load from stack</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    addl    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">                # Add 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)         </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"> # Store back</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(%</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rbp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">), %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">          # Load again</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    leave</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    ret</span></span></code></pre></figure>
+<p><strong>-O2 (optimized):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="asm" data-theme="github-light github-dark"><code data-language="asm" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">main:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    movl    </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">$43</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, %</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">eax</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">               # Just return 43!</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    ret</span></span></code></pre></figure>
+<p><strong>Compiler proved:</strong> <code>x = 42; x = x + 1; return x;</code> → <code>return 43;</code></p>
+<h3 id="register-allocation">Register allocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#register-allocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Compiler must decide:</strong> Which variables go in registers vs memory?</p>
+<p><strong>Registers are fast:</strong></p>
+<ul>
+<li>CPU registers: ~1 cycle</li>
+<li>L1 cache: ~4 cycles</li>
+<li>RAM: ~100 cycles</li>
+</ul>
+<p><strong>Limited registers (x86-64):</strong></p>
+<pre><code>General purpose: rax, rbx, rcx, rdx, rsi, rdi, r8-r15 (16 total)
+</code></pre>
+<p><strong>Graph coloring algorithm</strong> (NP-hard!):</p>
+<ol>
+<li>Build interference graph (variables used at same time)</li>
+<li>Color graph with k colors (k = number of registers)</li>
+<li>If fails, spill variables to memory</li>
+</ol>
+<p><strong>See:</strong> <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a> (graph coloring)</p>
+<h3 id="inline-assembly">Inline assembly<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#inline-assembly" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>You can embed assembly in C:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    __asm__</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">addl $1, %0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        : </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">+r</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (x)</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Output: x (read-write, register)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    );</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> x;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Returns 43</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>System calls</li>
+<li>Atomic operations</li>
+<li>Performance-critical code</li>
+<li>Access special CPU instructions</li>
+</ul>
+<p><strong>See:</strong> <a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a></p>
+<hr/>
+<h2 id="8-complete-timeline">8. Complete timeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-complete-timeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Time    Phase
+0ms     gcc driver starts
+1ms     Fork and exec cpp (preprocessor)
+5ms     Preprocessing complete (hello.i)
+6ms     Fork and exec cc1 (compiler)
+10ms    Lexical analysis (tokens)
+15ms    Syntax analysis (AST)
+20ms    Semantic analysis (type checking)
+25ms    IR generation
+50ms    Optimization passes
+100ms   Code generation (hello.s)
+101ms   Fork and exec as (assembler)
+105ms   Assembly complete (hello.o)
+106ms   Fork and exec ld (linker)
+110ms   Symbol resolution
+115ms   Relocation
+120ms   Write executable (hello)
+125ms   gcc exits
+</code></pre>
+<p><strong>Total: ~125ms</strong> (highly depends on code size, optimization level)</p>
+<p><strong>Breakdown:</strong></p>
+<ul>
+<li>Preprocessing: 5ms (I/O bound, reading headers)</li>
+<li>Compilation: 95ms (CPU bound, most expensive)</li>
+<li>Assembly: 4ms (simple translation)</li>
+<li>Linking: 14ms (I/O + symbol resolution)</li>
+</ul>
+<hr/>
+<h2 id="key-takeaways">Key takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-compilation-pipeline">The compilation pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-compilation-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Source Code (hello.c)
+    ↓ cpp (preprocessor)
+Preprocessed (hello.i)
+    ↓ cc1 (compiler)
+Assembly (hello.s)
+    ↓ as (assembler)
+Object File (hello.o)
+    ↓ ld (linker)
+Executable (hello)
+</code></pre>
+<h3 id="each-phase">Each phase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#each-phase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Preprocessor:</strong></p>
+<ul>
+<li>Text manipulation</li>
+<li>No understanding of C syntax</li>
+<li>Expands macros, includes</li>
+</ul>
+<p><strong>Compiler:</strong></p>
+<ul>
+<li>Lexer → tokens</li>
+<li>Parser → AST</li>
+<li>Semantic analysis → type checking</li>
+<li>IR generation → platform-independent</li>
+<li>Optimization → faster code</li>
+<li>Code generation → assembly</li>
+</ul>
+<p><strong>Assembler:</strong></p>
+<ul>
+<li>Mnemonics → machine code</li>
+<li>Produces object file (ELF)</li>
+<li>Addresses not yet finalized</li>
+</ul>
+<p><strong>Linker:</strong></p>
+<ul>
+<li>Combines object files</li>
+<li>Resolves symbols</li>
+<li>Relocates addresses</li>
+<li>Produces executable</li>
+</ul>
+<h3 id="optimization-is-hard">Optimization is hard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-is-hard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Compiler must:</strong></p>
+<ul>
+<li>✅ Preserve program semantics</li>
+<li>✅ Generate fast code</li>
+<li>✅ Minimize code size (sometimes)</li>
+<li>✅ Compile quickly</li>
+</ul>
+<p><strong>Trade-offs:</strong></p>
+<ul>
+<li>More optimization = slower compilation</li>
+<li>Aggressive optimization = harder to debug</li>
+<li>Inlining = faster code but larger binary</li>
+</ul>
+<p><strong>See:</strong> <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a>, <a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> (undecidability limits compiler optimization)</p>
+<hr/>
+<h2 id="related-concepts">Related concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#related-concepts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> - Compiler architecture</li>
+<li><a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a> - Assembly language</li>
+<li><a href="../ELF" class="internal" data-slug="ELF">ELF</a> - Executable file format</li>
+<li><a href="../Dynamic-Linking" class="internal" data-slug="Dynamic-Linking">Dynamic-Linking</a> - Shared libraries</li>
+<li><a href="../Preprocessor" class="internal" data-slug="Preprocessor">Preprocessor</a> - C preprocessor</li>
+<li><a href="../LLVM" class="internal" data-slug="LLVM">LLVM</a> - Modern compiler infrastructure</li>
+<li><a href="../Theory/Theory-of-Computation" class="internal" data-slug="Theory/Theory-of-Computation">Theory-of-Computation</a> - Automata, CFG</li>
+</ul>
+<hr/>
+<h2 id="further-reading">Further reading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#further-reading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Books:</strong></p>
+<ul>
+<li>“Compilers: Principles, Techniques, and Tools” (Dragon Book)</li>
+<li>“Engineering a Compiler” (Cooper &amp; Torczon)</li>
+<li>“Modern Compiler Implementation in C” (Appel)</li>
+</ul>
+<p><strong>See:</strong> <a href="../Book-Notes/CSAPP-Notes" class="internal" data-slug="Book-Notes/CSAPP-Notes">CSAPP-Notes</a> (Chapter 7: Linking)</p>
+<p><strong>Online:</strong></p>
+<ul>
+<li>“How LLVM Works” (llvm.org)</li>
+<li>“GCC Internals” (gcc.gnu.org/onlinedocs/gccint)</li>
+</ul>
+<p><strong>Courses:</strong></p>
+<ul>
+<li>CS143: Compilers (Stanford)</li>
+<li>6.035: Computer Language Engineering (MIT)</li>
+</ul>
+<hr/>
+<h2 id="the-big-picture">The Big Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Every program you run:</strong></p>
+<pre><code>Source Code
+    ↓ (Thousands of lines of compiler code)
+Assembly
+    ↓ (Instruction encoding)
+Machine Code
+    ↓ (Linker combines everything)
+Executable
+    ↓ (Kernel loads)
+Running Process
+</code></pre>
+<p><strong>Compilation involves:</strong></p>
+<ul>
+<li>Lexical analysis (regex, DFA)</li>
+<li>Parsing (CFG, pushdown automata)</li>
+<li>Optimization (NP-hard graph problems)</li>
+<li>Code generation (instruction selection)</li>
+</ul>
+<p><strong>This is systems programming. Compilers are some of the most complex software ever written.</strong></p>
+<p><strong>Now you know WTF happens when you compile <code>hello.c</code>.</strong></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-113" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-happens-when-you-compile-helloc" data-for="wtf-happens-when-you-compile-helloc">WTF happens when you compile hello.c</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#1-you-run-gcc" data-for="1-you-run-gcc">1. You run gcc</a></li><li class="depth-2"><a href="#your-source-code" data-for="your-source-code">Your source code</a></li><li class="depth-2"><a href="#the-gcc-command" data-for="the-gcc-command">The gcc command</a></li><li class="depth-2"><a href="#see-all-phases" data-for="see-all-phases">See all phases</a></li><li class="depth-1"><a href="#2-phase-1-preprocessing" data-for="2-phase-1-preprocessing">2. Phase 1: Preprocessing</a></li><li class="depth-2"><a href="#run-preprocessor-manually" data-for="run-preprocessor-manually">Run preprocessor manually</a></li><li class="depth-2"><a href="#what-preprocessing-does" data-for="what-preprocessing-does">What preprocessing does</a></li><li class="depth-2"><a href="#result-helloi" data-for="result-helloi">Result: hello.i</a></li><li class="depth-1"><a href="#3-phase-2-compilation" data-for="3-phase-2-compilation">3. Phase 2: Compilation</a></li><li class="depth-2"><a href="#run-compiler-manually" data-for="run-compiler-manually">Run compiler manually</a></li><li class="depth-2"><a href="#what-compilation-does" data-for="what-compilation-does">What compilation does</a></li><li class="depth-2"><a href="#31-lexical-analysis-lexer" data-for="31-lexical-analysis-lexer">3.1 Lexical Analysis (Lexer)</a></li><li class="depth-2"><a href="#32-syntax-analysis-parser" data-for="32-syntax-analysis-parser">3.2 Syntax Analysis (Parser)</a></li><li class="depth-2"><a href="#33-semantic-analysis" data-for="33-semantic-analysis">3.3 Semantic Analysis</a></li><li class="depth-2"><a href="#34-intermediate-representation-ir" data-for="34-intermediate-representation-ir">3.4 Intermediate Representation (IR)</a></li><li class="depth-2"><a href="#35-optimization" data-for="35-optimization">3.5 Optimization</a></li><li class="depth-2"><a href="#36-code-generation" data-for="36-code-generation">3.6 Code Generation</a></li><li class="depth-1"><a href="#4-phase-3-assembly" data-for="4-phase-3-assembly">4. Phase 3: Assembly</a></li><li class="depth-2"><a href="#run-assembler-manually" data-for="run-assembler-manually">Run assembler manually</a></li><li class="depth-2"><a href="#what-assembly-does" data-for="what-assembly-does">What assembly does</a></li><li class="depth-2"><a href="#object-file-format-elf" data-for="object-file-format-elf">Object file format: ELF</a></li><li class="depth-2"><a href="#view-sections" data-for="view-sections">View sections</a></li><li class="depth-1"><a href="#5-phase-4-linking" data-for="5-phase-4-linking">5. Phase 4: Linking</a></li><li class="depth-2"><a href="#run-linker-manually" data-for="run-linker-manually">Run linker manually</a></li><li class="depth-2"><a href="#what-linking-does" data-for="what-linking-does">What linking does</a></li><li class="depth-2"><a href="#51-symbol-resolution" data-for="51-symbol-resolution">5.1 Symbol resolution</a></li><li class="depth-2"><a href="#52-relocation" data-for="52-relocation">5.2 Relocation</a></li><li class="depth-2"><a href="#53-memory-layout" data-for="53-memory-layout">5.3 Memory layout</a></li><li class="depth-2"><a href="#54-entry-point" data-for="54-entry-point">5.4 Entry point</a></li><li class="depth-2"><a href="#55-dynamic-linking" data-for="55-dynamic-linking">5.5 Dynamic linking</a></li><li class="depth-2"><a href="#static-vs-dynamic-linking" data-for="static-vs-dynamic-linking">Static vs dynamic linking</a></li><li class="depth-1"><a href="#6-you-run-the-program" data-for="6-you-run-the-program">6. You run the program</a></li><li class="depth-2"><a href="#execution-flow" data-for="execution-flow">Execution flow</a></li><li class="depth-1"><a href="#7-behind-the-scenes" data-for="7-behind-the-scenes">7. Behind the scenes</a></li><li class="depth-2"><a href="#compiler-optimization-examples" data-for="compiler-optimization-examples">Compiler optimization examples</a></li><li class="depth-2"><a href="#register-allocation" data-for="register-allocation">Register allocation</a></li><li class="depth-2"><a href="#inline-assembly" data-for="inline-assembly">Inline assembly</a></li><li class="depth-1"><a href="#8-complete-timeline" data-for="8-complete-timeline">8. Complete timeline</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key takeaways</a></li><li class="depth-2"><a href="#the-compilation-pipeline" data-for="the-compilation-pipeline">The compilation pipeline</a></li><li class="depth-2"><a href="#each-phase" data-for="each-phase">Each phase</a></li><li class="depth-2"><a href="#optimization-is-hard" data-for="optimization-is-hard">Optimization is hard</a></li><li class="depth-1"><a href="#related-concepts" data-for="related-concepts">Related concepts</a></li><li class="depth-1"><a href="#further-reading" data-for="further-reading">Further reading</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The Big Picture</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>
