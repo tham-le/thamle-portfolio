@@ -22,14 +22,72 @@ jobs:
       with:
         submodules: recursive
         token: ${{ secrets.TOKEN_GITHUB }}
+        fetch-depth: 0  # Needed for change detection
+
+    - name: Detect changes
+      uses: dorny/paths-filter@v3
+      id: changes
+      if: github.event_name == 'push'
+      with:
+        filters: |
+          portfolio:
+            - 'content/**'
+            - 'layouts/**'
+            - 'themes/**'
+            - 'assets/**'
+            - 'config/**'
+            - 'scripts/**'
+            - 'hugo.toml'
+            - '.github/workflows/sync-and-deploy.yml'
+          notes:
+            - 'static/notes/**'
+
+    - name: Set deployment flags for manual/scheduled runs
+      id: deploy_flags
+      run: |
+        # For manual or scheduled runs, deploy everything
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event_name }}" == "schedule" ]]; then
+          echo "portfolio=true" >> $GITHUB_OUTPUT
+          echo "notes=true" >> $GITHUB_OUTPUT
+          echo "reason=manual_or_scheduled" >> $GITHUB_OUTPUT
+        else
+          # For push events, use change detection
+          echo "portfolio=${{ steps.changes.outputs.portfolio }}" >> $GITHUB_OUTPUT
+          echo "notes=${{ steps.changes.outputs.notes }}" >> $GITHUB_OUTPUT
+          echo "reason=change_detection" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Show deployment plan
+      run: |
+        echo "🔍 Deployment Plan:"
+        echo "  Trigger: ${{ github.event_name }}"
+        echo "  Reason: ${{ steps.deploy_flags.outputs.reason }}"
+        echo "  Portfolio deployment: ${{ steps.deploy_flags.outputs.portfolio }}"
+        echo "  Notes deployment: ${{ steps.deploy_flags.outputs.notes }}"
+        echo ""
+        if [[ "${{ steps.deploy_flags.outputs.portfolio }}" == "true" ]]; then
+          echo "✅ Will deploy thamle.live (portfolio)"
+        else
+          echo "⏭️  Skipping thamle.live (no changes)"
+        fi
+        if [[ "${{ steps.deploy_flags.outputs.notes }}" == "true" ]]; then
+          echo "✅ Will deploy notes.thamle.live"
+        else
+          echo "⏭️  Skipping notes.thamle.live (no changes)"
+        fi
+        if [[ "${{ steps.deploy_flags.outputs.portfolio }}" != "true" && "${{ steps.deploy_flags.outputs.notes }}" != "true" ]]; then
+          echo "ℹ️  No deployments needed"
+        fi
 
     - name: Setup environment
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> .env
         echo "GITHUB_USERNAME=tham-le" >> .env
         echo "HUGO_ENV=production" >> .env
 
     - name: Cache apt packages
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       uses: actions/cache@v4
       with:
         path: /var/cache/apt
@@ -38,11 +96,13 @@ jobs:
           ${{ runner.os }}-apt-
 
     - name: Install dependencies
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         sudo apt-get update
         sudo apt-get install -y jq curl
 
     - name: Sync all content
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         chmod +x ./scripts/sync-all.sh
         ./scripts/sync-all.sh
@@ -50,6 +110,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
     - name: Generate CTF index files
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         echo "🔧 Generating CTF _index.md files..."
         chmod +x ./scripts/generate-ctf-indexes.sh
@@ -57,6 +118,7 @@ jobs:
         echo "✅ CTF index files generated!"
 
     - name: Cache Hugo resources
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       uses: actions/cache@v4
       with:
         path: |
@@ -67,18 +129,21 @@ jobs:
           ${{ runner.os }}-hugo-
 
     - name: Setup Hugo
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       uses: peaceiris/actions-hugo@v3
       with:
         hugo-version: '0.129.0'
         extended: true
 
     - name: Test Hugo build
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         echo "🔍 Testing Hugo build..."
         hugo --minify --environment production
         echo "✅ Hugo build successful!"
 
     - name: Verify build output
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       run: |
         echo "🔍 Verifying build output..."
         if [ ! -d "public" ]; then
@@ -99,6 +164,7 @@ jobs:
         echo "- JS files: $(find public -name "*.js" | wc -l)"
 
     - name: Verify notes content
+      if: steps.deploy_flags.outputs.notes == 'true'
       run: |
         echo "🔍 Verifying notes content..."
         if [ ! -d "static/notes" ]; then
@@ -114,6 +180,7 @@ jobs:
         fi
 
     - name: Deploy Portfolio to Firebase
+      if: steps.deploy_flags.outputs.portfolio == 'true'
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
         repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -123,6 +190,7 @@ jobs:
         target: thamle-portfolio
 
     - name: Deploy Notes to Subdomain
+      if: steps.deploy_flags.outputs.notes == 'true'
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
         repoToken: '${{ secrets.GITHUB_TOKEN }}'
