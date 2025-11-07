@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Key-Repeat-Test-Cases</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Key-Repeat-Test-Cases"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Key-Repeat-Test-Cases"/><meta name="twitter:description" content="Complete Test Cases for Key Repeat Implementation Basic Functionality Tests 1."/><meta property="og:description" content="Complete Test Cases for Key Repeat Implementation Basic Functionality Tests 1."/><meta property="og:image:alt" content="Complete Test Cases for Key Repeat Implementation Basic Functionality Tests 1."/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Work-Related/Key-Repeat/Key-Repeat-Test-Cases"/><meta property="twitter:url" content="https://notes.thamle.live/Work-Related/Key-Repeat/Key-Repeat-Test-Cases"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Complete Test Cases for Key Repeat Implementation Basic Functionality Tests 1."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Work-Related/Key-Repeat/Key-Repeat-Test-Cases"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-271"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-271" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Work-Related/">Work Related</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Work-Related/Key-Repeat/">Key Repeat</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Key Repeat Test Cases</a></div></nav><h1 class="article-title">Key-Repeat-Test-Cases</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T13:36:49.132Z">Nov 07, 2025</time><span>7 min read</span></p></div></div><article class="popover-hint"><h1 id="complete-test-cases-for-key-repeat-implementation">Complete Test Cases for Key Repeat Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complete-test-cases-for-key-repeat-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="basic-functionality-tests">Basic Functionality Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#basic-functionality-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-single-key-repeat">1. Single Key Repeat<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-single-key-repeat" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’ key</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>First ‘a’ appears immediately</li>
+<li>After 250-1000ms delay (based on settings): ‘a’ starts repeating</li>
+<li>Repeats every 33-400ms (based on settings)</li>
+<li>Result: <code>aaaaaaaaaa</code></li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Basic repeat mechanism works</li>
+</ul>
+<h3 id="2-quick-tap-no-repeat">2. Quick Tap (No Repeat)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-quick-tap-no-repeat" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Press and immediately release ‘a’</p>
+<ul>
+<li><strong>Expected:</strong> Only one ‘a’ appears, no repeats</li>
+<li><strong>Verifies:</strong> Initial delay prevents unwanted repeats</li>
+</ul>
+<h3 id="3-multiple-different-keys-sequentially">3. Multiple Different Keys Sequentially<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-multiple-different-keys-sequentially" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, release, hold ‘b’, release, hold ‘c’</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → stop → <code>bbbbbbb</code> → stop → <code>ccccccc</code></li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Each key repeats independently when held alone</li>
+</ul>
+<hr/>
+<h2 id="key-switching-tests">Key Switching Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-switching-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="4-switch-keys-while-holding">4. Switch Keys While Holding<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-switch-keys-while-holding" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, then press ‘s’ (while still holding ‘a’)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → press ‘s’ → <code>s</code> (stops ‘a’ repeat)</li>
+<li>Now only ‘s’ repeats: <code>sssssss</code></li>
+<li><strong>NOT:</strong> <code>asasasasas</code></li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Only most recent key repeats</li>
+</ul>
+<h3 id="5-switch-keys-multiple-times">5. Switch Keys Multiple Times<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-switch-keys-multiple-times" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, press ‘d’, press ‘f’</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → <code>d</code> → <code>ddddd</code> → <code>f</code> → <code>fffff</code></li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Each new key becomes the repeating key</li>
+</ul>
+<h3 id="6-release-second-key-first-still-held">6. Release Second Key, First Still Held<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-release-second-key-first-still-held" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, press ‘s’, release ‘s’ (still holding ‘a’)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → <code>s</code> → <code>sssss</code> → release ‘s’ → <strong>stops repeating</strong></li>
+<li>Does NOT go back to repeating ‘a’</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Repeating stops when repeating key is released (matches standard keyboard behavior)</li>
+</ul>
+<hr/>
+<h2 id="modifier-key-tests">Modifier Key Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modifier-key-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="7-shift--letter">7. Shift + Letter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-shift--letter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, press Shift (while holding ‘a’)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → press Shift → <code>AAAAA</code> (uppercase, continues repeating)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Shift modifies the repeating character but doesn’t become the repeating key</li>
+</ul>
+<h3 id="8-shift-then-letter">8. Shift Then Letter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-shift-then-letter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Shift, press ‘a’</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Press Shift (nothing happens) → hold ‘a’ → <code>AAAAA</code></li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Shift alone doesn’t repeat, ‘a’ repeats as uppercase</li>
+</ul>
+<h3 id="9-ctrl--letter">9. Ctrl + Letter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-ctrl--letter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, press Ctrl</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → press Ctrl → Ctrl+A events repeat (might select all repeatedly in app)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Ctrl modifies repeating key, doesn’t become repeating key</li>
+</ul>
+<h3 id="10-alt--letter">10. Alt + Letter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-alt--letter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Alt, press ‘a’</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Alt alone doesn’t repeat → press ‘a’ → Alt+A repeats</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Alt works like Shift and Ctrl</li>
+</ul>
+<h3 id="11-win--letter">11. Win + Letter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-win--letter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, press Win key</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>aaaaaaa</code> → press Win → Windows shortcuts might trigger</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Win key is treated as modifier</li>
+</ul>
+<h3 id="12-hold-only-shift">12. Hold Only Shift<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-hold-only-shift" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Shift for 2 seconds</p>
+<ul>
+<li><strong>Expected:</strong> Nothing happens, no repeat Shift events</li>
+<li><strong>Verifies:</strong> Modifiers never repeat</li>
+</ul>
+<h3 id="13-hold-only-ctrl">13. Hold Only Ctrl<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-hold-only-ctrl" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Ctrl for 2 seconds</p>
+<ul>
+<li><strong>Expected:</strong> Nothing happens</li>
+<li><strong>Verifies:</strong> Ctrl doesn’t repeat</li>
+</ul>
+<hr/>
+<h2 id="windows-shortcut-tests">Windows Shortcut Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#windows-shortcut-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="14-ctrlaltdel">14. Ctrl+Alt+Del<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-ctrlaltdel" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Ctrl, hold Alt, press Del</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Security screen appears (handled by <code>handle_windows_shortcut</code>)</li>
+<li>No repeating</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Special shortcuts still work</li>
+</ul>
+<h3 id="15-winl">15. Win+L<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-winl" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Win, press L</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Workstation locks</li>
+<li>No repeating</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Lock shortcut works</li>
+</ul>
+<hr/>
+<h2 id="timing-tests">Timing Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#timing-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="16-respect-initial-delay">16. Respect Initial Delay<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16-respect-initial-delay" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, measure time until first repeat</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Based on registry setting (250-1000ms)</li>
+<li>Default usually 500ms</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Initial delay from Windows settings is respected</li>
+</ul>
+<h3 id="17-respect-repeat-interval">17. Respect Repeat Interval<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#17-respect-repeat-interval" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, measure time between repeats</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Based on registry setting (33-400ms)</li>
+<li>Default usually 33ms for fast setting</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Repeat speed from Windows settings is respected</li>
+</ul>
+<h3 id="18-immediate-stop-on-release">18. Immediate Stop on Release<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#18-immediate-stop-on-release" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’ until repeating, then release quickly</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Last character appears</li>
+<li><strong>At most</strong> 1 extra character after release (due to network latency)</li>
+<li><strong>NOT:</strong> Several characters after release</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Quick reaction to KeyUp</li>
+</ul>
+<hr/>
+<h2 id="client-behavior-tests">Client Behavior Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-behavior-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="19-client-sends-repeats-most-clients">19. Client Sends Repeats (Most Clients)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#19-client-sends-repeats-most-clients" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Client that sends: KeyDown → KeyDown → KeyDown → KeyUp</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Server filters client repeats</li>
+<li>Generates own repeats based on server timing</li>
+<li>User sees consistent timing</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Client repeats are ignored</li>
+</ul>
+<h3 id="20-client-doesnt-send-repeats-some-clients">20. Client Doesn’t Send Repeats (Some Clients)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#20-client-doesnt-send-repeats-some-clients" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Client that sends: KeyDown → (nothing) → KeyUp</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Server generates repeats</li>
+<li>User sees repeats at correct timing</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Server emulates when client doesn’t send repeats</li>
+</ul>
+<hr/>
+<h2 id="edge-cases">Edge Cases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#edge-cases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-very-fast-typing">21. Very Fast Typing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-very-fast-typing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Type ‘asdf’ very quickly (each key &lt; 100ms)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li><code>asdf</code> appears</li>
+<li>No repeats (released before delay expires)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Fast typing doesn’t trigger repeats</li>
+</ul>
+<h3 id="22-hold-many-keys-simultaneously">22. Hold Many Keys Simultaneously<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-hold-many-keys-simultaneously" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, ‘s’, ‘d’, ‘f’ at the same time</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Only the most recent key repeats</li>
+<li>If pressed in order: ‘f’ repeats</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Only one key repeats even with many held</li>
+</ul>
+<h3 id="23-spam-keydown-client-bug-simulation">23. Spam KeyDown (Client Bug Simulation)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-spam-keydown-client-bug-simulation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Client sends KeyDown 100 times per second for ‘a’</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Only first KeyDown processed</li>
+<li>Rest ignored</li>
+<li>Server generates own repeats at correct rate</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Protection against buggy clients</li>
+</ul>
+<h3 id="24-extended-keys-arrow-keys">24. Extended Keys (Arrow Keys)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-extended-keys-arrow-keys" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold down arrow key (scancode >= 0xE000)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Arrow repeats normally</li>
+<li><code>KEYEVENTF_EXTENDEDKEY</code> flag set</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Extended keys work correctly</li>
+</ul>
+<h3 id="25-numpad-keys">25. Numpad Keys<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-numpad-keys" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold Numpad 5</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>‘5’ repeats (if NumLock on)</li>
+<li>Or does nothing (if NumLock off)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Numpad keys work</li>
+</ul>
+<hr/>
+<h2 id="performance-tests">Performance Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="26-cpu-usage-when-idle">26. CPU Usage When Idle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#26-cpu-usage-when-idle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> No keys pressed, measure CPU</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Thread sleeps (no timeout wakeups)</li>
+<li>~0% CPU usage</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Efficient when idle</li>
+</ul>
+<h3 id="27-cpu-usage-when-holding-one-key">27. CPU Usage When Holding One Key<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#27-cpu-usage-when-holding-one-key" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’ for 10 seconds, measure CPU</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Minimal CPU (~0.05-0.1%)</li>
+<li>Thread wakes only when deadline reached</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Efficient repeat generation</li>
+</ul>
+<h3 id="28-latency-when-packets-arrive">28. Latency When Packets Arrive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#28-latency-when-packets-arrive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Send packets while key is repeating</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Packets processed immediately</li>
+<li>No delay added by repeat mechanism</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Repeats don’t impact packet processing</li>
+</ul>
+<hr/>
+<h2 id="networklatency-tests">Network/Latency Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#networklatency-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="29-high-network-latency">29. High Network Latency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#29-high-network-latency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Simulate 200ms network delay</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Initial key appears after 200ms</li>
+<li>Repeats continue smoothly at server rate</li>
+<li>KeyUp processed after 200ms delay</li>
+<li>Max 1-2 extra characters after release</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Works correctly with network delay</li>
+</ul>
+<h3 id="30-packet-loss">30. Packet Loss<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#30-packet-loss" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Drop 50% of repeat KeyDown packets from client</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Server ignores client repeats anyway</li>
+<li>Generates own repeats</li>
+<li>No impact on user experience</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Robust against packet loss</li>
+</ul>
+<hr/>
+<h2 id="gaming-tests">Gaming Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gaming-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-wasd-movement">31. WASD Movement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-wasd-movement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In a game, hold ‘W’ to move forward</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Smooth continuous movement</li>
+<li>No stuttering</li>
+<li>Character moves at constant speed</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Games using <code>GetAsyncKeyState()</code> work</li>
+</ul>
+<h3 id="32-space-to-jump">32. Space to Jump<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-space-to-jump" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In a game, hold Space</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Jump once (if game uses KeyDown event)</li>
+<li>Or continuous jump attempts (if game polls state)</li>
+<li><strong>NOT:</strong> Multiple jump events causing double-jump</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Action keys work correctly</li>
+</ul>
+<h3 id="33-hold-w-press-s-opposite-direction">33. Hold ‘W’, Press ‘S’ (Opposite Direction)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-hold-w-press-s-opposite-direction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In game, hold ‘W’ (forward), press ‘S’ (backward)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Movement changes to backward</li>
+<li>No stuttering</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Direction changes work smoothly</li>
+</ul>
+<hr/>
+<h2 id="text-editor-tests">Text Editor Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#text-editor-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="34-hold-backspace">34. Hold Backspace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-hold-backspace" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In text editor, hold Backspace</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Characters delete continuously</li>
+<li>Respects Windows repeat settings</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Special keys like Backspace repeat</li>
+</ul>
+<h3 id="35-hold-delete">35. Hold Delete<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-hold-delete" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In text editor, hold Delete</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Characters delete forward continuously</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Delete key repeats</li>
+</ul>
+<h3 id="36-hold-space">36. Hold Space<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-hold-space" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In text editor, hold Space</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Spaces appear continuously</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Space bar repeats</li>
+</ul>
+<h3 id="37-hold-arrow-key">37. Hold Arrow Key<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#37-hold-arrow-key" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> In text editor, hold Right arrow</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Cursor moves continuously right</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Navigation keys repeat</li>
+</ul>
+<hr/>
+<h2 id="registry-settings-tests">Registry Settings Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#registry-settings-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="38-change-windows-keyboard-delay">38. Change Windows Keyboard Delay<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#38-change-windows-keyboard-delay" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong></p>
+<ol>
+<li>Set Windows keyboard delay to 0 (short)</li>
+<li>Restart server</li>
+<li>Hold ‘a’</li>
+</ol>
+<ul>
+<li><strong>Expected:</strong> Repeat starts after ~250ms</li>
+<li><strong>Test Again:</strong> Set delay to 3 (long), restart, test</li>
+<li><strong>Expected:</strong> Repeat starts after ~1000ms</li>
+<li><strong>Verifies:</strong> Reads registry settings correctly</li>
+</ul>
+<h3 id="39-change-windows-keyboard-speed">39. Change Windows Keyboard Speed<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#39-change-windows-keyboard-speed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong></p>
+<ol>
+<li>Set Windows keyboard speed to 0 (slow)</li>
+<li>Restart server</li>
+<li>Hold ‘a’</li>
+</ol>
+<ul>
+<li><strong>Expected:</strong> Repeat interval ~400ms</li>
+<li><strong>Test Again:</strong> Set speed to 31 (fast), restart, test</li>
+<li><strong>Expected:</strong> Repeat interval ~33ms</li>
+<li><strong>Verifies:</strong> Respects speed settings</li>
+</ul>
+<hr/>
+<h2 id="stress-tests">Stress Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stress-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="40-hold-key-for-60-seconds">40. Hold Key for 60 Seconds<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#40-hold-key-for-60-seconds" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’ for one minute</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Consistent repeat rate throughout</li>
+<li>No memory leaks</li>
+<li>No CPU spike</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Stability over time</li>
+</ul>
+<h3 id="41-rapidly-pressrelease-100-times">41. Rapidly Press/Release 100 Times<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-rapidly-pressrelease-100-times" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Press ‘a’ 100 times rapidly (tap-tap-tap)</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>100 ‘a’ characters appear</li>
+<li>No repeats (each press &lt; delay time)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Handles rapid input</li>
+</ul>
+<h3 id="42-server-restart-during-hold">42. Server Restart During Hold<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-server-restart-during-hold" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test:</strong> Hold ‘a’, restart server, continue holding</p>
+<ul>
+<li><strong>Expected:</strong>
+<ul>
+<li>Graceful shutdown</li>
+<li>After restart: ‘a’ starts fresh (no memory of previous hold)</li>
+</ul>
+</li>
+<li><strong>Verifies:</strong> Clean startup/shutdown</li>
+</ul>
+<hr/>
+<h2 id="summary-table">Summary Table<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary-table" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Category</th><th>Test Count</th><th>Priority</th></tr></thead><tbody><tr><td>Basic Functionality</td><td>3</td><td>HIGH</td></tr><tr><td>Key Switching</td><td>3</td><td>HIGH</td></tr><tr><td>Modifiers</td><td>7</td><td>HIGH</td></tr><tr><td>Windows Shortcuts</td><td>2</td><td>MEDIUM</td></tr><tr><td>Timing</td><td>3</td><td>HIGH</td></tr><tr><td>Client Behavior</td><td>2</td><td>HIGH</td></tr><tr><td>Edge Cases</td><td>5</td><td>MEDIUM</td></tr><tr><td>Performance</td><td>3</td><td>MEDIUM</td></tr><tr><td>Network/Latency</td><td>2</td><td>MEDIUM</td></tr><tr><td>Gaming</td><td>3</td><td>HIGH</td></tr><tr><td>Text Editor</td><td>4</td><td>MEDIUM</td></tr><tr><td>Registry Settings</td><td>2</td><td>LOW</td></tr><tr><td>Stress</td><td>3</td><td>LOW</td></tr><tr><td><strong>TOTAL</strong></td><td><strong>42</strong></td><td></td></tr></tbody></table></div>
+<hr/>
+<h2 id="automated-test-script-idea">Automated Test Script Idea<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automated-test-script-idea" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light github-dark"><code data-language="rust" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#[cfg(test)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">mod</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> integration_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    #[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> test_single_key_repeat</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Send KeyDown('a')</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Wait 600ms</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Check repeats started</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Send KeyUp('a')</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Check repeats stopped</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    #[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> test_key_switching</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Send KeyDown('a')</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Wait 600ms (repeating)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Send KeyDown('s')</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        // Verify 'a' stops, 's' starts</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // ... more tests</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>These 42 test cases cover all the functionality comprehensively!</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-118" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#complete-test-cases-for-key-repeat-implementation" data-for="complete-test-cases-for-key-repeat-implementation">Complete Test Cases for Key Repeat Implementation</a></li><li class="depth-1"><a href="#basic-functionality-tests" data-for="basic-functionality-tests">Basic Functionality Tests</a></li><li class="depth-2"><a href="#1-single-key-repeat" data-for="1-single-key-repeat">1. Single Key Repeat</a></li><li class="depth-2"><a href="#2-quick-tap-no-repeat" data-for="2-quick-tap-no-repeat">2. Quick Tap (No Repeat)</a></li><li class="depth-2"><a href="#3-multiple-different-keys-sequentially" data-for="3-multiple-different-keys-sequentially">3. Multiple Different Keys Sequentially</a></li><li class="depth-1"><a href="#key-switching-tests" data-for="key-switching-tests">Key Switching Tests</a></li><li class="depth-2"><a href="#4-switch-keys-while-holding" data-for="4-switch-keys-while-holding">4. Switch Keys While Holding</a></li><li class="depth-2"><a href="#5-switch-keys-multiple-times" data-for="5-switch-keys-multiple-times">5. Switch Keys Multiple Times</a></li><li class="depth-2"><a href="#6-release-second-key-first-still-held" data-for="6-release-second-key-first-still-held">6. Release Second Key, First Still Held</a></li><li class="depth-1"><a href="#modifier-key-tests" data-for="modifier-key-tests">Modifier Key Tests</a></li><li class="depth-2"><a href="#7-shift--letter" data-for="7-shift--letter">7. Shift + Letter</a></li><li class="depth-2"><a href="#8-shift-then-letter" data-for="8-shift-then-letter">8. Shift Then Letter</a></li><li class="depth-2"><a href="#9-ctrl--letter" data-for="9-ctrl--letter">9. Ctrl + Letter</a></li><li class="depth-2"><a href="#10-alt--letter" data-for="10-alt--letter">10. Alt + Letter</a></li><li class="depth-2"><a href="#11-win--letter" data-for="11-win--letter">11. Win + Letter</a></li><li class="depth-2"><a href="#12-hold-only-shift" data-for="12-hold-only-shift">12. Hold Only Shift</a></li><li class="depth-2"><a href="#13-hold-only-ctrl" data-for="13-hold-only-ctrl">13. Hold Only Ctrl</a></li><li class="depth-1"><a href="#windows-shortcut-tests" data-for="windows-shortcut-tests">Windows Shortcut Tests</a></li><li class="depth-2"><a href="#14-ctrlaltdel" data-for="14-ctrlaltdel">14. Ctrl+Alt+Del</a></li><li class="depth-2"><a href="#15-winl" data-for="15-winl">15. Win+L</a></li><li class="depth-1"><a href="#timing-tests" data-for="timing-tests">Timing Tests</a></li><li class="depth-2"><a href="#16-respect-initial-delay" data-for="16-respect-initial-delay">16. Respect Initial Delay</a></li><li class="depth-2"><a href="#17-respect-repeat-interval" data-for="17-respect-repeat-interval">17. Respect Repeat Interval</a></li><li class="depth-2"><a href="#18-immediate-stop-on-release" data-for="18-immediate-stop-on-release">18. Immediate Stop on Release</a></li><li class="depth-1"><a href="#client-behavior-tests" data-for="client-behavior-tests">Client Behavior Tests</a></li><li class="depth-2"><a href="#19-client-sends-repeats-most-clients" data-for="19-client-sends-repeats-most-clients">19. Client Sends Repeats (Most Clients)</a></li><li class="depth-2"><a href="#20-client-doesnt-send-repeats-some-clients" data-for="20-client-doesnt-send-repeats-some-clients">20. Client Doesn’t Send Repeats (Some Clients)</a></li><li class="depth-1"><a href="#edge-cases" data-for="edge-cases">Edge Cases</a></li><li class="depth-2"><a href="#21-very-fast-typing" data-for="21-very-fast-typing">21. Very Fast Typing</a></li><li class="depth-2"><a href="#22-hold-many-keys-simultaneously" data-for="22-hold-many-keys-simultaneously">22. Hold Many Keys Simultaneously</a></li><li class="depth-2"><a href="#23-spam-keydown-client-bug-simulation" data-for="23-spam-keydown-client-bug-simulation">23. Spam KeyDown (Client Bug Simulation)</a></li><li class="depth-2"><a href="#24-extended-keys-arrow-keys" data-for="24-extended-keys-arrow-keys">24. Extended Keys (Arrow Keys)</a></li><li class="depth-2"><a href="#25-numpad-keys" data-for="25-numpad-keys">25. Numpad Keys</a></li><li class="depth-1"><a href="#performance-tests" data-for="performance-tests">Performance Tests</a></li><li class="depth-2"><a href="#26-cpu-usage-when-idle" data-for="26-cpu-usage-when-idle">26. CPU Usage When Idle</a></li><li class="depth-2"><a href="#27-cpu-usage-when-holding-one-key" data-for="27-cpu-usage-when-holding-one-key">27. CPU Usage When Holding One Key</a></li><li class="depth-2"><a href="#28-latency-when-packets-arrive" data-for="28-latency-when-packets-arrive">28. Latency When Packets Arrive</a></li><li class="depth-1"><a href="#networklatency-tests" data-for="networklatency-tests">Network/Latency Tests</a></li><li class="depth-2"><a href="#29-high-network-latency" data-for="29-high-network-latency">29. High Network Latency</a></li><li class="depth-2"><a href="#30-packet-loss" data-for="30-packet-loss">30. Packet Loss</a></li><li class="depth-1"><a href="#gaming-tests" data-for="gaming-tests">Gaming Tests</a></li><li class="depth-2"><a href="#31-wasd-movement" data-for="31-wasd-movement">31. WASD Movement</a></li><li class="depth-2"><a href="#32-space-to-jump" data-for="32-space-to-jump">32. Space to Jump</a></li><li class="depth-2"><a href="#33-hold-w-press-s-opposite-direction" data-for="33-hold-w-press-s-opposite-direction">33. Hold ‘W’, Press ‘S’ (Opposite Direction)</a></li><li class="depth-1"><a href="#text-editor-tests" data-for="text-editor-tests">Text Editor Tests</a></li><li class="depth-2"><a href="#34-hold-backspace" data-for="34-hold-backspace">34. Hold Backspace</a></li><li class="depth-2"><a href="#35-hold-delete" data-for="35-hold-delete">35. Hold Delete</a></li><li class="depth-2"><a href="#36-hold-space" data-for="36-hold-space">36. Hold Space</a></li><li class="depth-2"><a href="#37-hold-arrow-key" data-for="37-hold-arrow-key">37. Hold Arrow Key</a></li><li class="depth-1"><a href="#registry-settings-tests" data-for="registry-settings-tests">Registry Settings Tests</a></li><li class="depth-2"><a href="#38-change-windows-keyboard-delay" data-for="38-change-windows-keyboard-delay">38. Change Windows Keyboard Delay</a></li><li class="depth-2"><a href="#39-change-windows-keyboard-speed" data-for="39-change-windows-keyboard-speed">39. Change Windows Keyboard Speed</a></li><li class="depth-1"><a href="#stress-tests" data-for="stress-tests">Stress Tests</a></li><li class="depth-2"><a href="#40-hold-key-for-60-seconds" data-for="40-hold-key-for-60-seconds">40. Hold Key for 60 Seconds</a></li><li class="depth-2"><a href="#41-rapidly-pressrelease-100-times" data-for="41-rapidly-pressrelease-100-times">41. Rapidly Press/Release 100 Times</a></li><li class="depth-2"><a href="#42-server-restart-during-hold" data-for="42-server-restart-during-hold">42. Server Restart During Hold</a></li><li class="depth-1"><a href="#summary-table" data-for="summary-table">Summary Table</a></li><li class="depth-1"><a href="#automated-test-script-idea" data-for="automated-test-script-idea">Automated Test Script Idea</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../Work-Related/README" class="internal">README</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

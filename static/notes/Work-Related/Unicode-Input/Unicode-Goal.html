@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Unicode-Goal</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Unicode-Goal"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Unicode-Goal"/><meta name="twitter:description" content="Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ..."/><meta property="og:description" content="Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ..."/><meta property="og:image:alt" content="Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ..."/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal"/><meta property="twitter:url" content="https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Work-Related/Unicode-Input/Unicode-Goal"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-296"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-296" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Work-Related/">Work Related</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Work-Related/Unicode-Input/">Unicode Input</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Unicode Goal</a></div></nav><h1 class="article-title">Unicode-Goal</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T13:36:49.134Z">Nov 07, 2025</time><span>8 min read</span></p></div></div><article class="popover-hint"><h1 id="unicode-input-support">Unicode Input Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unicode-input-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Issue</strong>: Add support for “unicode” input<br/>
+<strong>Created</strong>: 3 days ago by Simon Latapie<br/>
+<strong>Status</strong>: Open</p>
+<p>Android Virtual Keyboard
+↓
+TextWatcher (afterTextChanged)
+↓
+KyberPlayerView.sendUnicodeInput()
+↓
+LibVLC.onUnicodeInput()
+↓
+JNI: nativeOnUnicodeInput()
+↓
+libkynput_unicode_to_packet() [Rust C API]
+↓
+handler_send_pkt() [JNI]
+↓
+InputRouter.consume() [Rust]
+↓
+Router.forward_pkt() [network_consumer]
+↓
+NetworkStream.TX [sends over TCP/KyMux]
+↓
+Server NetworkStream.RX [receives packet]
+↓
+HostKeyboardMouseHandler.on_packet()
+↓
+inject_unicode() [Windows SendInput with KEYEVENTF_UNICODE]
+↓
+Windows Host receives character!</p>
+<p>PlayerActivity.kt (TextWatcher)
+↓ calls
+view.sendUnicodeInput(codepoint, 0)  // KyberPlayerView.kt:299
+↓ calls
+kyber.onUnicodeInput(codepoint, modifiers)  // LibVLC.kt:115
+↓ calls
+nativeOnUnicodeInput(codepoint, modifiers)  // LibVLC.kt:116 (native declaration)
+↓ JNI bridge
+Java_com_kyber_libclient_LibVLC_nativeOnUnicodeInput(…)  // C function in libclientjni-jni.c:1318
+↓ creates packet
+libkynput_unicode_to_packet(TARGET_HOST, codepoint, modifiers)  // Rust libkynput
+↓ sends to router
+handler_send_pkt(pkt)
+↓ network layer
+TCP transmission to Windows host
+↓ Windows host receives
+inject_unicode() in host_keyboard_mouse.rs
+↓ Windows API
+SendInput with KEYEVENTF_UNICODE flag</p>
+<h2 id="goals">Goals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#goals" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Virtual keyboards (mobile, VR, Android TV) can send text input to the host</li>
+<li>IME (Input Method Editor) composition for CJK languages works correctly</li>
+<li>Emoji and special characters can be typed from any client platform</li>
+<li>Characters beyond the Basic Multilingual Plane (U+10000+) are supported</li>
+<li>Optional modifier keys (Ctrl, Alt, Shift, Meta) can be combined with Unicode input</li>
+</ul>
+<h2 id="problem-statement">Problem Statement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#problem-statement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>On some platforms, keyboards do not generate traditional key press/release events:</p>
+<ul>
+<li><strong>Mobile</strong>: iOS and Android virtual keyboards emit characters directly</li>
+<li><strong>VR Headsets</strong>: Quest, Vision Pro use spatial input methods</li>
+<li><strong>Android TV</strong>: Remote-controlled on-screen keyboards</li>
+<li><strong>IME Systems</strong>: Chinese, Japanese, Korean input methods produce composed characters</li>
+</ul>
+<p>Traditional scancode-based input (<code>KeyboardKey</code>) cannot represent:</p>
+<ul>
+<li>Emoji (😀, 🎉, ❤️)</li>
+<li>CJK characters (中, 日, 한)</li>
+<li>Mathematical symbols (∑, ∫, √)</li>
+<li>Characters requiring multiple key events to compose</li>
+</ul>
+<h2 id="implementation-status">Implementation Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="protocol-core">Protocol (Core)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#protocol-core" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> New <code>UnicodeInput</code> type in <code>libkynput/src/types/unicode.rs</code></li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Add <code>InputType::Unicode</code> enum variant</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Update <code>Payload</code> enum with <code>Unicode</code> variant</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Wire protocol serialization/deserialization (UTF-32 encoding)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Unit tests for serialization roundtrip</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> C API bindings (<code>libkynput_unicode_input_to_packet</code>)</li>
+</ul>
+<h3 id="host-input-injection">Host (Input Injection)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#host-input-injection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> <strong>Windows</strong>: FFI using <code>SendInput</code> with <code>KEYEVENTF_UNICODE</code>
+<ul>
+<li>Requires UTF-16 encoding with surrogate pair handling</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Linux</strong>: FFI using X11 <code>Ctrl+Shift+U</code> input method
+<ul>
+<li>Converts UTF-32 to hexadecimal sequence</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>macOS</strong>: FFI using <code>CGEventKeyboardSetUnicodeString</code>
+<ul>
+<li>Requires UTF-16 encoding with surrogate pair handling</li>
+</ul>
+</li>
+</ul>
+<h3 id="client-input-capture">Client (Input Capture)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-input-capture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Android</strong>: JNI bridge for <code>InputConnection.commitText()</code>
+<ul>
+<li>Requires UTF-16 to UTF-32 conversion (surrogate pair decoding)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>iOS</strong>: Objective-C bridge for <code>UITextInput</code> protocol
+<ul>
+<li>Requires UTF-16 to UTF-32 conversion</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Web</strong>: JavaScript bridge for <code>input</code> event
+<ul>
+<li>Requires UTF-16 to UTF-32 conversion via <code>codePointAt()</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="platform-testing">Platform Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Windows: ASCII, emoji, CJK, surrogate pairs</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Linux: Compatibility with GTK/Qt applications</li>
+<li class="task-list-item"><input type="checkbox" disabled/> macOS: Native text input validation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Android: Virtual keyboard integration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> iOS: QuickPath and dictation support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Web: Cross-browser compatibility</li>
+</ul>
+<h2 id="technical-design">Technical Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="wire-protocol">Wire Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wire-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Packet Structure</strong> (7 bytes):</p>
+<pre><code>[Type: 1 byte][Target: 1 byte][Codepoint: 4 bytes LE][Modifiers: 1 byte]
+</code></pre>
+<p><strong>Encoding</strong>: UTF-32 (fixed 4 bytes per character)</p>
+<ul>
+<li>Always exactly one Unicode scalar value per packet</li>
+<li>No variable-length parsing complexity</li>
+<li>Direct mapping to Rust’s <code>char</code> type</li>
+</ul>
+<p><strong>Example</strong> - ’😀’ (U+1F600):</p>
+<pre><code>[0x0A][0x01][0x00][0xF6][0x01][0x00][0x00]
+  │     │     └──────┬──────────┘   └──┘
+  │     │       UTF-32 codepoint    modifiers
+  │     Target: Host
+  Type: Unicode
+</code></pre>
+<h3 id="modifier-support">Modifier Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modifier-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bit Flags</strong> (1 byte):</p>
+<pre><code>Bit 0 (0x01): Ctrl
+Bit 1 (0x02): Alt
+Bit 2 (0x04): Shift
+Bit 3 (0x08): Meta/Win/Cmd
+</code></pre>
+<p><strong>Use Cases</strong>:</p>
+<ul>
+<li>Ctrl+C, Ctrl+V from virtual keyboard</li>
+<li>Alt+character for accented characters</li>
+<li>Custom keyboard shortcuts in client apps</li>
+</ul>
+<h3 id="data-flow">Data Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│ CLIENT (Android)                                             │
+├─────────────────────────────────────────────────────────────┤
+│ Virtual Keyboard → InputConnection.commitText(&quot;中&quot;)         │
+│       ↓                                                      │
+│ JNI: UTF-16 [0x4E2D] → UTF-32 [0x00004E2D]                 │
+│       ↓                                                      │
+│ Create: UnicodeInput { character: '中', modifiers: 0x00 }  │
+│       ↓                                                      │
+│ Serialize: [10, 1, 0x2D, 0x4E, 0x00, 0x00, 0x00]           │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Network (QUIC/TCP)
+┌────────────────────────▼────────────────────────────────────┐
+│ HOST (Windows)                                               │
+├─────────────────────────────────────────────────────────────┤
+│ Deserialize: UTF-32 [0x00004E2D] → char '中'               │
+│       ↓                                                      │
+│ Platform Injector: UTF-32 → UTF-16 [0x4E2D]                │
+│       ↓                                                      │
+│ SendInput with KEYEVENTF_UNICODE                             │
+│       ↓                                                      │
+│ '中' appears in Notepad/Word/etc                            │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="platform-specific-implementation">Platform-Specific Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-specific-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="windows-host">Windows Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#windows-host" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: <code>SendInput</code> with <code>KEYEVENTF_UNICODE</code> flag</p>
+<p><strong>Encoding Conversion</strong>:</p>
+<ul>
+<li>Input: UTF-32 (Rust <code>char</code>)</li>
+<li>Output: UTF-16 for Windows API</li>
+<li>Special handling for surrogate pairs (codepoints > U+FFFF)</li>
+</ul>
+<p><strong>Example</strong> (emoji ’😀’):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// UTF-32: 0x0001F600</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// UTF-16: [0xD83D, 0xDE00] (surrogate pair)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">INPUT </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">inputs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">inputs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">].ki.wScan </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> 0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">D83D</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // High surrogate</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">inputs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">].ki.wScan </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> 0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DE00</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Low surrogate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">SendInput</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, inputs, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">sizeof</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(INPUT));</span></span></code></pre></figure>
+<h3 id="linux-host">Linux Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#linux-host" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: X11 <code>XTestFakeKeyEvent</code> with Ctrl+Shift+U method</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Send Ctrl+Shift+U key sequence</li>
+<li>Type hexadecimal digits of codepoint</li>
+<li>Send Space to confirm</li>
+</ol>
+<p><strong>Example</strong> (‘中’ = U+4E2D):</p>
+<pre><code>Press: Ctrl+Shift+U
+Type: &quot;4e2d&quot;
+Press: Space
+Result: 中
+</code></pre>
+<p><strong>Limitations</strong>:</p>
+<ul>
+<li>Visible hex digits during input</li>
+<li>Application-dependent (GTK/Qt support required)</li>
+<li>Slower than native injection (~50-100ms)</li>
+</ul>
+<h3 id="macos-host">macOS Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#macos-host" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: <code>CGEventKeyboardSetUnicodeString</code></p>
+<p><strong>Encoding Conversion</strong>:</p>
+<ul>
+<li>Input: UTF-32 (Rust <code>char</code>)</li>
+<li>Output: UTF-16 for Core Graphics API</li>
+<li>Automatic surrogate pair handling</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">UniChar</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> utf16</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">];</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> count </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> utf32_to_utf16</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(codepoint, utf16);</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">CGEventKeyboardSetUnicodeString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(event, count, utf16);</span></span></code></pre></figure>
+<h3 id="android-client">Android Client<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#android-client" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: <code>InputConnection.commitText()</code></p>
+<p><strong>Java Side</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">@</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">Override</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">public</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> InputConnection </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">onCreateInputConnection</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(EditorInfo outAttrs) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> BaseInputConnection</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        @</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">Override</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> boolean</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> commitText</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(CharSequence </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">text</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;"> position</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">            nativeOnUnicodeInput</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(text.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">());</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    };</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>JNI Bridge</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">void</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Java_...</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">_nativeOnUnicodeInput</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(JNIEnv </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, jobject </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">thiz</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, jstring </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">jtext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> jchar </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">chars </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">env)-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">GetStringChars</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(env, jtext, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NULL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Handle UTF-16 → UTF-32 conversion</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Decode surrogate pairs</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Create libkynput packet</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Challenge</strong>: Java <code>String</code> uses UTF-16 with surrogate pairs</p>
+<ul>
+<li>Must decode surrogate pairs to UTF-32</li>
+<li>Example: ’😀’ = [0xD83D, 0xDE00] → 0x0001F600</li>
+</ul>
+<h3 id="ios-client">iOS Client<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ios-client" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: <code>UITextInput</code> protocol</p>
+<p><strong>Objective-C Side</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="objc" data-theme="github-light github-dark"><code data-language="objc" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">void</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)insertText:(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NSString</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)text {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">; i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> text.length; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">/* handle surrogates */</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        uint32_t</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> codepoint </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">self</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> codepointAtIndex:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">i </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">inString:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">text];</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">        ios_send_unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(codepoint);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Bridge to Rust</strong>: Similar UTF-16 to UTF-32 conversion</p>
+<h3 id="web-client">Web Client<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#web-client" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>API</strong>: DOM <code>input</code> event</p>
+<p><strong>JavaScript Side</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">inputElement.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">addEventListener</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'input'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">event</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> text</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> event.data;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> codepoint </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> text) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> cp</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> codepoint.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">codePointAt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        wasmModule.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">send_unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(cp);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span></code></pre></figure>
+<p><strong>Advantage</strong>: JavaScript’s <code>codePointAt()</code> handles surrogate pairs automatically</p>
+<h2 id="character-encoding-strategy">Character Encoding Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#character-encoding-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="why-utf-32-on-wire">Why UTF-32 on Wire?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-utf-32-on-wire" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Alternatives Considered</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Encoding</th><th>Size</th><th>Parsing</th><th>Pros</th><th>Cons</th></tr></thead><tbody><tr><td><strong>UTF-32</strong></td><td>4 bytes fixed</td><td>Trivial</td><td>✓ Fixed size<br/>✓ No surrogates<br/>✓ Matches Rust <code>char</code></td><td>✗ Larger for ASCII</td></tr><tr><td>UTF-16</td><td>2-4 bytes variable</td><td>Complex</td><td>✓ Matches Java/Windows</td><td>✗ Surrogate complexity<br/>✗ Variable length</td></tr><tr><td>UTF-8</td><td>1-4 bytes variable</td><td>Complex</td><td>✓ Smallest for ASCII<br/>✓ Standard</td><td>✗ Variable length<br/>✗ Multi-byte validation</td></tr></tbody></table></div>
+<p><strong>Decision</strong>: UTF-32</p>
+<ul>
+<li><strong>Simplicity</strong>: Fixed 4-byte read, no variable-length parsing</li>
+<li><strong>Safety</strong>: No invalid surrogate states</li>
+<li><strong>Performance</strong>: Zero conversion cost in Rust</li>
+<li><strong>Bandwidth</strong>: Negligible impact (single characters, not bulk text)</li>
+</ul>
+<h3 id="encoding-conversions">Encoding Conversions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#encoding-conversions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Android/iOS/Web (UTF-16)
+         ↓
+    [JNI/FFI conversion]
+         ↓
+  Wire Protocol (UTF-32)
+         ↓
+Windows/macOS (UTF-16) or Linux (UTF-8/hex)
+</code></pre>
+<p><strong>All platforms must handle</strong>:</p>
+<ul>
+<li>Surrogate pair encoding/decoding for U+10000+</li>
+<li>Invalid codepoint validation (0xD800-0xDFFF, > 0x10FFFF)</li>
+</ul>
+<h2 id="edge-cases">Edge Cases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#edge-cases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="surrogate-pairs">Surrogate Pairs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#surrogate-pairs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Characters</strong>: Emoji (U+1F600+), rare CJK, mathematical symbols <strong>Handling</strong>: Automatic in UTF-32, explicit encoding required for UTF-16</p>
+<h3 id="invalid-codepoints">Invalid Codepoints<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#invalid-codepoints" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Range</strong>: 0xD800-0xDFFF (surrogates), > 0x10FFFF <strong>Action</strong>: Reject during deserialization with error</p>
+<h3 id="combining-characters">Combining Characters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#combining-characters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Example</strong>: ‘é’ = ‘e’ (U+0065) + combining acute (U+0301) <strong>Approach</strong>: Send as separate Unicode packets <strong>Note</strong>: OS handles visual composition</p>
+<h3 id="zero-width-characters">Zero-Width Characters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#zero-width-characters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Examples</strong>: Zero-width joiner (U+200D), zero-width space (U+200B) <strong>Handling</strong>: Transmit as-is, OS handles rendering</p>
+<h3 id="emoji-with-modifiers">Emoji with Modifiers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#emoji-with-modifiers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Example</strong>: ’👍🏽’ = thumbs-up + skin-tone modifier <strong>Approach</strong>: Send as separate packets (base + modifier)</p>
+<h2 id="configuration-options">Configuration Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-options" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="security">Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Allow/deny clipboard to Unicode conversion</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Whitelist/blacklist specific codepoint ranges</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rate limiting for Unicode packets</li>
+</ul>
+<h3 id="compatibility">Compatibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#compatibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Fallback to scancode for ASCII on platforms without Unicode support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optional IME composition event support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configurable encoding for X11 (Ctrl+Shift+U vs other methods)</li>
+</ul>
+<h2 id="performance-considerations">Performance Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Bandwidth</strong>:</p>
+<ul>
+<li>7 bytes per character (2 header + 4 UTF-32 + 1 modifiers)</li>
+<li>Typical session: ~1000 characters/hour = ~7 KB/hour</li>
+<li>Impact: Negligible compared to video stream</li>
+</ul>
+<p><strong>Latency</strong>:</p>
+<ul>
+<li>Windows: ~1ms (native SendInput)</li>
+<li>macOS: ~1ms (native Core Graphics)</li>
+<li>Linux: ~50-100ms (Ctrl+Shift+U method)</li>
+<li>Network: Existing packet latency (same as keyboard)</li>
+</ul>
+<h2 id="testing-strategy">Testing Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="unit-tests">Unit Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unit-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> UTF-32 serialization/deserialization</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Surrogate pair encoding (UTF-16 ↔ UTF-32)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Invalid codepoint rejection</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Modifier bit flag operations</li>
+</ul>
+<h3 id="integration-tests">Integration Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> ASCII characters (A-Z, 0-9)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Latin extended (é, ñ, ü)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> CJK characters (中文, 日本語, 한국어)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Emoji (😀, 🎉, ❤️)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Supplementary plane (𝄞, 𝕳, 🀄)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> With modifiers (Ctrl+C, Alt+4)</li>
+</ul>
+<h3 id="platform-tests">Platform Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Windows: Notepad, Word, VS Code</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Linux: gedit, Kate, terminals</li>
+<li class="task-list-item"><input type="checkbox" disabled/> macOS: TextEdit, Safari, Xcode</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Android: Google Keyboard, SwiftKey</li>
+<li class="task-list-item"><input type="checkbox" disabled/> iOS: Native keyboard, GBoard</li>
+</ul>
+<h2 id="documentation-requirements">Documentation Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-requirements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> API documentation for <code>UnicodeInput</code> type</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Wire protocol specification update</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Platform-specific implementation notes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Migration guide from scancode-only approach</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Examples: Android/iOS integration</li>
+</ul>
+<h2 id="future-enhancements">Future Enhancements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-enhancements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-2">Phase 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> IME composition events (for showing intermediate text)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dead key support (combined with scancode events)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Batch Unicode input (multiple characters in one packet)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Clipboard integration (paste as Unicode events)</li>
+</ul>
+<h3 id="platform-expansion">Platform Expansion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-expansion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Android TV: D-pad navigation + Unicode</li>
+<li class="task-list-item"><input type="checkbox" disabled/> VR platforms: Hand-tracking keyboards</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Game consoles: On-screen keyboards</li>
+</ul>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Unicode Standard</strong>: <a href="https://www.unicode.org/standard/standard.html" class="external">https://www.unicode.org/standard/standard.html<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>UTF-16 Specification</strong>: RFC 2781</li>
+<li><strong>UTF-8 Specification</strong>: RFC 3629</li>
+<li><strong>Windows SendInput</strong>: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput" class="external">https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>macOS Core Graphics</strong>: <a href="https://developer.apple.com/documentation/coregraphics/1456564-cgeventkeyboardsetunicodestring" class="external">https://developer.apple.com/documentation/coregraphics/1456564-cgeventkeyboardsetunicodestring<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>X11 Compose Key</strong>: <a href="https://www.x.org/releases/current/doc/libX11/i18n/compose/en_US.UTF-8/" class="external">https://www.x.org/releases/current/doc/libX11/i18n/compose/en_US.UTF-8/<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>Android InputConnection</strong>: <a href="https://developer.android.com/reference/android/view/inputmethod/InputConnection" class="external">https://developer.android.com/reference/android/view/inputmethod/InputConnection<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>iOS UITextInput</strong>: <a href="https://developer.apple.com/documentation/uikit/uitextinput" class="external">https://developer.apple.com/documentation/uikit/uitextinput<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h2 id="success-criteria">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>✅ Virtual keyboards on mobile devices work seamlessly<br/>
+✅ Emoji can be typed from any client platform<br/>
+✅ CJK IME input produces correct characters<br/>
+✅ No regressions to existing scancode-based input<br/>
+✅ Performance impact &lt; 1% bandwidth increase<br/>
+✅ All platform tests pass<br/>
+✅ Documentation complete and clear</p>
+<hr/>
+<p><strong>Estimated Effort</strong>: 2-3 weeks for complete implementation across all platforms</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-129" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#unicode-input-support" data-for="unicode-input-support">Unicode Input Support</a></li><li class="depth-1"><a href="#goals" data-for="goals">Goals</a></li><li class="depth-1"><a href="#problem-statement" data-for="problem-statement">Problem Statement</a></li><li class="depth-1"><a href="#implementation-status" data-for="implementation-status">Implementation Status</a></li><li class="depth-2"><a href="#protocol-core" data-for="protocol-core">Protocol (Core)</a></li><li class="depth-2"><a href="#host-input-injection" data-for="host-input-injection">Host (Input Injection)</a></li><li class="depth-2"><a href="#client-input-capture" data-for="client-input-capture">Client (Input Capture)</a></li><li class="depth-2"><a href="#platform-testing" data-for="platform-testing">Platform Testing</a></li><li class="depth-1"><a href="#technical-design" data-for="technical-design">Technical Design</a></li><li class="depth-2"><a href="#wire-protocol" data-for="wire-protocol">Wire Protocol</a></li><li class="depth-2"><a href="#modifier-support" data-for="modifier-support">Modifier Support</a></li><li class="depth-2"><a href="#data-flow" data-for="data-flow">Data Flow</a></li><li class="depth-1"><a href="#platform-specific-implementation" data-for="platform-specific-implementation">Platform-Specific Implementation</a></li><li class="depth-2"><a href="#windows-host" data-for="windows-host">Windows Host</a></li><li class="depth-2"><a href="#linux-host" data-for="linux-host">Linux Host</a></li><li class="depth-2"><a href="#macos-host" data-for="macos-host">macOS Host</a></li><li class="depth-2"><a href="#android-client" data-for="android-client">Android Client</a></li><li class="depth-2"><a href="#ios-client" data-for="ios-client">iOS Client</a></li><li class="depth-2"><a href="#web-client" data-for="web-client">Web Client</a></li><li class="depth-1"><a href="#character-encoding-strategy" data-for="character-encoding-strategy">Character Encoding Strategy</a></li><li class="depth-2"><a href="#why-utf-32-on-wire" data-for="why-utf-32-on-wire">Why UTF-32 on Wire?</a></li><li class="depth-2"><a href="#encoding-conversions" data-for="encoding-conversions">Encoding Conversions</a></li><li class="depth-1"><a href="#edge-cases" data-for="edge-cases">Edge Cases</a></li><li class="depth-2"><a href="#surrogate-pairs" data-for="surrogate-pairs">Surrogate Pairs</a></li><li class="depth-2"><a href="#invalid-codepoints" data-for="invalid-codepoints">Invalid Codepoints</a></li><li class="depth-2"><a href="#combining-characters" data-for="combining-characters">Combining Characters</a></li><li class="depth-2"><a href="#zero-width-characters" data-for="zero-width-characters">Zero-Width Characters</a></li><li class="depth-2"><a href="#emoji-with-modifiers" data-for="emoji-with-modifiers">Emoji with Modifiers</a></li><li class="depth-1"><a href="#configuration-options" data-for="configuration-options">Configuration Options</a></li><li class="depth-2"><a href="#security" data-for="security">Security</a></li><li class="depth-2"><a href="#compatibility" data-for="compatibility">Compatibility</a></li><li class="depth-1"><a href="#performance-considerations" data-for="performance-considerations">Performance Considerations</a></li><li class="depth-1"><a href="#testing-strategy" data-for="testing-strategy">Testing Strategy</a></li><li class="depth-2"><a href="#unit-tests" data-for="unit-tests">Unit Tests</a></li><li class="depth-2"><a href="#integration-tests" data-for="integration-tests">Integration Tests</a></li><li class="depth-2"><a href="#platform-tests" data-for="platform-tests">Platform Tests</a></li><li class="depth-1"><a href="#documentation-requirements" data-for="documentation-requirements">Documentation Requirements</a></li><li class="depth-1"><a href="#future-enhancements" data-for="future-enhancements">Future Enhancements</a></li><li class="depth-2"><a href="#phase-2" data-for="phase-2">Phase 2</a></li><li class="depth-2"><a href="#platform-expansion" data-for="platform-expansion">Platform Expansion</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="depth-1"><a href="#success-criteria" data-for="success-criteria">Success Criteria</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>
