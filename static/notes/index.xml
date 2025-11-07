@@ -10,61 +10,61 @@
     <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
     <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
     <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:37:34 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:02:14 GMT</pubDate>
+  </item><item>
+    <title>android_rdp_keyboard</title>
+    <link>https://notes.thamle.live/Work-Related/Unicode-Input/android_rdp_keyboard</link>
+    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/android_rdp_keyboard</guid>
+    <description><![CDATA[ Capturing Virtual Keyboard Input for Remote Desktop on Android The Problem You’re building a remote desktop client (RDP, VNC, or similar) on Android. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
+  </item><item>
+    <title>encoding_protocol_design</title>
+    <link>https://notes.thamle.live/Work-Related/Unicode-Input/encoding_protocol_design</link>
+    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/encoding_protocol_design</guid>
+    <description><![CDATA[ Designing Flexible Character Encoding for Remote Desktop What Android Actually Uses Java (and therefore Android/Kotlin) uses UTF-16 as the internal representation for String objects in memory. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>virtual-keycode</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/virtual-keycode</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/virtual-keycode</guid>
     <description><![CDATA[ The user is asking about the fundamental difference between virtual keycodes and Unicode characters. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>why-utf-32</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/why-utf-32</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/why-utf-32</guid>
     <description><![CDATA[ Excellent Point: Why Not UTF-8 Everywhere? You’re absolutely right to challenge this design choice. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>Winit-Key-Reference</title>
     <link>https://notes.thamle.live/Work-Related/Utilities/Winit-Key-Reference</link>
     <guid>https://notes.thamle.live/Work-Related/Utilities/Winit-Key-Reference</guid>
     <description><![CDATA[ Excellent. That is the most important piece of information you could have given me. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
-  </item><item>
-    <title>Unicode-Data-Flow</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Data-Flow</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Data-Flow</guid>
-    <description><![CDATA[  LayerDeviceComponent / LocationDescriptionData/Action1Client Device (iPad)UI / Input Capture Platform-specific (iOS/Android/etc.)The user interacts with the virtual keyboard, and the operating system captures this input. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
-  </item><item>
-    <title>Unicode-Design-Choices</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Design-Choices</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Design-Choices</guid>
-    <description><![CDATA[ Architecture Analysis: Unicode Input Design Choices Core Architectural Decisions 1. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>Unicode-Goal</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal</guid>
     <description><![CDATA[ Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ... ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>Unicode-Implementation-Across-All-Layers</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Across-All-Layers</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Across-All-Layers</guid>
     <description><![CDATA[ Overview Here’s every function/file you need to create or modify to add Unicode support to libkynput, organized by layer from bottom (protocol) to top (UI). ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>Unicode-Implementation-Guide</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Guide</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Guide</guid>
     <description><![CDATA[  Based on the existing keyboard implementation, here’s how to add Unicode input support while maintaining the exact same coding style and architecture. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item><item>
     <title>Unicode-Original-Notes</title>
     <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Original-Notes</link>
     <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Original-Notes</guid>
     <description><![CDATA[ Of course. Let’s break this down. You’ve correctly identified that the server should be responsible for generating the repeats. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:36:49 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 14:01:14 GMT</pubDate>
   </item>
     </channel>
   </rss>
