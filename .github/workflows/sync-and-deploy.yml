@@ -5,8 +5,12 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    # Daily sync at 6 AM UTC
-    - cron: '0 6 * * *'
+    # Weekly sync on Monday at 6 AM UTC
+    - cron: '0 6 * * 1'
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   sync-build-deploy:
@@ -25,6 +29,14 @@ jobs:
         echo "GITHUB_USERNAME=tham-le" >> .env
         echo "HUGO_ENV=production" >> .env
 
+    - name: Cache apt packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/apt
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/sync-all.sh') }}
+        restore-keys: |
+          ${{ runner.os }}-apt-
+
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -37,25 +49,22 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
-    # NOTE: Path fixing script no longer needed for subdomain deployment
-    # The notes will be served from notes.thamle.live root, so Quartz
-    # paths work correctly without modification
-    # - name: Fix Quartz HTML base paths
-    #   run: |
-    #     chmod +x ./scripts/fix-notes-paths.sh
-    #     ./scripts/fix-notes-paths.sh
-
-    # - name: Prepare CTF Content
-    #   run: |
-    #     chmod +x ./scripts/prepare_hugo.py
-    #     python3 ./scripts/prepare_hugo.py
-
     - name: Generate CTF index files
       run: |
         echo "🔧 Generating CTF _index.md files..."
         chmod +x ./scripts/generate-ctf-indexes.sh
         bash ./scripts/generate-ctf-indexes.sh
         echo "✅ CTF index files generated!"
+
+    - name: Cache Hugo resources
+      uses: actions/cache@v4
+      with:
+        path: |
+          resources
+          .hugo_build.lock
+        key: ${{ runner.os }}-hugo-${{ hashFiles('**/hugo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-hugo-
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
