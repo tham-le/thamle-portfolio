@@ -10,61 +10,61 @@
     <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
     <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
     <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:29:39 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:36:19 GMT</pubDate>
   </item><item>
     <title>README</title>
     <link>https://notes.thamle.live/Roadmaps/README</link>
     <guid>https://notes.thamle.live/Roadmaps/README</guid>
     <description><![CDATA[ 00-Roadmaps Learning paths and progress tracking for systems development. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
   </item><item>
     <title>The-Complete-Systems-Developer-Roadmap</title>
     <link>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</link>
     <guid>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</guid>
     <description><![CDATA[ Phase 1: The Foundations - “How a Computer Actually Works” Goal: Build a solid mental model of the machine. No complex code yet. Pure concepts. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
   </item><item>
     <title>README</title>
     <link>https://notes.thamle.live/Systems/README</link>
     <guid>https://notes.thamle.live/Systems/README</guid>
     <description><![CDATA[ 03-Systems Operating systems and systems programming concepts. Contents Process vs. Thread vs. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
-  </item><item>
-    <title>README</title>
-    <link>https://notes.thamle.live/Networking/README</link>
-    <guid>https://notes.thamle.live/Networking/README</guid>
-    <description><![CDATA[ 05-Networking Network protocols, communication patterns, and internet fundamentals. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
-  </item><item>
-    <title>Transport Layer</title>
-    <link>https://notes.thamle.live/Networking/Transport-Layer</link>
-    <guid>https://notes.thamle.live/Networking/Transport-Layer</guid>
-    <description><![CDATA[ WTF is the Transport Layer? It’s the difference between “I don’t care if you got my message” and “I need to know you got every single byte” The Delivery Service Analogy You need to send something to a friend. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
-  </item><item>
-    <title>Transport-Protocols</title>
-    <link>https://notes.thamle.live/Networking/Transport-Protocols</link>
-    <guid>https://notes.thamle.live/Networking/Transport-Protocols</guid>
-    <description><![CDATA[ WTF are Transport Protocols? It’s the menu of options for getting your data from point A to point B, with different tradeoffs The Shipping Company Analogy You need to send a package across the country. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
-  </item><item>
-    <title>Ethernet</title>
-    <link>https://notes.thamle.live/Networking/Ethernet</link>
-    <guid>https://notes.thamle.live/Networking/Ethernet</guid>
-    <description><![CDATA[ Ethernet It’s the reason your computer can talk to your router without screaming into the void The Office Memo Analogy Imagine an office where everyone sits in cubicles. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
   </item><item>
     <title>Network-Buffer</title>
     <link>https://notes.thamle.live/Networking/Network-Buffer</link>
     <guid>https://notes.thamle.live/Networking/Network-Buffer</guid>
     <description><![CDATA[ WTF is a Network Buffer? The plumbing between your code and the wire In our last few articles, we built a simple echo server. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
   </item><item>
     <title>Network-Layer</title>
     <link>https://notes.thamle.live/Networking/Network-Layer</link>
     <guid>https://notes.thamle.live/Networking/Network-Layer</guid>
     <description><![CDATA[ Network-Layer It’s the post office of the internet The Postal Service Analogy You write a letter to your friend across the country. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 13:28:44 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
+  </item><item>
+    <title>README</title>
+    <link>https://notes.thamle.live/Networking/README</link>
+    <guid>https://notes.thamle.live/Networking/README</guid>
+    <description><![CDATA[ 05-Networking Network protocols, communication patterns, and internet fundamentals. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
+  </item><item>
+    <title>Transport Layer</title>
+    <link>https://notes.thamle.live/Networking/Transport-Layer</link>
+    <guid>https://notes.thamle.live/Networking/Transport-Layer</guid>
+    <description><![CDATA[ WTF is the Transport Layer? It’s the difference between “I don’t care if you got my message” and “I need to know you got every single byte” The Delivery Service Analogy You need to send something to a friend. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
+  </item><item>
+    <title>Transport-Protocols</title>
+    <link>https://notes.thamle.live/Networking/Transport-Protocols</link>
+    <guid>https://notes.thamle.live/Networking/Transport-Protocols</guid>
+    <description><![CDATA[ WTF are Transport Protocols? It’s the menu of options for getting your data from point A to point B, with different tradeoffs The Shipping Company Analogy You need to send a package across the country. ]]></description>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
+  </item><item>
+    <title>Day_1-Installation</title>
+    <link>https://notes.thamle.live/Languages/Rust-Learning/Day_1-Installation</link>
+    <guid>https://notes.thamle.live/Languages/Rust-Learning/Day_1-Installation</guid>
+    <description><![CDATA[ Linux: curl --proto &#039;=https&#039; --tlsv1.2 sh.rustup.rs -sSf | sh restart shell then Rust is intalled: rustc --version rustc 1.89.0 (29483883e 2025-08-04) for doc: rustup doc this shit wont not work if you have your browser installed with snap, so, # Move the rustup data to a visible directory... ]]></description>
+    <pubDate>Fri, 07 Nov 2025 13:35:21 GMT</pubDate>
   </item>
     </channel>
   </rss>
