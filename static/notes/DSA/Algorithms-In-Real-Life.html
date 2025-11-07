@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Algorithms in Real Life</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Algorithms in Real Life"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Algorithms in Real Life"/><meta name="twitter:description" content="Discover how everyday algorithms power the world around you"/><meta property="og:description" content="Discover how everyday algorithms power the world around you"/><meta property="og:image:alt" content="Discover how everyday algorithms power the world around you"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/DSA/Algorithms-In-Real-Life"/><meta property="twitter:url" content="https://notes.thamle.live/DSA/Algorithms-In-Real-Life"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Discover how everyday algorithms power the world around you"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="DSA/Algorithms-In-Real-Life"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-54"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-54" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../DSA/">DSA</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Algorithms in Real Life</a></div></nav><h1 class="article-title">Algorithms in Real Life</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-07T00:00:00.000Z">Nov 07, 2025</time><span>17 min read</span></p><ul class="tags"><li><a href="../tags/dsa" class="internal tag-link">dsa</a></li><li><a href="../tags/practical-applications" class="internal tag-link">practical-applications</a></li><li><a href="../tags/real-world" class="internal tag-link">real-world</a></li><li><a href="../tags/fundamentals" class="internal tag-link">fundamentals</a></li></ul></div></div><article class="popover-hint"><h1 id="algorithms-in-real-life">Algorithms in Real Life<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#algorithms-in-real-life" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Algorithms aren’t just for coding interviews.</strong> They’re everywhere in daily life.</p>
+<p>This guide shows how <strong>common algorithms solve real-world problems</strong> you encounter every day.</p>
+<hr/>
+<h2 id="why-this-matters">Why This Matters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-this-matters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout example" data-callout="example">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>The Hidden World of Algorithms </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>You use algorithms constantly without realizing it:</strong></p>
+<ul>
+<li>Google Maps finding the fastest route</li>
+<li>Netflix recommending shows</li>
+<li>Your phone’s autocomplete</li>
+<li>Credit card fraud detection</li>
+<li>Spotify’s shuffle mode</li>
+</ul>
+<p><strong>Understanding them:</strong></p>
+<ul>
+<li>Makes you a better problem solver</li>
+<li>Helps you recognize optimization opportunities</li>
+<li>Lets you apply CS concepts to everyday challenges</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-binary-search-the-guessing-game-strategy">1. Binary Search: The Guessing Game Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-binary-search-the-guessing-game-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Repeatedly divide search space in half until you find the answer.</p>
+<h3 id="real-world-applications">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-guessing-number-games">🎯 Guessing Number Games<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-guessing-number-games" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Think of a number between 1 and 100
+
+Bad strategy (Linear Search):
+&quot;Is it 1? Is it 2? Is it 3? ...&quot; → Up to 100 guesses
+
+Good strategy (Binary Search):
+&quot;Is it 50?&quot; → &quot;Lower&quot;
+&quot;Is it 25?&quot; → &quot;Higher&quot;
+&quot;Is it 37?&quot; → &quot;Lower&quot;
+&quot;Is it 31?&quot; → &quot;Higher&quot;
+...
+→ Maximum 7 guesses (log₂ 100 ≈ 6.6)
+</code></pre>
+<h4 id="-dictionary-lookup">📖 Dictionary Lookup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-dictionary-lookup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>When you look up a word in a physical dictionary:</p>
+<ol>
+<li>Open middle → Too far? Go left half. Not far enough? Go right half.</li>
+<li>Repeat until you find the word</li>
+<li><strong>Exactly binary search!</strong></li>
+</ol>
+<h4 id="-troubleshooting-finding-bad-commit">🔧 Troubleshooting: Finding Bad Commit<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-finding-bad-commit" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Git bisect uses binary search</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> bisect start</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> bisect bad          # Current version is bad</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> bisect good v1.0    # v1.0 was good</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Git checks middle commit</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># You test and mark good/bad</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Continues until bug is found</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># 1000 commits? Only ~10 tests needed!</span></span></code></pre></figure>
+<h4 id="-finding-perfect-temperature">🏠 Finding Perfect Temperature<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-finding-perfect-temperature" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Room too cold at 68°F, too hot at 76°F
+
+Binary search approach:
+Try 72°F (middle) → Still cold
+Try 74°F → Comfortable!
+
+Instead of trying every degree: 69, 70, 71, 72, 73, 74...
+</code></pre>
+<h4 id="-price-negotiation">💰 Price Negotiation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-price-negotiation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Selling your car. Buyer offers $5,000. You want $10,000.
+
+Binary search negotiation:
+You counter: $7,500 (middle)
+Buyer: $6,000
+You: $6,750
+...converge to fair price faster
+</code></pre>
+<h4 id="-library-book-search">📚 Library Book Search<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-library-book-search" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Physical library with sorted books by call number:</p>
+<ul>
+<li>Start in middle of shelf</li>
+<li>Check if your number is higher or lower</li>
+<li>Navigate to that section</li>
+<li>Repeat</li>
+</ul>
+<p><strong>Why it works:</strong> Data is sorted → logarithmic search time</p>
+<hr/>
+<h2 id="2-greedy-algorithms-the-vending-machine">2. Greedy Algorithms: The Vending Machine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-greedy-algorithms-the-vending-machine" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-1">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Make the locally optimal choice at each step, hoping for global optimum.</p>
+<h3 id="real-world-applications-1">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-making-change">💵 Making Change<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-making-change" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Cashier giving you $0.87 in change
+
+Greedy approach (what cashiers do):
+1. Largest coin ≤ remaining? Use it.
+2. Repeat until done.
+
+$0.87:
+- 3 quarters ($0.75) → $0.12 left
+- 1 dime ($0.10) → $0.02 left
+- 2 pennies → Done!
+
+Result: 6 coins (optimal!)
+</code></pre>
+<p><strong>Code simulation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> make_change</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(amount):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    coins </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">25</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Quarters, dimes, nickels, pennies</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> []</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> coin </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> coins:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> amount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">>=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> coin:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            result.append(coin)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            amount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> coin</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> result</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">print</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(make_change(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">87</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">))  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># [25, 25, 25, 10, 1, 1]</span></span></code></pre></figure>
+<h4 id="-activity-selection--meeting-scheduler">📅 Activity Selection / Meeting Scheduler<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-activity-selection--meeting-scheduler" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Schedule maximum meetings in conference room
+
+Meetings:
+A: 9-10am
+B: 9:30-11am
+C: 10:30-12pm
+D: 11am-12pm
+
+Greedy strategy: Always pick meeting that ends earliest
+1. Pick A (ends 10am)
+2. Pick C (ends 12pm, starts after A)
+Result: A + C (2 meetings)
+
+Why not B? It ends later, blocks more options.
+</code></pre>
+<h4 id="-packing-a-suitcase">🎒 Packing a Suitcase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-packing-a-suitcase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Limited weight, multiple items
+
+Greedy by value-to-weight ratio:
+- Item 1: $50, 2kg → ratio: 25
+- Item 2: $40, 1kg → ratio: 40  ← Pick first
+- Item 3: $30, 1kg → ratio: 30  ← Pick second
+
+Pack highest ratio items first
+</code></pre>
+<h4 id="-gas-station-stops">🚗 Gas Station Stops<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-gas-station-stops" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Road trip: 500 miles, 300-mile tank
+
+Gas stations at: 100, 200, 250, 350, 450 miles
+
+Greedy: Drive as far as possible before refueling
+- Fill at start
+- Pass 100, 200, 250 (can reach next)
+- Stop at 350 (can't reach 450 without refueling)
+- Stop at 450
+Result: 2 stops (optimal)
+</code></pre>
+<h4 id="-checkout-line-selection">🛒 Checkout Line Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-checkout-line-selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Supermarket: Multiple checkout lines
+
+Greedy: Pick shortest line right now
+
+Limitation: May not be optimal (short line might have slow customer)
+Better: Consider items per person, but greedy is fast decision
+</code></pre>
+<p><strong>Greedy limitation:</strong> Doesn’t always give optimal solution, but it’s fast and often “good enough.”</p>
+<hr/>
+<h2 id="3-graph-algorithms-navigation--networks">3. Graph Algorithms: Navigation &amp; Networks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-graph-algorithms-navigation--networks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-2">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Model relationships as nodes and edges, find paths or patterns.</p>
+<h3 id="real-world-applications-2">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="️-gps-navigation-dijkstras-algorithm">🗺️ GPS Navigation (Dijkstra’s Algorithm)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-gps-navigation-dijkstras-algorithm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Finding shortest path from home to work
+
+Map as graph:
+- Intersections = nodes
+- Roads = edges (with travel time as weight)
+
+Dijkstra's algorithm:
+1. Start at home (distance = 0)
+2. Check all neighbors, track shortest distance to each
+3. Visit closest unvisited node
+4. Repeat until destination reached
+
+Google Maps uses enhanced version considering:
+- Real-time traffic
+- Road types
+- Turn restrictions
+</code></pre>
+<p><strong>Simplified example:</strong></p>
+<pre><code>Home --5min--> Mall --10min--> Work
+Home --20min--> Park --8min--> Work
+
+Dijkstra finds: Home → Mall → Work (15 min)
+Better than: Home → Park → Work (28 min)
+</code></pre>
+<h4 id="️-flight-route-planning">✈️ Flight Route Planning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-flight-route-planning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Find cheapest flight from NYC to Tokyo
+
+Graph:
+- Cities = nodes
+- Flights = edges (price as weight)
+
+Algorithm explores connections:
+NYC → London → Tokyo ($500 + $400 = $900)
+NYC → LA → Tokyo ($300 + $500 = $800) ← Cheaper!
+
+Airlines use this for:
+- Finding routes with layovers
+- Optimizing fuel costs
+- Crew scheduling
+</code></pre>
+<h4 id="-social-network-friend-suggestions-bfs">👥 Social Network Friend Suggestions (BFS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-social-network-friend-suggestions-bfs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>&quot;People you may know&quot;
+
+Graph:
+- People = nodes
+- Friendships = edges
+
+Breadth-First Search (BFS):
+1. Your friends = distance 1
+2. Friends of friends = distance 2  ← Suggest these!
+3. Distance 3, 4, ... (too distant)
+
+Why BFS? Explores by &quot;degrees of separation&quot;
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>You → Alice → Bob
+You → Carol → Bob
+
+Bob appears at distance 2 via 2 paths → Strong suggestion!
+</code></pre>
+<h4 id="-web-crawling-dfsbfs">🌐 Web Crawling (DFS/BFS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-web-crawling-dfsbfs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Google indexing the web
+
+Graph:
+- Web pages = nodes
+- Hyperlinks = edges
+
+Crawler uses BFS:
+1. Start at seed URLs
+2. Visit page, extract all links
+3. Add links to queue
+4. Repeat
+
+Result: Discovers connected pages systematically
+</code></pre>
+<h4 id="-network-routing">🔌 Network Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-network-routing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Internet packet delivery
+
+Router graph:
+- Routers = nodes
+- Connections = edges (bandwidth, latency as weight)
+
+Algorithm finds:
+- Fastest path considering current load
+- Backup routes if connection fails
+- Load balancing across multiple paths
+</code></pre>
+<h4 id="-subway-system-planning">🚇 Subway System Planning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-subway-system-planning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Find route between stations with fewest transfers
+
+Graph:
+- Stations = nodes
+- Train lines = edges
+
+BFS finds shortest path by number of stops
+Weighted version considers:
+- Transfer time
+- Wait time
+- Walking distance
+</code></pre>
+<hr/>
+<h2 id="4-sorting-organizing-information">4. Sorting: Organizing Information<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-sorting-organizing-information" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-3">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Arrange elements in order (ascending/descending).</p>
+<h3 id="real-world-applications-3">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-leaderboards--rankings">📊 Leaderboards &amp; Rankings<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-leaderboards--rankings" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Video game leaderboard: Sort players by score
+
+Quick Sort approach (like game servers do):
+1. Pick pivot (middle score)
+2. Partition: Higher scores left, lower right
+3. Recursively sort each partition
+
+Real-time updates: Insert new score in sorted position (Binary Search + Insert)
+</code></pre>
+<h4 id="-email-inbox">📧 Email Inbox<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-email-inbox" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Gmail sorting by date/importance
+
+Merge Sort approach:
+- Divide emails into chunks
+- Sort each chunk
+- Merge sorted chunks
+
+Why Merge Sort?
+- Stable (maintains order of equal elements)
+- Efficient for large datasets
+- Good for external sorting (can't fit all in memory)
+</code></pre>
+<h4 id="-spotify-playlist-organization">🎵 Spotify Playlist Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-spotify-playlist-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Sort by: Recently played, artist name, song length
+
+Counting Sort for play counts:
+- Count frequency of each play count
+- Reconstruct sorted list
+
+Efficient when range is small (0-1000 plays)
+O(n + k) instead of O(n log n)
+</code></pre>
+<h4 id="-warehouse-inventory">📦 Warehouse Inventory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-warehouse-inventory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Amazon warehouse: Sort packages by delivery time
+
+Heap Sort approach:
+- Min heap: Package with earliest deadline at top
+- Extract min → Ship first
+- Continue until all shipped
+
+Priority queue naturally handles:
+- New packages arriving
+- Deadline changes
+</code></pre>
+<h4 id="-bank-transaction-history">🏦 Bank Transaction History<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-bank-transaction-history" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Sort by date and amount
+
+Multi-key sort:
+1. Primary: Date (newest first)
+2. Secondary: Amount (largest first within same date)
+
+Implementation:
+- Sort by amount
+- Stable sort by date (preserves amount order within each date)
+</code></pre>
+<h4 id="-shuffling-reverse-of-sorting">🎰 Shuffling (Reverse of Sorting)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-shuffling-reverse-of-sorting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Spotify shuffle, card games
+
+Fisher-Yates Shuffle:
+1. Start from last element
+2. Pick random element before it, swap
+3. Move to previous element
+4. Repeat
+
+Result: Uniformly random permutation
+</code></pre>
+<hr/>
+<h2 id="5-hash-tables-instant-lookups">5. Hash Tables: Instant Lookups<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-hash-tables-instant-lookups" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-4">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Map keys to array indices for O(1) access.</p>
+<h3 id="real-world-applications-4">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-phone-contacts">📱 Phone Contacts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phone-contacts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Find contact by name instantly
+
+Hash table:
+- Name → Hash function → Index
+- &quot;Alice&quot; → hash(&quot;Alice&quot;) → Index 42
+- contacts[42] = Alice's info
+
+Search &quot;Alice&quot;: Instant lookup, no need to scan all contacts
+</code></pre>
+<h4 id="-password-storage">🔐 Password Storage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-password-storage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Website login: Check password
+
+Don't store plain password!
+Store hash:
+- User creates password: &quot;secret123&quot;
+- Hash it: hash(&quot;secret123&quot;) → &quot;a4b3c2d1...&quot;
+- Store hash, not password
+
+Login attempt:
+- User enters &quot;secret123&quot;
+- Hash it: &quot;a4b3c2d1...&quot;
+- Compare hashes (match = correct password)
+
+Why? Can't reverse hash to get password (one-way function)
+</code></pre>
+<h4 id="-dns-domain-name-system">🌐 DNS (Domain Name System)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-dns-domain-name-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Type &quot;google.com&quot; → Get IP address
+
+DNS as distributed hash table:
+- Domain name = key
+- IP address = value
+
+Cache:
+- Your computer stores recent lookups
+- No need to query DNS server again
+- Hash table enables O(1) lookup
+</code></pre>
+<h4 id="-shopping-cart">🛒 Shopping Cart<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-shopping-cart" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>E-commerce cart: Track items and quantities
+
+Hash table:
+- Product ID = key
+- Quantity = value
+
+Operations:
+- Add item: cart[product_id] = quantity
+- Update quantity: cart[product_id] += 1
+- Remove: delete cart[product_id]
+
+All O(1) operations!
+</code></pre>
+<h4 id="-game-state-tracking">🎮 Game State Tracking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-game-state-tracking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Video game: Track player inventory
+
+Hash table:
+- Item name = key
+- Count = value
+
+inventory = {
+    &quot;sword&quot;: 1,
+    &quot;potion&quot;: 5,
+    &quot;gold&quot;: 150
+}
+
+Check if player has item: O(1)
+Use item: inventory[&quot;potion&quot;] -= 1
+</code></pre>
+<h4 id="-word-frequency-counter">📚 Word Frequency Counter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-word-frequency-counter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Analyze document: Count word occurrences
+
+Hash table approach:
+word_count = {}
+for word in document:
+    word_count[word] = word_count.get(word, 0) + 1
+
+Result: {&quot;the&quot;: 45, &quot;algorithm&quot;: 12, ...}
+
+Applications:
+- Search engine indexing
+- Spam detection
+- Autocomplete suggestions
+</code></pre>
+<hr/>
+<h2 id="6-stacks--queues-order-matters">6. Stacks &amp; Queues: Order Matters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-stacks--queues-order-matters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-5">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>LIFO (Stack) or FIFO (Queue) data structures.</p>
+<h3 id="real-world-applications-5">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="️-undoredo-stack">↩️ Undo/Redo (Stack)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-undoredo-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Text editor undo functionality
+
+Stack of actions:
+1. Type &quot;Hello&quot; → Push to stack
+2. Type &quot;World&quot; → Push to stack
+3. Undo → Pop &quot;World&quot;, revert
+4. Undo → Pop &quot;Hello&quot;, revert
+
+Browser back button:
+- Visit page → Push URL to stack
+- Back button → Pop stack
+- Forward → Push again
+</code></pre>
+<p><strong>Code:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> UndoManager</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> __init__</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self):</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.undo_stack </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> []</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.redo_stack </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> []</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> do_action</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self, action):</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.undo_stack.append(action)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.redo_stack.clear()  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Can't redo after new action</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> undo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.undo_stack:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            action </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.undo_stack.pop()</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">            self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.redo_stack.append(action)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> action</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> redo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.redo_stack:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            action </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.redo_stack.pop()</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">            self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.undo_stack.append(action)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> action</span></span></code></pre></figure>
+<h4 id="️-print-queue-queue">🖨️ Print Queue (Queue)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-print-queue-queue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Multiple print jobs → FIFO order
+
+Queue:
+1. Job A arrives → Enqueue
+2. Job B arrives → Enqueue
+3. Printer free → Dequeue Job A, print
+4. Job A done → Dequeue Job B, print
+
+Fair ordering: First come, first served
+</code></pre>
+<h4 id="-call-center-queue-queue">📞 Call Center Queue (Queue)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-call-center-queue-queue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Customers calling support
+
+Queue with priority:
+- Regular queue: Normal customers (FIFO)
+- Priority queue: Premium members (served first)
+
+Implementation:
+- Multiple queues
+- Dequeue from priority first, then regular
+</code></pre>
+<h4 id="-video-buffering-queue">🎬 Video Buffering (Queue)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-video-buffering-queue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Streaming video: Buffer frames
+
+Queue:
+- Download frames ahead → Enqueue
+- Play frame → Dequeue
+- Keep buffering while playing
+
+Ensures smooth playback
+</code></pre>
+<h4 id="-expression-evaluation-stack">🧮 Expression Evaluation (Stack)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-expression-evaluation-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Calculate: 3 + 5 * 2
+
+Using stack:
+1. Scan left to right
+2. Push operands
+3. Pop for operations (respect precedence)
+
+Infix: 3 + 5 * 2
+Postfix: 3 5 2 * +
+
+Evaluate postfix with stack:
+1. Push 3
+2. Push 5
+3. Push 2
+4. Pop 2, pop 5, multiply → Push 10
+5. Pop 10, pop 3, add → Result: 13
+</code></pre>
+<h4 id="-browser-history-stack">📦 Browser History (Stack)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-browser-history-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Visit pages: A → B → C
+
+Forward stack: []
+Back stack: [A, B, C]
+
+Back button:
+- Pop C from back stack → Move to forward stack
+- Display B
+
+Forward button:
+- Pop C from forward stack → Move to back stack
+- Display C
+</code></pre>
+<hr/>
+<h2 id="7-trees-hierarchical-organization">7. Trees: Hierarchical Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-trees-hierarchical-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-6">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hierarchical data structure with parent-child relationships.</p>
+<h3 id="real-world-applications-6">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-file-system">📁 File System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-file-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Computer file system = Tree structure
+
+Root: C:\
+├─ Users\
+│  ├─ Alice\
+│  │  ├─ Documents\
+│  │  └─ Pictures\
+│  └─ Bob\
+└─ Program Files\
+
+Operations:
+- Navigate: Traverse tree (DFS/BFS)
+- Search file: DFS with pruning
+- Calculate folder size: Recursive DFS
+</code></pre>
+<h4 id="-organization-chart">🏢 Organization Chart<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-organization-chart" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Company hierarchy
+
+        CEO
+         |
+    ┌────┴────┐
+   CTO       CFO
+    |         |
+  ┌─┴─┐      |
+Dev Ops   Finance
+
+Tree properties:
+- CEO = root
+- Managers = internal nodes
+- Employees = leaves
+
+Queries:
+- &quot;Who reports to CTO?&quot; → Get children
+- &quot;Who's Alice's manager?&quot; → Get parent
+</code></pre>
+<h4 id="-decision-trees">🔍 Decision Trees<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-decision-trees" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Medical diagnosis, credit approval
+
+Example: Loan approval tree
+
+        Income > 50k?
+        /          \
+      Yes          No
+       |            |
+  Own home?    Deny loan
+   /    \
+ Yes    No
+  |      |
+Approve Deny
+
+AI/ML uses this for classification
+</code></pre>
+<h4 id="-htmldom-structure">🌐 HTML/DOM Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-htmldom-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Web page = Tree
+
+&lt;html>
+  &lt;head>
+    &lt;title>Page&lt;/title>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>Title&lt;/h1>
+    &lt;p>Content&lt;/p>
+  &lt;/body>
+&lt;/html>
+
+Tree:
+html → head → title
+    → body → h1
+          → p
+
+Browser uses tree for:
+- Rendering (DFS traversal)
+- CSS selection
+- JavaScript manipulation
+</code></pre>
+<h4 id="-autocomplete-trie-tree">🔤 Autocomplete (Trie Tree)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-autocomplete-trie-tree" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Search suggestions as you type
+
+Trie stores words efficiently:
+
+         root
+        /  |  \
+       c   d   t
+       |   |   |
+       a   o   o
+       |   |
+       t   g
+
+Type &quot;ca&quot; → Suggests: &quot;cat&quot;, &quot;car&quot;, &quot;can&quot;
+
+Used by:
+- Google search
+- IDE autocomplete
+- Spell checkers
+</code></pre>
+<h4 id="-game-decision-ai">🎮 Game Decision AI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-game-decision-ai" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Chess engine: Minimax tree
+
+Current position
+  / | \
+Move A B C
+ /|\  |\  |\
+...  ...  ...
+
+Evaluate outcomes:
+- Max player wants highest score
+- Min player wants lowest score
+- Tree explores possibilities
+
+Prune bad branches early (Alpha-Beta pruning)
+</code></pre>
+<hr/>
+<h2 id="8-dynamic-programming-smart-optimization">8. Dynamic Programming: Smart Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-dynamic-programming-smart-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-7">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Solve complex problems by breaking into overlapping subproblems, cache results.</p>
+<h3 id="real-world-applications-7">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-financial-planning">💰 Financial Planning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-financial-planning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Maximize profit from stock trading
+
+Problem: Buy and sell stocks to maximize profit
+
+DP approach:
+- State: Day i, holding stock or not
+- Transition: Buy, sell, or hold
+- Memoize: Best profit at each state
+
+Example:
+Prices: [7, 1, 5, 3, 6, 4]
+Best: Buy at 1, sell at 6 → Profit = 5
+</code></pre>
+<h4 id="-knapsack-resource-allocation">📦 Knapsack: Resource Allocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-knapsack-resource-allocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Limited budget, maximize value
+
+Business: Allocate $1M across projects
+- Project A: $300k, ROI 40%
+- Project B: $500k, ROI 50%
+- Project C: $400k, ROI 35%
+
+DP finds optimal combination within budget
+</code></pre>
+<h4 id="-dna-sequence-alignment">🧬 DNA Sequence Alignment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-dna-sequence-alignment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Compare genetic sequences
+
+Find longest common subsequence:
+- Sequence 1: AGGTAB
+- Sequence 2: GXTXAYB
+- LCS: GTAB
+
+Used for:
+- Identifying mutations
+- Evolutionary relationships
+- Medical diagnostics
+
+DP builds table of solutions to subproblems
+</code></pre>
+<h4 id="-edit-distance-spell-check">🎯 Edit Distance: Spell Check<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-edit-distance-spell-check" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>&quot;recieve&quot; → &quot;receive&quot; (1 edit)
+
+Calculate minimum edits (insert, delete, replace):
+
+DP table compares character by character:
+- Match: No cost
+- Mismatch: Try all operations, pick cheapest
+
+Autocorrect uses this to suggest fixes
+</code></pre>
+<h4 id="-delivery-route-optimization">🚚 Delivery Route Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-delivery-route-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Visit N locations, minimize distance
+
+Traveling Salesman Problem (TSP):
+- Visit each city once
+- Return to start
+- Minimize total distance
+
+DP approach: Held-Karp algorithm
+- O(n² 2ⁿ) - better than brute force O(n!)
+
+Used by:
+- UPS route planning
+- Delivery services
+- Circuit board drilling
+</code></pre>
+<h4 id="-game-scoring-coin-change">🎮 Game Scoring: Coin Change<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-game-scoring-coin-change" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Minimum coins to make change
+
+Coins: [1, 5, 10, 25]
+Amount: $0.37
+
+DP:
+- Try each coin
+- Minimum of all options
+- Cache results
+
+Result: 37¢ = 1 quarter + 1 dime + 2 pennies (4 coins)
+</code></pre>
+<hr/>
+<h2 id="9-sliding-window-streaming-data">9. Sliding Window: Streaming Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-sliding-window-streaming-data" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-8">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Maintain window of elements, slide across data.</p>
+<h3 id="real-world-applications-8">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-stock-price-moving-average">📈 Stock Price Moving Average<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-stock-price-moving-average" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Calculate 7-day moving average
+
+Traditional: Recalculate sum of last 7 days each day
+Sliding window: Subtract oldest, add newest
+
+Day 8: Average = (sum_of_7_days - day1 + day8) / 7
+
+Constant time update!
+</code></pre>
+<p><strong>Code:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> moving_average</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(prices, window_size):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> len</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(prices) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> window_size:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> []</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    averages </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> []</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    window_sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> sum</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(prices[:window_size])</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    averages.append(window_sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> window_size)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(window_size, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">len</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(prices)):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        window_sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> window_sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prices[i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> window_size] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prices[i]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        averages.append(window_sum </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> window_size)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> averages</span></span></code></pre></figure>
+<h4 id="️-temperature-monitoring">🌡️ Temperature Monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-temperature-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Alert if average temp > threshold in last hour
+
+Sliding window:
+- Window = 60 minutes
+- Add new reading, remove oldest
+- Check if average exceeds threshold
+
+No need to store all historical data
+</code></pre>
+<h4 id="-video-quality-analysis">🎥 Video Quality Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-video-quality-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Detect scene changes in video
+
+Window of frames:
+- Compare consecutive frames
+- Large difference = scene change
+
+Netflix uses this for:
+- Thumbnail generation
+- Encoding optimization
+- Content analysis
+</code></pre>
+<h4 id="-rate-limiting">🔐 Rate Limiting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-rate-limiting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>API: Max 100 requests per minute per user
+
+Sliding window log:
+- Track timestamps of requests
+- Remove timestamps older than 1 minute
+- If count > 100, reject request
+
+Prevents abuse while allowing bursts
+</code></pre>
+<h4 id="-website-analytics">📊 Website Analytics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-website-analytics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Track active users in last 5 minutes
+
+Sliding window:
+- Event stream: User actions
+- Window: Last 5 minutes
+- Count unique users in window
+
+Update in real-time as events arrive
+</code></pre>
+<hr/>
+<h2 id="10-two-pointers-smart-scanning">10. Two Pointers: Smart Scanning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-two-pointers-smart-scanning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-algorithm-9">The Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-algorithm-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Two indices moving through data structure.</p>
+<h3 id="real-world-applications-9">Real-World Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-applications-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="-water-container-problem">💧 Water Container Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-water-container-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Warehouse: Store maximum water between walls
+
+Walls: [1, 8, 6, 2, 5, 4, 8, 3, 7]
+
+Two pointers:
+- Start: Left = 0, Right = 8
+- Calculate area
+- Move pointer with shorter wall (limits capacity)
+- Track maximum
+
+Real application: Optimal tank placement
+</code></pre>
+<h4 id="-container-loading">🚚 Container Loading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-container-loading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Load containers: Pairs that sum to weight limit
+
+Available weights: [1, 3, 5, 7, 9]
+Truck capacity: 10 (per pair)
+
+Two pointers:
+- Left = 0 (weight 1), Right = 4 (weight 9)
+- Sum = 10 ✓ → Load this pair
+- Continue with remaining
+
+Efficiently pairs items
+</code></pre>
+<h4 id="-duplicate-detection">🔍 Duplicate Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-duplicate-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Sorted log file: Find duplicate entries
+
+Two pointers:
+- Read pointer: Scan through
+- Write pointer: Write unique entries
+
+In-place removal of duplicates, O(n) time
+</code></pre>
+<h4 id="-target-sum-problems">🎯 Target Sum Problems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-target-sum-problems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Budget allocation: Two departments, total budget
+
+Costs A: [100, 200, 300, 400]
+Costs B: [150, 250, 350, 450]
+Budget: 600
+
+Two pointers find valid pairs efficiently
+</code></pre>
+<hr/>
+<h2 id="quick-reference-algorithm--real-world">Quick Reference: Algorithm → Real World<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-reference-algorithm--real-world" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Algorithm</th><th>Real-World Use</th><th>Why It Works</th></tr></thead><tbody><tr><td><strong>Binary Search</strong></td><td>Dictionary, troubleshooting, price negotiation</td><td>Halves search space, O(log n)</td></tr><tr><td><strong>Greedy</strong></td><td>Vending machine change, scheduling</td><td>Local optimum often works</td></tr><tr><td><strong>Graph/BFS</strong></td><td>GPS, social networks, web crawling</td><td>Models relationships</td></tr><tr><td><strong>Graph/DFS</strong></td><td>Maze solving, file search</td><td>Explores deeply first</td></tr><tr><td><strong>Sorting</strong></td><td>Leaderboards, email, playlists</td><td>Organizes for efficiency</td></tr><tr><td><strong>Hash Table</strong></td><td>Contacts, passwords, DNS</td><td>O(1) lookups</td></tr><tr><td><strong>Stack</strong></td><td>Undo/redo, browser back</td><td>LIFO order</td></tr><tr><td><strong>Queue</strong></td><td>Print jobs, call center</td><td>FIFO fairness</td></tr><tr><td><strong>Tree</strong></td><td>File system, org chart, autocomplete</td><td>Natural hierarchy</td></tr><tr><td><strong>Dynamic Programming</strong></td><td>Finance, route planning, DNA analysis</td><td>Optimal solutions, caching</td></tr><tr><td><strong>Sliding Window</strong></td><td>Moving averages, rate limiting</td><td>Efficient updates</td></tr><tr><td><strong>Two Pointers</strong></td><td>Container loading, duplicate removal</td><td>O(n) instead of O(n²)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="the-big-picture">The Big Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="algorithms-surround-you">Algorithms Surround You<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#algorithms-surround-you" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Every time you:</p>
+<ul>
+<li>🔍 Google something → <strong>Ranking algorithm + Hash tables</strong></li>
+<li>🗺️ Use GPS → <strong>Dijkstra’s shortest path</strong></li>
+<li>📱 Scroll feed → <strong>Recommendation algorithms</strong></li>
+<li>💳 Swipe card → <strong>Fraud detection (ML algorithms)</strong></li>
+<li>📦 Get package → <strong>Route optimization (TSP)</strong></li>
+<li>🎵 Stream music → <strong>Buffering (Queue) + Compression</strong></li>
+</ul>
+<hr/>
+<h2 id="interview-application">Interview Application<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#interview-application" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When asked “Where is this used in real life?”, remember:</p>
+<h3 id="binary-search">Binary Search<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#binary-search" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>”Like finding a word in a dictionary&quot;</li>
+<li>&quot;Git bisect to find bug&quot;</li>
+<li>&quot;Price is Right guessing strategy”</li>
+</ul>
+<h3 id="greedy-algorithms">Greedy Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#greedy-algorithms" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>”Cashier making change&quot;</li>
+<li>&quot;Scheduling meetings&quot;</li>
+<li>&quot;Packing a suitcase”</li>
+</ul>
+<h3 id="graph-algorithms">Graph Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graph-algorithms" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>”GPS navigation&quot;</li>
+<li>&quot;Social network friend suggestions&quot;</li>
+<li>&quot;Flight route planning”</li>
+</ul>
+<h3 id="dynamic-programming">Dynamic Programming<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynamic-programming" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>”Stock trading strategies&quot;</li>
+<li>&quot;Spell checker edit distance&quot;</li>
+<li>&quot;Resource allocation”</li>
+</ul>
+<p><strong>Pro tip:</strong> Always have 2-3 real-world examples ready for each algorithm you know.</p>
+<hr/>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>Algorithms aren’t abstract theory.</strong></p>
+<p>They’re <strong>practical tools</strong> that:</p>
+<ul>
+<li>Power the services you use daily</li>
+<li>Solve tangible problems efficiently</li>
+<li>Make impossible problems tractable</li>
+</ul>
+<p><strong>Understanding real-world applications makes you:</strong></p>
+<ul>
+<li>Better at explaining your code</li>
+<li>More creative in problem-solving</li>
+<li>Stronger in system design</li>
+</ul>
+<p><strong>Next time you solve a problem, ask:</strong>
+<em>“Where have I seen this pattern in real life?”</em></p>
+</blockquote>
+<hr/>
+<p><strong>The best way to learn algorithms?</strong> Spot them in the wild. Every app you use, every system you interact with—there’s an algorithm behind it.</p>
+<p>See also: <a href="../DSA/Pattern-Recognition" class="internal" data-slug="DSA/Pattern-Recognition">Pattern-Recognition</a>, <a href="../DSA/DSA-Roadmap" class="internal" data-slug="DSA/DSA-Roadmap">DSA-Roadmap</a>, <a href="../DSA/Big-O-Notation" class="internal" data-slug="DSA/Big-O-Notation">Big-O-Notation</a></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-16" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#algorithms-in-real-life" data-for="algorithms-in-real-life">Algorithms in Real Life</a></li><li class="depth-1"><a href="#why-this-matters" data-for="why-this-matters">Why This Matters</a></li><li class="depth-1"><a href="#1-binary-search-the-guessing-game-strategy" data-for="1-binary-search-the-guessing-game-strategy">1. Binary Search: The Guessing Game Strategy</a></li><li class="depth-2"><a href="#the-algorithm" data-for="the-algorithm">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications" data-for="real-world-applications">Real-World Applications</a></li><li class="depth-1"><a href="#2-greedy-algorithms-the-vending-machine" data-for="2-greedy-algorithms-the-vending-machine">2. Greedy Algorithms: The Vending Machine</a></li><li class="depth-2"><a href="#the-algorithm-1" data-for="the-algorithm-1">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-1" data-for="real-world-applications-1">Real-World Applications</a></li><li class="depth-1"><a href="#3-graph-algorithms-navigation--networks" data-for="3-graph-algorithms-navigation--networks">3. Graph Algorithms: Navigation &amp; Networks</a></li><li class="depth-2"><a href="#the-algorithm-2" data-for="the-algorithm-2">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-2" data-for="real-world-applications-2">Real-World Applications</a></li><li class="depth-1"><a href="#4-sorting-organizing-information" data-for="4-sorting-organizing-information">4. Sorting: Organizing Information</a></li><li class="depth-2"><a href="#the-algorithm-3" data-for="the-algorithm-3">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-3" data-for="real-world-applications-3">Real-World Applications</a></li><li class="depth-1"><a href="#5-hash-tables-instant-lookups" data-for="5-hash-tables-instant-lookups">5. Hash Tables: Instant Lookups</a></li><li class="depth-2"><a href="#the-algorithm-4" data-for="the-algorithm-4">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-4" data-for="real-world-applications-4">Real-World Applications</a></li><li class="depth-1"><a href="#6-stacks--queues-order-matters" data-for="6-stacks--queues-order-matters">6. Stacks &amp; Queues: Order Matters</a></li><li class="depth-2"><a href="#the-algorithm-5" data-for="the-algorithm-5">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-5" data-for="real-world-applications-5">Real-World Applications</a></li><li class="depth-1"><a href="#7-trees-hierarchical-organization" data-for="7-trees-hierarchical-organization">7. Trees: Hierarchical Organization</a></li><li class="depth-2"><a href="#the-algorithm-6" data-for="the-algorithm-6">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-6" data-for="real-world-applications-6">Real-World Applications</a></li><li class="depth-1"><a href="#8-dynamic-programming-smart-optimization" data-for="8-dynamic-programming-smart-optimization">8. Dynamic Programming: Smart Optimization</a></li><li class="depth-2"><a href="#the-algorithm-7" data-for="the-algorithm-7">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-7" data-for="real-world-applications-7">Real-World Applications</a></li><li class="depth-1"><a href="#9-sliding-window-streaming-data" data-for="9-sliding-window-streaming-data">9. Sliding Window: Streaming Data</a></li><li class="depth-2"><a href="#the-algorithm-8" data-for="the-algorithm-8">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-8" data-for="real-world-applications-8">Real-World Applications</a></li><li class="depth-1"><a href="#10-two-pointers-smart-scanning" data-for="10-two-pointers-smart-scanning">10. Two Pointers: Smart Scanning</a></li><li class="depth-2"><a href="#the-algorithm-9" data-for="the-algorithm-9">The Algorithm</a></li><li class="depth-2"><a href="#real-world-applications-9" data-for="real-world-applications-9">Real-World Applications</a></li><li class="depth-1"><a href="#quick-reference-algorithm--real-world" data-for="quick-reference-algorithm--real-world">Quick Reference: Algorithm → Real World</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The Big Picture</a></li><li class="depth-2"><a href="#algorithms-surround-you" data-for="algorithms-surround-you">Algorithms Surround You</a></li><li class="depth-1"><a href="#interview-application" data-for="interview-application">Interview Application</a></li><li class="depth-2"><a href="#binary-search" data-for="binary-search">Binary Search</a></li><li class="depth-2"><a href="#greedy-algorithms" data-for="greedy-algorithms">Greedy Algorithms</a></li><li class="depth-2"><a href="#graph-algorithms" data-for="graph-algorithms">Graph Algorithms</a></li><li class="depth-2"><a href="#dynamic-programming" data-for="dynamic-programming">Dynamic Programming</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../DSA/Pattern-Recognition" class="internal">DSA Pattern Recognition Guide</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>
