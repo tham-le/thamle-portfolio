@@ -28,16 +28,15 @@ This directory contains all the automation scripts for the portfolio.
   - Creates individual challenge pages
   - Generates event overview pages
 
-### ⚙️ Setup Scripts
+### 🛠️ Utility Scripts
 
-- **`setup.sh`** - Initial portfolio setup
-  - Installs dependencies
-  - Sets up environment
-  - Initializes submodules
+- **`generate-ctf-indexes.sh`** - Generates index files for CTF sections
+  - Creates `_index.md` files for Hugo navigation
+  - Used by CI workflow
 
-- **`test-sync.sh`** - Testing script for development
-  - Tests sync operations
-  - Validates content generation
+- **`prepare_hugo.py`** - Prepares Hugo for local development
+  - Generates local index files needed for the CTF section
+  - Run before starting Hugo server locally
 
 ## Project Configuration
 
