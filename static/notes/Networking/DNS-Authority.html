@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is DNS Authority?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is DNS Authority?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is DNS Authority?"/><meta name="twitter:description" content="Who controls the internet's phone book, how domain registration works, and why DNS stays synchronized across billions of devices"/><meta property="og:description" content="Who controls the internet's phone book, how domain registration works, and why DNS stays synchronized across billions of devices"/><meta property="og:image:alt" content="Who controls the internet's phone book, how domain registration works, and why DNS stays synchronized across billions of devices"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Networking/DNS-Authority"/><meta property="twitter:url" content="https://notes.thamle.live/Networking/DNS-Authority"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Who controls the internet's phone book, how domain registration works, and why DNS stays synchronized across billions of devices"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Networking/DNS-Authority"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-187"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-187" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Networking/">Networking</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is DNS Authority?</a></div></nav><h1 class="article-title">WTF is DNS Authority?</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-14T00:00:00.000Z">Nov 14, 2025</time><span>10 min read</span></p><ul class="tags"><li><a href="../tags/networking" class="internal tag-link">networking</a></li><li><a href="../tags/dns" class="internal tag-link">dns</a></li><li><a href="../tags/infrastructure" class="internal tag-link">infrastructure</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-dns-authority">WTF is DNS Authority?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-dns-authority" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>Or: How does the entire internet agree on what google.com means?</em></p>
+<p>You just learned <a href="../Networking/DNS" class="internal alias" data-slug="Networking/DNS">how DNS works</a>. Your computer asks “where’s github.com?” and gets back an IP address. But here’s the real question: <strong>who decided that github.com points to that specific IP address?</strong> And how does every DNS server on Earth know the same answer?</p>
+<p>Welcome to the world of DNS authority, where we’ll discover who actually controls the internet’s naming system.</p>
+<h2 id="the-core-analogy">The Core Analogy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-core-analogy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Think of DNS authority like a giant library system with a strict hierarchy.</p>
+<p>At the top, you have the <strong>Library of Congress</strong> (the root). They don’t have every book, but they have a master catalog telling you which regional library handles which topics.</p>
+<p>Then you have <strong>regional libraries</strong> (.com, .org, .uk). They don’t store every book either, but they know which local library has what you need.</p>
+<p>Finally, you have <strong>local libraries</strong> (github.com, google.com). These actually have the books (IP addresses) you’re looking for.</p>
+<p>Each level has authority over its section. The Library of Congress can’t tell your local library which books to stock, but they can tell everyone where to find your local library.</p>
+<h2 id="beginner-the-trust-hierarchy">Beginner: The Trust Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#beginner-the-trust-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="whos-in-charge">Who’s in Charge?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whos-in-charge" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DNS has a clear chain of command:</p>
+<pre><code>Root Zone (.)
+    ↓
+ICANN (Internet Corporation for Assigned Names and Numbers)
+    ↓
+TLD Operators (.com, .org, .uk, etc.)
+    ↓
+Domain Registrars (GoDaddy, Namecheap, Google Domains, etc.)
+    ↓
+Domain Owners (You!)
+    ↓
+Authoritative Nameservers (Your DNS provider)
+</code></pre>
+<p>Let’s break this down from the top.</p>
+<h3 id="the-root-zone-the-master-list">The Root Zone: The Master List<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-root-zone-the-master-list" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>At the very top is the <strong>root zone</strong>. It’s literally a text file that lists every TLD (.com, .org, .uk, .pizza) and which servers are authoritative for them.</p>
+<p>Here’s what part of it looks like:</p>
+<pre><code>com.                 172800  IN  NS  a.gtld-servers.net.
+com.                 172800  IN  NS  b.gtld-servers.net.
+org.                 172800  IN  NS  a0.org.aone.net.
+uk.                  172800  IN  NS  ns1.nic.uk.
+</code></pre>
+<p>This file is managed by <strong>ICANN</strong> and <strong>IANA</strong> (Internet Assigned Numbers Authority). They’re nonprofit organizations that coordinate the global internet infrastructure.</p>
+<h3 id="the-13-root-servers-sort-of">The 13 Root Servers (Sort Of)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-13-root-servers-sort-of" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>There are “13” root DNS servers named A through M:</p>
+<pre><code>a.root-servers.net.
+b.root-servers.net.
+c.root-servers.net.
+...
+m.root-servers.net.
+</code></pre>
+<p>But here’s the trick: there aren’t actually 13 physical servers. There are <strong>hundreds</strong> of servers worldwide, all using <strong>anycast routing</strong>. When you query <code>a.root-servers.net</code>, your request goes to the nearest server in that cluster.</p>
+<p>Why 13 names? Historical reasons. Early DNS packets could only fit 13 server addresses in a <a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a> response without fragmenting.</p>
+<h3 id="tld-operators-managing-com-org-etc">TLD Operators: Managing .com, .org, etc.<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tld-operators-managing-com-org-etc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each TLD has an operator:</p>
+<ul>
+<li><strong>.com and .net</strong>: Verisign</li>
+<li><strong>.org</strong>: Public Interest Registry (PIR)</li>
+<li><strong>.uk</strong>: Nominet</li>
+<li><strong>.io</strong>: Internet Computer Bureau (ICB)</li>
+<li><strong>.pizza</strong>: Yes, this exists. Someone manages it.</li>
+</ul>
+<p>These operators maintain the authoritative DNS servers for their TLD. When you register <code>mysite.com</code>, you’re asking Verisign (through a registrar) to add an entry to the .com zone.</p>
+<h3 id="domain-registrars-your-gateway">Domain Registrars: Your Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domain-registrars-your-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>You don’t talk to Verisign directly. You use a <strong>registrar</strong> like:</p>
+<ul>
+<li>GoDaddy</li>
+<li>Namecheap</li>
+<li>Google Domains (now Squarespace)</li>
+<li>Cloudflare</li>
+<li>Gandi</li>
+</ul>
+<p>Registrars are accredited by ICANN to sell domain names. They handle the paperwork and money, then tell the TLD operator to update the zone file.</p>
+<h3 id="what-happens-when-you-register-a-domain">What Happens When You Register a Domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-happens-when-you-register-a-domain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Let’s say you register <code>coolproject.com</code>:</p>
+<ol>
+<li><strong>You pay the registrar</strong> (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">10</span><span class="mord">−</span></span></span></span>15/year for .com)</li>
+<li><strong>Registrar contacts Verisign</strong>: “Add coolproject.com to the .com zone”</li>
+<li><strong>You provide nameserver addresses</strong>: Where should DNS queries for coolproject.com go?
+<pre><code>ns1.cloudflare.com
+ns2.cloudflare.com
+</code></pre>
+</li>
+<li><strong>Verisign updates the .com zone</strong> with your nameservers</li>
+<li><strong>Your nameserver serves the actual records</strong> (A, AAAA, MX, etc.)</li>
+</ol>
+<p>Now, when someone looks up <code>coolproject.com</code>:</p>
+<pre><code>Root → &quot;Ask .com servers&quot;
+.com → &quot;Ask ns1.cloudflare.com&quot;
+ns1.cloudflare.com → &quot;coolproject.com is at 104.21.48.23&quot;
+</code></pre>
+<h2 id="intermediate-how-synchronization-works">Intermediate: How Synchronization Works<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#intermediate-how-synchronization-works" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-zone-file-system">The Zone File System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-zone-file-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DNS isn’t a single database. It’s millions of independent databases (zone files) that reference each other.</p>
+<p>A <strong>zone file</strong> is a text file listing all DNS records for a domain:</p>
+<pre><code>; Zone file for example.com
+$TTL 3600
+@       IN  SOA   ns1.example.com. admin.example.com. (
+                  2025111401 ; Serial number (YYYYMMDDnn)
+                  7200       ; Refresh (2 hours)
+                  3600       ; Retry (1 hour)
+                  1209600    ; Expire (2 weeks)
+                  86400 )    ; Minimum TTL (1 day)
+
+@       IN  NS    ns1.example.com.
+@       IN  NS    ns2.example.com.
+@       IN  A     93.184.216.34
+www     IN  A     93.184.216.34
+mail    IN  A     93.184.216.35
+@       IN  MX    10 mail.example.com.
+</code></pre>
+<p><strong>Key fields:</strong></p>
+<ul>
+<li><strong>SOA (Start of Authority)</strong>: Metadata about this zone</li>
+<li><strong>Serial number</strong>: Incremented every time the zone changes</li>
+<li><strong>NS records</strong>: Which servers are authoritative for this zone</li>
+<li><strong>A/AAAA records</strong>: The actual IP addresses</li>
+</ul>
+<h3 id="dns-propagation-why-changes-take-time">DNS Propagation: Why Changes Take Time<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-propagation-why-changes-take-time" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When you update a DNS record, it doesn’t instantly affect everyone. Why?</p>
+<p><strong>TTL (Time To Live)</strong> tells caches how long to keep a result:</p>
+<pre><code>example.com.  3600  IN  A  93.184.216.34
+              ^^^^
+              This is the TTL (1 hour)
+</code></pre>
+<p>If you change <code>example.com</code> to point to a new IP, here’s what happens:</p>
+<ol>
+<li><strong>You update your zone file</strong> on your authoritative nameserver</li>
+<li><strong>Recursive resolvers (8.8.8.8, etc.) still have the old answer cached</strong></li>
+<li><strong>After 3600 seconds (1 hour), the cache expires</strong></li>
+<li><strong>Next query fetches the new answer</strong></li>
+</ol>
+<p>This is why “DNS propagation takes 24-48 hours” is a thing. It’s not that DNS is slow, it’s that:</p>
+<ul>
+<li>Different resolvers cache at different times</li>
+<li>Some ignore TTL recommendations (bad behavior, but it happens)</li>
+<li>Your ISP might have multi-level caching</li>
+</ul>
+<p><strong>Pro tip</strong>: Before making a critical DNS change, lower your TTL to 300 seconds (5 minutes) a day in advance. Then make your change. Then raise TTL back to normal.</p>
+<h3 id="zone-transfers-how-nameservers-stay-in-sync">Zone Transfers: How Nameservers Stay in Sync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#zone-transfers-how-nameservers-stay-in-sync" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If you have multiple nameservers (you should for redundancy), they need to stay synchronized.</p>
+<p><strong>Primary nameserver</strong> (master): Holds the authoritative zone file
+<strong>Secondary nameservers</strong> (slaves): Copy data from the primary</p>
+<p>Zone transfers happen over <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> (not <a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a> like normal queries):</p>
+<pre><code>Secondary: &quot;What's your serial number?&quot;
+Primary: &quot;2025111401&quot;
+Secondary: &quot;Mine is 2025111305. Send me updates.&quot;
+Primary: [Sends entire zone or just changes]
+</code></pre>
+<p>This uses two methods:</p>
+<ol>
+<li><strong>AXFR (Full zone transfer)</strong>: Sends the entire zone file</li>
+<li><strong>IXFR (Incremental zone transfer)</strong>: Sends only changes since last serial</li>
+</ol>
+<p>The secondary checks periodically (based on the Refresh value in SOA).</p>
+<h3 id="how-everyone-stays-consistent">How Everyone Stays Consistent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-everyone-stays-consistent" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The genius of DNS is that consistency isn’t instantaneous. It’s <strong>eventual consistency</strong>:</p>
+<ol>
+<li><strong>Root zone updates rarely</strong>: Adding new TLDs is a big deal</li>
+<li><strong>TLD zones update when domains are registered/renewed</strong></li>
+<li><strong>Domain zones update when owners make changes</strong></li>
+<li><strong>Caching at every level</strong> smooths out the load</li>
+</ol>
+<p>The root zone is distributed via <strong>HTTPS</strong> to all root servers every few hours. It’s digitally signed (more on this in Advanced).</p>
+<h2 id="advanced-dnssec-and-the-root-key-ceremony">Advanced: DNSSEC and the Root Key Ceremony<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#advanced-dnssec-and-the-root-key-ceremony" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-security-problem">The Security Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-security-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Traditional DNS has zero security. Anyone can:</p>
+<ul>
+<li><strong>Spoof responses</strong>: Fake DNS server sends wrong IP</li>
+<li><strong>Cache poisoning</strong>: Trick a resolver into caching malicious answers</li>
+<li><strong>Man-in-the-middle</strong>: Intercept and modify DNS queries</li>
+</ul>
+<p><strong>DNSSEC (DNS Security Extensions)</strong> solves this with cryptographic signatures.</p>
+<h3 id="how-dnssec-works">How DNSSEC Works<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-dnssec-works" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Every DNS response is signed with a private key. Clients verify the signature with a public key.</p>
+<pre><code>example.com.  3600  IN  A      93.184.216.34
+example.com.  3600  IN  RRSIG  A 8 2 3600 (
+              20251201000000 20251101000000 12345 example.com.
+              [cryptographic signature data] )
+</code></pre>
+<p><strong>The chain of trust:</strong></p>
+<pre><code>Root Zone (.) 
+  ↓ [signed by root key]
+.com Zone
+  ↓ [signed by .com key]
+example.com
+  ↓ [signed by example.com key]
+www.example.com → 93.184.216.34
+</code></pre>
+<p>Each level signs the public key of the level below it. If any signature is invalid, the resolver rejects the answer.</p>
+<h3 id="the-root-key-signing-ceremony">The Root Key Signing Ceremony<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-root-key-signing-ceremony" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The root zone’s private key is <strong>the most important key on the internet</strong>. If it’s compromised, someone could redirect all DNS traffic.</p>
+<p>So ICANN does something amazing: <strong>The Root Key Signing Ceremony</strong>.</p>
+<p>Four times a year, people from around the world gather in a secure facility:</p>
+<ol>
+<li><strong>21 people</strong> (Trusted Community Representatives) hold physical key cards</li>
+<li><strong>7 must be present</strong> to unlock the Hardware Security Module (HSM)</li>
+<li>They’re in a <strong>Faraday cage</strong> (no signals in or out)</li>
+<li><strong>Video cameras record everything</strong></li>
+<li>They generate or use the <strong>Key Signing Key (KSK)</strong> to sign the root zone</li>
+</ol>
+<p>This is not a joke. This actually happens. The ceremony is livestreamed and audited.</p>
+<p><strong>Why this matters</strong>: If the root zone is compromised, the entire internet’s DNS becomes untrustworthy. This process ensures no single entity can control it.</p>
+<h3 id="anycast-routing-for-root-servers">Anycast Routing for Root Servers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#anycast-routing-for-root-servers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Remember those “13” root servers? Here’s how anycast makes them actually hundreds:</p>
+<p><strong>Traditional routing</strong>: IP address → specific server</p>
+<p><strong>Anycast routing</strong>: Same IP address announced from multiple locations. Routers send traffic to the “nearest” one based on <a href="../Networking/Router" class="internal alias" data-slug="Networking/Router">BGP routing</a>.</p>
+<p>Example: <code>a.root-servers.net</code> (198.41.0.4) is announced from:</p>
+<ul>
+<li>Los Angeles</li>
+<li>London</li>
+<li>Tokyo</li>
+<li>Sydney</li>
+<li>…150+ other locations</li>
+</ul>
+<p>When you query it, your <a href="../ISP" class="internal" data-slug="ISP">ISP</a>’s router sends your packet to the closest instance. This provides:</p>
+<ul>
+<li><strong>Low latency</strong>: Queries go to the nearest server</li>
+<li><strong>High availability</strong>: If one server fails, traffic routes to the next nearest</li>
+<li><strong>DDoS resistance</strong>: Attack traffic is distributed across many servers</li>
+</ul>
+<h3 id="bgp-hijacking-the-dark-side">BGP Hijacking: The Dark Side<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bgp-hijacking-the-dark-side" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DNS relies on <a href="../Networking/Router" class="internal alias" data-slug="Networking/Router">BGP (Border Gateway Protocol)</a> to route traffic. But BGP has no authentication.</p>
+<p><strong>What can go wrong:</strong></p>
+<p>In 2008, Pakistan Telecom tried to block YouTube domestically. They announced a more specific BGP route for YouTube’s IP space. Routers worldwide saw this as “the best path” and sent ALL YouTube traffic to Pakistan.</p>
+<p>Result: YouTube was down globally for hours.</p>
+<p>This has happened multiple times:</p>
+<ul>
+<li>2018: Google’s 8.8.8.8 hijacked by China Telecom</li>
+<li>2019: Cloudflare’s 1.1.1.1 briefly redirected</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li><strong>RPKI (Resource Public Key Infrastructure)</strong>: Cryptographically signs BGP announcements</li>
+<li><strong>ROV (Route Origin Validation)</strong>: Routers verify BGP signatures</li>
+</ul>
+<p>But adoption is slow because BGP is ancient (1989) and everyone needs to upgrade.</p>
+<h3 id="the-dns-root-trust-anchor">The DNS Root Trust Anchor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-dns-root-trust-anchor" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How do you trust the root zone’s public key in the first place? This is the <strong>trust anchor problem</strong>.</p>
+<p>Your <a href="../Systems/Operating-System" class="internal alias" data-slug="Systems/Operating-System">operating system</a> ships with the root zone’s public key hardcoded:</p>
+<pre><code>; Root trust anchor (built into your OS)
+. 172800 IN DNSKEY 257 3 8 (
+    AwEAAaz/tAm8yTn4Mfeh5eyI96WSVexTBAvkMgJzkKTOiW1vkIbzxeF3
+    [more key data...]
+    ) ; Key ID = 20326
+</code></pre>
+<p>This key is called the <strong>trust anchor</strong>. Your OS vendor (Microsoft, Apple, Linux distros) includes it.</p>
+<p>When ICANN does the Key Signing Ceremony, they’re updating this key. Then OS vendors push updates.</p>
+<p><strong>The 2018 Root Key Rollover</strong> was a big deal. ICANN changed the root key for the first time since DNSSEC was deployed. Some old devices that didn’t update lost DNSSEC validation.</p>
+<h2 id="real-world-implications">Real-World Implications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-implications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="censorship-and-dns">Censorship and DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#censorship-and-dns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Governments censor the internet by:</p>
+<ol>
+<li><strong>Blocking at the ISP DNS level</strong>: ISP’s resolver returns fake IPs</li>
+<li><strong>Poisoning DNS caches</strong>: Inject false answers into resolvers</li>
+<li><strong>Blocking authoritative nameservers</strong>: Firewall traffic to specific DNS servers</li>
+</ol>
+<p><strong>Workarounds:</strong></p>
+<ul>
+<li>Use <a href="../Networking/TLS" class="internal alias" data-slug="Networking/TLS">DNS over HTTPS</a> (DoH) to bypass ISP DNS</li>
+<li>Use public resolvers (8.8.8.8, 1.1.1.1)</li>
+<li>Use VPNs to route around geographic blocks</li>
+</ul>
+<h3 id="the-fragility-of-centralization">The Fragility of Centralization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-fragility-of-centralization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DNS has choke points:</p>
+<ul>
+<li><strong>ICANN controls the root zone</strong>: US-based nonprofit</li>
+<li><strong>Verisign has a monopoly on .com</strong>: They can raise prices (and do)</li>
+<li><strong>13 root server organizations</strong>: If they collude, they could manipulate DNS</li>
+</ul>
+<p><strong>Alternatives being explored:</strong></p>
+<ul>
+<li><strong>Blockchain-based DNS</strong> (Namecoin, Handshake): Decentralized, no ICANN</li>
+<li><strong>ENS (Ethereum Name Service)</strong>: Decentralized naming for crypto addresses</li>
+</ul>
+<p>But these lack adoption because traditional DNS just works.</p>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Now you understand who controls DNS and how the system stays synchronized. But <strong>what happens after you get that IP address?</strong> How does your program actually use it to connect?</p>
+<p>Next article: <strong>WTF is a Socket?</strong> We’ll dive into the <a href="../Networking/Socket-API" class="internal alias" data-slug="Networking/Socket-API">socket API</a>, <a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> connections, and how programs talk over the network.</p>
+<p><strong>Related reading:</strong></p>
+<ul>
+<li><a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a>: Why zone transfers use TCP instead</li>
+<li><a href="../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a>: How DNS over HTTPS secures queries</li>
+<li><a href="../Networking/Router" class="internal" data-slug="Networking/Router">Router</a>: How BGP routing affects DNS</li>
+<li><a href="../ISP" class="internal" data-slug="ISP">ISP</a>: Why your ISP’s DNS might be slow or censored</li>
+</ul>
+<hr/>
+<h2 id="sources--verification">Sources &amp; Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources--verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Verified during writing:</strong></p>
+<ul>
+<li>ICANN root zone management: ICANN official documentation</li>
+<li>DNSSEC specifications: RFC 4033, RFC 4034, RFC 4035</li>
+<li>Root key signing ceremony: ICANN Key Signing Ceremony documentation</li>
+<li>BGP hijacking incidents: Historical records from RIPE, APNIC, and news sources</li>
+</ul>
+<p><strong>To verify this article:</strong></p>
+<ol>
+<li><code>&quot;ICANN root zone management process&quot;</code></li>
+<li><code>&quot;DNSSEC RFC 4033 specification&quot;</code></li>
+<li><code>&quot;root key signing ceremony procedure&quot;</code></li>
+<li><code>&quot;BGP hijacking incidents history&quot;</code></li>
+</ol>
+<p><strong>Last fact-check</strong>: 2025-11-14</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-79" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-dns-authority" data-for="wtf-is-dns-authority">WTF is DNS Authority?</a></li><li class="depth-1"><a href="#the-core-analogy" data-for="the-core-analogy">The Core Analogy</a></li><li class="depth-1"><a href="#beginner-the-trust-hierarchy" data-for="beginner-the-trust-hierarchy">Beginner: The Trust Hierarchy</a></li><li class="depth-2"><a href="#whos-in-charge" data-for="whos-in-charge">Who’s in Charge?</a></li><li class="depth-2"><a href="#the-root-zone-the-master-list" data-for="the-root-zone-the-master-list">The Root Zone: The Master List</a></li><li class="depth-2"><a href="#the-13-root-servers-sort-of" data-for="the-13-root-servers-sort-of">The 13 Root Servers (Sort Of)</a></li><li class="depth-2"><a href="#tld-operators-managing-com-org-etc" data-for="tld-operators-managing-com-org-etc">TLD Operators: Managing .com, .org, etc.</a></li><li class="depth-2"><a href="#domain-registrars-your-gateway" data-for="domain-registrars-your-gateway">Domain Registrars: Your Gateway</a></li><li class="depth-2"><a href="#what-happens-when-you-register-a-domain" data-for="what-happens-when-you-register-a-domain">What Happens When You Register a Domain</a></li><li class="depth-1"><a href="#intermediate-how-synchronization-works" data-for="intermediate-how-synchronization-works">Intermediate: How Synchronization Works</a></li><li class="depth-2"><a href="#the-zone-file-system" data-for="the-zone-file-system">The Zone File System</a></li><li class="depth-2"><a href="#dns-propagation-why-changes-take-time" data-for="dns-propagation-why-changes-take-time">DNS Propagation: Why Changes Take Time</a></li><li class="depth-2"><a href="#zone-transfers-how-nameservers-stay-in-sync" data-for="zone-transfers-how-nameservers-stay-in-sync">Zone Transfers: How Nameservers Stay in Sync</a></li><li class="depth-2"><a href="#how-everyone-stays-consistent" data-for="how-everyone-stays-consistent">How Everyone Stays Consistent</a></li><li class="depth-1"><a href="#advanced-dnssec-and-the-root-key-ceremony" data-for="advanced-dnssec-and-the-root-key-ceremony">Advanced: DNSSEC and the Root Key Ceremony</a></li><li class="depth-2"><a href="#the-security-problem" data-for="the-security-problem">The Security Problem</a></li><li class="depth-2"><a href="#how-dnssec-works" data-for="how-dnssec-works">How DNSSEC Works</a></li><li class="depth-2"><a href="#the-root-key-signing-ceremony" data-for="the-root-key-signing-ceremony">The Root Key Signing Ceremony</a></li><li class="depth-2"><a href="#anycast-routing-for-root-servers" data-for="anycast-routing-for-root-servers">Anycast Routing for Root Servers</a></li><li class="depth-2"><a href="#bgp-hijacking-the-dark-side" data-for="bgp-hijacking-the-dark-side">BGP Hijacking: The Dark Side</a></li><li class="depth-2"><a href="#the-dns-root-trust-anchor" data-for="the-dns-root-trust-anchor">The DNS Root Trust Anchor</a></li><li class="depth-1"><a href="#real-world-implications" data-for="real-world-implications">Real-World Implications</a></li><li class="depth-2"><a href="#censorship-and-dns" data-for="censorship-and-dns">Censorship and DNS</a></li><li class="depth-2"><a href="#the-fragility-of-centralization" data-for="the-fragility-of-centralization">The Fragility of Centralization</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#sources--verification" data-for="sources--verification">Sources &amp; Verification</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

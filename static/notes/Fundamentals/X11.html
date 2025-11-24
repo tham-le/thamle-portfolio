@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is X11?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is X11?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is X11?"/><meta name="twitter:description" content="Understanding the X Window System's 40-year-old architecture that ruled Unix graphics for decades"/><meta property="og:description" content="Understanding the X Window System's 40-year-old architecture that ruled Unix graphics for decades"/><meta property="og:image:alt" content="Understanding the X Window System's 40-year-old architecture that ruled Unix graphics for decades"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Fundamentals/X11"/><meta property="twitter:url" content="https://notes.thamle.live/Fundamentals/X11"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Understanding the X Window System's 40-year-old architecture that ruled Unix graphics for decades"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Fundamentals/X11"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-135"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-135" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is X11?</a></div></nav><h1 class="article-title">WTF is X11?</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-17T00:00:00.000Z">Nov 17, 2025</time><span>12 min read</span></p><ul class="tags"><li><a href="../tags/x11" class="internal tag-link">x11</a></li><li><a href="../tags/display-server" class="internal tag-link">display-server</a></li><li><a href="../tags/graphics" class="internal tag-link">graphics</a></li><li><a href="../tags/linux" class="internal tag-link">linux</a></li><li><a href="../tags/unix" class="internal tag-link">unix</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-x11">WTF is X11?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-x11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>The display system built for a world that no longer exists</em></p>
+<p>You boot a Linux machine from the 1990s, 2000s, or even early 2010s. Your desktop appears. Windows open, move, resize. You type, you click, pixels change. For decades, there was one system making this happen on Unix machines: <strong>X11</strong>.</p>
+<p>But here’s the weird part: the X server runs on your machine, the client runs on your machine, and they talk to each other over a network protocol… even though they’re on the same computer. <strong>WTF is that about?</strong></p>
+<p>Let’s rewind to 1984 and understand why the X Window System was designed the way it was, and why it dominated Unix graphics for 40 years.</p>
+<hr/>
+<h2 id="the-multi-terminal-university-problem">The Multi-Terminal University Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-multi-terminal-university-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Think of MIT in 1984. You have expensive mainframes and minicomputers in machine rooms. You have dozens of terminals at desks scattered across campus. Students and researchers need to run programs on the powerful machines while sitting at their terminals.</p>
+<p><strong>The problem:</strong> Everyone wants graphical interfaces, not just text. But your terminal doesn’t have the computing power to run the application AND draw the graphics. The powerful computer in the machine room doesn’t have a screen attached to it.</p>
+<p><strong>The solution:</strong> Split the job in two.</p>
+<ul>
+<li>The <strong>application</strong> runs on the powerful machine (the “client”)</li>
+<li>The <strong>display server</strong> runs on your desk terminal (the “server”)</li>
+<li>They talk to each other over the campus network</li>
+</ul>
+<p>This is where X11’s seemingly backwards terminology comes from. The <strong>server</strong> is at your desk because it serves your screen, keyboard, and mouse to the remote applications. The <strong>client</strong> is the application that connects to your display server, wherever that application happens to be running.</p>
+<p>In the restaurant analogy from the Wayland article, imagine a kitchen (application server) in one building, and dining rooms (display servers) scattered across campus. The kitchen sends plated dishes over a delivery network to whichever dining room ordered them.</p>
+<p>This made perfect sense in 1984.</p>
+<hr/>
+<h2 id="what-x11-actually-is">What X11 Actually Is<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-x11-actually-is" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>X11</strong> is three things at once:</p>
+<ol>
+<li><strong>A protocol</strong>: The X11 protocol defines how clients and servers talk to each other</li>
+<li><strong>A display server</strong>: The X server manages your screen, keyboard, and mouse</li>
+<li><strong>An architecture</strong>: The entire X Window System including libraries, window managers, and more</li>
+</ol>
+<p>The “11” comes from the protocol version. X went through rapid evolution from X1 (1984) to X10 (1986), then X11 was released in September 1987. The protocol designers said “we don’t think it will ever change again, okay. There’s not gonna be a version 12.”</p>
+<p>They were right. X11 has been at version 11 since 1987, nearly 40 years.</p>
+<hr/>
+<h2 id="the-core-architecture-network-transparent-by-design">The Core Architecture: Network Transparent by Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-core-architecture-network-transparent-by-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>X uses a client-server model where the X server program runs on a computer with a graphical display and communicates with various client programs.</p>
+<p>Here’s the key insight: <strong>the client and server can communicate securely over the Internet by tunneling the connection over an encrypted connection</strong>. They can run on the same machine or on different ones, possibly with different architectures and operating systems.</p>
+<h3 id="the-communication-model">The Communication Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-communication-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The X server acts as a go-between for the user and the client programs, accepting requests on TCP port 6000 (plus the display number) for graphical output from the client programs and displaying them to the user, and receiving user input and transmitting it to the client programs.</p>
+<p><strong>Four types of packets flow over the network:</strong></p>
+<ol>
+<li><strong>Request</strong>: Client asks server to do something (“create a window”, “draw a rectangle”)</li>
+<li><strong>Reply</strong>: Server sends information back to client</li>
+<li><strong>Event</strong>: Server notifies client about something (“mouse moved”, “key pressed”, “window exposed”)</li>
+<li><strong>Error</strong>: Server tells client something went wrong</li>
+</ol>
+<p>This all happens asynchronously. Clients send requests without waiting for replies (when they don’t need one). The server sends events whenever something interesting happens.</p>
+<h3 id="the-display-variable">The Display Variable<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-display-variable" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>You’ve probably seen <code>DISPLAY=:0</code> or <code>DISPLAY=localhost:10.0</code> in error messages. This tells clients where to find the X server.</p>
+<p>The format is: <code>hostname:displaynumber.screennumber</code></p>
+<ul>
+<li><code>:0</code> means local connection, display 0, screen 0</li>
+<li><code>192.168.1.100:0</code> means connect to that IP address, display 0</li>
+<li><code>localhost:10.0</code> typically means SSH X11 forwarding</li>
+</ul>
+<p>On the same host, X uses Unix domain sockets for efficient communication instead of TCP. But the protocol is identical.</p>
+<hr/>
+<h2 id="what-the-x-server-actually-does">What The X Server Actually Does<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-the-x-server-actually-does" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The X server is the program that sits closest to your hardware. It has three main jobs:</p>
+<h3 id="1-output-management">1. Output Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-output-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The X server <strong>can perform rendering itself</strong>. X provides basic drawing primitives:</p>
+<ul>
+<li>Fill rectangles</li>
+<li>Draw lines</li>
+<li>Display text</li>
+<li>Copy rectangular regions</li>
+<li>Composite images</li>
+</ul>
+<p>Applications send commands like “draw a red rectangle from (10,10) to (100,100)” and the X server translates these into actual GPU commands.</p>
+<p>The X server maintains a framebuffer (the actual pixels on screen) and coordinates which pixels belong to which window.</p>
+<h3 id="2-input-handling">2. Input Handling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-input-handling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The X server captures all input from keyboard, mouse, and other devices. It routes input events to the appropriate client based on:</p>
+<ul>
+<li>Which window has focus</li>
+<li>Where the mouse pointer is</li>
+<li>Which client asked to receive which events</li>
+</ul>
+<p>The X server receives input from the kernel (via evdev or similar) and packages it into X11 protocol events.</p>
+<h3 id="3-resource-management">3. Resource Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-resource-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The X server manages shared resources:</p>
+<ul>
+<li><strong>Windows</strong>: Rectangular areas that clients draw into</li>
+<li><strong>Pixmaps</strong>: Off-screen images stored in server memory</li>
+<li><strong>Graphics Contexts (GCs)</strong>: Drawing state (colors, line widths, fonts)</li>
+<li><strong>Colormaps</strong>: Color management (important before true color displays)</li>
+<li><strong>Cursors</strong>: Mouse pointer shapes</li>
+</ul>
+<p>All these objects live in the server. Clients reference them by ID numbers.</p>
+<hr/>
+<h2 id="the-separation-of-concerns">The Separation of Concerns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-separation-of-concerns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s where X11 gets interesting (and complicated): <strong>X deliberately does not specify the user interface</strong>.</p>
+<p>The X11 protocol provides drawing primitives, but it does NOT provide:</p>
+<ul>
+<li>Buttons</li>
+<li>Menus</li>
+<li>Scroll bars</li>
+<li>Window title bars</li>
+<li>Window decorations</li>
+<li>Desktop icons</li>
+</ul>
+<p>All of that is someone else’s job.</p>
+<h3 id="the-three-layer-cake">The Three-Layer Cake<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-three-layer-cake" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Layer 1: X Server</strong></p>
+<ul>
+<li>Manages hardware</li>
+<li>Provides drawing primitives</li>
+<li>Routes input</li>
+</ul>
+<p><strong>Layer 2: Window Manager</strong></p>
+<ul>
+<li>A special X client that controls window appearance</li>
+<li>Draws title bars and borders</li>
+<li>Handles window positioning, resizing, minimizing</li>
+<li>Defines how windows interact</li>
+</ul>
+<p><strong>Layer 3: Widget Toolkit</strong></p>
+<ul>
+<li>Client-side libraries (GTK, Qt, Motif, etc.)</li>
+<li>Implements buttons, menus, scroll bars</li>
+<li>Uses X drawing primitives to render widgets</li>
+</ul>
+<p>This separation means you can mix and match. Run KDE apps on GNOME. Use a tiling window manager with Qt applications. Everything talks the same X11 protocol underneath.</p>
+<p>But it also means <strong>massive complexity</strong>. Three separate programs (server, window manager, compositor) have to coordinate perfectly.</p>
+<hr/>
+<h2 id="windows-and-drawing-how-it-actually-works">Windows and Drawing: How It Actually Works<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#windows-and-drawing-how-it-actually-works" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Let’s trace what happens when you open a terminal window:</p>
+<h3 id="step-1-create-the-window">Step 1: Create the Window<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-1-create-the-window" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The terminal application (X client) sends a CreateWindow request to the X server:</p>
+<ul>
+<li>Position: (100, 100)</li>
+<li>Size: 800x600</li>
+<li>Attributes: Want keyboard input, want mouse events</li>
+</ul>
+<p>The server allocates window resources and assigns it a Window ID (like 0x2400001).</p>
+<h3 id="step-2-map-the-window">Step 2: Map the Window<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2-map-the-window" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Windows start unmapped (invisible). The client sends a MapWindow request to make it visible.</p>
+<p>The window manager intercepts this. It decides where the window actually goes, adds decorations (title bar, borders), and then allows it to be shown.</p>
+<h3 id="step-3-expose-events">Step 3: Expose Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3-expose-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When a window becomes visible, the server sends Expose events to tell the client “these pixels need to be drawn.”</p>
+<p>Why? Because X traditionally <strong>did not keep window contents in off-screen buffers</strong>. When a window was covered and then uncovered, those pixels were lost. The application had to redraw them.</p>
+<h3 id="step-4-drawing">Step 4: Drawing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4-drawing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The client uses X drawing primitives to render content:</p>
+<ul>
+<li><code>XDrawString()</code> to draw text</li>
+<li><code>XFillRectangle()</code> to draw filled rectangles</li>
+<li><code>XCopyArea()</code> to copy pixmap data</li>
+</ul>
+<p>Each drawing call is a protocol request sent to the server. The server executes these drawing commands and updates the framebuffer.</p>
+<h3 id="step-5-input">Step 5: Input<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-5-input" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>User presses a key. The server generates a KeyPress event and sends it to the focused window’s client. The client application receives the event and responds.</p>
+<hr/>
+<h2 id="the-extension-system">The Extension System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-extension-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The X11 protocol was designed to be extensible. The core protocol is minimal, and functionality is added through extensions.</p>
+<p>At the protocol level, every extension can be assigned new request/event/error packet types.</p>
+<p><strong>Important extensions:</strong></p>
+<ul>
+<li><strong>MIT-SHM</strong>: Shared memory for faster image transfer (avoids copying pixels over the socket)</li>
+<li><strong>XRender</strong>: Modern 2D rendering with alpha blending, gradients</li>
+<li><strong>Composite</strong>: Redirect window contents to off-screen buffers (needed for compositing)</li>
+<li><strong>XFixes</strong>: Various fixes and additions (cursor hiding, regions)</li>
+<li><strong>GLX</strong>: OpenGL rendering in X windows</li>
+<li><strong>Xinerama/RandR</strong>: Multi-monitor support</li>
+</ul>
+<p>Applications query which extensions are available and adapt accordingly.</p>
+<hr/>
+<h2 id="the-compositing-revolution">The Compositing Revolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-compositing-revolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Traditional X had no compositing. Windows drew directly to the screen. This was fast but limited:</p>
+<ul>
+<li>No translucency effects</li>
+<li>No live window previews</li>
+<li>Screen tearing during updates</li>
+<li>No smooth animations</li>
+</ul>
+<p>The <strong>Composite extension</strong> changed this. It allows window contents to be redirected to off-screen buffers.</p>
+<p>A <strong>compositing manager</strong> (separate program) reads these buffers, applies effects, and composites them into a final screen image.</p>
+<p>But this is NOT built into X. It’s a separate program that uses X extensions. Common compositing managers include:</p>
+<ul>
+<li><strong>Compiz</strong>: Famous for its 3D desktop cube</li>
+<li><strong>Picom</strong>: Lightweight standalone compositor</li>
+<li><strong>Mutter</strong> (GNOME) and <strong>KWin</strong> (KDE): Integrated compositors</li>
+</ul>
+<p>This layered approach created more complexity and more places for things to go wrong.</p>
+<hr/>
+<h2 id="the-beautiful-complications">The Beautiful Complications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-beautiful-complications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>X11’s design philosophy: <strong>“Provide mechanism, not policy.”</strong></p>
+<p>Translation: X gives you the tools to build a GUI, but doesn’t tell you how to use them. This created incredible flexibility:</p>
+<ul>
+<li>Hundreds of window managers to choose from</li>
+<li>Complete customization of desktop appearance</li>
+<li>Network transparency as a core feature</li>
+<li>True multi-user capabilities</li>
+</ul>
+<p>But it also created problems:</p>
+<p><strong>Complexity</strong>: Three or more programs (X server, window manager, compositor, applications) have to coordinate
+<strong>Performance</strong>: Drawing commands sent over a protocol have overhead
+<strong>Security</strong>: Any X client can spy on any other (read keystrokes, screenshots, inject input)
+<strong>Latency</strong>: Network round trips add delay, even on localhost</p>
+<hr/>
+<h2 id="network-transparency-the-killer-feature-that-killed-performance">Network Transparency: The Killer Feature (That Killed Performance)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-transparency-the-killer-feature-that-killed-performance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>X11 was designed when network transparency mattered. You could run an application on a powerful server and display it on your terminal.</p>
+<p><strong>This still works today:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># On remote machine</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> DISPLAY</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">your-desktop:0</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">xcalc</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Calculator appears on your desktop</span></span></code></pre></figure>
+<p>Or more securely with SSH:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">ssh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> user@remote-machine</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">firefox</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Firefox runs remotely, displays locally</span></span></code></pre></figure>
+<p>Every X drawing command goes over the network. For simple apps, this is fine. For complex apps (web browsers, video players), this is terrible.</p>
+<p>Modern X implementations use Unix domain sockets for local connections and shared memory extensions to avoid copying pixels, but the protocol structure remains.</p>
+<p><strong>The tradeoff:</strong> Network transparency added complexity that penalized the common case (local applications) to support the rare case (remote applications).</p>
+<hr/>
+<h2 id="the-security-disaster">The Security Disaster<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-security-disaster" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>X’s design lacks sandboxing, so any application can access and manipulate keyboard, mouse, display and clipboard content.</p>
+<p>Practically, this means:</p>
+<ul>
+<li>Any X client can read your keystrokes (yes, including passwords)</li>
+<li>Any X client can take screenshots of other windows</li>
+<li>Any X client can inject fake keyboard/mouse events into other windows</li>
+<li>Any X client can move/resize other windows</li>
+</ul>
+<p>This is a fundamental design flaw. X was built in a more trusting era where all programs on a machine belonged to the same user and were assumed to be cooperative.</p>
+<p>Modern systems try to mitigate this:</p>
+<ul>
+<li>Run X server without root privileges</li>
+<li>Use SSH tunneling for remote connections</li>
+<li>Sandboxing extensions (XACE) that few apps use</li>
+<li>Just accept the risk</li>
+</ul>
+<hr/>
+<h2 id="why-x11-lasted-so-long">Why X11 Lasted So Long<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-x11-lasted-so-long" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Despite its problems, X11 ruled Unix graphics from 1987 to approximately 2015 (and still runs on many systems today). Why?</p>
+<p><strong>1. It worked well enough</strong>
+For typical desktop use, X11 was fine. The problems were more theoretical than practical for most users.</p>
+<p><strong>2. Massive ecosystem</strong>
+Thousands of applications written for X11. Decades of window managers, toolkits, and extensions.</p>
+<p><strong>3. No viable alternative</strong>
+Attempts to replace X failed repeatedly. The network was too entrenched.</p>
+<p><strong>4. Continuous improvement</strong>
+X11 adapted. Compositing extensions, GPU acceleration, better font rendering. The protocol stayed the same, but implementations improved.</p>
+<p><strong>5. “Good enough” is hard to beat</strong>
+Replacing working software that everyone depends on is extraordinarily difficult.</p>
+<hr/>
+<h2 id="the-big-picture">The Big Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When you run X11:</p>
+<ol>
+<li>The <strong>X server</strong> starts (Xorg, XFree86, etc.)</li>
+<li>It talks to the <a href="../Kernel" class="internal" data-slug="Kernel">Kernel</a> via DRM/KMS to control display hardware</li>
+<li>It listens on a Unix socket (<code>:0</code>) and optionally TCP port 6000</li>
+<li>A <strong>window manager</strong> connects as a special client</li>
+<li>The <strong>compositor</strong> (if using one) connects via Composite extension</li>
+<li><strong>Applications</strong> connect as clients</li>
+<li>Applications send drawing commands</li>
+<li>The server executes them and updates the screen</li>
+<li>Input events flow back to applications</li>
+</ol>
+<p>Everything goes through the server. It’s the central hub, but unlike Wayland’s compositor, it’s separate from the window manager and has no built-in compositing.</p>
+<p><strong>This is X11: a network-transparent, endlessly flexible, beautifully complicated display system designed for a world of terminals and timesharing that somehow survived into the age of personal computers.</strong></p>
+<hr/>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Now you understand what X11 is and why it was designed this way. But why did we move away from it? What problems proved unfixable?</p>
+<p>Next up: <strong>Wayland vs X11</strong> where we’ll directly compare the two architectures and understand what Wayland fixed, what it sacrificed, and why the transition took so long.</p>
+<p><strong>Related concepts:</strong></p>
+<ul>
+<li><a href="../Socket" class="internal" data-slug="Socket">Socket</a> - X11 uses both Unix domain sockets and TCP sockets</li>
+<li><a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> - Network transparency uses TCP/IP</li>
+<li><a href="../IPC" class="internal" data-slug="IPC">IPC</a> - The X11 protocol is fundamentally IPC</li>
+<li><a href="../Process" class="internal" data-slug="Process">Process</a> - X server, window manager, and apps are separate processes</li>
+<li><a href="../Fundamentals/Wayland" class="internal" data-slug="Fundamentals/Wayland">Wayland</a> - The successor to X11</li>
+</ul>
+<hr/>
+<h2 id="sources--verification">Sources &amp; Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources--verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Verified during writing:</strong></p>
+<ul>
+<li>X11 protocol architecture: <a href="https://en.wikipedia.org/wiki/X_Window_System_protocols_and_architecture" class="external">Wikipedia - X Window System protocols and architecture<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Client-server model and network transparency: <a href="https://en.wikipedia.org/wiki/X_Window_System" class="external">Wikipedia - X Window System<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Drawing primitives and rendering: <a href="https://x.org/wiki/guide/client-ecosystem/" class="external">X.Org Foundation - Client Ecosystem<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Extension system: <a href="https://en.wikipedia.org/wiki/X_Window_System_core_protocol" class="external">Wikipedia - X Window System core protocol<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Window manager separation: <a href="https://en.wikipedia.org/wiki/X_window_manager" class="external">Wikipedia - X window manager<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Compositing architecture: <a href="https://en.wikipedia.org/wiki/Compositing_window_manager" class="external">Wikipedia - Compositing window manager<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>Last fact-check</strong>: 2025-11-17</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-56" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-x11" data-for="wtf-is-x11">WTF is X11?</a></li><li class="depth-1"><a href="#the-multi-terminal-university-problem" data-for="the-multi-terminal-university-problem">The Multi-Terminal University Problem</a></li><li class="depth-1"><a href="#what-x11-actually-is" data-for="what-x11-actually-is">What X11 Actually Is</a></li><li class="depth-1"><a href="#the-core-architecture-network-transparent-by-design" data-for="the-core-architecture-network-transparent-by-design">The Core Architecture: Network Transparent by Design</a></li><li class="depth-2"><a href="#the-communication-model" data-for="the-communication-model">The Communication Model</a></li><li class="depth-2"><a href="#the-display-variable" data-for="the-display-variable">The Display Variable</a></li><li class="depth-1"><a href="#what-the-x-server-actually-does" data-for="what-the-x-server-actually-does">What The X Server Actually Does</a></li><li class="depth-2"><a href="#1-output-management" data-for="1-output-management">1. Output Management</a></li><li class="depth-2"><a href="#2-input-handling" data-for="2-input-handling">2. Input Handling</a></li><li class="depth-2"><a href="#3-resource-management" data-for="3-resource-management">3. Resource Management</a></li><li class="depth-1"><a href="#the-separation-of-concerns" data-for="the-separation-of-concerns">The Separation of Concerns</a></li><li class="depth-2"><a href="#the-three-layer-cake" data-for="the-three-layer-cake">The Three-Layer Cake</a></li><li class="depth-1"><a href="#windows-and-drawing-how-it-actually-works" data-for="windows-and-drawing-how-it-actually-works">Windows and Drawing: How It Actually Works</a></li><li class="depth-2"><a href="#step-1-create-the-window" data-for="step-1-create-the-window">Step 1: Create the Window</a></li><li class="depth-2"><a href="#step-2-map-the-window" data-for="step-2-map-the-window">Step 2: Map the Window</a></li><li class="depth-2"><a href="#step-3-expose-events" data-for="step-3-expose-events">Step 3: Expose Events</a></li><li class="depth-2"><a href="#step-4-drawing" data-for="step-4-drawing">Step 4: Drawing</a></li><li class="depth-2"><a href="#step-5-input" data-for="step-5-input">Step 5: Input</a></li><li class="depth-1"><a href="#the-extension-system" data-for="the-extension-system">The Extension System</a></li><li class="depth-1"><a href="#the-compositing-revolution" data-for="the-compositing-revolution">The Compositing Revolution</a></li><li class="depth-1"><a href="#the-beautiful-complications" data-for="the-beautiful-complications">The Beautiful Complications</a></li><li class="depth-1"><a href="#network-transparency-the-killer-feature-that-killed-performance" data-for="network-transparency-the-killer-feature-that-killed-performance">Network Transparency: The Killer Feature (That Killed Performance)</a></li><li class="depth-1"><a href="#the-security-disaster" data-for="the-security-disaster">The Security Disaster</a></li><li class="depth-1"><a href="#why-x11-lasted-so-long" data-for="why-x11-lasted-so-long">Why X11 Lasted So Long</a></li><li class="depth-1"><a href="#the-big-picture" data-for="the-big-picture">The Big Picture</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#sources--verification" data-for="sources--verification">Sources &amp; Verification</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2025</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

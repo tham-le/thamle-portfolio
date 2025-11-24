@@ -10,61 +10,61 @@
     <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
     <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
     <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:12:14 GMT</pubDate>
+    <pubDate>Mon, 24 Nov 2025 14:23:31 GMT</pubDate>
   </item><item>
-    <title>android_rdp_keyboard</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/android_rdp_keyboard</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/android_rdp_keyboard</guid>
-    <description><![CDATA[ Capturing Virtual Keyboard Input for Remote Desktop on Android The Problem You’re building a remote desktop client (RDP, VNC, or similar) on Android. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Roadmaps Overview</title>
+    <link>https://notes.thamle.live/Roadmaps/Roadmaps-Overview</link>
+    <guid>https://notes.thamle.live/Roadmaps/Roadmaps-Overview</guid>
+    <description><![CDATA[ 00-Roadmaps Learning paths and progress tracking for systems development. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>encoding_protocol_design</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/encoding_protocol_design</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/encoding_protocol_design</guid>
-    <description><![CDATA[ Designing Flexible Character Encoding for Remote Desktop What Android Actually Uses Java (and therefore Android/Kotlin) uses UTF-16 as the internal representation for String objects in memory. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>The-Complete-Systems-Developer-Roadmap</title>
+    <link>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</link>
+    <guid>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</guid>
+    <description><![CDATA[ Phase 1: The Foundations - “How a Computer Actually Works” Goal: Build a solid mental model of the machine. No complex code yet. Pure concepts. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>virtual-keycode</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/virtual-keycode</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/virtual-keycode</guid>
-    <description><![CDATA[ The user is asking about the fundamental difference between virtual keycodes and Unicode characters. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Systems Overview</title>
+    <link>https://notes.thamle.live/Systems/Systems-Overview</link>
+    <guid>https://notes.thamle.live/Systems/Systems-Overview</guid>
+    <description><![CDATA[ 03-Systems Operating systems and systems programming concepts. Contents Process vs. Thread vs. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>why-utf-32</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/why-utf-32</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/why-utf-32</guid>
-    <description><![CDATA[ Excellent Point: Why Not UTF-8 Everywhere? You’re absolutely right to challenge this design choice. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Transport Layer</title>
+    <link>https://notes.thamle.live/Networking/Transport-Layer</link>
+    <guid>https://notes.thamle.live/Networking/Transport-Layer</guid>
+    <description><![CDATA[ WTF is the Transport Layer? It’s the difference between “I don’t care if you got my message” and “I need to know you got every single byte” The Delivery Service Analogy You need to send something to a friend. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>Winit-Key-Reference</title>
-    <link>https://notes.thamle.live/Work-Related/Utilities/Winit-Key-Reference</link>
-    <guid>https://notes.thamle.live/Work-Related/Utilities/Winit-Key-Reference</guid>
-    <description><![CDATA[ Excellent. That is the most important piece of information you could have given me. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Transport-Protocols</title>
+    <link>https://notes.thamle.live/Networking/Transport-Protocols</link>
+    <guid>https://notes.thamle.live/Networking/Transport-Protocols</guid>
+    <description><![CDATA[ WTF are Transport Protocols? It’s the menu of options for getting your data from point A to point B, with different tradeoffs The Shipping Company Analogy You need to send a package across the country. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>Work-Related Overview</title>
-    <link>https://notes.thamle.live/Work-Related/Work-Related-Overview</link>
-    <guid>https://notes.thamle.live/Work-Related/Work-Related-Overview</guid>
-    <description><![CDATA[ libkynput Project - Development Notes This folder contains technical notes and implementation guides for the libkynput project - a Rust library for cross-platform keyboard and mouse input capture and injection, used in remote desktop and game streaming applications. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Network-Layer</title>
+    <link>https://notes.thamle.live/Networking/Network-Layer</link>
+    <guid>https://notes.thamle.live/Networking/Network-Layer</guid>
+    <description><![CDATA[ Network-Layer It’s the post office of the internet The Postal Service Analogy You write a letter to your friend across the country. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>Unicode-Goal</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Goal</guid>
-    <description><![CDATA[ Unicode Input Support Issue: Add support for “unicode” input Created: 3 days ago by Simon Latapie Status: Open Android Virtual Keyboard ↓ TextWatcher (afterTextChanged) ↓ KyberPlayerView.sendUnicodeInput() ↓ LibVLC.onUnicodeInput() ↓ JNI: nativeOnUnicodeInput() ↓ libkynput_unicode_to_packet() [Rust ... ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Networking Overview</title>
+    <link>https://notes.thamle.live/Networking/Networking-Overview</link>
+    <guid>https://notes.thamle.live/Networking/Networking-Overview</guid>
+    <description><![CDATA[ 05-Networking Network protocols, communication patterns, and internet fundamentals. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>Unicode-Implementation-Across-All-Layers</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Across-All-Layers</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Across-All-Layers</guid>
-    <description><![CDATA[ Overview Here’s every function/file you need to create or modify to add Unicode support to libkynput, organized by layer from bottom (protocol) to top (UI). ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Ethernet</title>
+    <link>https://notes.thamle.live/Networking/Ethernet</link>
+    <guid>https://notes.thamle.live/Networking/Ethernet</guid>
+    <description><![CDATA[ Ethernet It’s the reason your computer can talk to your router without screaming into the void The Office Memo Analogy Imagine an office where everyone sits in cubicles. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item><item>
-    <title>Unicode-Implementation-Guide</title>
-    <link>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Guide</link>
-    <guid>https://notes.thamle.live/Work-Related/Unicode-Input/Unicode-Implementation-Guide</guid>
-    <description><![CDATA[  Based on the existing keyboard implementation, here’s how to add Unicode input support while maintaining the exact same coding style and architecture. ]]></description>
-    <pubDate>Fri, 07 Nov 2025 14:11:10 GMT</pubDate>
+    <title>Languages</title>
+    <link>https://notes.thamle.live/Languages/Languages</link>
+    <guid>https://notes.thamle.live/Languages/Languages</guid>
+    <description><![CDATA[ 02-Languages Programming language-specific concepts and comparisons. ]]></description>
+    <pubDate>Mon, 24 Nov 2025 14:22:25 GMT</pubDate>
   </item>
     </channel>
   </rss>
