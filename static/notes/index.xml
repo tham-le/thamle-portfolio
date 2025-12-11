@@ -10,61 +10,61 @@
     <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
     <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
     <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:48:19 GMT</pubDate>
+    <pubDate>Thu, 11 Dec 2025 18:09:30 GMT</pubDate>
   </item><item>
-    <title>Roadmaps Overview</title>
-    <link>https://notes.thamle.live/Roadmaps/Roadmaps-Overview</link>
-    <guid>https://notes.thamle.live/Roadmaps/Roadmaps-Overview</guid>
-    <description><![CDATA[ 00-Roadmaps Learning paths and progress tracking for systems development. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is a Windows Package Installer? EXE vs MSI</title>
+    <link>https://notes.thamle.live/Fundamentals/Windows_Package_Installer</link>
+    <guid>https://notes.thamle.live/Fundamentals/Windows_Package_Installer</guid>
+    <description><![CDATA[ Understanding the difference between EXE and MSI installers, from PE format basics to the Windows Installer database ]]></description>
+    <pubDate>Thu, 11 Dec 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>The-Complete-Systems-Developer-Roadmap</title>
-    <link>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</link>
-    <guid>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</guid>
-    <description><![CDATA[ Phase 1: The Foundations - “How a Computer Actually Works” Goal: Build a solid mental model of the machine. No complex code yet. Pure concepts. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is Device Topology on Linux?</title>
+    <link>https://notes.thamle.live/Architecture/Device-Topology-on-Linux</link>
+    <guid>https://notes.thamle.live/Architecture/Device-Topology-on-Linux</guid>
+    <description><![CDATA[ Why your computer isn't a list of devices, but a complex family tree of buses, bridges, and controllers. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Systems Overview</title>
-    <link>https://notes.thamle.live/Systems/Systems-Overview</link>
-    <guid>https://notes.thamle.live/Systems/Systems-Overview</guid>
-    <description><![CDATA[ 03-Systems Operating systems and systems programming concepts. Contents Process vs. Thread vs. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is the Linux Input Core?</title>
+    <link>https://notes.thamle.live/Architecture/Linux-Input-Core</link>
+    <guid>https://notes.thamle.live/Architecture/Linux-Input-Core</guid>
+    <description><![CDATA[ How the Linux kernel turns chaos into order by forcing every mouse, keyboard, and joystick to speak the same language. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Transport Layer</title>
-    <link>https://notes.thamle.live/Networking/Transport-Layer</link>
-    <guid>https://notes.thamle.live/Networking/Transport-Layer</guid>
-    <description><![CDATA[ WTF is the Transport Layer? It’s the difference between “I don’t care if you got my message” and “I need to know you got every single byte” The Delivery Service Analogy You need to send something to a friend. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF are Scancodes, Keycodes, and Virtual Keys?</title>
+    <link>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</link>
+    <guid>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</guid>
+    <description><![CDATA[ Tracing the chaotic journey of a keystroke from hardware voltage to ASCII character. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Transport-Protocols</title>
-    <link>https://notes.thamle.live/Networking/Transport-Protocols</link>
-    <guid>https://notes.thamle.live/Networking/Transport-Protocols</guid>
-    <description><![CDATA[ WTF are Transport Protocols? It’s the menu of options for getting your data from point A to point B, with different tradeoffs The Shipping Company Analogy You need to send a package across the country. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is evdev?</title>
+    <link>https://notes.thamle.live/Architecture/evdev</link>
+    <guid>https://notes.thamle.live/Architecture/evdev</guid>
+    <description><![CDATA[ The universal protocol that lets your code listen to everything from a mouse to a PS5 controller without going insane. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Ethernet</title>
-    <link>https://notes.thamle.live/Networking/Ethernet</link>
-    <guid>https://notes.thamle.live/Networking/Ethernet</guid>
-    <description><![CDATA[ Ethernet It’s the reason your computer can talk to your router without screaming into the void The Office Memo Analogy Imagine an office where everyone sits in cubicles. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is hwdb?</title>
+    <link>https://notes.thamle.live/Architecture/hwdb</link>
+    <guid>https://notes.thamle.live/Architecture/hwdb</guid>
+    <description><![CDATA[ The giant database of overrides that fixes your hardware's broken promises. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Network-Layer</title>
-    <link>https://notes.thamle.live/Networking/Network-Layer</link>
-    <guid>https://notes.thamle.live/Networking/Network-Layer</guid>
-    <description><![CDATA[ Network-Layer It’s the post office of the internet The Postal Service Analogy You write a letter to your friend across the country. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is sysfs?</title>
+    <link>https://notes.thamle.live/Architecture/sysfs</link>
+    <guid>https://notes.thamle.live/Architecture/sysfs</guid>
+    <description><![CDATA[ The virtual filesystem that turns Kernel C structs into files you can read and write. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Networking Overview</title>
-    <link>https://notes.thamle.live/Networking/Networking-Overview</link>
-    <guid>https://notes.thamle.live/Networking/Networking-Overview</guid>
-    <description><![CDATA[ 05-Networking Network protocols, communication patterns, and internet fundamentals. ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF is udev?</title>
+    <link>https://notes.thamle.live/Architecture/udev</link>
+    <guid>https://notes.thamle.live/Architecture/udev</guid>
+    <description><![CDATA[ The userspace device manager that decides what happens when you plug something in. ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Day_1-Installation</title>
-    <link>https://notes.thamle.live/Languages/Rust-Learning/Day_1-Installation</link>
-    <guid>https://notes.thamle.live/Languages/Rust-Learning/Day_1-Installation</guid>
-    <description><![CDATA[ Linux: curl --proto &#039;=https&#039; --tlsv1.2 sh.rustup.rs -sSf | sh restart shell then Rust is intalled: rustc --version rustc 1.89.0 (29483883e 2025-08-04) for doc: rustup doc this shit wont not work if you have your browser installed with snap, so, # Move the rustup data to a visible directory... ]]></description>
-    <pubDate>Thu, 11 Dec 2025 17:47:18 GMT</pubDate>
+    <title>WTF are Safe IT Practices?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Safe-IT-Practices</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Safe-IT-Practices</guid>
+    <description><![CDATA[ Comprehensive defense strategies against supply chain attacks, credential theft, and modern threats, learned from real incidents ]]></description>
+    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item>
     </channel>
   </rss>
