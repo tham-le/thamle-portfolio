@@ -6,11 +6,17 @@
       <description>Last 10 notes on Tham Le&#039;s Notes</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>[Book Title]</title>
-    <link>https://notes.thamle.live/Book-Notes/_Book-Template</link>
-    <guid>https://notes.thamle.live/Book-Notes/_Book-Template</guid>
-    <description><![CDATA[ Study notes for [Book Title] by [Author] ]]></description>
-    <pubDate>Fri, 12 Dec 2025 12:41:07 GMT</pubDate>
+    <title>WTF is a Media Container vs a Codec?</title>
+    <link>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</link>
+    <guid>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</guid>
+    <description><![CDATA[ Why your MP4 file is actually a box holding compressed video and audio streams, not a video itself ]]></description>
+    <pubDate>Mon, 15 Dec 2025 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>Welcome to My Notes</title>
+    <link>https://notes.thamle.live/</link>
+    <guid>https://notes.thamle.live/</guid>
+    <description><![CDATA[ From licking rocks to understanding malloc ]]></description>
+    <pubDate>Mon, 15 Dec 2025 00:00:00 GMT</pubDate>
   </item><item>
     <title>WTF is a Windows Package Installer? EXE vs MSI</title>
     <link>https://notes.thamle.live/Fundamentals/Windows_Package_Installer</link>
@@ -58,12 +64,6 @@
     <link>https://notes.thamle.live/Architecture/udev</link>
     <guid>https://notes.thamle.live/Architecture/udev</guid>
     <description><![CDATA[ The userspace device manager that decides what happens when you plug something in. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF are Safe IT Practices?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Safe-IT-Practices</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Safe-IT-Practices</guid>
-    <description><![CDATA[ Comprehensive defense strategies against supply chain attacks, credential theft, and modern threats, learned from real incidents ]]></description>
     <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
   </item>
     </channel>

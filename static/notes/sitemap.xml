@@ -11,6 +11,9 @@
     <loc>https://notes.thamle.live/Architecture/Linux-Input-Core</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</loc>
+    <lastmod>2025-12-15T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
@@ -25,15 +28,6 @@
   </url><url>
     <loc>https://notes.thamle.live/Architecture/udev</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Book-Notes/CSAPP-Notes</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Book-Notes/The-Rust-Book-Notes</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Book-Notes/_Book-Template</loc>
-    <lastmod>2025-12-12T12:41:07.595Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Callback-Hell</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
@@ -74,17 +68,11 @@
     <loc>https://notes.thamle.live/DSA/Big-O</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
   </url><url>
-    <loc>https://notes.thamle.live/DSA/Common-Interview-Problems</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
-  </url><url>
     <loc>https://notes.thamle.live/DSA/DSA-Patterns</loc>
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/DSA-Roadmap</loc>
     <lastmod>2025-11-06T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/DSA/Data-Structures-Fundamentals</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Dynamic-Programming</loc>
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
@@ -324,5 +312,5 @@
     <lastmod>2025-11-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-12-15T00:00:00.000Z</lastmod>
   </url></urlset>
