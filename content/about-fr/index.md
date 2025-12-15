@@ -1,94 +1,72 @@
 ---
-title: "À propos de moi"
-description: "Le parcours d'une ingénieure, de la modélisation des océans à la programmation système bas-niveau."
+title: "À propos"
+description: "Parcours d'une ingénieure, de la modélisation océanique aux systèmes bas niveau."
 ---
 
 <div class="language-toggle">
-    <a href="/about/" class="language-btn">🇬🇧 Read in English</a>
+    <a href="/about/" class="language-btn">🇬🇧 Yes, I speak English</a>
 </div>
 
-Je suis une ingénieure logiciel basée à Paris, d'origine vietnamienne et avec une formation en sciences marines computationnelles. Je parle anglais, français et vietnamien, et je suis passionnée par la création et la compréhension des systèmes complexes. Vous pouvez trouver mon CV complet [ici](/thamle_resume.pdf), voir mon code sur [GitHub](https://github.com/tham-le), ou me contacter à [thamle.work@gmail.com](mailto:thamle.work@gmail.com). En dehors du travail, j'aime affûter mes compétences en cybersécurité lors de compétitions CTF  et créer des applications à impact positif lors de hackathons.
+Je suis ingénieure logiciel basée à Paris, avec des racines vietnamiennes et un parcours qui a commencé par l'océanographie, pas l'informatique.
+
+J'ai découvert la programmation à travers la modélisation climatique : simulations FORTRAN des courants océaniques, scripts Python traitant des décennies de données de température, longues heures passées à analyser la distribution du mercure en Méditerranée. J'ai travaillé avec des chercheurs contribuant aux rapports du GIEC. Ce travail m'a appris à penser en systèmes, à tracer les causes et effets à travers des couches de complexité.
+
+Finalement, j'ai voulu comprendre les outils eux-mêmes. Cela m'a menée à [42 Paris](https://42.fr/), où j'ai appris le C et le C++ en construisant : serveurs réseau, moteurs graphiques, services conteneurisés. Pas de cours magistraux, pas de manuels. Juste des problèmes à résoudre.
+
+Aujourd'hui, je travaille sur la programmation système, la sécurité et le développement bas niveau. Je maintiens également une série de notes techniques appelée [WTF is...](/notes) où j'écris les explications que j'aurais aimé avoir quand j'apprenais.
+
+Vous pouvez consulter mon CV complet [ici](/thamle_resume.pdf), mon code sur [GitHub](https://github.com/tham-le), ou me contacter à [thamle.work@gmail.com](mailto:thamle.work@gmail.com).
 
 ---
 
-## Mon Parcours : De l'Océan au Code
+## Expérience
 
-Mon parcours dans la tech n'a pas commencé avec un ordinateur, mais avec l'océan. En tant qu'étudiante scientifique à l'Université d'Aix-Marseille puis au LSCE-CEA, je me suis spécialisée en océanographie physique et chimique, notamment dans la modélisation de la distribution du mercure dans les écosystèmes marins. J'utilisais des jeux de données climatiques complexes et des modèles mathématiques pour comprendre les systèmes à grande échelle et l'évolution du changement climatique.
+### Ingénieure R&D chez Kyber
+*Octobre 2025 – Présent*
 
-C'est là que j'ai eu le déclic. J'ai réalisé que j'étais toujours attirée par les cours qui impliquaient de la programmation et que je voulais construire les outils moi-même. C'est cette curiosité pour la mécanique sous-jacente qui m'a conduite vers le génie logiciel.
+Développement d'un SDK de contrôle à distance haute performance en Rust pour applications de streaming. Je travaille sur le streaming d'entrées (souris, clavier, manette) avec gestion de la latence, le support multiplateforme (Windows, Linux, macOS, Android, Web) et la conteneurisation Docker.
 
-J'ai trouvé ma place à **42 Paris**, un environnement d'apprentissage intense et sans cours, où la seule façon d'apprendre est de construire, de casser et de collaborer. C'est là que j'ai pu plonger en profondeur dans la programmation système en C/C++, les algorithmes et la résolution de problèmes fondamentaux en construisant des projets comme des serveurs réseau, des moteurs graphiques et des services web conteneurisés en partant de zéro.
-
-Aujourd'hui, je poursuis ce chemin en tant qu'ingénieure. Chaque projet est une nouvelle occasion de comprendre un système complexe, que ce soit en optimisant un rendu graphique, en sécurisant une application web ou en écrivant du code C++ pour protéger les données des utilisateurs.
-
----
-
-## Expérience Professionnelle
-
-### **Ingénieure Développement C++ chez Snowpack**
-
+### Ingénieure Développement C++ chez Snowpack
 *Août 2024 – Juillet 2025*
 
-> [Snowpack](https://snowpack.eu/) développe une solution innovante pour protéger les données des utilisateurs avec un VIPN (Virtual & Invisible Private Network), transformant les données en "flocons de neige" pour rendre les utilisateurs invisibles en ligne.
+[Snowpack](https://snowpack.eu/) développe des solutions VPN axées sur la protection de la vie privée. J'ai porté leur SDK C++ vers les navigateurs via WebAssembly, développé des suites de tests multiplateformes (Android, macOS, ARM64) et implémenté des fonctionnalités de sécurité incluant la gestion MFA et la rotation de logs sécurisée.
 
-**Missions :**
-
-* Piloté le portage du SDK C++ de Snowpack pour qu'il s'exécute dans les navigateurs via **WebAssembly (Wasm)**, en créant avec succès une preuve de concept qui a validé le déploiement de fonctionnalités sur plusieurs plateformes.
-* Assuré la qualité du logiciel en développant des suites de tests et en effectuant des tests rigoureux sur diverses plateformes (Android, macOS, ARM64), identifiant des bugs critiques pour accélérer leur résolution.
-* Amélioré l'ergonomie et la sécurité de l'interface en ligne de commande (CLI) en implémentant des fonctionnalités telles qu'une gestion MFA robuste, le listage des services utilisateur, et une stratégie de rotation des logs pour une gestion mémoire plus sûre.
-* Collaboré avec des équipes pluridisciplinaires pour développer et spécifier des fonctionnalités de suivi de la consommation de données utilisateur sur les applications C++, Android et iOS.
-
-### **Stagiaire en Recherche au LSCE-CEA**
-
+### Stagiaire Recherche au LSCE-CNRS
 *Février 2021 – Août 2021*
 
-> Le LSCE est un laboratoire de recherche de premier plan axé sur les sciences du climat et de l'environnement.
-
-**Missions :**
-
-* Contribué à la recherche climatique mondiale en développant et en ajoutant de nouveaux modules en FORTRAN à des modèles climatiques de GIEC, utilisés pour analyser la distribution du mercure dans les écosystèmes marins.
-* Traité de très grands jeux de données en utilisant Python, une expérience qui m'a enseigné l'importance cruciale d'un code propre et de résultats reproductibles dans la recherche scientifique.
+Au sein d'un des principaux laboratoires français de recherche climatique, j'ai développé des modules FORTRAN pour des modèles climatiques de classe GIEC analysant la distribution du mercure dans les écosystèmes marins. J'ai traité des données à grande échelle avec Python, en mettant l'accent sur la reproductibilité et la qualité du code.
 
 ---
 
 ## Compétences Techniques
 
-* **Programmation Système & Backend :** C, C++, Python (FastAPI, Django), API REST
-* **Web & Frontend :** JavaScript, React
-* **Systèmes & DevOps :** Linux, Docker, Git, CI/CD
-* **Cybersécurité :** Pratiques de codage sécurisé, analyse de vulnérabilités
+**Systèmes & Backend :** C, C++, Rust, Python  
+**Plateformes :** Linux, Windows, développement multiplateforme  
+**Infrastructure :** Docker, Git, CMake, CI/CD  
+**Réseau :** WebSockets, TCP/IP  
+**Sécurité :** Pratiques de code sécurisé, analyse de vulnérabilités
 
 ---
 
 ## Formation
 
-### **42 Paris - Génie Logiciel**
+### 42 Paris
+*2022 – 2026 (prévu)*
 
-*2022 – 2025*
+Programme d'ingénierie logicielle par projets. Classée dans le top 10 à la piscine (500+ candidats), top 20 du tronc commun (800+ étudiants). Spécialisation en C/C++, programmation système et algorithmique. Tutrice en programmation C.
 
-* Classée dans le Top 10 lors de la "piscine" de sélection (parmi plus de 500 candidats) et terminé le tronc commun dans le Top 20 (sur plus de 800).
-* Cursus basé sur des projets, axé sur la programmation système en C/C++, les algorithmes.
-* Apprentissage par la pratique, le débogage et la collaboration. Pas de cours formels.
-* Agit en tant que tutrice en programmation C.
-
-### **Université d'Aix-Marseille - M.Sc, Sciences Marines**
-
+### Aix-Marseille Université, Master Sciences de la Mer
 *2019 – 2021*
 
-* Spécialisation en océanographie computationnelle et modélisation mathématique.
-* Utilisation de Python, R, et Fortran pour l'analyse de données.
+Spécialisation en océanographie computationnelle et modélisation mathématique. Utilisation de Python, R et FORTRAN pour l'analyse de données et la simulation.
 
 ---
 
-## Autres Intérêts
+## En Dehors du Travail
 
-### **Compétitions CTF**
+Je participe à des compétitions CTF pour apprendre la sécurité appliquée : exploitation web, cryptographie, analyse binaire. Mes writeups sont disponibles [ici](https://github.com/tham-le/CTF-Writeups).
 
-Je participe à des CTF pour apprendre des concepts de sécurité appliqués de manière pratique. C'est une méthode efficace pour comprendre la sécurité web, la cryptographie et l'exploitation de binaires. Je maintiens un dépôt de mes *writeups* [ici](https://github.com/tham-le/CTF-Writeups).
-
-### **Hackathons**
-
-J'aime participer à des hackathons pour construire rapidement des solutions à des problèmes du monde réel. J'ai travaillé sur des projets liés à la technologie de la santé (DigHacktion) et à la santé des femmes (InnovHer), et j'ai participé à des événements axés sur le matériel comme le Google Hardware Hackathon.
+J'apprécie également les hackathons pour la contrainte de construire quelque chose de concret en 48 heures. Projets passés : prototypes health tech (DigHacktion, InnovHer) et défis hardware (Google Hardware Hackathon).
 
 ---
 

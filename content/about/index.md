@@ -7,68 +7,66 @@ description: "An engineer's journey, from modeling oceans to building low-level 
     <a href="/about-fr/" class="language-btn">🇫🇷 Oui, je parle français</a>
 </div>
 
-I'm a software engineer based in Paris, with roots in Vietnam and a background in computational marine science. I speak English, French, and Vietnamese, and I'm passionate about building and understanding complex systems. You can find my full resume [here](/thamle_resume.pdf), see my code on [GitHub](https://github.com/tham-le), or contact me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com). Outside of work, I enjoy sharpening my security skills in CTF competitions and building impactful applications at hackathons.
+I'm a software engineer based in Paris, with roots in Vietnam and a background that started in oceanography, not computer science.
 
----
+I came to programming through climate modeling: FORTRAN simulations of ocean currents, Python scripts processing decades of temperature data, long hours staring at plots of mercury distribution in the Mediterranean. I worked with researchers contributing to IPCC reports. That work taught me to think in systems, to trace cause and effect through layers of complexity.
 
-## My Journey: From Ocean Science to Code
+Eventually, I wanted to understand the tools themselves. That led me to [42 Paris](https://42.fr/), where I learned C and C++ by building things: network servers, graphics engines, containerized services. No lectures, no textbooks. Just problems to solve.
 
-My path into technology started with computational oceanography at Aix-Marseille University and LSCE-CEA, where I modeled mercury distribution in marine ecosystems using complex climate datasets. That work sparked my curiosity for building the tools themselves, leading me to software engineering.
+Today I work on systems programming, security, and low-level development. I also maintain a set of technical notes called [WTF is...](notes.thamle.live) where I write the explanations I wish I had when I was learning.
 
-At **42 Paris**, I dove deep into C/C++ systems programming through hands-on projects—network servers, graphics engines, and containerized services. Today, I apply that same systems-thinking approach to solve technical challenges, whether optimizing performance, securing applications, or building robust infrastructure.
+You can find my full resume [here](/thamle_resume.pdf), my code on [GitHub](https://github.com/tham-le), or reach me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com).
 
 ---
 
 ## Experience
 
-### **C++ Development Engineer at Snowpack**
+### R&D Engineer at Kyber
+*October 2025 – Present*
+
+Building a high-performance remote control SDK in Rust for streaming applications. I work on input streaming (mouse, keyboard, gamepad) with latency management, cross-platform support (Windows, Linux, macOS, Android, Web), and Docker containerization.
+
+### C++ Development Engineer at Snowpack
 *August 2024 – July 2025*
 
-> [Snowpack](https://snowpack.eu/) develops privacy-focused VPN solutions to protect user data online.
+[Snowpack](https://snowpack.eu/) builds privacy-focused VPN solutions. I ported their C++ SDK to browsers using WebAssembly, developed cross-platform test suites (Android, macOS, ARM64), and implemented security features including MFA handling and memory-safe log rotation.
 
-Ported C++ SDK to browsers using **WebAssembly**, developed cross-platform test suites (Android, macOS, ARM64), and implemented security features including MFA handling and memory-safe log rotation. Collaborated on data consumption tracking across C++, Android, and iOS platforms.
-
-### **Research Intern at LSCE-CNRS**
+### Research Intern at LSCE-CNRS
 *February 2021 – August 2021*
 
-> Leading climate and environmental sciences research laboratory.
-
-Developed FORTRAN modules for IPCC-class climate models to analyze mercury distribution in marine ecosystems. Processed large-scale climate datasets using Python, emphasizing clean code and reproducibility.
+At one of France's leading climate research laboratories, I developed FORTRAN modules for IPCC-class climate models analyzing mercury distribution in marine ecosystems. I processed large-scale datasets with Python, focusing on reproducibility and clean code.
 
 ---
 
 ## Technical Skills
 
-* **Systems & Backend Programming:** C, C++, Python (FastAPI, Django), REST APIs
-* **Web & Frontend:** JavaScript, React
-* **Systems & DevOps:** Linux, Docker, Git, CI/CD
-* **Cybersecurity:** Secure coding practices, vulnerability analysis
+**Systems & Backend:** C, C++, Rust, Python  
+**Platforms:** Linux, Windows, cross-platform development  
+**Infrastructure:** Docker, Git, CMake, CI/CD  
+**Networking:** WebSockets, TCP/IP  
+**Security:** Secure coding practices, vulnerability analysis
 
 ---
 
 ## Education
 
-### **42 Paris - Software Engineering**
+### 42 Paris
+*2022 – 2026 (expected)*
 
-*2022 – 2025*
+Project-based software engineering program. Ranked top 10 in the selection round (500+ candidates), finished the core curriculum in the top 20 (800+). Focused on C/C++, systems programming, and algorithms. Served as a C programming tutor.
 
-* Ranked Top 10 in the 'piscine' selection round (out of 500+ candidates) and finished the Common Core curriculum in the Top 20 (out of 800+).
-* Project-based curriculum focused on C/C++, system programming, and algorithms.
-* Learned by building, debugging, and collaborating. No formal classes.
-* Served as a C programming tutor.
-
-### **Aix-Marseille University - M.Sc, Marine Science**
-
+### Aix-Marseille University, M.Sc Marine Science
 *2019 – 2021*
 
-* Specialized in computational oceanography and mathematical modeling.
-* Used Python, R, and Fortran for data analysis.
+Specialized in computational oceanography and mathematical modeling. Used Python, R, and FORTRAN for data analysis and simulation.
 
 ---
 
-## Other Interests
+## Beyond Work
 
-I participate in **CTF competitions** to learn applied security concepts hands-on, covering web security, cryptography, and binary exploitation. I maintain writeups [here](https://github.com/tham-le/CTF-Writeups). I also enjoy **hackathons** for rapid prototyping, having worked on health tech projects (DigHacktion, InnovHer) and hardware challenges (Google Hardware Hackathon).
+I compete in CTF challenges to learn applied security: web exploitation, cryptography, binary analysis. Writeups are [here](https://github.com/tham-le/CTF-Writeups).
+
+I also enjoy hackathons for the constraint of building something real in 48 hours. Past projects include health tech prototypes (DigHacktion, InnovHer) and hardware challenges (Google Hardware Hackathon).
 
 ---
 
