@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is the WireGuard Protocol?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is the WireGuard Protocol?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is the WireGuard Protocol?"/><meta name="twitter:description" content="A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together."/><meta property="og:description" content="A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together."/><meta property="og:image:alt" content="A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together."/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Networking/WireGuard-Protocol"/><meta property="twitter:url" content="https://notes.thamle.live/Networking/WireGuard-Protocol"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together."/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Networking/WireGuard-Protocol"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>{node.displayName=node.slugSegment}&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-269"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-269" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Networking/">Networking</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is the WireGuard Protocol?</a></div></nav><h1 class="article-title">WTF is the WireGuard Protocol?</h1><p show-comma="true" class="content-meta"><time datetime="2026-03-04T00:00:00.000Z">Mar 04, 2026</time><span>12 min read</span></p><ul class="tags"><li><a href="../tags/networking" class="internal tag-link">networking</a></li><li><a href="../tags/wireguard" class="internal tag-link">wireguard</a></li><li><a href="../tags/cryptography" class="internal tag-link">cryptography</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-the-wireguard-protocol">WTF is the WireGuard Protocol?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-the-wireguard-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>Three messages. Two peers. One shared secret. Here’s every step.</em></p>
+<p>You’ve been taking WireGuard on faith for three articles. You know it uses a TUN device, you know the peers find each other via NAT traversal, you know the control plane distributes keys. But when WireGuard says “your packet is encrypted,” what does that actually mean at the byte level?</p>
+<p>What algorithm? What key? How does a fresh peer connection bootstrap a shared secret when two parties have never communicated before? And what does “perfect forward secrecy” actually mean in practice, not just as a marketing phrase?</p>
+<p>This article answers all of it. It’s the most technically demanding in the series, but you’ll come out of it understanding exactly why WireGuard is considered one of the best-designed security protocols written in the last decade.</p>
+<hr/>
+<h2 id="the-core-analogy">The Core Analogy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-core-analogy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Imagine you need to have a private conversation with a stranger in a public square. You both have a lockbox, and you’ve published the combination to your lockbox publicly (that’s your public key). Anyone can put a message in your box. Only you can open it (that’s your private key).</p>
+<p>Here’s the trick: you both put sealed envelopes containing one-time combination codes into each other’s public lockboxes. Each of you opens your own box, reads the combination inside, and you both now have the same secret combination. Nobody watching from outside learned anything. That shared secret becomes the key for all your future conversation.</p>
+<p>That’s a Diffie-Hellman key exchange. WireGuard’s handshake is a more sophisticated version of this, using Curve25519 elliptic curve math instead of combination locks, and it runs this exchange four times simultaneously with different key pairs to cover various failure scenarios.</p>
+<hr/>
+<h2 id="the-cryptographic-primitives">The Cryptographic Primitives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-cryptographic-primitives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before the handshake, let’s name the tools WireGuard uses. These aren’t negotiable: WireGuard has no cipher suite negotiation. You get exactly this stack, no configuration options:</p>
+<p><strong>Curve25519</strong> handles key exchange. It’s an elliptic curve designed by Daniel Bernstein. Each WireGuard peer has a static Curve25519 key pair that serves as their permanent identity. Curve25519 was chosen because it’s fast in software, resistant to timing side-channels by construction, and has a much smaller key size (32 bytes) than RSA while providing comparable or better security.</p>
+<p><strong>ChaCha20-Poly1305</strong> is the AEAD (Authenticated Encryption with Associated Data) cipher used for all data. ChaCha20 is the stream cipher (it encrypts). Poly1305 is the MAC (it authenticates, detecting any tampering). They’re always used together. This combination was chosen over AES-GCM because it’s fast in pure software on hardware without AES acceleration, which matters enormously for mobile devices and embedded systems.</p>
+<p><strong>BLAKE2s</strong> is the hash function, used for key derivation and chaining keys through the handshake. It’s faster than SHA-256 at comparable security levels.</p>
+<p><strong>HKDF</strong> (HMAC-based Key Derivation Function, RFC 5869) derives symmetric session keys from the Diffie-Hellman outputs.</p>
+<p><strong>The Noise Protocol Framework</strong> is not a cipher; it’s a pattern language for building handshake protocols. WireGuard implements the specific pattern called <code>Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s</code>. That name decodes as: Noise framework, IK handshake pattern (Initiator sends their key, responder’s Key is Known to the initiator beforehand), optional Pre-Shared Key in position 2, using Curve25519, ChaCha20-Poly1305, BLAKE2s.</p>
+<hr/>
+<h2 id="the-cryptokey-routing-table">The Cryptokey Routing Table<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-cryptokey-routing-table" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before a single handshake packet flies, WireGuard needs to know one thing: which public key belongs to which destination IP range. This is the <strong>Cryptokey Routing Table</strong>, and it’s the heart of WireGuard’s identity model.</p>
+<pre><code># A WireGuard interface configuration
+
+[Interface]
+PrivateKey = &lt;base64-encoded Curve25519 private key>
+ListenPort = 51820
+
+[Peer]
+PublicKey  = &lt;peer A's Curve25519 public key>
+AllowedIPs = 10.0.0.2/32
+
+[Peer]
+PublicKey  = &lt;peer B's Curve25519 public key>
+AllowedIPs = 10.0.0.3/32, 192.168.100.0/24
+</code></pre>
+<p>When WireGuard needs to send a packet to <code>10.0.0.2</code>, it walks the AllowedIPs table, finds peer A’s public key, and uses that key to encrypt the packet. When it receives an encrypted packet, it decrypts it and checks that the decrypted source IP is in peer A’s AllowedIPs. If it doesn’t match, the packet is silently dropped.</p>
+<p>This is powerful: <strong>authentication and routing are the same operation.</strong> If a packet decrypts and authenticates correctly, you know exactly who sent it. No spoofing possible. No need for separate firewall rules checking source IPs from untrusted sources.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>AllowedIPs Is an Access Control List and a Routing Table Simultaneously </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>On the send side: AllowedIPs is a routing table. “Send packets destined for 10.0.0.2 to this peer.”
+On the receive side: AllowedIPs is an ACL. “Only accept packets claiming to be from 10.0.0.2 if they come from this peer’s key.”
+A packet that arrives encrypted under peer A’s key but claims to be from <code>10.0.0.4</code> (not in peer A’s AllowedIPs) is dropped immediately. The crypto proves the sender, the AllowedIPs prove the sender is allowed to claim that address.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="the-handshake-three-messages">The Handshake: Three Messages<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-handshake-three-messages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The WireGuard handshake establishes a shared symmetric session key between two peers. It takes 1.5 round trips: initiator sends, responder sends, initiator sends first data packet (which serves as key confirmation). Here’s what each message contains.</p>
+<h3 id="message-1-initiator-hello">Message 1: Initiator Hello<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#message-1-initiator-hello" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The initiator wants to talk to the responder. It knows the responder’s static public key (from the Cryptokey Routing Table). It sends:</p>
+<pre><code>Handshake Initiation message:
+  u8   message_type          = 1
+  u8   reserved[3]           = {0, 0, 0}
+  u32  sender_index          (random session ID, used to route replies)
+  u8   ephemeral_public[32]  (fresh Curve25519 public key, generated just for this session)
+  u8   encrypted_static[48]  (initiator's static public key, encrypted)
+  u8   encrypted_timestamp[28] (anti-replay timestamp, encrypted)
+  u8   mac1[16]              (keyed MAC over the whole message, for DoS resistance)
+  u8   mac2[16]              (optional, for cookie mechanism under load)
+</code></pre>
+<p>The cryptographic construction behind this message:</p>
+<pre><code># Step 1: Start with a chaining key based on the protocol identifier
+ck = HASH(&quot;Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s&quot;)
+
+# Step 2: Generate a fresh ephemeral key pair just for this session
+e_priv, e_pub = DH_GENERATE()
+
+# Mix the responder's static public key into the chaining key
+ck = HKDF(ck, responder_static_pub)
+
+# Step 3: Mix our ephemeral public key into the chain
+ck, key = HKDF(ck, e_pub)
+
+# Step 4: Perform DH between our ephemeral private key and responder's static public key
+# This proves we know the responder's public key before they reply
+dh_result = DH(e_priv, responder_static_pub)
+ck, key = HKDF(ck, dh_result)
+
+# Step 5: Encrypt our static public key using the derived key
+# The responder will decrypt this to learn who is calling
+encrypted_static = AEAD_ENCRYPT(key, 0, initiator_static_pub, hash_so_far)
+
+# Step 6: Perform DH between our static private key and responder's static public key
+dh_result2 = DH(initiator_static_priv, responder_static_pub)
+ck, key = HKDF(ck, dh_result2)
+
+# Step 7: Encrypt a timestamp (prevents replay attacks)
+encrypted_timestamp = AEAD_ENCRYPT(key, 0, current_tai64n_timestamp, hash_so_far)
+</code></pre>
+<p>The key observation: the initiator’s static public key is <strong>encrypted</strong> in the message. An eavesdropper watching the network cannot identify who is initiating the connection. This is called identity hiding.</p>
+<h3 id="message-2-responder-hello">Message 2: Responder Hello<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#message-2-responder-hello" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The responder receives message 1, decrypts the initiator’s static public key, and looks it up in its own Cryptokey Routing Table. If it’s a known peer, it responds:</p>
+<pre><code>Handshake Response message:
+  u8   message_type          = 2
+  u8   reserved[3]           = {0, 0, 0}
+  u32  sender_index          (responder's random session ID)
+  u32  receiver_index        (echoes the initiator's sender_index)
+  u8   ephemeral_public[32]  (responder's fresh ephemeral key)
+  u8   encrypted_empty[16]   (empty payload encrypted + authenticated, proves key knowledge)
+  u8   mac1[16]
+  u8   mac2[16]
+</code></pre>
+<p>The responder generates its own fresh ephemeral key pair, performs four Diffie-Hellman operations, and derives the same chaining key the initiator computed. The encrypted empty payload is the proof: it’s an AEAD-encrypted zero-length message. If the initiator can decrypt and verify it, both sides have confirmed they share the same session keys.</p>
+<p>At this point, both sides have derived two symmetric keys from the handshake:</p>
+<pre><code>send_key, recv_key = HKDF(final_chaining_key, empty)
+</code></pre>
+<p>The initiator’s <code>send_key</code> equals the responder’s <code>recv_key</code>, and vice versa. These are the session keys for encrypted data transport.</p>
+<h3 id="the-15-rtt-nuance">The 1.5 RTT Nuance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-15-rtt-nuance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>After message 2, the <strong>responder cannot safely send data yet.</strong> The responder authenticated the initiator’s static key (step 5 in message 1 above), but entity authentication is incomplete until the initiator sends a data packet that decrypts correctly. The responder waits. When the initiator sends the first encrypted transport packet, that serves as implicit key confirmation. Only then does the responder begin sending data.</p>
+<p>This is why WireGuard is described as 1.5-RTT: strictly speaking, the handshake + first data packet complete full mutual authentication before bidirectional data flows.</p>
+<hr/>
+<h2 id="the-data-packet-format">The Data Packet Format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-data-packet-format" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Once the handshake is complete, data packets look like this:</p>
+<pre><code>Transport Data message:
+  u8   message_type = 4
+  u8   reserved[3]  = {0, 0, 0}
+  u32  receiver_index   (identifies which session this belongs to)
+  u64  counter          (monotonically increasing, serves as the nonce)
+  u8   encrypted_payload[variable length]  (your actual IP packet, encrypted)
+  u8   auth_tag[16]     (Poly1305 authentication tag, appended by AEAD)
+</code></pre>
+<p>The encryption operation:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// The entire IP packet (from the TUN device) becomes the plaintext</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// counter is the 64-bit packet counter, used as the AEAD nonce</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// send_key is the session key derived during the handshake</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ciphertext </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> ChaCha20Poly1305_AEAD_Encrypt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    key   </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> send_key,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    nonce </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> counter,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">       // monotonically increasing, prevents replay</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    plain </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ip_packet,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    aad   </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> empty</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">          // WireGuard uses no additional authenticated data for transport</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Send: header + ciphertext (which already includes the 16-byte Poly1305 tag)</span></span></code></pre></figure>
+<p>The counter serves double duty as the nonce and as replay protection. The receiver maintains a sliding window of accepted counters. Any packet with a counter already seen or too far in the past is dropped. This prevents replay attacks where an attacker records and re-sends packets.</p>
+<hr/>
+<h2 id="perfect-forward-secrecy-what-it-actually-means">Perfect Forward Secrecy: What It Actually Means<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#perfect-forward-secrecy-what-it-actually-means" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This phrase gets thrown around constantly. Here’s what it concretely means in WireGuard.</p>
+<p><strong>Without PFS:</strong> If an attacker records all your encrypted traffic today and later compromises your long-term private key, they can decrypt all of that recorded traffic retroactively.</p>
+<p><strong>With PFS:</strong> Each session uses ephemeral key pairs that exist only in RAM for the duration of the session. When the session ends, those ephemeral keys are explicitly zeroed in memory. An attacker who compromises your long-term static key later cannot decrypt past sessions, because the ephemeral keys that generated those session keys no longer exist anywhere.</p>
+<p>WireGuard achieves PFS by:</p>
+<ol>
+<li>Using fresh ephemeral Curve25519 key pairs in every handshake (the <code>e_priv</code>, <code>e_pub</code> generated in message 1 above).</li>
+<li>Rekeying automatically every <code>REKEY_AFTER_TIME</code> seconds (180 seconds by default) or after <code>REKEY_AFTER_MESSAGES</code> packets (roughly 2^60), whichever comes first.</li>
+<li>Explicitly zeroing ephemeral keys and symmetric session keys from memory after use using <code>memzero_explicit()</code> (the kernel-provided function that won’t be optimized out by the compiler).</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// From WireGuard's kernel implementation, paraphrased:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// After deriving the session keys from the handshake, zero the ephemeral</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// private key immediately. It served its purpose. Don't keep it around.</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">memzero_explicit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">handshake</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-></span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">ephemeral_private</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, NOISE_PUBLIC_KEY_LEN);</span></span></code></pre></figure>
+<p>This is the difference between a protocol with PFS and one without. It’s not magic. It’s a discipline of destroying key material the moment it’s no longer needed.</p>
+<hr/>
+<h2 id="why-these-algorithms-not-others">Why These Algorithms, Not Others?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-these-algorithms-not-others" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is worth understanding because it’s a deliberate rejection of complexity.</p>
+<p><strong>ChaCha20-Poly1305 over AES-GCM:</strong> AES-GCM is faster on CPUs with hardware AES instructions (AES-NI). ChaCha20-Poly1305 is faster everywhere else. Mobile devices, embedded systems, and older hardware often lack AES-NI. ChaCha20 also has no known timing side-channels in software implementations, while AES implementations have historically been vulnerable to cache-timing attacks on hardware without AES-NI. By choosing ChaCha20, WireGuard gets consistent security properties everywhere.</p>
+<p><strong>Curve25519 over RSA or NIST curves:</strong> RSA keys at comparable security levels are enormous (2048 to 4096 bits). NIST curves (P-256, P-384) have a history of questionable parameter choices and potential NSA influence. Curve25519 was designed with transparent parameters that are verifiably not backdoored, is extremely fast, and has a 32-byte key size.</p>
+<p><strong>No cipher negotiation at all:</strong> SSL/TLS allows clients and servers to negotiate which cipher suite to use. This flexibility has historically led to downgrade attacks where an attacker forces both parties to agree on a weaker algorithm. WireGuard simply doesn’t have this. There is one algorithm stack. You cannot be downgraded.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>WireGuard Is Not Quantum-Resistant by Default </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Curve25519 and the DH construction would be broken by a sufficiently capable quantum computer using Shor’s algorithm. WireGuard supports an optional pre-shared symmetric key (PSK) that can be added to the handshake. If a quantum attacker breaks the DH, the PSK still protects the session. This provides post-quantum resistance at the cost of having to distribute and manage an extra shared secret per peer pair.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="silent-drop-policy-why-wireguard-is-hard-to-fingerprint">Silent Drop Policy: Why WireGuard Is Hard to Fingerprint<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#silent-drop-policy-why-wireguard-is-hard-to-fingerprint" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>One more design choice worth noting: WireGuard responds to packets from unknown sources with <strong>absolute silence.</strong> No error messages. No ICMP port unreachable. No RST packets. Nothing.</p>
+<p>If you scan a WireGuard port on the internet with a random packet, you get no response. The port appears closed. A legitimate peer that sends a correctly formatted handshake initiation, encrypted under a key that matches a configured peer, will get a response. Everyone else gets silence.</p>
+<p>This makes WireGuard interfaces significantly harder to fingerprint and enumerate than traditional VPN endpoints, which typically respond to probes with recognizable error packets.</p>
+<hr/>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>You now understand the full cryptographic layer: how the Noise handshake bootstraps a shared secret, how ChaCha20-Poly1305 encrypts every packet, how perfect forward secrecy works in practice, and why WireGuard’s opinionated algorithm choices make it more secure than the configurable mess of TLS cipher suites.</p>
+<p>The final article pulls everything together into the full picture: TUN devices, NAT traversal, control planes, and the WireGuard protocol, assembled into a mesh network.</p>
+<p>Next: <strong>WTF is a Mesh Network?</strong> where we cover why full mesh topology matters, how it differs from hub-and-spoke, and how all five layers of the stack we’ve built combine into something like Tailscale or NetBird.</p>
+<p><strong>Related reading:</strong></p>
+<ul>
+<li><a href="../Fundamentals/Encryption" class="internal" data-slug="Fundamentals/Encryption">Encryption</a> for the foundational concepts behind AEAD and symmetric encryption</li>
+<li><a href="../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a> for comparison: how TLS’s cipher negotiation creates the downgrade attack surface WireGuard avoids</li>
+<li><a href="../Networking/NAT-Traversal" class="internal" data-slug="Networking/NAT-Traversal">NAT-Traversal</a> for how the peers actually reach each other before this handshake fires</li>
+<li><a href="../Networking/Control-Plane" class="internal" data-slug="Networking/Control-Plane">Control-Plane</a> for what distributes the static public keys before the handshake begins</li>
+<li><a href="../QUIC" class="internal" data-slug="QUIC">QUIC</a> for another modern protocol that made similar opinionated cryptographic choices</li>
+</ul>
+<hr/>
+<h2 id="sources">Sources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>WireGuard Protocol &amp; Cryptography: <a href="https://www.wireguard.com/protocol/" class="external">wireguard.com/protocol<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>WireGuard Academic Whitepaper: <a href="https://www.wireguard.com/papers/wireguard.pdf" class="external">wireguard.com/papers/wireguard.pdf<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Dowling &amp; Paterson, “A Cryptographic Analysis of the WireGuard Protocol”: <a href="https://eprint.iacr.org/2018/080.pdf" class="external">eprint.iacr.org/2018/080.pdf<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Noise Protocol Framework specification: <a href="https://noiseprotocol.org/" class="external">noiseprotocol.org<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>RFC 7539: ChaCha20 and Poly1305 for IETF Protocols: <a href="https://datatracker.ietf.org/doc/html/rfc7539" class="external">datatracker.ietf.org/doc/html/rfc7539<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>RFC 5869: HKDF: <a href="https://datatracker.ietf.org/doc/html/rfc5869" class="external">datatracker.ietf.org/doc/html/rfc5869<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>wireguard-go source: <a href="https://github.com/WireGuard/wireguard-go/blob/master/device/noise-protocol.go" class="external">github.com/WireGuard/wireguard-go/blob/master/device/noise-protocol.go<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>Last fact-check</strong>: 2026-03-04</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-121" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-the-wireguard-protocol" data-for="wtf-is-the-wireguard-protocol">WTF is the WireGuard Protocol?</a></li><li class="depth-1"><a href="#the-core-analogy" data-for="the-core-analogy">The Core Analogy</a></li><li class="depth-1"><a href="#the-cryptographic-primitives" data-for="the-cryptographic-primitives">The Cryptographic Primitives</a></li><li class="depth-1"><a href="#the-cryptokey-routing-table" data-for="the-cryptokey-routing-table">The Cryptokey Routing Table</a></li><li class="depth-1"><a href="#the-handshake-three-messages" data-for="the-handshake-three-messages">The Handshake: Three Messages</a></li><li class="depth-2"><a href="#message-1-initiator-hello" data-for="message-1-initiator-hello">Message 1: Initiator Hello</a></li><li class="depth-2"><a href="#message-2-responder-hello" data-for="message-2-responder-hello">Message 2: Responder Hello</a></li><li class="depth-2"><a href="#the-15-rtt-nuance" data-for="the-15-rtt-nuance">The 1.5 RTT Nuance</a></li><li class="depth-1"><a href="#the-data-packet-format" data-for="the-data-packet-format">The Data Packet Format</a></li><li class="depth-1"><a href="#perfect-forward-secrecy-what-it-actually-means" data-for="perfect-forward-secrecy-what-it-actually-means">Perfect Forward Secrecy: What It Actually Means</a></li><li class="depth-1"><a href="#why-these-algorithms-not-others" data-for="why-these-algorithms-not-others">Why These Algorithms, Not Others?</a></li><li class="depth-1"><a href="#silent-drop-policy-why-wireguard-is-hard-to-fingerprint" data-for="silent-drop-policy-why-wireguard-is-hard-to-fingerprint">Silent Drop Policy: Why WireGuard Is Hard to Fingerprint</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#sources" data-for="sources">Sources</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Networking/Mesh-Networking" class="internal">WTF is a Mesh Network?</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2026</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

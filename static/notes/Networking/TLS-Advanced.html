@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>TLS: Under the Hood (Advanced)</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="TLS: Under the Hood (Advanced)"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="TLS: Under the Hood (Advanced)"/><meta name="twitter:description" content="Deep dive into TLS 1.3: handshake mechanics, certificate validation, protocol integration with TCP and QUIC, and performance optimization"/><meta property="og:description" content="Deep dive into TLS 1.3: handshake mechanics, certificate validation, protocol integration with TCP and QUIC, and performance optimization"/><meta property="og:image:alt" content="Deep dive into TLS 1.3: handshake mechanics, certificate validation, protocol integration with TCP and QUIC, and performance optimization"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Networking/TLS-Advanced"/><meta property="twitter:url" content="https://notes.thamle.live/Networking/TLS-Advanced"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Deep dive into TLS 1.3: handshake mechanics, certificate validation, protocol integration with TCP and QUIC, and performance optimization"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Networking/TLS-Advanced"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>{node.displayName=node.slugSegment}&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-255"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-255" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Networking/">Networking</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>TLS: Under the Hood (Advanced)</a></div></nav><h1 class="article-title">TLS: Under the Hood (Advanced)</h1><p show-comma="true" class="content-meta"><time datetime="2025-12-30T00:00:00.000Z">Dec 30, 2025</time><span>14 min read</span></p><ul class="tags"><li><a href="../tags/networking" class="internal tag-link">networking</a></li><li><a href="../tags/security" class="internal tag-link">security</a></li><li><a href="../tags/encryption" class="internal tag-link">encryption</a></li><li><a href="../tags/tls" class="internal tag-link">tls</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li></ul></div></div><article class="popover-hint"><h1 id="tls-under-the-hood-advanced">TLS: Under the Hood (Advanced)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-under-the-hood-advanced" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>From handshake packets to certificate chains: how TLS actually works</em></p>
+<p>You’ve read <a href="../Networking/TLS" class="internal alias" data-slug="Networking/TLS">WTF is TLS?</a> and understand that TLS encrypts your data, authenticates servers, and prevents tampering. Now let’s get into the details: <strong>how does the handshake actually work? What’s inside those certificates? Why is QUIC’s approach different from TCP+TLS?</strong></p>
+<p>This is the deep dive.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Prerequisites </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>This article assumes you understand:</p>
+<ul>
+<li>Basic TLS concepts (encryption, authentication, integrity)</li>
+<li><a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> and <a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a> fundamentals</li>
+<li>What <a href="../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a> and <a href="../HTTPS" class="internal" data-slug="HTTPS">HTTPS</a> are</li>
+</ul>
+<p>If not, start with <a href="../Networking/TLS" class="internal alias" data-slug="Networking/TLS">WTF is TLS?</a> first.</p>
+</div>
+</blockquote>
+<h2 id="tls-protocol-architecture">TLS Protocol Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-protocol-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>TLS is actually <strong>two protocols in one</strong>:</p>
+<pre><code>┌─────────────────────────────────────┐
+│        TLS Handshake Protocol       │  &lt;- Negotiate security
+│   (Key exchange, authentication)    │
+├─────────────────────────────────────┤
+│        TLS Record Protocol          │  &lt;- Encrypt data
+│   (Fragmentation, compression,      │
+│    encryption, authentication)      │
+└─────────────────────────────────────┘
+</code></pre>
+<p><strong>TLS Handshake Protocol:</strong></p>
+<ul>
+<li>Negotiates cipher suites</li>
+<li>Exchanges keys</li>
+<li>Authenticates peers</li>
+<li>Runs once per connection</li>
+</ul>
+<p><strong>TLS Record Protocol:</strong></p>
+<ul>
+<li>Fragments application data into records</li>
+<li>Encrypts each record</li>
+<li>Adds authentication tags</li>
+<li>Runs continuously during the session</li>
+</ul>
+<p>This separation is important: the handshake sets everything up, then the record layer handles the heavy lifting of encrypting your actual data.</p>
+<h2 id="tls-13-handshake-technical-details">TLS 1.3 Handshake (Technical Details)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-13-handshake-technical-details" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>TLS 1.3 (RFC 8446, August 2018) was a major overhaul. Let’s trace exactly what happens.</p>
+<h3 id="full-handshake-1-rtt">Full Handshake (1-RTT)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#full-handshake-1-rtt" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Client                                               Server
+
+Key  ^ ClientHello
+Exch | + key_share*
+     | + signature_algorithms*
+     | + psk_key_exchange_modes*
+     v + pre_shared_key*       -------->
+                                                  ServerHello  ^ Key
+                                                 + key_share*  | Exch
+                                            + pre_shared_key*  v
+                                        {EncryptedExtensions}  ^  Server
+                                        {CertificateRequest*}  v  Params
+                                               {Certificate*}  ^
+                                         {CertificateVerify*}  | Auth
+                                                   {Finished}  v
+                               &lt;--------  [Application Data*]
+     ^ {Certificate*}
+Auth | {CertificateVerify*}
+     v {Finished}              -------->
+       [Application Data]      &lt;------->  [Application Data]
+</code></pre>
+<p><strong>Breaking it down:</strong></p>
+<h4 id="1-clienthello-client--server">1. ClientHello (Client → Server)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-clienthello-client--server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ClientHello contains:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> protocol_version: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0303</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (disguised as TLS </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1.2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Why? Broken middleboxes reject new version numbers</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> random: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">32</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> bytes of randomness</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> cipher_suites: List of supported algorithms</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Example: TLS_AES_256_GCM_SHA384</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> extensions:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> supported_versions: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0304</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (real TLS </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1.3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> key_share: Client</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'s Diffie-Hellman public key</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    - signature_algorithms: RSA-PSS, ECDSA, etc.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    - server_name (SNI): &quot;github.com&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    - supported_groups: x25519, secp256r1, etc.</span></span></code></pre></figure>
+<p><strong>Key innovation:</strong> Client sends its <strong>key_share immediately</strong>. TLS 1.2 required an extra round trip to negotiate the key exchange algorithm first.</p>
+<h4 id="2-serverhello--more-server--client">2. ServerHello + More (Server → Client)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-serverhello--more-server--client" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>The server responds with multiple messages (encrypted after ServerHello):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ServerHello {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    protocol_version: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0303</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (still disguised)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    random: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">32</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> bytes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cipher_suite: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">TLS_AES_256_GCM_SHA384</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (chosen)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    extensions:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> supported_versions: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0304</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (TLS </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1.3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> confirmed)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> key_share: Server</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'s DH public key</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Everything below is ENCRYPTED with handshake keys</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">EncryptedExtensions {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    server_name: (acknowledged)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    // Other extensions that don'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">t need to be in ServerHello</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Certificate {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    certificate_list: [server_cert, intermediate_ca, ...]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // X.509 certificates in DER format</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">CertificateVerify {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    algorithm: rsa_pss_rsae_sha256</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    signature: [cryptographic proof server owns private key]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Finished {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    verify_data: HMAC of entire handshake transcript</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Critical security feature:</strong> Everything after ServerHello is encrypted. TLS 1.2 sent certificates in plaintext, leaking which sites you visited.</p>
+<h4 id="3-client-authentication-client--server">3. Client Authentication (Client → Server)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-client-authentication-client--server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Finished {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    verify_data: HMAC confirming client saw everything correctly</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>Both sides have now verified:</p>
+<ul>
+<li>The handshake wasn’t tampered with</li>
+<li>They derived the same keys</li>
+<li>(Optionally) client provided a certificate</li>
+</ul>
+<p><strong>Total round trips: 1</strong> (down from 2 in TLS 1.2)</p>
+<h3 id="0-rtt-mode-zero-round-trip-time">0-RTT Mode (Zero Round Trip Time)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#0-rtt-mode-zero-round-trip-time" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For <strong>resumed connections</strong>, TLS 1.3 allows sending data immediately:</p>
+<pre><code>Client                                               Server
+
+ClientHello
++ early_data
++ key_share*
++ psk_key_exchange_modes
++ pre_shared_key
+(Application Data*)        -------->
+                                                  ServerHello
+                                             + pre_shared_key
+                                                 + key_share*
+                                        {EncryptedExtensions}
+                                                   {Finished}
+                           &lt;--------  [Application Data*]
+(EndOfEarlyData)
+{Finished}                 -------->
+[Application Data]         &lt;------->  [Application Data]
+</code></pre>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Client and server shared a PSK (Pre-Shared Key) from a previous session</li>
+<li>Client encrypts data with derived key from PSK</li>
+<li>Sends encrypted data in <strong>first flight</strong></li>
+<li>Server processes early data while handshake completes</li>
+</ol>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>0-RTT Replay Attacks </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Early data is vulnerable to replay attacks. An attacker can capture the first ClientHello + early data and replay it later. The server sees what looks like a valid request.</p>
+<p><strong>Mitigation:</strong> Only use 0-RTT for idempotent operations (GET requests, not POST). Many implementations disable it by default.</p>
+</div>
+</blockquote>
+<h3 id="what-tls-13-removed">What TLS 1.3 Removed<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-tls-13-removed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>TLS 1.3 aggressively pruned dangerous features from TLS 1.2:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Removed Feature</th><th>Why It Was Dangerous</th></tr></thead><tbody><tr><td>RSA key exchange</td><td>No forward secrecy (compromise private key → decrypt all past sessions)</td></tr><tr><td>Static DH</td><td>Same problem as RSA</td></tr><tr><td>CBC mode ciphers</td><td>BEAST, Lucky13, POODLE attacks</td></tr><tr><td>RC4 stream cipher</td><td>Biased output, practical attacks</td></tr><tr><td>SHA-1, MD5</td><td>Collision attacks demonstrated</td></tr><tr><td>Compression</td><td>CRIME attack (compression side-channel)</td></tr><tr><td>Renegotiation</td><td>Complex attack surface, removed entirely</td></tr><tr><td>Custom DHE parameters</td><td>Logjam attack, weak parameter choices</td></tr></tbody></table></div>
+<p><strong>What’s left:</strong> Only AEAD (Authenticated Encryption with Associated Data) ciphers:</p>
+<ul>
+<li>AES-GCM</li>
+<li>ChaCha20-Poly1305</li>
+<li>AES-CCM</li>
+</ul>
+<p>All require forward secrecy (ephemeral key exchange).</p>
+<h2 id="certificate-deep-dive">Certificate Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-deep-dive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Certificates are <a href="../X.509" class="internal" data-slug="X.509">X.509</a> documents that bind a public key to an identity. Let’s decode one.</p>
+<h3 id="x509-certificate-structure">X.509 Certificate Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#x509-certificate-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Certificate (TBSCertificate):
+┌────────────────────────────────────────────┐
+│ Version: 3                                 │
+│ Serial Number: 0x04:7f:3a:23:...(20 bytes)│
+├────────────────────────────────────────────┤
+│ Signature Algorithm: sha256WithRSAEncryption│
+├────────────────────────────────────────────┤
+│ Issuer:                                    │
+│   CN = DigiCert TLS RSA SHA256 2020 CA1   │
+│   O = DigiCert Inc                         │
+│   C = US                                   │
+├────────────────────────────────────────────┤
+│ Validity:                                  │
+│   Not Before: 2024-11-01 00:00:00 UTC     │
+│   Not After:  2025-11-30 23:59:59 UTC     │
+├────────────────────────────────────────────┤
+│ Subject:                                   │
+│   CN = github.com                          │
+├────────────────────────────────────────────┤
+│ Subject Public Key Info:                  │
+│   Algorithm: rsaEncryption                │
+│   Public Key: (2048 bit)                  │
+│     Modulus: 00:c7:3e:5a:...              │
+│     Exponent: 65537 (0x10001)             │
+├────────────────────────────────────────────┤
+│ X509v3 Extensions:                        │
+│   Subject Alternative Name:               │
+│     DNS:github.com                        │
+│     DNS:www.github.com                    │
+│   Key Usage:                              │
+│     Digital Signature, Key Encipherment   │
+│   Extended Key Usage:                     │
+│     TLS Web Server Authentication         │
+│   Authority Information Access:           │
+│     OCSP: http://ocsp.digicert.com        │
+│   CRL Distribution Points:                │
+│     http://crl3.digicert.com/...          │
+└────────────────────────────────────────────┘
+Signature Algorithm: sha256WithRSAEncryption
+Signature: 4a:2b:c9:8f:...
+</code></pre>
+<p><strong>Key fields explained:</strong></p>
+<p><strong>Serial Number:</strong> Unique identifier for this certificate. Used in revocation lists.</p>
+<p><strong>Issuer:</strong> The CA that signed this certificate. This creates the chain of trust.</p>
+<p><strong>Subject:</strong> Who this certificate belongs to. For TLS, this is usually a domain name.</p>
+<p><strong>Subject Alternative Names (SANs):</strong> Additional domains this certificate is valid for. Modern certificates use SANs instead of CN.</p>
+<p><strong>Key Usage:</strong> What the key can be used for (signing, encryption, etc.)</p>
+<p><strong>Authority Information Access (AIA):</strong> Where to check certificate status:</p>
+<ul>
+<li><strong>OCSP:</strong> Online Certificate Status Protocol (real-time check)</li>
+<li><strong>CRL:</strong> Certificate Revocation List (batch check)</li>
+</ul>
+<h3 id="certificate-chain-validation">Certificate Chain Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-chain-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When your browser receives a certificate, it performs this algorithm (simplified from RFC 5280):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> validate_certificate_chain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(cert, trusted_roots):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    Validates a certificate chain from leaf to root.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    Returns True if valid, False otherwise.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    chain </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> build_chain(cert, trusted_roots)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">len</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(chain) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> chain[i]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        issuer </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> chain[i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # 1. Check signature</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> not</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> verify_signature(current, issuer.public_key):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # 2. Check validity period</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> not</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (current.not_before </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> now() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> current.not_after):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # 3. Check revocation status</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> is_revoked(current):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # 4. Check name constraints</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> not</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> satisfies_name_constraints(current, issuer):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">        # 5. Check key usage</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> len</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(chain) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Intermediate CA</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            if</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> not</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> issuer.key_usage.certificate_sign:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">                return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # 6. Check root is trusted</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    root </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> chain[</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> root </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">not</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> trusted_roots:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> False</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> True</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> build_chain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(cert, trusted_roots):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    Build certificate chain from leaf to root.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    chain </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [cert]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> cert</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> current.issuer </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">!=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> current.subject:  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Not self-signed</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        issuer_cert </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> find_issuer(current, trusted_roots)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> issuer_cert </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">is</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> None</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            raise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ChainBuildError(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Cannot find issuer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        chain.append(issuer_cert)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> issuer_cert</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> chain</span></span></code></pre></figure>
+<p><strong>What can go wrong:</strong></p>
+<ol>
+<li><strong>Expired certificate:</strong> <code>not_after</code> date passed</li>
+<li><strong>Self-signed certificate:</strong> Issuer not in trust store</li>
+<li><strong>Name mismatch:</strong> Certificate CN/SAN doesn’t match requested hostname</li>
+<li><strong>Revoked certificate:</strong> CA marked it as compromised</li>
+<li><strong>Incomplete chain:</strong> Server didn’t send intermediate certificates</li>
+<li><strong>Wrong key usage:</strong> Certificate marked for signing, not encryption</li>
+</ol>
+<h3 id="certificate-revocation">Certificate Revocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-revocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How do you invalidate a certificate before it expires?</p>
+<h4 id="crl-certificate-revocation-list">CRL (Certificate Revocation List)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#crl-certificate-revocation-list" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>CRL Structure:
+┌────────────────────────────────────┐
+│ Issuer: DigiCert CA                │
+│ This Update: 2025-12-30 00:00      │
+│ Next Update: 2025-12-31 00:00      │
+├────────────────────────────────────┤
+│ Revoked Certificates:              │
+│   Serial: 0x1234...                │
+│   Revocation Date: 2025-12-15      │
+│   Reason: Key Compromise           │
+│                                    │
+│   Serial: 0x5678...                │
+│   Revocation Date: 2025-12-20      │
+│   Reason: Certificate Hold         │
+└────────────────────────────────────┘
+</code></pre>
+<p><strong>Problem:</strong> CRLs can be huge (megabytes). Browsers don’t want to download them.</p>
+<h4 id="ocsp-online-certificate-status-protocol">OCSP (Online Certificate Status Protocol)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ocsp-online-certificate-status-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Better approach: Ask the CA in real-time:</p>
+<pre><code>OCSP Request:
+  Certificate Serial: 0x1234...
+  Hash Algorithm: SHA-256
+
+OCSP Response:
+  Certificate Status: good
+  This Update: 2025-12-30 12:00
+  Next Update: 2025-12-31 12:00
+  Signature: [signed by CA]
+</code></pre>
+<p><strong>Problem:</strong> Privacy leak. The CA learns which sites you visit.</p>
+<h4 id="ocsp-stapling">OCSP Stapling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ocsp-stapling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Best approach: Server gets OCSP response and <strong>staples</strong> it to the certificate during handshake:</p>
+<pre><code>Server -> Client:
+  Certificate
+  + OCSP Response (signed by CA, fresh timestamp)
+</code></pre>
+<p>Benefits:</p>
+<ul>
+<li>No privacy leak (client doesn’t contact CA)</li>
+<li>Faster (no extra round trip)</li>
+<li>Reduces CA load</li>
+</ul>
+<h4 id="certificate-transparency">Certificate Transparency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-transparency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Modern solution: All certificates are logged in <strong>public append-only logs</strong> (Certificate Transparency logs):</p>
+<ol>
+<li>CA issues certificate</li>
+<li>CA submits certificate to CT logs</li>
+<li>CT logs return Signed Certificate Timestamps (SCTs)</li>
+<li>Server presents SCTs during handshake</li>
+<li>Browser verifies SCTs prove certificate was logged</li>
+</ol>
+<p><strong>Why this matters:</strong> Prevents CAs from issuing fraudulent certificates secretly. If a bad certificate is issued, it appears in public logs where anyone can detect it.</p>
+<h3 id="certificate-validity-periods">Certificate Validity Periods<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-validity-periods" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The industry is moving toward shorter certificate lifespans:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Year</th><th>Maximum Validity</th></tr></thead><tbody><tr><td>2015</td><td>39 months (3.25 years)</td></tr><tr><td>2018</td><td>825 days (27 months)</td></tr><tr><td>2020</td><td>398 days (13 months)</td></tr><tr><td>2029</td><td><strong>47 days</strong> (approved)</td></tr></tbody></table></div>
+<p><strong>Why shorter?</strong></p>
+<ul>
+<li>Limits damage from compromised keys</li>
+<li>Forces automation (Let’s Encrypt model)</li>
+<li>Reduces reliance on revocation checking</li>
+<li>Faster crypto algorithm migration</li>
+</ul>
+<h2 id="protocol-stack-integration">Protocol Stack Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#protocol-stack-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>How does TLS fit with different transport protocols?</p>
+<h3 id="traditional-tcp--tls">Traditional: TCP + TLS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#traditional-tcp--tls" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌──────────────────┐
+│   Application    │  &lt;- Your code: HTTP, SMTP, etc.
+├──────────────────┤
+│   TLS Layer      │  &lt;- Encryption, authentication
+│  (TLS 1.3)       │
+├──────────────────┤
+│   TCP Layer      │  &lt;- Reliable transport
+│  (Stream)        │     - In-order delivery
+├──────────────────┤     - Retransmission
+│   IP Layer       │     - Flow control
+└──────────────────┘
+</code></pre>
+<p><strong>Connection establishment:</strong></p>
+<pre><code>Timeline of TCP + TLS handshake:
+
+0ms    Client -> Server: TCP SYN
+20ms   Server -> Client: TCP SYN-ACK
+40ms   Client -> Server: TCP ACK
+       ✓ TCP connection established (1 RTT)
+
+40ms   Client -> Server: TLS ClientHello
+60ms   Server -> Client: TLS ServerHello + Certificate + Finished
+80ms   Client -> Server: TLS Finished
+       ✓ TLS connection established (1 RTT)
+
+Total: 2 RTT before application data
+</code></pre>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>2 RTT minimum</strong> (TCP handshake + TLS handshake)</li>
+<li><strong>Head-of-line blocking:</strong> One lost packet blocks entire stream</li>
+<li><strong>Separate layers:</strong> TLS doesn’t know about TCP, TCP doesn’t know about TLS</li>
+</ul>
+<h3 id="modern-quic-integrated-tls-13">Modern: QUIC (Integrated TLS 1.3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modern-quic-integrated-tls-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><a href="../QUIC" class="internal" data-slug="QUIC">QUIC</a> (RFC 9000, May 2021) <strong>embeds TLS 1.3 directly</strong>:</p>
+<pre><code>┌──────────────────┐
+│   Application    │  &lt;- HTTP/3, DNS-over-QUIC
+├──────────────────┤
+│   QUIC Layer     │  &lt;- Transport + TLS integrated
+│  - Streams       │     - TLS 1.3 handshake
+│  - Reliability   │     - Built-in encryption
+│  - Encryption    │     - Per-stream ordering
+├──────────────────┤
+│   UDP Layer      │  &lt;- Unreliable datagrams
+└──────────────────┘
+</code></pre>
+<p><strong>Connection establishment:</strong></p>
+<pre><code>Timeline of QUIC handshake:
+
+0ms    Client -> Server: Initial Packet
+                         + ClientHello
+                         + key_share
+20ms   Server -> Client: Initial + Handshake Packets
+                         + ServerHello
+                         + Certificate
+                         + Finished
+40ms   Client -> Server: Handshake Packet
+                         + Finished
+       ✓ Connection established (1 RTT)
+
+With 0-RTT:
+0ms    Client -> Server: Initial Packet
+                         + Early Application Data
+       ✓ Data sent immediately (0 RTT)
+</code></pre>
+<p><strong>Key differences:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>TCP + TLS</th><th>QUIC</th></tr></thead><tbody><tr><td><strong>Handshake</strong></td><td>2 RTT</td><td>1 RTT (or 0 RTT)</td></tr><tr><td><strong>Encryption</strong></td><td>Optional</td><td>Mandatory</td></tr><tr><td><strong>Head-of-line blocking</strong></td><td>Yes (single stream)</td><td>No (multiple streams)</td></tr><tr><td><strong>Connection migration</strong></td><td>No (tied to 4-tuple)</td><td>Yes (connection ID)</td></tr><tr><td><strong>Ossification resistance</strong></td><td>Poor (middleboxes inspect)</td><td>Good (encrypted headers)</td></tr></tbody></table></div>
+<h3 id="quics-tls-integration-rfc-9001">QUIC’s TLS Integration (RFC 9001)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quics-tls-integration-rfc-9001" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>QUIC doesn’t use TLS as a separate layer. Instead:</p>
+<ol>
+<li>
+<p><strong>QUIC acts as the TLS record layer:</strong></p>
+<ul>
+<li>QUIC packets replace TLS records</li>
+<li>QUIC provides encryption, not TLS</li>
+</ul>
+</li>
+<li>
+<p><strong>TLS provides only the handshake:</strong></p>
+<ul>
+<li>Key exchange (Diffie-Hellman)</li>
+<li>Authentication (certificates)</li>
+<li>Key derivation</li>
+</ul>
+</li>
+<li>
+<p><strong>Cryptographic handshake messages are in CRYPTO frames:</strong></p>
+</li>
+</ol>
+<pre><code>QUIC Initial Packet:
+┌────────────────────────────────────┐
+│ Header (unencrypted):              │
+│   Type: Initial                    │
+│   Version: 1                       │
+│   Destination Connection ID        │
+│   Source Connection ID             │
+│   Packet Number                    │
+├────────────────────────────────────┤
+│ Payload (encrypted with initial    │
+│          keys derived from conn    │
+│          IDs):                     │
+│   CRYPTO Frame:                    │
+│     ClientHello (TLS 1.3)          │
+│   PADDING Frame                    │
+└────────────────────────────────────┘
+</code></pre>
+<p><strong>Why this is brilliant:</strong></p>
+<ul>
+<li><strong>No double encryption:</strong> TLS normally encrypts, then QUIC would encrypt again (wasteful)</li>
+<li><strong>Faster:</strong> Handshake and transport setup combined</li>
+<li><strong>Mandatory security:</strong> Can’t run QUIC without encryption</li>
+<li><strong>Ossification resistance:</strong> Nearly everything is encrypted, preventing middlebox interference</li>
+</ul>
+<h2 id="performance-characteristics">Performance Characteristics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-characteristics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="latency-breakdown">Latency Breakdown<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#latency-breakdown" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Full handshake (new connection):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Stack</th><th>RTTs</th><th>Time (50ms RTT)</th></tr></thead><tbody><tr><td>TCP + TLS 1.2</td><td>3 RTT</td><td>150ms</td></tr><tr><td>TCP + TLS 1.3</td><td>2 RTT</td><td>100ms</td></tr><tr><td>QUIC</td><td>1 RTT</td><td>50ms</td></tr><tr><td>QUIC (0-RTT)</td><td>0 RTT</td><td>0ms</td></tr></tbody></table></div>
+<p><strong>Resumed connection:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Stack</th><th>RTTs</th><th>Time (50ms RTT)</th></tr></thead><tbody><tr><td>TCP + TLS 1.2 (session resumption)</td><td>2 RTT</td><td>100ms</td></tr><tr><td>TCP + TLS 1.3 (session resumption)</td><td>2 RTT</td><td>100ms</td></tr><tr><td>QUIC (0-RTT)</td><td>0 RTT</td><td>0ms</td></tr></tbody></table></div>
+<h3 id="computational-cost">Computational Cost<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#computational-cost" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Modern CPUs have hardware acceleration for crypto:</p>
+<p><strong>AES-GCM (common TLS cipher):</strong></p>
+<ul>
+<li><strong>Software:</strong> ~1-2 GB/s per core</li>
+<li><strong>AES-NI (Intel/AMD):</strong> 10-20 GB/s per core</li>
+<li><strong>ARMv8 Crypto:</strong> 5-10 GB/s per core</li>
+</ul>
+<p><strong>ChaCha20-Poly1305 (mobile-friendly):</strong></p>
+<ul>
+<li><strong>Software:</strong> 2-4 GB/s per core</li>
+<li><strong>NEON (ARM):</strong> 5-8 GB/s per core</li>
+</ul>
+<p><strong>Bottom line:</strong> Encryption is essentially free on modern hardware. TLS overhead is dominated by handshake latency, not CPU cost.</p>
+<h3 id="bandwidth-overhead">Bandwidth Overhead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bandwidth-overhead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Per-record overhead (TLS 1.3):</strong></p>
+<pre><code>TLS Record Header:
+  Content Type: 1 byte
+  Legacy Version: 2 bytes
+  Length: 2 bytes
+  = 5 bytes header
+
+AEAD Authentication Tag:
+  = 16 bytes (GCM/Poly1305)
+
+Total overhead per record: 21 bytes
+</code></pre>
+<p><strong>For a 1400-byte Ethernet frame:</strong></p>
+<ul>
+<li>Useful payload: ~1379 bytes</li>
+<li>Overhead: ~1.5%</li>
+</ul>
+<p>Negligible for most applications.</p>
+<h3 id="tls-false-start">TLS False Start<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-false-start" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Optimization in TLS 1.2 (obsoleted by TLS 1.3’s 1-RTT):</p>
+<p>Client sends application data <strong>before</strong> receiving server’s Finished message:</p>
+<pre><code>Client                         Server
+ClientHello         -------->
+                    &lt;--------  ServerHello
+                               Certificate
+                               ServerKeyExchange
+                               ServerHelloDone
+ClientKeyExchange
+ChangeCipherSpec
+Finished
+Application Data    -------->  &lt;- False Start!
+                    &lt;--------  ChangeCipherSpec
+                               Finished
+Application Data    &lt;------->  Application Data
+</code></pre>
+<p><strong>Risk:</strong> Client sends data before server is fully authenticated. Requires additional security properties from cipher suite.</p>
+<p><strong>TLS 1.3 makes this unnecessary</strong> by completing handshake in 1-RTT.</p>
+<h2 id="security-considerations">Security Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="forward-secrecy">Forward Secrecy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forward-secrecy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Definition:</strong> Compromise of long-term keys (server’s private key) doesn’t allow decryption of past sessions.</p>
+<p><strong>How TLS 1.3 achieves this:</strong></p>
+<p>Every connection uses <strong>ephemeral key exchange</strong>:</p>
+<pre><code>Connection 1:
+  Client generates ephemeral DH private key
+  Server generates ephemeral DH private key
+  Both derive session key
+  ✓ Session key destroyed after connection
+
+Connection 2:
+  NEW ephemeral keys generated
+  Completely unrelated to Connection 1
+  ✓ Independent session key
+
+If server's long-term private key is compromised:
+  → Attacker can impersonate server in future
+  ✗ But cannot decrypt past recorded sessions
+</code></pre>
+<p>TLS 1.2’s RSA key exchange <strong>doesn’t have forward secrecy:</strong></p>
+<pre><code>RSA key exchange (removed in TLS 1.3):
+  Client encrypts session key with server's public key
+  Attacker records encrypted session
+
+Later, if server's private key is compromised:
+  ✓ Attacker can decrypt session key
+  ✓ Attacker can decrypt entire recorded session
+</code></pre>
+<p>This is why TLS 1.3 removed RSA key exchange entirely.</p>
+<h3 id="downgrade-attacks">Downgrade Attacks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#downgrade-attacks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How do you prevent attackers from forcing use of weak TLS versions?</p>
+<p><strong>TLS 1.3 protection:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Client sends supported versions in extension</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ClientHello {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    legacy_version: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0303</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Appears to be TLS 1.2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    extensions: {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        supported_versions: [</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0304</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0303</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0302</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">                            // Actually: TLS 1.3, 1.2, 1.1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Server must respond with highest mutually supported version</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ServerHello {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    legacy_version: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0303</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    extensions: {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        supported_versions: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0304</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // TLS 1.3 selected</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Both sides verify the version wasn't downgraded:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Finished message includes hash of entire handshake</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Including the version negotiation</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// If attacker modified versions, hash won't match</span></span></code></pre></figure>
+<p><strong>Additional protection (downgrade sentinels):</strong></p>
+<p>If server is forced to negotiate TLS 1.2 or earlier, it includes a <strong>special random value</strong> in ServerHello:</p>
+<pre><code>TLS 1.2 downgrade:
+  server_random = [...24 bytes...] + 0x44 0x4F 0x57 0x4E 0x47 0x52 0x44 0x01
+                                     ^^^^^^^^^^^^ &quot;DOWNGRD\x01&quot;
+
+TLS 1.1 or earlier:
+  server_random = [...24 bytes...] + 0x44 0x4F 0x57 0x4E 0x47 0x52 0x44 0x00
+                                     ^^^^^^^^^^^^ &quot;DOWNGRD\x00&quot;
+</code></pre>
+<p>TLS 1.3 clients detect this sentinel and abort the connection, preventing downgrade.</p>
+<h2 id="the-big-picture-protocol-comparison">The Big Picture: Protocol Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-picture-protocol-comparison" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Protocol</th><th>Transport</th><th>Encryption</th><th>Handshake</th><th>Use Case</th></tr></thead><tbody><tr><td><strong>TCP</strong></td><td>Reliable</td><td>None</td><td>1 RTT</td><td>Legacy apps</td></tr><tr><td><strong>TCP + TLS 1.2</strong></td><td>Reliable</td><td>Layered</td><td>3 RTT</td><td>Older HTTPS</td></tr><tr><td><strong>TCP + TLS 1.3</strong></td><td>Reliable</td><td>Layered</td><td>2 RTT</td><td>Modern HTTPS</td></tr><tr><td><strong>UDP</strong></td><td>Unreliable</td><td>None</td><td>None</td><td>Gaming, streaming</td></tr><tr><td><strong>UDP + DTLS</strong></td><td>Unreliable</td><td>Layered</td><td>2-3 RTT</td><td>VoIP, WebRTC</td></tr><tr><td><strong>QUIC</strong></td><td>Reliable streams</td><td>Integrated</td><td>1 RTT (0-RTT)</td><td>HTTP/3, future</td></tr></tbody></table></div>
+<p><strong>Evolution of web transport:</strong></p>
+<pre><code>1990s: HTTP/1.0 over TCP
+       ↓
+2000s: HTTP/1.1 over TCP
+       ↓ (add security)
+2010s: HTTP/1.1 over TCP+TLS 1.2
+       ↓ (multiplexing)
+2015:  HTTP/2 over TCP+TLS 1.2/1.3
+       ↓ (fix head-of-line blocking)
+2020s: HTTP/3 over QUIC (UDP+integrated TLS 1.3)
+</code></pre>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>You now understand how TLS actually works under the hood: the handshake mechanics, certificate validation, and protocol integration.</p>
+<p>But we’ve glossed over the cryptography. <strong>How does Diffie-Hellman key exchange work? What makes AES-GCM secure? Why is forward secrecy mathematically possible?</strong></p>
+<p><strong>Next article: WTF is Public Key Cryptography?</strong> (where math becomes magic)</p>
+<p><strong>Related reading:</strong></p>
+<ul>
+<li><a href="../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a> - The beginner-friendly introduction</li>
+<li><a href="../QUIC" class="internal" data-slug="QUIC">QUIC</a> - Modern protocol with TLS 1.3 integrated</li>
+<li><a href="../Networking/TCP" class="internal" data-slug="Networking/TCP">TCP</a> - The reliable transport layer</li>
+<li><a href="../Networking/UDP" class="internal" data-slug="Networking/UDP">UDP</a> - The unreliable transport layer</li>
+<li><a href="../Networking/HTTP3" class="internal" data-slug="Networking/HTTP3">HTTP3</a> - HTTP over QUIC</li>
+<li><a href="../Networking/WebSocket" class="internal" data-slug="Networking/WebSocket">WebSocket</a> - Real-time protocol over TLS</li>
+<li><a href="../Fundamentals/Encryption" class="internal" data-slug="Fundamentals/Encryption">Encryption</a> - The cryptography behind TLS</li>
+</ul>
+<hr/>
+<h2 id="sources--verification">Sources &amp; Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources--verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Verified during writing:</strong></p>
+<ul>
+<li>TLS 1.3 specification: <a href="https://datatracker.ietf.org/doc/html/rfc8446" class="external">RFC 8446<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>QUIC transport protocol: <a href="https://datatracker.ietf.org/doc/html/rfc9000" class="external">RFC 9000<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>QUIC TLS integration: <a href="https://quicwg.org/base-drafts/rfc9001.html" class="external">RFC 9001<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>X.509 certificate format: <a href="https://www.rfc-editor.org/rfc/rfc5280" class="external">RFC 5280<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Certificate path validation: <a href="https://www.rfc-editor.org/rfc/rfc4158" class="external">RFC 4158<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>TLS security analysis: <a href="https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/" class="external">Cloudflare TLS 1.3 deep dive<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Certificate validity changes: <a href="https://www.ssl.com/faqs/what-is-an-x-509-certificate/" class="external">SSL.com 47-day timeline<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>To double-check this article:</strong></p>
+<ol>
+<li><code>&quot;RFC 8446 TLS 1.3 handshake protocol section 2&quot;</code></li>
+<li><code>&quot;RFC 9001 QUIC TLS integration&quot;</code></li>
+<li><code>&quot;RFC 5280 X.509 certificate path validation&quot;</code></li>
+<li><code>&quot;TLS 1.3 removed features security improvements&quot;</code></li>
+</ol>
+<p><strong>Last fact-check</strong>: 2025-12-30</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-114" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#tls-under-the-hood-advanced" data-for="tls-under-the-hood-advanced">TLS: Under the Hood (Advanced)</a></li><li class="depth-1"><a href="#tls-protocol-architecture" data-for="tls-protocol-architecture">TLS Protocol Architecture</a></li><li class="depth-1"><a href="#tls-13-handshake-technical-details" data-for="tls-13-handshake-technical-details">TLS 1.3 Handshake (Technical Details)</a></li><li class="depth-2"><a href="#full-handshake-1-rtt" data-for="full-handshake-1-rtt">Full Handshake (1-RTT)</a></li><li class="depth-2"><a href="#0-rtt-mode-zero-round-trip-time" data-for="0-rtt-mode-zero-round-trip-time">0-RTT Mode (Zero Round Trip Time)</a></li><li class="depth-2"><a href="#what-tls-13-removed" data-for="what-tls-13-removed">What TLS 1.3 Removed</a></li><li class="depth-1"><a href="#certificate-deep-dive" data-for="certificate-deep-dive">Certificate Deep Dive</a></li><li class="depth-2"><a href="#x509-certificate-structure" data-for="x509-certificate-structure">X.509 Certificate Structure</a></li><li class="depth-2"><a href="#certificate-chain-validation" data-for="certificate-chain-validation">Certificate Chain Validation</a></li><li class="depth-2"><a href="#certificate-revocation" data-for="certificate-revocation">Certificate Revocation</a></li><li class="depth-2"><a href="#certificate-validity-periods" data-for="certificate-validity-periods">Certificate Validity Periods</a></li><li class="depth-1"><a href="#protocol-stack-integration" data-for="protocol-stack-integration">Protocol Stack Integration</a></li><li class="depth-2"><a href="#traditional-tcp--tls" data-for="traditional-tcp--tls">Traditional: TCP + TLS</a></li><li class="depth-2"><a href="#modern-quic-integrated-tls-13" data-for="modern-quic-integrated-tls-13">Modern: QUIC (Integrated TLS 1.3)</a></li><li class="depth-2"><a href="#quics-tls-integration-rfc-9001" data-for="quics-tls-integration-rfc-9001">QUIC’s TLS Integration (RFC 9001)</a></li><li class="depth-1"><a href="#performance-characteristics" data-for="performance-characteristics">Performance Characteristics</a></li><li class="depth-2"><a href="#latency-breakdown" data-for="latency-breakdown">Latency Breakdown</a></li><li class="depth-2"><a href="#computational-cost" data-for="computational-cost">Computational Cost</a></li><li class="depth-2"><a href="#bandwidth-overhead" data-for="bandwidth-overhead">Bandwidth Overhead</a></li><li class="depth-2"><a href="#tls-false-start" data-for="tls-false-start">TLS False Start</a></li><li class="depth-1"><a href="#security-considerations" data-for="security-considerations">Security Considerations</a></li><li class="depth-2"><a href="#forward-secrecy" data-for="forward-secrecy">Forward Secrecy</a></li><li class="depth-2"><a href="#downgrade-attacks" data-for="downgrade-attacks">Downgrade Attacks</a></li><li class="depth-1"><a href="#the-big-picture-protocol-comparison" data-for="the-big-picture-protocol-comparison">The Big Picture: Protocol Comparison</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#sources--verification" data-for="sources--verification">Sources &amp; Verification</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Networking/Certificate-Verification" class="internal">WTF is Certificate Verification?</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2026</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

@@ -6,65 +6,65 @@
       <description>Last 10 notes on Tham Le&#039;s Notes</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>WTF is a Media Container vs a Codec?</title>
-    <link>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</link>
-    <guid>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</guid>
-    <description><![CDATA[ Why your MP4 file is actually a box holding compressed video and audio streams, not a video itself ]]></description>
-    <pubDate>Mon, 15 Dec 2025 00:00:00 GMT</pubDate>
+    <title>WTF is a Control Plane?</title>
+    <link>https://notes.thamle.live/Networking/Control-Plane</link>
+    <guid>https://notes.thamle.live/Networking/Control-Plane</guid>
+    <description><![CDATA[ Why raw WireGuard requires manual configuration for every peer, and how Tailscale, NetBird, and Headscale solve that problem with a coordination layer. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Welcome to My Notes</title>
-    <link>https://notes.thamle.live/</link>
-    <guid>https://notes.thamle.live/</guid>
-    <description><![CDATA[ From licking rocks to understanding malloc ]]></description>
-    <pubDate>Mon, 15 Dec 2025 00:00:00 GMT</pubDate>
+    <title>WTF is a Mesh Network?</title>
+    <link>https://notes.thamle.live/Networking/Mesh-Networking</link>
+    <guid>https://notes.thamle.live/Networking/Mesh-Networking</guid>
+    <description><![CDATA[ How hub-and-spoke VPNs work, why they fail at scale, and how mesh networking with WireGuard solves the problem. The complete picture of everything in this series. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is a Windows Package Installer? EXE vs MSI</title>
-    <link>https://notes.thamle.live/Fundamentals/Windows_Package_Installer</link>
-    <guid>https://notes.thamle.live/Fundamentals/Windows_Package_Installer</guid>
-    <description><![CDATA[ Understanding the difference between EXE and MSI installers, from PE format basics to the Windows Installer database ]]></description>
-    <pubDate>Thu, 11 Dec 2025 00:00:00 GMT</pubDate>
+    <title>WTF is NAT Traversal?</title>
+    <link>https://notes.thamle.live/Networking/NAT-Traversal</link>
+    <guid>https://notes.thamle.live/Networking/NAT-Traversal</guid>
+    <description><![CDATA[ How WireGuard and Tailscale connect two machines that are both hiding behind NAT, without either one having a public IP. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is Device Topology on Linux?</title>
-    <link>https://notes.thamle.live/Architecture/Device-Topology-on-Linux</link>
-    <guid>https://notes.thamle.live/Architecture/Device-Topology-on-Linux</guid>
-    <description><![CDATA[ Why your computer isn't a list of devices, but a complex family tree of buses, bridges, and controllers. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is a TUN/TAP Device?</title>
+    <link>https://notes.thamle.live/Networking/TUN-TAP</link>
+    <guid>https://notes.thamle.live/Networking/TUN-TAP</guid>
+    <description><![CDATA[ How userspace programs pretend to be network cards, and why WireGuard, Tailscale, and OpenVPN all depend on it. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is the Linux Input Core?</title>
-    <link>https://notes.thamle.live/Architecture/Linux-Input-Core</link>
-    <guid>https://notes.thamle.live/Architecture/Linux-Input-Core</guid>
-    <description><![CDATA[ How the Linux kernel turns chaos into order by forcing every mouse, keyboard, and joystick to speak the same language. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is the WireGuard Protocol?</title>
+    <link>https://notes.thamle.live/Networking/WireGuard-Protocol</link>
+    <guid>https://notes.thamle.live/Networking/WireGuard-Protocol</guid>
+    <description><![CDATA[ A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF are Scancodes, Keycodes, and Virtual Keys?</title>
-    <link>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</link>
-    <guid>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</guid>
-    <description><![CDATA[ Tracing the chaotic journey of a keystroke from hardware voltage to ASCII character. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is JWT?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/JWT</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/JWT</guid>
+    <description><![CDATA[ JWT explained from structure to cryptography to the attacks that have broken real libraries. What it is, how it works, and where it goes wrong. ]]></description>
+    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is evdev?</title>
-    <link>https://notes.thamle.live/Architecture/evdev</link>
-    <guid>https://notes.thamle.live/Architecture/evdev</guid>
-    <description><![CDATA[ The universal protocol that lets your code listen to everything from a mouse to a PS5 controller without going insane. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is the OAuth RFC Zoo?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/OAuth-RFC-Zoo</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/OAuth-RFC-Zoo</guid>
+    <description><![CDATA[ A map of the OAuth 2.0 RFC ecosystem: which specs matter, what each one fixes, and why the core spec alone is not enough. ]]></description>
+    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is hwdb?</title>
-    <link>https://notes.thamle.live/Architecture/hwdb</link>
-    <guid>https://notes.thamle.live/Architecture/hwdb</guid>
-    <description><![CDATA[ The giant database of overrides that fixes your hardware's broken promises. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is OAuth 2.0?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/OAuth</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/OAuth</guid>
+    <description><![CDATA[ OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work. ]]></description>
+    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is sysfs?</title>
-    <link>https://notes.thamle.live/Architecture/sysfs</link>
-    <guid>https://notes.thamle.live/Architecture/sysfs</guid>
-    <description><![CDATA[ The virtual filesystem that turns Kernel C structs into files you can read and write. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is OpenID Connect?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</guid>
+    <description><![CDATA[ OpenID Connect explained: the identity layer that sits on top of OAuth 2.0 and actually answers 'who is this user?' ]]></description>
+    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item><item>
-    <title>WTF is udev?</title>
-    <link>https://notes.thamle.live/Architecture/udev</link>
-    <guid>https://notes.thamle.live/Architecture/udev</guid>
-    <description><![CDATA[ The userspace device manager that decides what happens when you plug something in. ]]></description>
-    <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+    <title>WTF is SSO?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/SSO</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/SSO</guid>
+    <description><![CDATA[ Single Sign-On explained: how one login session spans multiple independent apps, the three-session model, and why logout is the hard part. ]]></description>
+    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item>
     </channel>
   </rss>

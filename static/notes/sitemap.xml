@@ -5,16 +5,43 @@
     <loc>https://notes.thamle.live/Architecture/HID</loc>
     <lastmod>2025-01-14T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Architecture/HIDCLASS-SYS</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Architecture/Input-Device</loc>
     <lastmod>2025-01-14T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Linux-Input-Core</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Architecture/Linux-vs-Windows-Input</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</loc>
     <lastmod>2025-12-15T00:00:00.000Z</lastmod>
   </url><url>
-    <loc>https://notes.thamle.live/Architecture/Scancodes,-Keycodes,-and-Virtual-Keys</loc>
+    <loc>https://notes.thamle.live/Architecture/Raw-Input</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Scancodes-Keycodes-and-Virtual-Keys</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Virtual-Input</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Virtual-Key-Codes</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Kernel-Streaming-Filters</loc>
+    <lastmod>2025-11-04T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Windows-Audio-Stack</loc>
+    <lastmod>2025-11-03T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-IRP</loc>
+    <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-Message-Queue</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/evdev</loc>
@@ -30,13 +57,13 @@
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Callback-Hell</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Coroutines</loc>
     <lastmod>2025-08-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Data-Race</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-03T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/Event-Loop</loc>
     <lastmod>2025-07-09T00:00:00.000Z</lastmod>
@@ -46,6 +73,27 @@
   </url><url>
     <loc>https://notes.thamle.live/Concurrency/async</loc>
     <lastmod>2025-08-09T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/JWT</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/OAuth-RFC-Zoo</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/OAuth</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/SSO</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/Session-Management</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/mTLS-and-DPoP</loc>
+    <lastmod>2026-02-24T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Cybersecurity/Safe-IT-Practices</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
@@ -63,55 +111,58 @@
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Algorithms-Real-World</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-22T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Big-O</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-01T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/DSA-Patterns</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-18T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/DSA-Roadmap</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-02T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Dynamic-Programming</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-12T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Graph-Algorithms</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/DSA/Sorting-Algorithms</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Debugging/Debugging-Segfaults</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-16T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Debugging/GDB-Guide</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-12T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Debugging/Valgrind-Guide</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-13T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/CPU</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/CUSE</loc>
     <lastmod>2025-11-26T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Compiler</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-11T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Computational-Models</loc>
     <lastmod>2025-08-10T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/Display-Server</loc>
+    <lastmod>2025-09-08T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Encryption</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-19T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/FFI</loc>
+    <lastmod>2025-09-14T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/FFmpeg</loc>
     <lastmod>2025-10-01T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Fundamentals/FSM</loc>
-    <lastmod>2025-08-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/FUSE</loc>
     <lastmod>2025-11-26T00:00:00.000Z</lastmod>
@@ -120,10 +171,10 @@
     <lastmod>2025-11-26T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Lambda-Calculus</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-22T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Memory</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Pointer-vs-Reference</loc>
     <lastmod>2025-10-16T00:00:00.000Z</lastmod>
@@ -132,16 +183,25 @@
     <lastmod>2025-10-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/RAII</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-26T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/Rule-of-Three</loc>
+    <lastmod>2025-08-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/Scancode</loc>
+    <lastmod>2025-09-14T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Systems-Programming</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-08-13T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Turing-Machine</loc>
     <lastmod>2025-08-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Unicode</loc>
     <lastmod>2025-09-15T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/Virtual-Keyboard</loc>
+    <lastmod>2025-09-20T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/Wayland</loc>
     <lastmod>2025-11-17T00:00:00.000Z</lastmod>
@@ -153,40 +213,43 @@
     <lastmod>2025-11-17T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Hardware/Computer</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-18T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Hardware/Logic-Gate</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Hardware/Transistor</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-14T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Assembly</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-25T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/Boost-Asio</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/C++20</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-02T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/Process-Thread-Coroutine-CPP</loc>
     <lastmod>2025-08-20T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/co_await</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-03T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/std-mutex</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-07T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/C++/std-thread</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-06T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/OCaml</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-09-29T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-Learning/Modules_in_Rust</loc>
     <lastmod>2025-10-01T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Languages/Rust-Learning/Rust_book_link</loc>
+    <lastmod>2025-10-10T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust-vs-Cpp</loc>
     <lastmod>2025-09-05T00:00:00.000Z</lastmod>
@@ -195,16 +258,22 @@
     <lastmod>2025-09-01T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust/Borrow-Checker</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-17T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust/Borrowing</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Languages/Rust/Cargo</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-14T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/C10k-Problem</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-31T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Certificate-Verification</loc>
+    <lastmod>2025-12-30T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Control-Plane</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/DNS-Authority</loc>
     <lastmod>2025-11-14T00:00:00.000Z</lastmod>
@@ -214,6 +283,9 @@
   </url><url>
     <loc>https://notes.thamle.live/Networking/Encapsulation</loc>
     <lastmod>2025-10-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Ethernet</loc>
+    <lastmod>2025-10-12T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/HTTP</loc>
     <lastmod>2025-10-22T00:00:00.000Z</lastmod>
@@ -231,19 +303,28 @@
     <lastmod>2025-10-17T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/ISP</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-23T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Mesh-Networking</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/NAT-Traversal</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Network-Buffer</loc>
     <lastmod>2025-11-14T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Network-Layer</loc>
+    <lastmod>2025-10-15T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Networking</loc>
     <lastmod>2025-08-09T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Non-blocking-IO</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Packet</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-25T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Ping</loc>
     <lastmod>2025-11-14T00:00:00.000Z</lastmod>
@@ -252,16 +333,28 @@
     <lastmod>2025-10-23T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Router</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-24T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/Socket-API</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-27T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/TCP</loc>
     <lastmod>2025-10-18T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Networking/TLS-Advanced</loc>
+    <lastmod>2025-12-30T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Networking/TLS</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-01T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/TUN-TAP</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Transport-Layer</loc>
+    <lastmod>2025-10-18T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Networking/Transport-Protocols</loc>
+    <lastmod>2025-10-21T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/UDP</loc>
     <lastmod>2025-10-19T00:00:00.000Z</lastmod>
@@ -269,47 +362,53 @@
     <loc>https://notes.thamle.live/Networking/WebSocket</loc>
     <lastmod>2025-10-21T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Networking/WireGuard-Protocol</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Networking/epoll</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-29T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/localhost</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-22T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Networking/socket</loc>
     <lastmod>2025-10-20T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Roadmaps/Systems-Developer-Roadmap</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-10-08T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</loc>
+    <lastmod>2025-08-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/Context-Switch</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-02T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/Operating-System</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-03T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/Process-Thread-Coroutine</loc>
     <lastmod>2025-08-01T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Theory/Algorithm-Theory</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Theory/Mathematics-for-CS</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-30T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Theory/Theory-of-Computation</loc>
-    <lastmod>2025-11-06T00:00:00.000Z</lastmod>
+    <lastmod>2025-07-22T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/WTF-Happens-When/Compile</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/WTF-Happens-When/Run-Program</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/WTF-Happens-When/Type-Google</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/WTF-Happens-When/malloc</loc>
-    <lastmod>2025-11-07T00:00:00.000Z</lastmod>
+    <lastmod>2025-11-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/</loc>
     <lastmod>2025-12-15T00:00:00.000Z</lastmod>

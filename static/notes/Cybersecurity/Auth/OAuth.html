@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>WTF is OAuth 2.0?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is OAuth 2.0?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is OAuth 2.0?"/><meta name="twitter:description" content="OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work."/><meta property="og:description" content="OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work."/><meta property="og:image:alt" content="OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work."/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Cybersecurity/Auth/OAuth"/><meta property="twitter:url" content="https://notes.thamle.live/Cybersecurity/Auth/OAuth"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Cybersecurity/Auth/OAuth"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>{node.displayName=node.slugSegment}&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-76"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-76" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Cybersecurity/">Cybersecurity</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Cybersecurity/Auth/">Auth</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is OAuth 2.0?</a></div></nav><h1 class="article-title">WTF is OAuth 2.0?</h1><p show-comma="true" class="content-meta"><time datetime="2026-02-24T00:00:00.000Z">Feb 24, 2026</time><span>9 min read</span></p><ul class="tags"><li><a href="../../tags/networking" class="internal tag-link">networking</a></li><li><a href="../../tags/security" class="internal tag-link">security</a></li><li><a href="../../tags/auth" class="internal tag-link">auth</a></li><li><a href="../../tags/protocols" class="internal tag-link">protocols</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-oauth-20">WTF is OAuth 2.0?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-oauth-20" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>The protocol that lets you say “yes, this app can read my calendar” without handing it your password.</em></p>
+<p>You click “Sign in with Google” on some random website. Google pops up, you approve, and suddenly that website has your email address. <strong>How did that happen without the website ever touching your password?</strong></p>
+<p>That’s OAuth 2.0. And once you see the system design behind it, you’ll realize it’s solving a genuinely elegant problem.</p>
+<h2 id="the-core-analogy">The Core Analogy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-core-analogy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Think of OAuth 2.0 like a <strong>hotel key card system</strong>.</p>
+<p>You check in at the front desk (the <strong>authorization server</strong>). You show your passport (your actual credentials). The front desk doesn’t give the valet your passport. They give you a <strong>key card</strong> (an access token) that only opens specific doors, only works for a limited time, and can be revoked if lost.</p>
+<p>The valet (the <strong>third-party app</strong>) gets the key card. They can park your car. They cannot open your room safe. They cannot check you out. The key card is all they get, scoped to exactly what they need.</p>
+<p>That’s the entire mental model. Now let’s unpack the architecture.</p>
+<h2 id="the-problem-it-solves">The Problem It Solves<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-problem-it-solves" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before OAuth, the only way for a third-party app to access your data elsewhere was to give it your <strong>username and password directly</strong>. The app would log in as you. Full access. Forever.</p>
+<p>This is a beautiful dumpster fire:</p>
+<ul>
+<li>The third-party app can do <em>anything</em> your account allows, not just what you intended</li>
+<li>If you change your password, every integration breaks</li>
+<li>If the app gets compromised, attackers have your real credentials</li>
+<li>You have no mechanism to revoke access to just one app without nuking all of them</li>
+</ul>
+<p>OAuth 2.0 replaces “give the app your password” with “give the app a scoped, expiring, revocable token.” The password never leaves the authorization server.</p>
+<h2 id="the-four-actors">The Four Actors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-four-actors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>RFC 6749 defines four roles. You need these before the flows make sense.</p>
+<p><strong>Resource Owner</strong> is you, the user. You own the data. You decide who gets access to it.</p>
+<p><strong>Client</strong> is the third-party application that wants access. A web app, a mobile app, a backend service. The client never sees your password.</p>
+<p><strong>Authorization Server</strong> is the trusted gatekeeper. It verifies your identity, gets your consent, and issues tokens. Google’s auth server, GitHub’s auth server, your company’s Keycloak instance. This is where authentication logic lives.</p>
+<p><strong>Resource Server</strong> is the API holding your protected data. Google Calendar API, GitHub API, your company’s user service. It validates incoming tokens and decides whether to serve the request.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>One auth server, many resource servers </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>A single authorization server can issue tokens accepted by multiple resource servers. Google’s auth server mints tokens for Gmail, Drive, Calendar, YouTube. The services are separate. The trust chain runs through the auth server.</p>
+</div>
+</blockquote>
+<p>Here’s the system at a glance:</p>
+<pre><code>You (Resource Owner)
+    |
+    | (1) You trust the Auth Server. You log in there.
+    v
+Authorization Server  &lt;-----> Client (Third-party App)
+    |                              |
+    | (2) Issues access token      | (3) Presents token
+    v                              v
+                          Resource Server
+                          (your protected data)
+</code></pre>
+<p>The client never asks you for credentials directly. You authenticate with the auth server, which delegates access to the client via a token.</p>
+<h2 id="the-token-vocabulary">The Token Vocabulary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-token-vocabulary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Access Token</strong> is the key card. Short-lived (often 1 hour). The client presents this to the resource server with every request. The resource server validates it and serves data. RFC 6749 intentionally does not specify the format. Implementations use opaque strings or <a href="../../Cybersecurity/Auth/JWT" class="internal alias" data-slug="Cybersecurity/Auth/JWT">JSON Web Tokens</a>.</p>
+<p><strong>Refresh Token</strong> is a token for getting new access tokens without making the user log in again. Longer-lived. Never sent to the resource server, only back to the authorization server. Think of it as a “reissue key card” voucher stored safely server-side.</p>
+<p><strong>Authorization Code</strong> is a short-lived, single-use intermediate code. A claim ticket you exchange for the actual access token. It exists for a very specific security reason explained below.</p>
+<h2 id="the-flows-grant-types">The Flows (Grant Types)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-flows-grant-types" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>OAuth 2.0 is a framework, not a single protocol. It defines multiple “grant types”, each for a different context.</p>
+<h3 id="authorization-code-flow-the-one-you-should-use">Authorization Code Flow (The One You Should Use)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#authorization-code-flow-the-one-you-should-use" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Use this for web apps, mobile apps, SPAs. It’s designed so the access token <strong>never touches the browser</strong>.</p>
+<pre><code>User     Browser     Your App (Client)     Auth Server     Resource Server
+ |          |               |                   |                |
+ |-click--->|               |                   |                |
+ |          |---redirect--->|                   |                |
+ |          |               |--build auth URL-->|                |
+ |          |               |  client_id,       |                |
+ |          |&lt;--redirect----|  scope,            |                |
+ |          |   to auth     |  redirect_uri,     |                |
+ |          |   server      |  state (CSRF)      |                |
+ |          |                                    |                |
+ |&lt;---login page---------------------------------|                |
+ |--creds-->|------------------------------------------login---->|
+ |          |&lt;---------redirect with auth code-------(front ch.)--|
+ |          |               |                   |                |
+ |          |---code------->|                   |                |
+ |          |               |--POST /token----->| (back channel) |
+ |          |               |  code,            |                |
+ |          |               |  client_secret    |                |
+ |          |               |&lt;--access_token----|                |
+ |          |               |   refresh_token   |                |
+ |          |               |                   |                |
+ |          |               |--GET /data, Bearer token---------->|
+ |          |               |&lt;--protected data------------------|
+</code></pre>
+<p>The auth code travels through the browser (front channel, exposed). The access token is exchanged server to server (back channel, never exposed to the browser).</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Why the two-step? Why not get the token directly? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Because browsers leak things. History, logs, referrer headers, browser extensions. The auth code is useless without the <code>client_secret</code>, which only lives on your server. Even if an attacker intercepts the auth code, they can’t exchange it without the secret.</p>
+</div>
+</blockquote>
+<p>The <code>state</code> parameter is <a href="../../Networking/HTTP" class="internal alias" data-slug="Networking/HTTP">CSRF</a> protection. Your app generates a random value, sends it with the auth request, and verifies it comes back unchanged on the callback. If it doesn’t match, abort.</p>
+<h3 id="client-credentials-flow-machine-to-machine">Client Credentials Flow (Machine to Machine)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-credentials-flow-machine-to-machine" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>No user involved. A backend service authenticates as itself.</p>
+<pre><code>Your Service (Client)           Auth Server
+        |                            |
+        |--POST /token------------->|
+        |  client_id                |
+        |  client_secret            |
+        |  grant_type=client_credentials
+        |&lt;--access_token------------|
+        |                            |
+        |--API call with token------>Resource Server
+</code></pre>
+<p>Use this for microservice-to-microservice calls, batch jobs, CI/CD pipelines. Any time there’s no human in the loop.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>No refresh tokens in this flow </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Why would you need one? The service has its own credentials and can get a new access token directly whenever needed.</p>
+</div>
+</blockquote>
+<h3 id="pkce-the-mobile-app-fix">PKCE (The Mobile App Fix)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pkce-the-mobile-app-fix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Public clients like mobile apps and SPAs can’t keep a <code>client_secret</code> secret. The binary can be decompiled. The JavaScript can be read. So how do you use the Authorization Code flow safely?</p>
+<p><strong>PKCE</strong> (Proof Key for Code Exchange, pronounced “pixie”) replaces the static <code>client_secret</code> with a per-request dynamic secret:</p>
+<pre><code>1. App generates random code_verifier (43-128 random chars)
+2. App hashes it: code_challenge = base64url(SHA-256(code_verifier))
+3. App sends code_challenge in the auth request (safe to expose)
+4. Auth server stores code_challenge
+5. App sends code_verifier when exchanging the auth code for a token
+6. Auth server verifies SHA-256(code_verifier) == stored code_challenge
+</code></pre>
+<p>Even if an attacker steals the auth code, they don’t have the <code>code_verifier</code>. And the <code>code_verifier</code> is never transmitted until the exchange step, so it’s never in browser history.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>PKCE is now recommended for all clients </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Not just mobile. The OAuth 2.0 Security Best Current Practice recommends PKCE for all Authorization Code flows, even confidential web apps with client secrets. It’s layered defense.</p>
+</div>
+</blockquote>
+<h2 id="scopes-the-access-control-layer">Scopes: The Access Control Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scopes-the-access-control-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Scopes are how OAuth limits <em>what</em> a token can do. When the client builds the auth URL, it declares what it wants:</p>
+<pre><code>https://accounts.google.com/authorize?
+  client_id=my-app
+  &amp;scope=email profile calendar.readonly
+  &amp;response_type=code
+  &amp;redirect_uri=https://myapp.com/callback
+  &amp;state=abc123
+</code></pre>
+<p>The user sees a consent screen listing exactly what the app is requesting. The issued token is then limited to those scopes. The resource server enforces them on every request.</p>
+<p>This is the “limited doors” part of the hotel analogy. A token with <code>calendar.readonly</code> scope cannot modify your calendar. The resource server checks the scope claim and rejects any out-of-scope request.</p>
+<h2 id="the-token-lifecycle-in-production">The Token Lifecycle in Production<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-token-lifecycle-in-production" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Access Token  ------>  short-lived (15 min to 1 hour)
+Refresh Token ------>  long-lived (days to weeks), rotated on use
+Auth Code     ------>  single-use, max ~10 minutes
+</code></pre>
+<p>When the access token expires, the client silently uses the refresh token to get a new one. No user interaction needed. When the refresh token is used, a new refresh token is issued and the old one is invalidated (this is called rotation). If the refresh token itself expires or gets revoked, the user logs in again.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Bearer tokens: possession equals access </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>OAuth access tokens are <strong>bearer tokens</strong>. Whoever holds one gets access. No additional proof required. This is why <a href="../../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a> is non-negotiable for all OAuth communication. A token leaked over plain HTTP is game over.</p>
+</div>
+</blockquote>
+<h2 id="what-oauth-20-does-not-do">What OAuth 2.0 Does NOT Do<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-oauth-20-does-not-do" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here’s the most important architectural boundary in OAuth: <strong>it is an authorization framework, not an authentication protocol.</strong></p>
+<p>OAuth answers: “Does this client have permission to access these resources?”</p>
+<p>It does not answer: “Who is the user?”</p>
+<p>There is no standard field in an OAuth access token that says “this is Alice.” There is no standard endpoint in RFC 6749 for fetching user identity. This is by design. Authorization and authentication are different concerns, and keeping them separate keeps the spec clean.</p>
+<p>If you need identity (“who is this person?”), you need something layered on top of OAuth. That something is <a href="../../Cybersecurity/Auth/OpenID-Connect" class="internal alias" data-slug="Cybersecurity/Auth/OpenID-Connect">OpenID Connect</a>.</p>
+<h2 id="common-misconceptions">Common Misconceptions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-misconceptions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>”OAuth is for login”</strong>: No. OAuth is for delegation. It lets apps act on your behalf. <a href="../../Cybersecurity/Auth/OpenID-Connect" class="internal alias" data-slug="Cybersecurity/Auth/OpenID-Connect">OpenID Connect</a> is the layer that adds login/identity on top.</p>
+<p><strong>”The access token is always a JWT”</strong>: No. RFC 6749 says access tokens are opaque strings to the client. Many providers issue JWTs because it lets resource servers validate tokens locally without calling back to the auth server. But it’s not required.</p>
+<p><strong>”Implicit flow is fine for SPAs”</strong>: No. Implicit flow is deprecated. It returns the access token directly in the URL fragment, which is exposed to the browser. Use Authorization Code with PKCE instead.</p>
+<h2 id="whats-next">What’s Next<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-next" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>You now understand OAuth 2.0 as a system: four actors, three token types, two main flows, one scope system.</p>
+<p>But there’s still the identity question. OAuth gives the client an access token. It says nothing about <em>who approved it</em>. For that, we layer <a href="../../Cybersecurity/Auth/OpenID-Connect" class="internal alias" data-slug="Cybersecurity/Auth/OpenID-Connect">OpenID Connect</a> on top, which adds an ID token and a standardized way to ask “who is this user?”</p>
+<p>Next: <strong><a href="../../Cybersecurity/Auth/OpenID-Connect" class="internal alias" data-slug="Cybersecurity/Auth/OpenID-Connect">OpenID Connect</a></strong></p>
+<p><strong>Related reading:</strong></p>
+<ul>
+<li><a href="../../Networking/TLS" class="internal" data-slug="Networking/TLS">TLS</a> - Why HTTPS is mandatory for OAuth</li>
+<li><a href="../../Networking/HTTP" class="internal" data-slug="Networking/HTTP">HTTP</a> - The transport layer OAuth runs over</li>
+<li><a href="../../Cybersecurity/Auth/JWT" class="internal" data-slug="Cybersecurity/Auth/JWT">JWT</a> - The token format you’ll encounter everywhere in OAuth implementations</li>
+<li><a href="../../Fundamentals/Encryption" class="internal" data-slug="Fundamentals/Encryption">Encryption</a> - The crypto primitives behind token signing and verification</li>
+</ul>
+<hr/>
+<h2 id="sources">Sources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc6749" class="external">RFC 6749: The OAuth 2.0 Authorization Framework<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc9700" class="external">OAuth 2.0 Security Best Current Practice (RFC 9700)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc7636" class="external">PKCE: RFC 7636<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc8252" class="external">OAuth 2.0 for Native Apps: RFC 8252<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>Last fact-check</strong>: 2026-02-24</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-27" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-oauth-20" data-for="wtf-is-oauth-20">WTF is OAuth 2.0?</a></li><li class="depth-1"><a href="#the-core-analogy" data-for="the-core-analogy">The Core Analogy</a></li><li class="depth-1"><a href="#the-problem-it-solves" data-for="the-problem-it-solves">The Problem It Solves</a></li><li class="depth-1"><a href="#the-four-actors" data-for="the-four-actors">The Four Actors</a></li><li class="depth-1"><a href="#the-token-vocabulary" data-for="the-token-vocabulary">The Token Vocabulary</a></li><li class="depth-1"><a href="#the-flows-grant-types" data-for="the-flows-grant-types">The Flows (Grant Types)</a></li><li class="depth-2"><a href="#authorization-code-flow-the-one-you-should-use" data-for="authorization-code-flow-the-one-you-should-use">Authorization Code Flow (The One You Should Use)</a></li><li class="depth-2"><a href="#client-credentials-flow-machine-to-machine" data-for="client-credentials-flow-machine-to-machine">Client Credentials Flow (Machine to Machine)</a></li><li class="depth-2"><a href="#pkce-the-mobile-app-fix" data-for="pkce-the-mobile-app-fix">PKCE (The Mobile App Fix)</a></li><li class="depth-1"><a href="#scopes-the-access-control-layer" data-for="scopes-the-access-control-layer">Scopes: The Access Control Layer</a></li><li class="depth-1"><a href="#the-token-lifecycle-in-production" data-for="the-token-lifecycle-in-production">The Token Lifecycle in Production</a></li><li class="depth-1"><a href="#what-oauth-20-does-not-do" data-for="what-oauth-20-does-not-do">What OAuth 2.0 Does NOT Do</a></li><li class="depth-1"><a href="#common-misconceptions" data-for="common-misconceptions">Common Misconceptions</a></li><li class="depth-1"><a href="#whats-next" data-for="whats-next">What’s Next</a></li><li class="depth-1"><a href="#sources" data-for="sources">Sources</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../Cybersecurity/Auth/JWT" class="internal">WTF is JWT?</a></li><li><a href="../../Cybersecurity/Auth/OAuth-RFC-Zoo" class="internal">WTF is the OAuth RFC Zoo?</a></li><li><a href="../../Cybersecurity/Auth/OpenID-Connect" class="internal">WTF is OpenID Connect?</a></li><li><a href="../../Cybersecurity/Auth/SSO" class="internal">WTF is SSO?</a></li><li><a href="../../Cybersecurity/Auth/Session-Management" class="internal">WTF is Session Management?</a></li><li><a href="../../Cybersecurity/Auth/mTLS-and-DPoP" class="internal">WTF is mTLS / DPoP?</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2026</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>
