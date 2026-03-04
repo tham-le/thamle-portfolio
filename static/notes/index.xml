@@ -6,6 +6,54 @@
       <description>Last 10 notes on Tham Le&#039;s Notes</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>WTF is VAAPI?</title>
+    <link>https://notes.thamle.live/Architecture/Media/VAAPI</link>
+    <guid>https://notes.thamle.live/Architecture/Media/VAAPI</guid>
+    <description><![CDATA[ How Linux offloads video encoding and decoding to the GPU — the VA-API abstraction layer, driver stack, and FFmpeg integration. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is the Windows Clipboard?</title>
+    <link>https://notes.thamle.live/Architecture/Windows-Clipboard</link>
+    <guid>https://notes.thamle.live/Architecture/Windows-Clipboard</guid>
+    <description><![CDATA[ How Windows stores, transfers, and negotiates clipboard data — from CF_UNICODETEXT to CF_HTML to delayed rendering. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is the Windows Notification Area?</title>
+    <link>https://notes.thamle.live/Architecture/Windows-Notification-Area</link>
+    <guid>https://notes.thamle.live/Architecture/Windows-Notification-Area</guid>
+    <description><![CDATA[ How system tray icons actually work — Shell_NotifyIcon, hidden windows, and the message pump behind the little icons. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is the X11 Clipboard?</title>
+    <link>https://notes.thamle.live/Architecture/X11-Clipboard</link>
+    <guid>https://notes.thamle.live/Architecture/X11-Clipboard</guid>
+    <description><![CDATA[ Why paste breaks when the source app closes — and the wild request/response protocol behind X11 selections. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is PKCE?</title>
+    <link>https://notes.thamle.live/Cybersecurity/Auth/PKCE</link>
+    <guid>https://notes.thamle.live/Cybersecurity/Auth/PKCE</guid>
+    <description><![CDATA[ Why desktop and mobile apps can't keep secrets, and the elegant trick that makes OAuth safe without them. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is GPU Rendering in a Container?</title>
+    <link>https://notes.thamle.live/Fundamentals/GPU-Rendering-Containers</link>
+    <guid>https://notes.thamle.live/Fundamentals/GPU-Rendering-Containers</guid>
+    <description><![CDATA[ How to render graphics inside Docker — from Xvfb fake displays to VirtualGL GPU passthrough to software rendering fallbacks. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is JNI?</title>
+    <link>https://notes.thamle.live/Fundamentals/JNI</link>
+    <guid>https://notes.thamle.live/Fundamentals/JNI</guid>
+    <description><![CDATA[ The bridge between native code and the JVM — how Rust talks to Java on Android, and why it's painful. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>WTF is Cross-Platform Rust?</title>
+    <link>https://notes.thamle.live/Languages/Rust/Cross-Platform-Rust</link>
+    <guid>https://notes.thamle.live/Languages/Rust/Cross-Platform-Rust</guid>
+    <description><![CDATA[ The reality of shipping Rust to Linux, Windows, macOS, Android, and iOS — cfg attributes, platform deps, and the pain points. ]]></description>
+    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
+  </item><item>
     <title>WTF is a Control Plane?</title>
     <link>https://notes.thamle.live/Networking/Control-Plane</link>
     <guid>https://notes.thamle.live/Networking/Control-Plane</guid>
@@ -17,54 +65,6 @@
     <guid>https://notes.thamle.live/Networking/Mesh-Networking</guid>
     <description><![CDATA[ How hub-and-spoke VPNs work, why they fail at scale, and how mesh networking with WireGuard solves the problem. The complete picture of everything in this series. ]]></description>
     <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is NAT Traversal?</title>
-    <link>https://notes.thamle.live/Networking/NAT-Traversal</link>
-    <guid>https://notes.thamle.live/Networking/NAT-Traversal</guid>
-    <description><![CDATA[ How WireGuard and Tailscale connect two machines that are both hiding behind NAT, without either one having a public IP. ]]></description>
-    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is a TUN/TAP Device?</title>
-    <link>https://notes.thamle.live/Networking/TUN-TAP</link>
-    <guid>https://notes.thamle.live/Networking/TUN-TAP</guid>
-    <description><![CDATA[ How userspace programs pretend to be network cards, and why WireGuard, Tailscale, and OpenVPN all depend on it. ]]></description>
-    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is the WireGuard Protocol?</title>
-    <link>https://notes.thamle.live/Networking/WireGuard-Protocol</link>
-    <guid>https://notes.thamle.live/Networking/WireGuard-Protocol</guid>
-    <description><![CDATA[ A line-by-line look at how WireGuard's Noise handshake, Curve25519 key exchange, and ChaCha20-Poly1305 encryption actually work together. ]]></description>
-    <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is JWT?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Auth/JWT</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Auth/JWT</guid>
-    <description><![CDATA[ JWT explained from structure to cryptography to the attacks that have broken real libraries. What it is, how it works, and where it goes wrong. ]]></description>
-    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is the OAuth RFC Zoo?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Auth/OAuth-RFC-Zoo</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Auth/OAuth-RFC-Zoo</guid>
-    <description><![CDATA[ A map of the OAuth 2.0 RFC ecosystem: which specs matter, what each one fixes, and why the core spec alone is not enough. ]]></description>
-    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is OAuth 2.0?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Auth/OAuth</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Auth/OAuth</guid>
-    <description><![CDATA[ OAuth 2.0 explained from the system design perspective: why it exists, the four actors, and how the flows work. ]]></description>
-    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is OpenID Connect?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</guid>
-    <description><![CDATA[ OpenID Connect explained: the identity layer that sits on top of OAuth 2.0 and actually answers 'who is this user?' ]]></description>
-    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
-  </item><item>
-    <title>WTF is SSO?</title>
-    <link>https://notes.thamle.live/Cybersecurity/Auth/SSO</link>
-    <guid>https://notes.thamle.live/Cybersecurity/Auth/SSO</guid>
-    <description><![CDATA[ Single Sign-On explained: how one login session spans multiple independent apps, the three-session model, and why logout is the hard part. ]]></description>
-    <pubDate>Tue, 24 Feb 2026 00:00:00 GMT</pubDate>
   </item>
     </channel>
   </rss>

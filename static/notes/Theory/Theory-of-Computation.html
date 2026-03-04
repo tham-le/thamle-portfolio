@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr"><head><title>Theory of Computation Roadmap</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="Theory of Computation Roadmap"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Theory of Computation Roadmap"/><meta name="twitter:description" content="Essential theory of computation topics - automata, computability, and complexity theory"/><meta property="og:description" content="Essential theory of computation topics - automata, computability, and complexity theory"/><meta property="og:image:alt" content="Essential theory of computation topics - automata, computability, and complexity theory"/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Theory/Theory-of-Computation"/><meta property="twitter:url" content="https://notes.thamle.live/Theory/Theory-of-Computation"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Essential theory of computation topics - automata, computability, and complexity theory"/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+<html lang="en" dir="ltr"><head><title>WTF is Theory of Computation?</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Tham Le's Notes"/><meta property="og:title" content="WTF is Theory of Computation?"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="WTF is Theory of Computation?"/><meta name="twitter:description" content="What computers can and can't solve, and how fast they can solve it — automata, computability, and complexity theory."/><meta property="og:description" content="What computers can and can't solve, and how fast they can solve it — automata, computability, and complexity theory."/><meta property="og:image:alt" content="What computers can and can't solve, and how fast they can solve it — automata, computability, and complexity theory."/><meta property="og:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:url" content="https://notes.thamle.live/static/og-image.png"/><meta name="twitter:image" content="https://notes.thamle.live/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="notes.thamle.live"/><meta property="og:url" content="https://notes.thamle.live/Theory/Theory-of-Computation"/><meta property="twitter:url" content="https://notes.thamle.live/Theory/Theory-of-Computation"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="What computers can and can't solve, and how fast they can solve it — automata, computability, and complexity theory."/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
   position: absolute;
   display: flex;
   float: right;
@@ -116,613 +116,161 @@ pre:hover > .expand-button {
   padding: 0 12px;
   font-size: 14px;
 }
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Theory/Theory-of-Computation"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>{node.displayName=node.slugSegment}&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-291"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-291" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Theory/">Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Theory of Computation Roadmap</a></div></nav><h1 class="article-title">Theory of Computation Roadmap</h1><p show-comma="true" class="content-meta"><time datetime="2025-07-22T00:00:00.000Z">Jul 22, 2025</time><span>10 min read</span></p><ul class="tags"><li><a href="../tags/theory" class="internal tag-link">theory</a></li><li><a href="../tags/computer-science" class="internal tag-link">computer-science</a></li><li><a href="../tags/roadmap" class="internal tag-link">roadmap</a></li></ul></div></div><article class="popover-hint"><p><strong>Theory of Computation</strong> answers fundamental questions:</p>
-<ul>
-<li>What problems can computers solve?</li>
-<li>What problems are impossible to solve?</li>
-<li>How efficiently can we solve problems?</li>
-</ul>
-<p>This is the <strong>mathematical foundation</strong> of computer science. Understanding it makes you a computer scientist, not just a programmer.</p>
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvbXktbm90ZXMvbXktbm90ZXMvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://notes.thamle.live/index.xml"/></head><body data-slug="Theory/Theory-of-Computation"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Tham Le's Notes</a></h2><div class="spacer mobile-only"></div><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button><div class="explorer desktop-only" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>{node.displayName=node.slugSegment}&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-301"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-301" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../Theory/">Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>WTF is Theory of Computation?</a></div></nav><h1 class="article-title">WTF is Theory of Computation?</h1><p show-comma="true" class="content-meta"><time datetime="2025-07-22T00:00:00.000Z">Jul 22, 2025</time><span>7 min read</span></p><ul class="tags"><li><a href="../tags/theory" class="internal tag-link">theory</a></li><li><a href="../tags/computer-science" class="internal tag-link">computer-science</a></li><li><a href="../tags/deep-dive" class="internal tag-link">deep-dive</a></li></ul></div></div><article class="popover-hint"><h1 id="wtf-is-theory-of-computation">WTF is Theory of Computation?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wtf-is-theory-of-computation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><em>The mathematical framework that tells you when to stop looking for a better algorithm — because one can’t exist.</em></p>
+<p>You spend a week optimizing a scheduling algorithm. You try every trick you know. The best solution still takes exponential time. Was that a failure of skill, or is the problem itself fundamentally hard?</p>
+<p>Theory of computation answers that question. It draws the boundaries of what is computable, what is decidable, and what is tractable. Once you understand those boundaries, you stop wasting time on impossible optimizations and start reaching for the right tool: heuristics, approximation, or a different problem formulation entirely.</p>
 <hr/>
-<h2 id="why-study-theory-of-computation">Why Study Theory of Computation?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-study-theory-of-computation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="for-systems-programmers">For Systems Programmers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#for-systems-programmers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Practical benefits:</strong></p>
-<ul>
-<li><strong>Understand limits</strong> - Know when optimization is impossible</li>
-<li><strong>Recognize patterns</strong> - See problems you’ve encountered before</li>
-<li><strong>Design better algorithms</strong> - Use theoretical insights</li>
-<li><strong>Interview preparation</strong> - Complexity theory is heavily tested</li>
-<li><strong>Appreciate tools</strong> - Understand how compilers, parsers work</li>
-</ul>
-<p><strong>Example:</strong> Knowing that certain problems are NP-complete tells you to stop looking for perfect algorithms and use heuristics instead.</p>
+<h2 id="the-core-analogy">The Core Analogy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-core-analogy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Think of computation like a factory with three questions posted on the wall:</p>
+<ol>
+<li><strong>What machines can we build?</strong> (Automata theory)</li>
+<li><strong>What products are impossible to manufacture, no matter the machine?</strong> (Computability)</li>
+<li><strong>For the products we <em>can</em> make, how long does the assembly line take?</strong> (Complexity)</li>
+</ol>
+<p>A factory manager who only knows question 1 will keep buying bigger machines when the real problem is question 2 or 3. Theory of computation makes you the manager who knows the difference.</p>
 <hr/>
-<h2 id="-three-pillars">📚 Three Pillars<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-three-pillars" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="1-automata-theory">1. Automata Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-automata-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Question:</strong> What can different computational models compute?</p>
-<h3 id="2-computability-theory">2. Computability Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-computability-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Question:</strong> What problems are fundamentally solvable/unsolvable?</p>
-<h3 id="3-complexity-theory">3. Complexity Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-complexity-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Question:</strong> How efficiently can we solve solvable problems?</p>
-<hr/>
-<h2 id="-phase-1-automata-theory-4-6-weeks">🎯 Phase 1: Automata Theory (4-6 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-1-automata-theory-4-6-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="11-finite-automata-fa">1.1 Finite Automata (FA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-finite-automata-fa" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Concept:</strong> Simplest computational model - finite memory, read input once.</p>
-<p><strong>Types:</strong></p>
-<ul>
-<li><strong>DFA</strong> (Deterministic Finite Automaton)</li>
-<li><strong>NFA</strong> (Nondeterministic Finite Automaton)</li>
-</ul>
-<p><strong>Example - DFA for strings ending in “01”:</strong></p>
+<h2 id="three-pillars">Three Pillars<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#three-pillars" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="automata-theory--what-can-different-machines-compute">Automata Theory — What Can Different Machines Compute?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automata-theory--what-can-different-machines-compute" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The theory starts by classifying computational models from weakest to strongest.</p>
+<p><strong>Finite Automata (DFA/NFA)</strong> are the simplest model: finite memory, read input once left-to-right, accept or reject.</p>
+<p>A DFA recognizing binary strings that end in <code>01</code>:</p>
 <pre><code>States: {q0, q1, q2}
-Start: q0
-Accept: q2
+Start: q0, Accept: q2
 
-Transitions:
-q0 --0--> q1
-q0 --1--> q0
-q1 --0--> q1
-q1 --1--> q2
-q2 --0--> q1
-q2 --1--> q0
+q0 --0--> q1    q0 --1--> q0
+q1 --0--> q1    q1 --1--> q2
+q2 --0--> q1    q2 --1--> q0
 </code></pre>
-<p><strong>Applications:</strong></p>
-<ul>
-<li>Lexical analysis in <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>s (tokenizing)</li>
-<li>Text pattern matching</li>
-<li>Network protocol validation</li>
-<li>Regular expression engines</li>
-</ul>
-<p><strong>Key theorems:</strong></p>
-<ul>
-<li>DFA = NFA (same power)</li>
-<li>Minimization algorithm (smallest equivalent DFA)</li>
-<li>Pumping lemma (prove languages aren’t regular)</li>
-</ul>
-<p><strong>Practice:</strong></p>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Design DFA for various patterns</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Convert NFA to DFA</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Prove languages are/aren’t regular</li>
-</ul>
-<hr/>
-<h3 id="12-regular-expressions--regular-languages">1.2 Regular Expressions &amp; Regular Languages<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-regular-expressions--regular-languages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Connection:</strong> Regular expressions = Finite automata</p>
-<pre><code>Regex: (0|1)*01
-Language: All binary strings ending in 01
+<p>DFAs power every regex engine, every lexer in a <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>, every network protocol validator. The key theorem: DFAs and NFAs (nondeterministic finite automata) recognize exactly the same class of languages. Nondeterminism doesn’t add power here.</p>
+<p><strong>Context-Free Grammars (CFG)</strong> add a stack, enabling them to count. A DFA can’t match balanced parentheses — a CFG can:</p>
+<pre><code>S → ε | (S) | SS
 </code></pre>
-<p><strong>Closure properties:</strong></p>
-<ul>
-<li>Union: L1 ∪ L2 is regular</li>
-<li>Concatenation: L1 · L2 is regular</li>
-<li>Kleene star: L* is regular</li>
-</ul>
-<p><strong>Non-regular languages:</strong></p>
-<ul>
-<li>{0ⁿ1ⁿ | n ≥ 0} - Cannot count unboundedly</li>
-<li>{ww | w ∈ {0,1}*} - Cannot remember arbitrary strings</li>
-</ul>
-<p><strong>Proof technique:</strong> Pumping lemma</p>
-<hr/>
-<h3 id="13-context-free-grammars-cfg">1.3 Context-Free Grammars (CFG)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-context-free-grammars-cfg" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>More powerful:</strong> Can count (has stack/memory).</p>
-<p><strong>Example - Balanced parentheses:</strong></p>
-<pre><code>S → ε
-S → (S)
-S → SS
+<p>This is why programming language parsers use CFGs. Every <code>if/else</code> block, every nested function call, every JSON structure relies on context-free parsing. The corresponding machine model is the <strong>pushdown automaton</strong> (finite automaton + stack), and PDA = CFG in expressive power.</p>
+<p><strong>Turing Machines</strong> are the ultimate model: an infinite tape, a read/write head, finite control. The <strong>Church-Turing Thesis</strong> says anything algorithmically computable can be computed by a Turing machine. Your C program, your Python script, your Rust binary — they’re all Turing machines with extra syntax. Multi-tape TMs, nondeterministic TMs, and the RAM model are all equivalent in power.</p>
+<h3 id="the-chomsky-hierarchy">The Chomsky Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-chomsky-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>These models form a strict hierarchy:</p>
+<pre><code>Type 0: Recursively Enumerable  (Turing machines)
+   ⊃
+Type 1: Context-Sensitive       (Linear bounded automata)
+   ⊃
+Type 2: Context-Free            (Pushdown automata)
+   ⊃
+Type 3: Regular                 (Finite automata)
 </code></pre>
-<p>Generates: (), (()), ()(), ((())), …</p>
-<p><strong>Applications:</strong></p>
-<ul>
-<li>Programming language syntax (C, Java, etc.)</li>
-<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> parsing</li>
-<li>XML/JSON validation</li>
-<li>Arithmetic expression parsing</li>
-</ul>
-<p><strong>Key concepts:</strong></p>
-<ul>
-<li>Terminals vs non-terminals</li>
-<li>Derivations (leftmost, rightmost)</li>
-<li>Parse trees</li>
-<li>Ambiguity</li>
-</ul>
-<p><strong>Practice:</strong></p>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Write CFGs for programming constructs</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Identify ambiguous grammars</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Convert to unambiguous form</li>
-</ul>
+<p>The trade-off: weaker models are faster and more analyzable. Regular languages have decidable everything. Context-free languages have some undecidable problems. Recursively enumerable languages have many.</p>
+<p>This is the hierarchy your <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> uses: regex for tokens (Type 3), CFG for syntax (Type 2), and Turing-complete analysis for semantics.</p>
 <hr/>
-<h3 id="14-pushdown-automata-pda">1.4 Pushdown Automata (PDA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-pushdown-automata-pda" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Model:</strong> Finite automaton + stack</p>
-<p><strong>Power:</strong> Recognizes context-free languages</p>
-<p><strong>Equivalence:</strong> PDA = CFG</p>
-<p><strong>Applications:</strong></p>
-<ul>
-<li>Parsing algorithms (LL, LR)</li>
-<li>Function call stacks</li>
-<li>Expression evaluation</li>
-</ul>
-<hr/>
-<h3 id="15-turing-machines-tm">1.5 Turing Machines (TM)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-turing-machines-tm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>The ultimate model:</strong> Unlimited memory, full computational power.</p>
-<p><strong>Components:</strong></p>
-<ul>
-<li>Infinite tape (memory)</li>
-<li>Read/write head</li>
-<li>Finite control (states)</li>
-</ul>
-<p><strong>Church-Turing Thesis:</strong> Anything algorithmically computable can be computed by a Turing machine.</p>
-<p><strong>Variants (all equivalent):</strong></p>
-<ul>
-<li>Multi-tape TM</li>
-<li>Nondeterministic TM</li>
-<li>RAM model (what real computers are)</li>
-</ul>
-<p><strong>Key insight:</strong> Your C program = Turing machine. Understanding TM helps you understand computation limits.</p>
-<hr/>
-<h2 id="-phase-2-computability-theory-4-6-weeks">🎯 Phase 2: Computability Theory (4-6 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-2-computability-theory-4-6-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="21-decidability">2.1 Decidability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-decidability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Decidable:</strong> Algorithm always terminates with yes/no answer.</p>
-<p><strong>Examples of decidable problems:</strong></p>
-<ul>
-<li>Is this number prime?</li>
-<li>Does this DFA accept string w?</li>
-<li>Is this CFG empty?</li>
-</ul>
-<p><strong>Key theorem:</strong> Decidability of regular languages (all questions are decidable).</p>
-<hr/>
-<h3 id="22-undecidability">2.2 Undecidability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-undecidability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Undecidable:</strong> No algorithm can solve for all inputs.</p>
-<p><strong>The Halting Problem:</strong></p>
-<pre><code>Input: Program P, input I
+<h3 id="computability--what-is-fundamentally-unsolvable">Computability — What Is Fundamentally Unsolvable?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#computability--what-is-fundamentally-unsolvable" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Some problems have no algorithm. Not “no efficient algorithm” — no algorithm at all.</p>
+<p><strong>Decidable</strong> means an algorithm exists that always terminates with a correct yes/no answer. “Is this number prime?” is decidable. “Does this DFA accept string w?” is decidable. Every question about regular languages is decidable.</p>
+<p><strong>Undecidable</strong> means no such algorithm can exist for all inputs.</p>
+<h4 id="the-halting-problem">The Halting Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-halting-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>The most famous undecidable problem:</p>
+<pre><code>Input:  Program P, input I
 Question: Does P(I) halt?
-Answer: UNDECIDABLE!
+Answer:   UNDECIDABLE
 </code></pre>
-<p><strong>Proof (by contradiction):</strong>
-If we had HALT(P, I):</p>
+<p>The proof is a beautiful contradiction. Suppose <code>HALT(P, I)</code> exists and correctly determines whether <code>P</code> halts on input <code>I</code>:</p>
 <figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> paradox</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(P):</span></span>
-<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> HALT(P, P):  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># If P halts on itself</span></span>
-<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        loop_forever()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> HALT(P, P):    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># If P halts on itself...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        loop_forever() </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># ...then we loop</span></span>
 <span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    else</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
-<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        return</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        return</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">         # ...otherwise we halt</span></span>
 <span data-line> </span>
-<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># What does paradox(paradox) do? Contradiction!</span></span></code></pre></figure>
-<p><strong>Practical impact:</strong></p>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># What does paradox(paradox) do?</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># If it halts → HALT says it halts → it loops. Contradiction.</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># If it loops → HALT says it loops → it halts. Contradiction.</span></span></code></pre></figure>
+<p>No matter what <code>HALT</code> returns, it’s wrong. Therefore <code>HALT</code> cannot exist.</p>
+<p>This isn’t abstract. It means:</p>
 <ul>
-<li>No perfect debugger (can’t detect all infinite loops)</li>
-<li>No perfect virus scanner (can’t detect all malware)</li>
-<li>No perfect optimizer (can’t optimize all code perfectly)</li>
+<li><strong>No perfect debugger</strong> — you can’t detect all infinite loops</li>
+<li><strong>No perfect virus scanner</strong> — you can’t detect all malware</li>
+<li><strong>No perfect optimizer</strong> — you can’t determine whether arbitrary code transformations preserve behavior</li>
 </ul>
-<p><strong>Other undecidable problems:</strong></p>
-<ul>
-<li>Does TM accept any string? (Acceptance problem)</li>
-<li>Are two CFGs equivalent?</li>
-<li>Does program P satisfy specification S? (verification problem)</li>
-</ul>
-<p><strong>Key technique:</strong> Reduction (show Problem A ≤ Problem B)</p>
-<hr/>
-<h3 id="23-reduction">2.3 Reduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-reduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Idea:</strong> If A is undecidable and A ≤ B, then B is undecidable.</p>
-<p><strong>Example:</strong> Halting ≤ “Does TM accept empty string?”</p>
-<p><strong>Chain of reductions:</strong></p>
+<h4 id="reductions">Reductions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reductions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>If problem A is undecidable and you can transform any instance of A into an instance of B, then B is undecidable too. This is a <strong>reduction</strong> (A ≤ B).</p>
 <pre><code>Halting Problem
-    ↓ (reduces to)
-Acceptance Problem
-    ↓ (reduces to)
+    ↓ reduces to
+Acceptance Problem (does TM accept any string?)
+    ↓ reduces to
 Emptiness Problem
-    ↓ (reduces to)
+    ↓ reduces to
 Your problem
 </code></pre>
-<p>If you can reduce from an undecidable problem, yours is undecidable too.</p>
+<p>If you can reduce from an undecidable problem to yours, stop looking for an algorithm.</p>
+<h4 id="rices-theorem">Rice’s Theorem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rices-theorem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>The nuclear option: <strong>any non-trivial semantic property of programs is undecidable.</strong></p>
+<p>Does this program compute function f? Undecidable.
+Does this program ever crash? Undecidable.
+Does this program have a buffer overflow? Undecidable.</p>
+<p>This is why static analysis tools are fundamentally approximate. They can find <em>some</em> bugs, but they can never find <em>all</em> bugs. They’re working within the limits Rice’s theorem sets.</p>
 <hr/>
-<h3 id="24-rices-theorem">2.4 Rice’s Theorem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-rices-theorem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Statement:</strong> Any non-trivial property of the language recognized by a Turing machine is undecidable.</p>
-<p><strong>Translation:</strong> You can’t algorithmically determine semantic properties of programs.</p>
-<p><strong>Examples (all undecidable):</strong></p>
-<ul>
-<li>Does program compute function f?</li>
-<li>Does program crash?</li>
-<li>Does program have buffer overflow?</li>
-<li>Is program secure?</li>
-</ul>
-<p><strong>Practical lesson:</strong> Static analysis tools are limited (they approximate, not solve perfectly).</p>
-<hr/>
-<h3 id="25-the-chomsky-hierarchy">2.5 The Chomsky Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-the-chomsky-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<pre><code>Type 0: Recursively Enumerable (Turing machines)
-   ⊃
-Type 1: Context-Sensitive (Linear bounded automata)
-   ⊃
-Type 2: Context-Free (Pushdown automata)
-   ⊃
-Type 3: Regular (Finite automata)
-</code></pre>
-<p><strong>Power vs expressiveness trade-off:</strong></p>
-<ul>
-<li>Regular: Weak but fast, decidable</li>
-<li>Context-free: Medium power, some undecidable problems</li>
-<li>Recursively enumerable: Full power, many undecidable problems</li>
-</ul>
-<p><strong>See:</strong> <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> (uses this hierarchy for parsing)</p>
-<hr/>
-<h2 id="-phase-3-complexity-theory-6-8-weeks">🎯 Phase 3: Complexity Theory (6-8 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-3-complexity-theory-6-8-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="31-time-complexity-classes">3.1 Time Complexity Classes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-time-complexity-classes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>P (Polynomial Time):</strong></p>
-<ul>
-<li>Problems solvable in O(nᵏ) time</li>
-<li>Examples: Sorting, shortest path, MST</li>
-<li><strong>Tractable</strong> - efficiently solvable</li>
-</ul>
-<p><strong>NP (Nondeterministic Polynomial):</strong></p>
-<ul>
-<li>Solutions verifiable in polynomial time</li>
-<li>Examples: SAT, clique, Hamiltonian path</li>
-<li><strong>May or may not be tractable</strong></li>
-</ul>
-<p><strong>NP-Complete:</strong></p>
-<ul>
-<li>Hardest problems in NP</li>
-<li>If any NP-complete problem is in P, then P = NP</li>
-<li>Examples: SAT, 3-SAT, Vertex Cover, TSP (decision version)</li>
-</ul>
-<p><strong>NP-Hard:</strong></p>
-<ul>
-<li>At least as hard as NP-complete</li>
-<li>May not be in NP (optimization versions)</li>
-<li>Example: Halting problem (undecidable, so harder than NP)</li>
-</ul>
-<p><strong>The P vs NP question:</strong></p>
+<h3 id="complexity-theory--how-efficiently-can-we-solve-it">Complexity Theory — How Efficiently Can We Solve It?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complexity-theory--how-efficiently-can-we-solve-it" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A problem being decidable doesn’t mean it’s practical. Complexity theory classifies decidable problems by how much time and space they require.</p>
+<h4 id="p-and-np">P and NP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#p-and-np" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>P</strong> (Polynomial Time): problems solvable in O(n^k) time. Sorting, shortest path, minimum spanning tree. These are <strong>tractable</strong> — efficiently solvable.</p>
+<p><strong>NP</strong> (Nondeterministic Polynomial): problems where a proposed solution can be <em>verified</em> in polynomial time. SAT, clique, Hamiltonian path. Finding a solution may be hard; checking one is easy.</p>
+<p><strong>NP-Complete</strong>: the hardest problems in NP. If <em>any</em> NP-complete problem has a polynomial algorithm, then <em>every</em> NP problem does (P = NP). Examples: SAT, 3-SAT, vertex cover, traveling salesman (decision version).</p>
+<p><strong>NP-Hard</strong>: at least as hard as NP-complete, but may not even be in NP. The halting problem is NP-hard (it’s undecidable, so it’s harder than everything in NP).</p>
+<p>The million-dollar question:</p>
 <pre><code>P = NP?
-│
-├─ If YES → Many &quot;hard&quot; problems become easy (unlikely)
-└─ If NO → Some problems are inherently hard (likely true)
+
+If YES → &quot;hard&quot; problems become easy (almost certainly false)
+If NO  → some problems are inherently hard (almost certainly true)
 </code></pre>
-<p><strong>$1 million prize</strong> for solving this!</p>
-<hr/>
-<h3 id="32-np-completeness">3.2 NP-Completeness<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-np-completeness" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Cook-Levin Theorem:</strong> SAT is NP-complete (first proven NP-complete problem).</p>
-<p><strong>Reduction chain:</strong></p>
-<pre><code>SAT (Boolean satisfiability)
-  ↓
+<h4 id="cook-levin-and-the-reduction-chain">Cook-Levin and the Reduction Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cook-levin-and-the-reduction-chain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>The <strong>Cook-Levin theorem</strong> proved SAT is NP-complete — the first domino. Every subsequent NP-completeness proof works by reduction from a known NP-complete problem:</p>
+<pre><code>SAT
+  ↓ reduces to
 3-SAT
-  ↓
+  ↓ reduces to
 Clique
-  ↓
+  ↓ reduces to
 Vertex Cover
-  ↓
+  ↓ reduces to
 Hamiltonian Path
-  ↓
+  ↓ reduces to
 Traveling Salesman (decision)
 </code></pre>
-<p><strong>How to prove NP-completeness:</strong></p>
-<ol>
-<li>Show problem is in NP (verifiable in polynomial time)</li>
-<li>Reduce from known NP-complete problem</li>
-</ol>
-<p><strong>Practical impact:</strong></p>
-<ul>
-<li>Recognize when to stop looking for polynomial algorithm</li>
-<li>Use approximation algorithms or heuristics</li>
-<li>Branch-and-bound, backtracking, genetic algorithms</li>
-</ul>
-<p><strong>Systems relevance:</strong></p>
-<ul>
-<li>Register allocation in <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>s (graph coloring - NP-complete)</li>
-<li>Task scheduling (NP-complete)</li>
-<li>Network routing optimization (often NP-hard)</li>
-</ul>
-<hr/>
-<h3 id="33-space-complexity">3.3 Space Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-space-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>L (Logarithmic Space):</strong> O(log n) space</p>
-<ul>
-<li>Path reachability in graphs</li>
-</ul>
-<p><strong>PSPACE:</strong> Polynomial space</p>
-<ul>
-<li>Contains P, NP</li>
-<li>Problems: Chess (generalized), Go (generalized), QBF</li>
-</ul>
-<p><strong>PSPACE-Complete:</strong></p>
-<ul>
-<li>QBF (Quantified Boolean Formula)</li>
-<li>Game playing (generalized)</li>
-</ul>
-<p><strong>Hierarchy:</strong></p>
+<p>To prove your problem is NP-complete: (1) show it’s in NP (solutions are verifiable in polynomial time), (2) reduce from a known NP-complete problem to it.</p>
+<h4 id="space-complexity">Space Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#space-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Time isn’t the only resource. Space complexity tracks memory usage:</p>
 <pre><code>L ⊆ P ⊆ NP ⊆ PSPACE ⊆ EXPTIME
 </code></pre>
-<p>Some inclusions are strict, others unknown.</p>
-<hr/>
-<h3 id="34-reductions--hardness">3.4 Reductions &amp; Hardness<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-reductions--hardness" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Types of reductions:</strong></p>
+<p><strong>PSPACE</strong> contains problems solvable with polynomial memory (which may take exponential time). Generalized chess and Go are PSPACE-complete. Some inclusions are known to be strict, others remain open.</p>
+<h4 id="when-a-problem-is-np-hard">When a Problem Is NP-Hard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-a-problem-is-np-hard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Recognizing NP-hardness is the practical payoff. When you identify an NP-hard problem in your system, you know the options:</p>
 <ul>
-<li><strong>Many-one reduction (Karp):</strong> Transform instance of A to B</li>
-<li><strong>Turing reduction (Cook):</strong> Solve A using oracle for B</li>
+<li><strong>Approximation algorithms</strong>: vertex cover has a 2-approximation (guaranteed within 2x of optimal), metric TSP has a 1.5-approximation (Christofides)</li>
+<li><strong>Heuristics</strong>: greedy, simulated annealing, genetic algorithms</li>
+<li><strong>Parameterized solutions</strong>: vertex cover is O(2^k · n) — exponential in the parameter k, but polynomial in n. For small k, this is practical.</li>
 </ul>
-<p><strong>Using reductions:</strong></p>
-<pre><code>Problem A ≤ Problem B
-
-Meaning:
-- If B is easy, A is easy
-- If A is hard, B is hard
-</code></pre>
-<p><strong>Example:</strong> 3-SAT ≤ Vertex Cover</p>
+<p>Systems problems that are NP-hard:</p>
 <ul>
-<li>Given 3-SAT instance, construct graph</li>
-<li>Vertex cover of size k exists ⟺ 3-SAT is satisfiable</li>
+<li><strong>Register allocation</strong> in <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>s (graph coloring)</li>
+<li><strong>Task scheduling</strong> in <a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a>s</li>
+<li><strong>Network routing</strong> optimization</li>
+<li><strong>Database query</strong> optimization</li>
 </ul>
 <hr/>
-<h3 id="35-approximation--heuristics">3.5 Approximation &amp; Heuristics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-approximation--heuristics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>When problems are NP-hard:</strong></p>
-<p><strong>Approximation algorithms:</strong></p>
-<ul>
-<li>Vertex Cover: 2-approximation (within 2× optimal)</li>
-<li>TSP (metric): 1.5-approximation</li>
-<li>Set Cover: O(log n)-approximation</li>
-</ul>
-<p><strong>Heuristics:</strong></p>
-<ul>
-<li>Greedy algorithms</li>
-<li>Simulated annealing</li>
-<li>Genetic algorithms</li>
-<li>Branch and bound</li>
-</ul>
-<p><strong>Practical systems use these:</strong></p>
-<ul>
-<li><a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> optimization (NP-hard, use heuristics)</li>
-<li>Database query optimization</li>
-<li>Network routing</li>
-</ul>
+<h2 id="where-theory-meets-systems">Where Theory Meets Systems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#where-theory-meets-systems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Every layer of the systems stack uses this theory:</p>
+<p><strong>Compilers</strong>: lexical analysis (DFA), parsing (CFG/PDA), optimization (NP-hard → heuristics). See <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>.</p>
+<p><strong>Operating Systems</strong>: scheduling (NP-hard), deadlock detection (graph algorithms). See <a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a>.</p>
+<p><strong>Cryptography</strong>: security relies on computational hardness assumptions — factoring is believed NP-intermediate, and one-way functions underpin everything from RSA to hash functions.</p>
+<p><strong>Static Analysis</strong>: Rice’s theorem sets the fundamental limit. Every linter, type checker, and formal verification tool is an approximation of an undecidable problem.</p>
 <hr/>
-<h3 id="36-parameterized-complexity">3.6 Parameterized Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-parameterized-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Idea:</strong> Some problems with parameter k might be tractable.</p>
-<p><strong>FPT (Fixed-Parameter Tractable):</strong> O(f(k) · nᶜ)</p>
-<p><strong>Example:</strong> Vertex Cover</p>
-<ul>
-<li>NP-complete in general</li>
-<li>FPT: O(2ᵏ · n) - exponential in k, polynomial in n</li>
-<li>Practical for small k (k = 10 is solvable)</li>
-</ul>
-<p><strong>Relevance:</strong> Many real-world instances have small parameters.</p>
-<hr/>
-<h2 id="-phase-4-advanced-topics-pick-based-on-interest">🎯 Phase 4: Advanced Topics (Pick Based on Interest)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-phase-4-advanced-topics-pick-based-on-interest" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="41-randomized-algorithms">4.1 Randomized Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-randomized-algorithms" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>BPP (Bounded-error Probabilistic Polynomial):</strong></p>
-<ul>
-<li>Algorithms with small error probability</li>
-<li>Example: Miller-Rabin primality test</li>
-</ul>
-<p><strong>RP, co-RP, ZPP:</strong></p>
-<ul>
-<li>One-sided error, zero error</li>
-</ul>
-<p><strong>Derandomization:</strong></p>
-<ul>
-<li>Can randomized algorithms be made deterministic?</li>
-</ul>
-<hr/>
-<h3 id="42-interactive-proofs">4.2 Interactive Proofs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-interactive-proofs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>IP (Interactive Polynomial):</strong></p>
-<ul>
-<li>Prover convinces verifier</li>
-<li>IP = PSPACE (surprising result!)</li>
-</ul>
-<p><strong>Zero-knowledge proofs:</strong></p>
-<ul>
-<li>Prove statement without revealing why it’s true</li>
-<li>Applications: Cryptography, blockchain</li>
-</ul>
-<hr/>
-<h3 id="43-quantum-complexity">4.3 Quantum Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-quantum-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>BQP (Bounded-error Quantum Polynomial):</strong></p>
-<ul>
-<li>Problems quantum computers can solve efficiently</li>
-<li>Shor’s algorithm: Factor integers in polynomial time (classical is exponential)</li>
-</ul>
-<p><strong>P ⊆ BQP ⊆ PSPACE</strong></p>
-<p><strong>Impact:</strong> If quantum computers scale, cryptography breaks.</p>
-<hr/>
-<h3 id="44-circuit-complexity">4.4 Circuit Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-circuit-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Boolean circuits:</strong></p>
-<ul>
-<li>Model for parallel computation</li>
-<li>NC (Nick’s Class): Efficient parallel algorithms</li>
-</ul>
-<p><strong>Lower bounds:</strong></p>
-<ul>
-<li>Proving circuit size lower bounds</li>
-<li>Fundamental to understanding P vs NP</li>
-</ul>
-<hr/>
-<h3 id="45-communication-complexity">4.5 Communication Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-communication-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Question:</strong> How much communication needed to compute function?</p>
-<p><strong>Applications:</strong></p>
-<ul>
-<li>Distributed systems</li>
-<li>Data streaming</li>
-<li>Lower bounds for algorithms</li>
-</ul>
-<hr/>
-<h3 id="46-logic--computation">4.6 Logic &amp; Computation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-logic--computation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Logical characterizations:</strong></p>
-<ul>
-<li>First-order logic ⟺ AC⁰ (constant depth circuits)</li>
-<li>Second-order logic ⟺ PSPACE</li>
-</ul>
-<p><strong>Descriptive complexity:</strong></p>
-<ul>
-<li>Express computational problems as logical formulas</li>
-</ul>
-<p><strong>See:</strong> <a href="../Fundamentals/Lambda-Calculus" class="internal" data-slug="Fundamentals/Lambda-Calculus">Lambda-Calculus</a>, <a href="../OCaml" class="internal" data-slug="OCaml">OCaml</a></p>
-<hr/>
-<h2 id="-essential-topics-summary">📚 Essential Topics Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-essential-topics-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="must-know-core">Must Know (Core)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#must-know-core" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" checked disabled/> Finite automata, regular languages</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> Context-free grammars</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> Turing machines</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> Decidability &amp; undecidability</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> Halting problem</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> P, NP, NP-complete</li>
-<li class="task-list-item"><input type="checkbox" checked disabled/> Reductions</li>
-</ul>
-<h3 id="should-know-important">Should Know (Important)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#should-know-important" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Pumping lemmas</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Rice’s theorem</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Cook-Levin theorem</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Space complexity</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Approximation algorithms</li>
-</ul>
-<h3 id="nice-to-know-advanced">Nice to Know (Advanced)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nice-to-know-advanced" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Randomized complexity</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Interactive proofs</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Quantum complexity</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Circuit complexity</li>
-</ul>
-<hr/>
-<h2 id="-recommended-books">📖 Recommended Books<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-recommended-books" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<p><strong>Introductory (pick one):</strong></p>
-<ol>
-<li><strong>“Introduction to the Theory of Computation”</strong> (Sipser) ⭐ Best</li>
-<li>”Theory of Computation” (Hopcroft, Motwani, Ullman)</li>
-<li>“Computational Complexity” (Arora, Barak)</li>
-</ol>
-<p><strong>Supplementary:</strong></p>
-<ul>
-<li>“Computability and Logic” (Boolos, Burgess, Jeffrey)</li>
-<li>“Computational Complexity: A Modern Approach” (Arora, Barak)</li>
-</ul>
-<hr/>
-<h2 id="-learning-strategy">🎯 Learning Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-learning-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="understand-through-examples">Understand Through Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#understand-through-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p>For each concept:</p>
-<ol>
-<li><strong>Simple example</strong> - Understand intuitively</li>
-<li><strong>Formal definition</strong> - Mathematical precision</li>
-<li><strong>Proof</strong> - Why it works</li>
-<li><strong>Application</strong> - Where it’s used</li>
-</ol>
-<h3 id="connect-to-practice">Connect to Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connect-to-practice" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p><strong>Theory → Practice:</strong></p>
-<ul>
-<li>Regular languages → Lexers in <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>s</li>
-<li>Context-free grammars → Parsers</li>
-<li>Undecidability → Limits of static analysis</li>
-<li>NP-completeness → When to use heuristics</li>
-<li>Complexity classes → Algorithm choice</li>
-</ul>
-<hr/>
-<h2 id="-connections-to-systems-programming">🔗 Connections to Systems Programming<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-connections-to-systems-programming" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="compilers">Compilers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#compilers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li><strong>Lexical analysis:</strong> DFA</li>
-<li><strong>Parsing:</strong> CFG, PDA</li>
-<li><strong>Optimization:</strong> NP-hard (use heuristics)</li>
-</ul>
-<p><strong>See:</strong> <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>, <a href="../Languages/Assembly" class="internal" data-slug="Languages/Assembly">Assembly</a></p>
-<h3 id="operating-systems">Operating Systems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#operating-systems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li><strong>Scheduling:</strong> NP-hard</li>
-<li><strong>Deadlock detection:</strong> Graph algorithms</li>
-</ul>
-<p><strong>See:</strong> <a href="../Systems/Operating-System" class="internal" data-slug="Systems/Operating-System">Operating-System</a></p>
-<h3 id="databases">Databases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#databases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li><strong>Query optimization:</strong> NP-hard</li>
-<li><strong>Transaction serializability:</strong> Complexity analysis</li>
-</ul>
-<h3 id="cryptography">Cryptography<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cryptography" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li><strong>Hardness assumptions:</strong> One-way functions, NP-hard problems</li>
-<li><strong>Zero-knowledge proofs:</strong> Interactive proofs</li>
-</ul>
-<hr/>
-<h2 id="-study-plan-16-20-weeks">📅 Study Plan (16-20 weeks)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-study-plan-16-20-weeks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="weeks-1-6-automata-theory">Weeks 1-6: Automata Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-1-6-automata-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li>Week 1-2: DFA, NFA, regular expressions</li>
-<li>Week 3-4: CFG, parsing</li>
-<li>Week 5-6: Turing machines</li>
-</ul>
-<h3 id="weeks-7-12-computability">Weeks 7-12: Computability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-7-12-computability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li>Week 7-8: Decidability</li>
-<li>Week 9-10: Undecidability, Halting problem</li>
-<li>Week 11-12: Reductions, Rice’s theorem</li>
-</ul>
-<h3 id="weeks-13-20-complexity">Weeks 13-20: Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weeks-13-20-complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul>
-<li>Week 13-14: P, NP</li>
-<li>Week 15-16: NP-completeness, reductions</li>
-<li>Week 17-18: Space complexity, PSPACE</li>
-<li>Week 19-20: Approximation, advanced topics</li>
-</ul>
-<hr/>
-<h2 id="-study-tips">💡 Study Tips<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-study-tips" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="1-do-proofs">1. Do Proofs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-do-proofs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p>Don’t just read - <strong>prove theorems yourself</strong>.</p>
-<h3 id="2-visual-intuition">2. Visual Intuition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-visual-intuition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p>Draw automata, parse trees, reduction diagrams.</p>
-<h3 id="3-connect-to-code">3. Connect to Code<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-connect-to-code" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p>For each model, write a simulator:</p>
-<ul>
-<li>DFA simulator</li>
-<li>CFG parser</li>
-<li>Turing machine simulator</li>
-</ul>
-<h3 id="4-recognize-patterns">4. Recognize Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-recognize-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<p>When coding, ask:</p>
-<ul>
-<li>Is this problem decidable?</li>
-<li>What complexity class?</li>
-<li>Can I reduce from known problem?</li>
-</ul>
-<hr/>
-<h2 id="-exercises--practice">🎯 Exercises &amp; Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-exercises--practice" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<h3 id="automata-theory">Automata Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automata-theory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Design DFA for various languages</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Prove language is not regular (pumping lemma)</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Write CFG for programming constructs</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Implement LL/LR parser</li>
-</ul>
-<h3 id="computability">Computability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#computability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Prove problems undecidable by reduction</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Understand Halting problem proof</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Apply Rice’s theorem</li>
-</ul>
-<h3 id="complexity">Complexity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complexity" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<ul class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" disabled/> Identify NP-complete problems in systems work</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Prove NP-completeness by reduction</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Design approximation algorithm</li>
-</ul>
-<hr/>
-<h2 id="the-big-takeaway">The Big Takeaway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-big-takeaway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<blockquote>
-<p><strong>Theory of Computation answers:</strong></p>
-<ul>
-<li>What can/can’t be computed (computability)</li>
-<li>How efficiently (complexity)</li>
-<li>What model to use (automata)</li>
-</ul>
-<p><strong>Practical value for systems programmers:</strong></p>
-<ul>
-<li>Recognize unsolvable/hard problems</li>
-<li>Choose appropriate algorithms</li>
-<li>Understand <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> internals</li>
-<li>Design better systems</li>
-</ul>
-<p><strong>Connection to practice:</strong></p>
-<ul>
-<li>Every <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a> uses this theory</li>
-<li>Every algorithm has complexity</li>
-<li>Every optimization has limits</li>
-</ul>
-<p><strong>The mindset shift:</strong> From “can I code this?” to “is this even possible/efficient?”</p>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Theory of computation answers three questions: <em>what can be computed</em> (automata), <em>what can’t</em> (computability), and <em>how fast</em> (complexity). The Halting Problem proves some problems have no algorithm. Rice’s theorem proves you can’t determine semantic properties of programs. NP-completeness tells you when to stop looking for a polynomial algorithm and reach for approximations instead. This isn’t abstract math — it’s the reason your compiler uses heuristics for register allocation, your static analyzer has false positives, and your scheduler doesn’t find optimal solutions.</p>
+</div>
 </blockquote>
-<p><strong>Theory makes you understand the WHY behind every algorithm you implement.</strong></p>
 <p>See also: <a href="../Theory/Algorithm-Theory" class="internal" data-slug="Theory/Algorithm-Theory">Algorithm-Theory</a>, <a href="../Theory/Mathematics-for-CS" class="internal" data-slug="Theory/Mathematics-for-CS">Mathematics-for-CS</a>, <a href="../Fundamentals/Compiler" class="internal" data-slug="Fundamentals/Compiler">Compiler</a>, <a href="../Fundamentals/Lambda-Calculus" class="internal" data-slug="Fundamentals/Lambda-Calculus">Lambda-Calculus</a></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
                 s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
                 c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
@@ -733,6 +281,6 @@ Meaning:
                 C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
                 S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
                 s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
-                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-131" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#why-study-theory-of-computation" data-for="why-study-theory-of-computation">Why Study Theory of Computation?</a></li><li class="depth-1"><a href="#for-systems-programmers" data-for="for-systems-programmers">For Systems Programmers</a></li><li class="depth-0"><a href="#-three-pillars" data-for="-three-pillars">📚 Three Pillars</a></li><li class="depth-1"><a href="#1-automata-theory" data-for="1-automata-theory">1. Automata Theory</a></li><li class="depth-1"><a href="#2-computability-theory" data-for="2-computability-theory">2. Computability Theory</a></li><li class="depth-1"><a href="#3-complexity-theory" data-for="3-complexity-theory">3. Complexity Theory</a></li><li class="depth-0"><a href="#-phase-1-automata-theory-4-6-weeks" data-for="-phase-1-automata-theory-4-6-weeks">🎯 Phase 1: Automata Theory (4-6 weeks)</a></li><li class="depth-1"><a href="#11-finite-automata-fa" data-for="11-finite-automata-fa">1.1 Finite Automata (FA)</a></li><li class="depth-1"><a href="#12-regular-expressions--regular-languages" data-for="12-regular-expressions--regular-languages">1.2 Regular Expressions &amp; Regular Languages</a></li><li class="depth-1"><a href="#13-context-free-grammars-cfg" data-for="13-context-free-grammars-cfg">1.3 Context-Free Grammars (CFG)</a></li><li class="depth-1"><a href="#14-pushdown-automata-pda" data-for="14-pushdown-automata-pda">1.4 Pushdown Automata (PDA)</a></li><li class="depth-1"><a href="#15-turing-machines-tm" data-for="15-turing-machines-tm">1.5 Turing Machines (TM)</a></li><li class="depth-0"><a href="#-phase-2-computability-theory-4-6-weeks" data-for="-phase-2-computability-theory-4-6-weeks">🎯 Phase 2: Computability Theory (4-6 weeks)</a></li><li class="depth-1"><a href="#21-decidability" data-for="21-decidability">2.1 Decidability</a></li><li class="depth-1"><a href="#22-undecidability" data-for="22-undecidability">2.2 Undecidability</a></li><li class="depth-1"><a href="#23-reduction" data-for="23-reduction">2.3 Reduction</a></li><li class="depth-1"><a href="#24-rices-theorem" data-for="24-rices-theorem">2.4 Rice’s Theorem</a></li><li class="depth-1"><a href="#25-the-chomsky-hierarchy" data-for="25-the-chomsky-hierarchy">2.5 The Chomsky Hierarchy</a></li><li class="depth-0"><a href="#-phase-3-complexity-theory-6-8-weeks" data-for="-phase-3-complexity-theory-6-8-weeks">🎯 Phase 3: Complexity Theory (6-8 weeks)</a></li><li class="depth-1"><a href="#31-time-complexity-classes" data-for="31-time-complexity-classes">3.1 Time Complexity Classes</a></li><li class="depth-1"><a href="#32-np-completeness" data-for="32-np-completeness">3.2 NP-Completeness</a></li><li class="depth-1"><a href="#33-space-complexity" data-for="33-space-complexity">3.3 Space Complexity</a></li><li class="depth-1"><a href="#34-reductions--hardness" data-for="34-reductions--hardness">3.4 Reductions &amp; Hardness</a></li><li class="depth-1"><a href="#35-approximation--heuristics" data-for="35-approximation--heuristics">3.5 Approximation &amp; Heuristics</a></li><li class="depth-1"><a href="#36-parameterized-complexity" data-for="36-parameterized-complexity">3.6 Parameterized Complexity</a></li><li class="depth-0"><a href="#-phase-4-advanced-topics-pick-based-on-interest" data-for="-phase-4-advanced-topics-pick-based-on-interest">🎯 Phase 4: Advanced Topics (Pick Based on Interest)</a></li><li class="depth-1"><a href="#41-randomized-algorithms" data-for="41-randomized-algorithms">4.1 Randomized Algorithms</a></li><li class="depth-1"><a href="#42-interactive-proofs" data-for="42-interactive-proofs">4.2 Interactive Proofs</a></li><li class="depth-1"><a href="#43-quantum-complexity" data-for="43-quantum-complexity">4.3 Quantum Complexity</a></li><li class="depth-1"><a href="#44-circuit-complexity" data-for="44-circuit-complexity">4.4 Circuit Complexity</a></li><li class="depth-1"><a href="#45-communication-complexity" data-for="45-communication-complexity">4.5 Communication Complexity</a></li><li class="depth-1"><a href="#46-logic--computation" data-for="46-logic--computation">4.6 Logic &amp; Computation</a></li><li class="depth-0"><a href="#-essential-topics-summary" data-for="-essential-topics-summary">📚 Essential Topics Summary</a></li><li class="depth-1"><a href="#must-know-core" data-for="must-know-core">Must Know (Core)</a></li><li class="depth-1"><a href="#should-know-important" data-for="should-know-important">Should Know (Important)</a></li><li class="depth-1"><a href="#nice-to-know-advanced" data-for="nice-to-know-advanced">Nice to Know (Advanced)</a></li><li class="depth-0"><a href="#-recommended-books" data-for="-recommended-books">📖 Recommended Books</a></li><li class="depth-0"><a href="#-learning-strategy" data-for="-learning-strategy">🎯 Learning Strategy</a></li><li class="depth-1"><a href="#understand-through-examples" data-for="understand-through-examples">Understand Through Examples</a></li><li class="depth-1"><a href="#connect-to-practice" data-for="connect-to-practice">Connect to Practice</a></li><li class="depth-0"><a href="#-connections-to-systems-programming" data-for="-connections-to-systems-programming">🔗 Connections to Systems Programming</a></li><li class="depth-1"><a href="#compilers" data-for="compilers">Compilers</a></li><li class="depth-1"><a href="#operating-systems" data-for="operating-systems">Operating Systems</a></li><li class="depth-1"><a href="#databases" data-for="databases">Databases</a></li><li class="depth-1"><a href="#cryptography" data-for="cryptography">Cryptography</a></li><li class="depth-0"><a href="#-study-plan-16-20-weeks" data-for="-study-plan-16-20-weeks">📅 Study Plan (16-20 weeks)</a></li><li class="depth-1"><a href="#weeks-1-6-automata-theory" data-for="weeks-1-6-automata-theory">Weeks 1-6: Automata Theory</a></li><li class="depth-1"><a href="#weeks-7-12-computability" data-for="weeks-7-12-computability">Weeks 7-12: Computability</a></li><li class="depth-1"><a href="#weeks-13-20-complexity" data-for="weeks-13-20-complexity">Weeks 13-20: Complexity</a></li><li class="depth-0"><a href="#-study-tips" data-for="-study-tips">💡 Study Tips</a></li><li class="depth-1"><a href="#1-do-proofs" data-for="1-do-proofs">1. Do Proofs</a></li><li class="depth-1"><a href="#2-visual-intuition" data-for="2-visual-intuition">2. Visual Intuition</a></li><li class="depth-1"><a href="#3-connect-to-code" data-for="3-connect-to-code">3. Connect to Code</a></li><li class="depth-1"><a href="#4-recognize-patterns" data-for="4-recognize-patterns">4. Recognize Patterns</a></li><li class="depth-0"><a href="#-exercises--practice" data-for="-exercises--practice">🎯 Exercises &amp; Practice</a></li><li class="depth-1"><a href="#automata-theory" data-for="automata-theory">Automata Theory</a></li><li class="depth-1"><a href="#computability" data-for="computability">Computability</a></li><li class="depth-1"><a href="#complexity" data-for="complexity">Complexity</a></li><li class="depth-0"><a href="#the-big-takeaway" data-for="the-big-takeaway">The Big Takeaway</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Theory/Algorithm-Theory" class="internal">Algorithm Theory Roadmap</a></li><li><a href="../Theory/Mathematics-for-CS" class="internal">Mathematics for Computer Science</a></li><li><a href="../WTF-Happens-When/Compile" class="internal">WTF happens when you compile code</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2026</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-139" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#wtf-is-theory-of-computation" data-for="wtf-is-theory-of-computation">WTF is Theory of Computation?</a></li><li class="depth-1"><a href="#the-core-analogy" data-for="the-core-analogy">The Core Analogy</a></li><li class="depth-1"><a href="#three-pillars" data-for="three-pillars">Three Pillars</a></li><li class="depth-2"><a href="#automata-theory--what-can-different-machines-compute" data-for="automata-theory--what-can-different-machines-compute">Automata Theory — What Can Different Machines Compute?</a></li><li class="depth-2"><a href="#the-chomsky-hierarchy" data-for="the-chomsky-hierarchy">The Chomsky Hierarchy</a></li><li class="depth-2"><a href="#computability--what-is-fundamentally-unsolvable" data-for="computability--what-is-fundamentally-unsolvable">Computability — What Is Fundamentally Unsolvable?</a></li><li class="depth-2"><a href="#complexity-theory--how-efficiently-can-we-solve-it" data-for="complexity-theory--how-efficiently-can-we-solve-it">Complexity Theory — How Efficiently Can We Solve It?</a></li><li class="depth-1"><a href="#where-theory-meets-systems" data-for="where-theory-meets-systems">Where Theory Meets Systems</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../Theory/Algorithm-Theory" class="internal">WTF is Algorithm Design?</a></li><li><a href="../Theory/Mathematics-for-CS" class="internal">The Math You Actually Need for Systems Programming</a></li><li><a href="../WTF-Happens-When/Compile" class="internal">WTF happens when you compile code</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v1.0.0</a> © 2026</p><ul><li><a href="https://github.com/tham-le">GitHub</a></li><li><a href="https://thamle.live">Portfolio</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
 </script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
 </script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

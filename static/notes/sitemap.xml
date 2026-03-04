@@ -20,6 +20,9 @@
     <loc>https://notes.thamle.live/Architecture/Media/Container-vs-Codec</loc>
     <lastmod>2025-12-15T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Architecture/Media/VAAPI</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Architecture/Raw-Input</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
@@ -38,11 +41,20 @@
     <loc>https://notes.thamle.live/Architecture/Windows-Audio-Drivers/Windows-Audio-Stack</loc>
     <lastmod>2025-11-03T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-Clipboard</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-IRP</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/Windows-Message-Queue</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/Windows-Notification-Area</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Architecture/X11-Clipboard</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Architecture/evdev</loc>
     <lastmod>2025-11-28T00:00:00.000Z</lastmod>
@@ -85,6 +97,9 @@
   </url><url>
     <loc>https://notes.thamle.live/Cybersecurity/Auth/OpenID-Connect</loc>
     <lastmod>2026-02-24T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Cybersecurity/Auth/PKCE</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Cybersecurity/Auth/SSO</loc>
     <lastmod>2026-02-24T00:00:00.000Z</lastmod>
@@ -166,6 +181,12 @@
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/FUSE</loc>
     <lastmod>2025-11-26T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/GPU-Rendering-Containers</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
+    <loc>https://notes.thamle.live/Fundamentals/JNI</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Fundamentals/LD_PRELOAD</loc>
     <lastmod>2025-11-26T00:00:00.000Z</lastmod>
@@ -266,6 +287,9 @@
     <loc>https://notes.thamle.live/Languages/Rust/Cargo</loc>
     <lastmod>2025-10-14T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Languages/Rust/Cross-Platform-Rust</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Networking/C10k-Problem</loc>
     <lastmod>2025-10-31T00:00:00.000Z</lastmod>
   </url><url>
@@ -329,6 +353,9 @@
     <loc>https://notes.thamle.live/Networking/Ping</loc>
     <lastmod>2025-11-14T00:00:00.000Z</lastmod>
   </url><url>
+    <loc>https://notes.thamle.live/Networking/Platform-Certificate-Verification</loc>
+    <lastmod>2026-03-04T00:00:00.000Z</lastmod>
+  </url><url>
     <loc>https://notes.thamle.live/Networking/QUIC</loc>
     <lastmod>2025-10-23T00:00:00.000Z</lastmod>
   </url><url>
@@ -373,12 +400,6 @@
   </url><url>
     <loc>https://notes.thamle.live/Networking/socket</loc>
     <lastmod>2025-10-20T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Roadmaps/Systems-Developer-Roadmap</loc>
-    <lastmod>2025-10-08T00:00:00.000Z</lastmod>
-  </url><url>
-    <loc>https://notes.thamle.live/Roadmaps/The-Complete-Systems-Developer-Roadmap</loc>
-    <lastmod>2025-08-05T00:00:00.000Z</lastmod>
   </url><url>
     <loc>https://notes.thamle.live/Systems/Context-Switch</loc>
     <lastmod>2025-11-02T00:00:00.000Z</lastmod>
