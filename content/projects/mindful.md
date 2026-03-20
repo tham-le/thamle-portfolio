@@ -2,7 +2,7 @@
 title: "mindful"
 date: 2025-03-03T15:18:49Z
 lastmod: 2025-05-23T12:10:34Z
-description: "MindfulWealth is a financial assistant application designed to help users make mindful spending decisions and encourage saving and investing."
+description: "AI financial assistant built at a hackathon — Flask, React, Gemini AI, Docker."
 image: ""
 showFeatureImage: true
 links:
@@ -28,34 +28,24 @@ stats:
     language: Python
 ---
 
-# MindfulWealth
+# MindfulWealth — AI Financial Assistant
 
-An AI-powered financial assistant that helps users make mindful spending decisions and encourages saving and investing. Built with Flask, React, and Google's Gemini AI.
+A hackathon project: an AI-powered chat assistant that analyzes spending habits and projects the long-term impact of purchases ("if you invest this instead, here's what happens in 10 years").
 
-## Features
+## What made this interesting
 
-- **AI Financial Assistant**: Chat interface for spending guidance and financial advice
-- **Impulse Purchase Analysis**: Long-term impact projections for purchases
-- **Investment Projections**: Compare spending vs. investing outcomes
-- **Personality Modes**: Choose between different advisor personalities (nice, funny, ironic)
-- **Multilingual**: English and French support
-- **Responsive Design**: Mobile and desktop optimized
+Built in 48 hours. The core challenge was making the AI responses useful rather than generic — we tuned Gemini's prompts to give concrete numbers (compound interest projections, opportunity cost) instead of vague advice. Added personality modes (nice, ironic, funny) to keep it engaging.
 
-## Quick Start
+## Stack
+
+- **Backend**: Flask API + Google Gemini AI integration
+- **Frontend**: React with chat interface and dashboard
+- **Features**: impulse purchase analysis, investment projections, multilingual (EN/FR)
+- **Deployment**: Dockerized (ports 80, 3000, 5000)
 
 ```bash
-./start.sh  # Production deployment with Docker
-./dev.sh    # Development setup
+./start.sh  # Production with Docker
+./dev.sh    # Development
 ```
 
-Requires Docker/Docker Compose and a [Gemini API key](https://ai.google.dev/).
-
-## Architecture
-
-**Backend**: Flask API with Google Gemini AI integration, user authentication, and financial data processing
-
-**Frontend**: React application with chat interface, dashboard, and settings management
-
-**Deployment**: Dockerized with ports 80 (frontend), 3000 (alt frontend), 5000 (backend API)
-
-*Screenshots and detailed setup instructions available in the [GitHub repository](https://github.com/tham-le/mindful).*
+*Hackathon project — Python, React, Docker.*

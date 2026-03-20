@@ -2,7 +2,7 @@
 title: "Python-for-Data-Science"
 date: 2024-06-08T19:08:02Z
 lastmod: 2025-02-24T12:18:45Z
-description: "No description available"
+description: "Progressive data science exercises — NumPy, pandas, matplotlib, OOP, decorators."
 image: ""
 showFeatureImage: true
 links:
@@ -25,28 +25,14 @@ stats:
 
 # Python for Data Science
 
-A comprehensive series of Python projects following a "piscine" learning approach, progressively building data science fundamentals through hands-on exercises.
+A series of progressive exercises building data science fundamentals from scratch. Covers the full stack from NumPy array manipulation to pandas analysis to OOP patterns.
 
 ## Modules
 
-### Module 0: Python Basics
-Core Python concepts including data structures, string manipulation, type handling, command-line arguments, custom packages, and error handling. Includes a custom progress bar implementation and Morse code encoder.
+1. **Python Basics** — data structures, error handling, custom packages, Morse encoder
+2. **Arrays & Image Processing** — NumPy, matplotlib, grayscale conversion, image rotation
+3. **Data Tables** — pandas, CSV analysis, life expectancy trends, GDP correlations
+4. **OOP** — abstract classes, inheritance, diamond problem, dunder methods
+5. **Data-Oriented Design** — statistical functions, closures, decorators, dataclasses
 
-### Module 1: Arrays & Image Processing
-NumPy arrays and image manipulation with matplotlib. Covers BMI calculations, 2D array operations, image loading, grayscale conversion, zooming, rotation, and color channel manipulation.
-
-### Module 2: Data Tables
-Data analysis with pandas: loading CSV files, visualizing life expectancy trends, population data, and exploring correlations between GDP and life expectancy with scatter plots.
-
-### Module 3: Object-Oriented Programming
-OOP concepts including abstract base classes, inheritance, multiple inheritance (diamond problem), class methods, dunder methods, static methods, getters/setters.
-
-### Module 4: Data-Oriented Design
-Advanced Python patterns: statistical functions (mean, median, quartile, std dev, variance), closures, decorators, and dataclasses with automatic field generation.
-
-## Technologies
-
-**Libraries**: NumPy, pandas, matplotlib
-**Concepts**: Data structures, image processing, data visualization, OOP, functional programming, decorators
-
-*Detailed exercises and implementations available in the [GitHub repository](https://github.com/tham-le/Python-for-Data-Science).*
+*42 Paris — Python, NumPy, pandas, matplotlib.*

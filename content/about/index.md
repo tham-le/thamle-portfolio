@@ -1,6 +1,6 @@
 ---
 title: "About Me"
-description: "An engineer's journey, from modeling oceans to building low-level systems."
+description: "Systems engineer — from modeling oceans to building low-level software in Rust and C++."
 ---
 
 <div class="language-toggle">
@@ -9,42 +9,30 @@ description: "An engineer's journey, from modeling oceans to building low-level 
 
 I'm a software engineer based in Paris, with roots in Vietnam and a background that started in oceanography, not computer science.
 
-I came to programming through climate modeling: FORTRAN simulations of ocean currents, Python scripts processing decades of temperature data, long hours staring at plots of mercury distribution in the Mediterranean. I worked with researchers contributing to IPCC reports. That work taught me to think in systems, to trace cause and effect through layers of complexity.
+I came to programming through climate modeling: FORTRAN simulations of ocean currents, Python scripts processing decades of temperature data, long hours analyzing mercury distribution in the Mediterranean. I worked with researchers contributing to IPCC reports. That work taught me to think in systems — to trace cause and effect through layers of complexity.
 
 Eventually, I wanted to understand the tools themselves. That led me to [42 Paris](https://42.fr/), where I learned C and C++ by building things: network servers, graphics engines, containerized services. No lectures, no textbooks. Just problems to solve.
 
-Today I work on systems programming, security, and low-level development. I also maintain a set of technical notes called [WTF is...](notes.thamle.live) where I write the explanations I wish I had when I was learning.
-
-You can find my full resume [here](/thamle_resume.pdf), my code on [GitHub](https://github.com/tham-le), or reach me at [thamle.work@gmail.com](mailto:thamle.work@gmail.com).
+Today I work on systems programming, security, and low-level development. I maintain a set of technical notes called [WTF is...](https://notes.thamle.live) — the explanations I wish I had when I was learning.
 
 ---
 
 ## Experience
 
-### R&D Engineer at Kyber
+### R&D Engineer — [Kyber](https://gitlab.com/kyber.stream)
 *October 2025 – Present*
 
-Building a high-performance remote control SDK in Rust for streaming applications. I work on input streaming (mouse, keyboard, gamepad) with latency management, cross-platform support (Windows, Linux, macOS, Android, Web), and Docker containerization.
+Building a cross-platform remote control SDK in Rust for low-latency streaming applications. I own the input pipeline (mouse, keyboard, gamepad) across Windows, Linux, macOS, Android, and Web — handling real-time input capture, serialization, and replay with strict latency constraints. I also work on TLS integration, cross-platform certificate verification (including Android JNI), and Docker-based build infrastructure.
 
-### C++ Development Engineer at Snowpack
-*August 2024 – July 2025*
+### Software Engineer — Snowpack
+*August 2024 – August 2025*
 
-[Snowpack](https://snowpack.eu/) builds privacy-focused VPN solutions. I ported their C++ SDK to browsers using WebAssembly, developed cross-platform test suites (Android, macOS, ARM64), and implemented security features including MFA handling and memory-safe log rotation.
+[Snowpack](https://snowpack.eu/) builds next-generation private network infrastructure. Started as intern, promoted to engineer after 6 months. I ported their C++ SDK to browsers using WebAssembly (Emscripten), enabling the VPN client to run natively in-browser. Built cross-platform test suites covering Android, macOS, and ARM64. Implemented security features including MFA handling and memory-safe log rotation.
 
-### Research Intern at LSCE-CNRS
-*February 2021 – August 2021*
+### Research Intern — CEA/CNRS (LSCE)
+*January 2021 – July 2021*
 
-At one of France's leading climate research laboratories, I developed FORTRAN modules for IPCC-class climate models analyzing mercury distribution in marine ecosystems. I processed large-scale datasets with Python, focusing on reproducibility and clean code.
-
----
-
-## Technical Skills
-
-**Systems & Backend:** C, C++, Rust, Python  
-**Platforms:** Linux, Windows, cross-platform development  
-**Infrastructure:** Docker, Git, CMake, CI/CD  
-**Networking:** WebSockets, TCP/IP  
-**Security:** Secure coding practices, vulnerability analysis
+Implemented scientific simulation modules within the NEMO-PISCES oceanographic model on an HPC Linux cluster. Developed data analysis and visualization pipelines in Python. Results contributed to an accepted poster at Goldschmidt Conference 2022.
 
 ---
 
@@ -53,23 +41,22 @@ At one of France's leading climate research laboratories, I developed FORTRAN mo
 ### 42 Paris
 *2022 – 2026 (expected)*
 
-Project-based software engineering program. Ranked top 10 in the selection round (500+ candidates), finished the core curriculum in the top 20 (800+). Focused on C/C++, systems programming, and algorithms. Served as a C programming tutor.
+Project-based software engineering. Top 10 in the selection round (500+ candidates), top 20 in the core curriculum (800+ students). C programming tutor.
 
-### Aix-Marseille University, M.Sc Marine Science
+### Aix-Marseille University — M.Sc Marine Science
 *2019 – 2021*
 
-Specialized in computational oceanography and mathematical modeling. Used Python, R, and FORTRAN for data analysis and simulation.
+Computational oceanography and mathematical modeling. Python, R, FORTRAN.
 
 ---
 
 ## Beyond Work
 
-I compete in CTF challenges to learn applied security: web exploitation, cryptography, binary analysis. Writeups are [here](https://github.com/tham-le/CTF-Writeups).
-
-I also enjoy hackathons for the constraint of building something real in 48 hours. Past projects include health tech prototypes (DigHacktion, InnovHer) and hardware challenges (Google Hardware Hackathon).
+I compete in [CTF challenges](/ctf/) — web exploitation, cryptography, binary analysis. I also enjoy hackathons: health tech prototypes (DigHacktion, InnovHer) and hardware challenges (Google Hardware Hackathon).
 
 ---
 
-**Contact:** <thamle.work@gmail.com>  
-**Code:** [github.com/tham-le](https://github.com/tham-le)  
+**Resume:** [thamle_resume.pdf](/thamle_resume.pdf)
+**Code:** [github.com/tham-le](https://github.com/tham-le)
+**Contact:** [thamle.work@gmail.com](mailto:thamle.work@gmail.com)
 **LinkedIn:** [linkedin.com/in/tham42](https://www.linkedin.com/in/tham42)

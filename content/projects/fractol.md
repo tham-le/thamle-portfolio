@@ -2,7 +2,7 @@
 title: "fractol"
 date: 2025-05-30T20:24:09Z
 lastmod: 2025-06-05T18:22:11Z
-description: "High-performance fractal visualization in C with multi-threading and advanced graphics"
+description: "Fractal explorer in C with multi-threaded rendering, 8 fractal types, and real-time interaction."
 image: "https://raw.githubusercontent.com/tham-le/fractol/main/image/Newton-rainbow.bmp"
 showFeatureImage: false
 carousel:
@@ -37,35 +37,30 @@ stats:
     language: C
 ---
 
-# Fractol - Advanced Fractal Explorer
+# fractol — Fractal Explorer
 
-High-performance fractal visualization in C with multi-threading and interactive graphics. Extends the 42 School assignment with advanced features demonstrating systems programming and optimization.
+An interactive fractal renderer in C with real-time pan, zoom, and color switching. Extended well beyond the 42 assignment with 8 fractal types, multi-threaded computation, and image export.
+
+## What made this interesting
+
+Fractals are computationally expensive — each pixel requires iterating a complex function until convergence or divergence. Making this feel interactive meant parallelizing the computation with POSIX threads (2-8x speedup depending on core count) and optimizing the iteration loop to bail out early.
+
+The color mapping was a fun math problem: smooth coloring requires interpolating between escape-time values using logarithmic scaling, not just mapping iteration count to a palette index.
 
 ## Features
 
-- **8 Fractal Types**: Mandelbrot, Julia, Burning Ship, Newton, Tricorn, Barnsley Fern, Mandelbar, Multibrot
-- **Multi-Threading**: Automatic CPU core detection with 2-8x rendering speed improvements
-- **13 Color Palettes**: Real-time switching with smooth interpolation
-- **Interactive Controls**: Mouse pan/zoom, real-time parameter modification
+- **8 fractal types**: Mandelbrot, Julia, Burning Ship, Newton, Tricorn, Barnsley Fern, Mandelbar, Multibrot
+- **13 color palettes** with smooth interpolation
+- **Multi-threaded** with automatic CPU core detection
 - **Export**: BMP/PPM image and animation export
-- **Anti-Aliasing**: Adaptive supersampling for quality rendering
-
-## Usage
+- **Anti-aliasing**: adaptive supersampling
 
 ```bash
 git clone --recursive https://github.com/tham-le/fractol.git
 cd fractol && make
-
 ./fractol mandelbrot
-./fractol julia 0.285 0.01
-./fractol help
 ```
 
-## Technical Stack
+*42 Paris — C, POSIX threads, complex number math.*
 
-- **Language**: C with MinilibX graphics library
-- **Concurrency**: POSIX threads for parallel computation
-- **Mathematics**: Complex number operations, iterative algorithms
-- **Optimization**: Efficient memory management, adaptive algorithms
-
-*Gallery of fractal renders showcasing mathematical precision and artistic beauty available in the [GitHub repository](https://github.com/tham-le/fractol).*
+**Deep-dive:** [WTF is a Fractal?](https://notes.thamle.live/Theory/Fractals)

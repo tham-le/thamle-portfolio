@@ -2,7 +2,7 @@
 title: "ft_irc"
 date: 2024-01-04T20:10:12Z
 lastmod: 2025-06-05T18:21:43Z
-description: "Implementation of a basic IRC server, adhering to a subset of the IRC RFC specifications (primarily RFC 2810, 2811, 2812, 2813, and 7194)."
+description: "An IRC server in C++ built on poll() — multi-client, RFC-compliant, event-driven."
 image: ""
 showFeatureImage: true
 links:
@@ -24,40 +24,29 @@ stats:
     language: C++
 ---
 
-# ft_irc
+# ft_irc — IRC Server
 
-A C++ implementation of an IRC (Internet Relay Chat) server following RFC specifications (2810-2813, 7194). This project demonstrates network programming, concurrent connection handling, and server-side development using sockets and the `poll()` system call.
+A C++ IRC server handling multiple simultaneous clients using an event-driven architecture built on `poll()`. Implements 20+ commands from RFCs 2810-2813.
+
+## What made this interesting
+
+This was my first real networking project. The core challenge is handling partial reads — TCP is a stream protocol, so a single `recv()` might return half a command or three commands concatenated. Building a proper message parser that buffers incomplete data per-client and processes complete messages in order was the key design problem.
+
+The event loop with `poll()` handles all I/O multiplexing without threads — one loop manages connection acceptance, authentication state machines, message routing, and channel management.
 
 ## Features
 
-- **Connection Management**: Multi-client handling with socket programming (`bind`, `listen`, `accept`, `poll`)
-- **Authentication**: Password-protected server with user registration (`NICK`, `USER`)
-- **Channels**: Create, join, manage channels with topics, modes (invite-only, key, user limits)
-- **Messaging**: Private messages and channel communication
-- **Operator Tools**: Kick, invite, and mode management
-- **Utilities**: WHOIS, INFO, ADMIN, VERSION, PING/PONG, server logging
-
-## Usage
+- **Event-driven**: single-threaded `poll()` loop, no threads
+- **Authentication**: password-protected with NICK/USER registration
+- **Channels**: create, join, topics, modes (invite-only, key, user limits)
+- **Operator tools**: KICK, INVITE, MODE management
+- **20+ IRC commands**: PASS, NICK, JOIN, PART, PRIVMSG, TOPIC, WHOIS, PING/PONG...
 
 ```bash
-make                           # Compile the project
-./ircserv <port> <password>   # Run the server
+make
+./ircserv 6667 mysecretpassword
 ```
 
-Example: `./ircserv 6667 mysecretpassword`
+*42 Paris — C++98, socket programming, team project with [Christine Qin](https://github.com/cqin42) and [Yulia Boktaeva](https://github.com/yboktaeva).*
 
-## Architecture
-
-Built with C++98, the server uses an event-driven architecture with `poll()` for handling multiple simultaneous client connections. Core classes include:
-- **Ircserv**: Main server managing connections and event loop
-- **User**: Client representation with authentication state
-- **Channel**: Channel management with modes and permissions
-- **Command**: Command parser and executor
-
-Implements 20+ IRC commands including PASS, NICK, USER, JOIN, PART, PRIVMSG, KICK, INVITE, MODE, TOPIC, and more.
-
-## Authors
-
-*   [Christine Qin](https://github.com/cqin42) (cqin)
-*   [Tham Le](https://github.com/tham-le) (thi-le)
-*   [Yulia Boktaeva](https://github.com/yboktaeva) (yuboktae)
+**Deep-dives:** [WTF are bind() and accept()?](https://notes.thamle.live/Networking/Socket-API) | [WTF is Non-blocking I/O?](https://notes.thamle.live/Networking/Non-blocking-IO)

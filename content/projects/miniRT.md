@@ -2,7 +2,7 @@
 title: "miniRT"
 date: 2023-09-10T15:12:29Z
 lastmod: 2025-06-05T18:19:54Z
-description: "Ray Tracing Engine"
+description: "A ray tracing engine in C — 8,000 lines of math, light simulation, and multi-threaded rendering."
 image: "https://raw.githubusercontent.com/tham-le/miniRT/master/image/all-shapes.png"
 showFeatureImage: false
 carousel:
@@ -37,32 +37,28 @@ stats:
     language: C
 ---
 
-# miniRT - Ray Tracing Engine
+# miniRT — Ray Tracing Engine
 
-A 3D ray tracer built in C with multi-threading support for parallel rendering. Renders photorealistic scenes by simulating light rays, supporting multiple geometric shapes, Phong lighting, shadows, and reflections.
+A 3D ray tracer built from scratch in C. No graphics library beyond pixel-level framebuffer access — every ray-object intersection, lighting calculation, and reflection is implemented manually.
+
+## What made this interesting
+
+Ray tracing is pure math meeting systems constraints. Each pixel requires casting a ray, testing intersections against every object, computing Phong lighting (ambient + diffuse + specular), tracing shadow rays, and recursing for reflections. Doing this in C means managing all memory manually while keeping the math precise.
+
+The hardest part was multi-threading the renderer with POSIX threads — splitting the image into horizontal bands, balancing workload across regions with varying object density, and avoiding race conditions on the shared framebuffer.
 
 ## Features
 
-- **Ray Tracing**: Casts rays from camera through pixels to render 3D scenes
-- **Multi-Threading**: Parallel rendering using pthreads for improved performance
-- **Shapes**: Spheres, planes, cylinders, cones, triangles (mesh support)
-- **Lighting**: Phong model with ambient, diffuse, specular components and shadows
-- **Reflections**: Recursive ray casting for realistic reflective surfaces
-
-## Usage
+- **Shapes**: spheres, planes, cylinders, cones, triangles (mesh import)
+- **Lighting**: Phong model with shadows and recursive reflections
+- **Multi-threading**: pthreads with automatic CPU core detection
+- **Scene format**: simple text-based `.rt` files defining camera, lights, objects
 
 ```bash
 make
 ./miniRT scenes/one_sphere.rt
 ```
 
-**Scene format**: Simple text-based format defining camera, lights, and objects with position, color, and material properties.
+*42 Paris — C, POSIX threads, 8,000+ lines.*
 
-## Technical Stack
-
-- **Language**: C (8,000+ lines)
-- **Concurrency**: POSIX threads for workload distribution
-- **Mathematics**: 3D vector operations, ray-object intersections
-- **Graphics**: Ray tracing algorithms, Phong shading
-
-*Gallery of rendered scenes available in the [GitHub repository](https://github.com/tham-le/miniRT).* 
+**Deep-dive:** [WTF is Raytracing?](https://notes.thamle.live/Theory/Raytracing)

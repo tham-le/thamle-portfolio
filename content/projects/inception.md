@@ -2,7 +2,7 @@
 title: "inception"
 date: 2023-12-20T21:07:19Z
 lastmod: 2025-05-15T12:46:18Z
-description: "No description available"
+description: "Multi-container Docker infrastructure — Nginx, WordPress, MariaDB, Redis, all from custom Dockerfiles."
 image: ""
 showFeatureImage: true
 links:
@@ -25,30 +25,28 @@ stats:
     language: Dockerfile
 ---
 
-# Inception - Docker-based Web Infrastructure
+# inception — Docker Infrastructure
 
-A multi-container web infrastructure project demonstrating Docker orchestration and system administration. The setup runs WordPress with MariaDB, Redis caching, and Nginx as a reverse proxy—all containerized and deployed on an Alpine Linux VM, creating nested layers of virtualization (VM → Containers → Services).
+A multi-container web stack deployed on an Alpine Linux VM. Every service runs in its own container built from a custom Dockerfile — no pre-built images allowed.
 
-## Key Features
+## What made this interesting
 
-- **Services**: Nginx with SSL, WordPress, MariaDB, Redis
-- **Security**: SSL/TLS encryption, environment variables, persistent volumes
-- **Best Practices**: Custom Dockerfiles, volume management, container networking, health checks
+The constraint is what makes it educational: you can't just `docker pull nginx`. Each Dockerfile must install and configure the service from a base Alpine image. This forces you to understand what each service actually needs — how Nginx handles SSL termination, how MariaDB initializes its data directory, how WordPress connects to its database.
 
-## Usage
+Running it all inside a VM adds another layer of virtualization (VM → containers → services), which is how I first understood the relationship between hypervisors and container runtimes.
+
+## Stack
+
+- **Nginx** with SSL/TLS termination (self-signed certs)
+- **WordPress** with php-fpm
+- **MariaDB** with persistent volume
+- **Redis** for object caching
+- **Docker Compose** for orchestration
 
 ```bash
 make up      # Start all containers
 make down    # Stop containers
-make re      # Restart containers
-make fclean  # Remove all containers, images, and volumes
+make fclean  # Remove everything
 ```
 
-Configuration uses environment variables in `srcs/.env` for database credentials and settings.
-
-## Technologies
-
-**Stack**: Docker, Docker Compose, Nginx, WordPress, MariaDB, Redis
-**Concepts**: Multi-container orchestration, SSL/TLS, persistent volumes, container networking
-
-*Part of the 42 school curriculum. Full details and setup instructions available in the [GitHub repository](https://github.com/tham-le/inception).*
+*42 Paris — Docker, Docker Compose, shell scripting, system administration.*
