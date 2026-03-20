@@ -39,21 +39,15 @@ jobs:
             - 'scripts/**'
             - 'hugo.toml'
             - '.github/workflows/sync-and-deploy.yml'
-          notes:
-            - 'static/notes/**'
 
     - name: Set deployment flags for manual/scheduled runs
       id: deploy_flags
       run: |
-        # For manual or scheduled runs, deploy everything
         if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event_name }}" == "schedule" ]]; then
           echo "portfolio=true" >> $GITHUB_OUTPUT
-          echo "notes=true" >> $GITHUB_OUTPUT
           echo "reason=manual_or_scheduled" >> $GITHUB_OUTPUT
         else
-          # For push events, use change detection
           echo "portfolio=${{ steps.changes.outputs.portfolio }}" >> $GITHUB_OUTPUT
-          echo "notes=${{ steps.changes.outputs.notes }}" >> $GITHUB_OUTPUT
           echo "reason=change_detection" >> $GITHUB_OUTPUT
         fi
 
@@ -63,20 +57,11 @@ jobs:
         echo "  Trigger: ${{ github.event_name }}"
         echo "  Reason: ${{ steps.deploy_flags.outputs.reason }}"
         echo "  Portfolio deployment: ${{ steps.deploy_flags.outputs.portfolio }}"
-        echo "  Notes deployment: ${{ steps.deploy_flags.outputs.notes }}"
         echo ""
         if [[ "${{ steps.deploy_flags.outputs.portfolio }}" == "true" ]]; then
           echo "✅ Will deploy thamle.live (portfolio)"
         else
           echo "⏭️  Skipping thamle.live (no changes)"
-        fi
-        if [[ "${{ steps.deploy_flags.outputs.notes }}" == "true" ]]; then
-          echo "✅ Will deploy notes.thamle.live"
-        else
-          echo "⏭️  Skipping notes.thamle.live (no changes)"
-        fi
-        if [[ "${{ steps.deploy_flags.outputs.portfolio }}" != "true" && "${{ steps.deploy_flags.outputs.notes }}" != "true" ]]; then
-          echo "ℹ️  No deployments needed"
         fi
 
     - name: Setup environment
@@ -163,22 +148,6 @@ jobs:
         echo "- CSS files: $(find public -name "*.css" | wc -l)"
         echo "- JS files: $(find public -name "*.js" | wc -l)"
 
-    - name: Verify notes content
-      if: steps.deploy_flags.outputs.notes == 'true'
-      run: |
-        echo "🔍 Verifying notes content..."
-        if [ ! -d "static/notes" ]; then
-          echo "❌ Notes directory not found"
-          exit 1
-        fi
-
-        NOTES_COUNT=$(find static/notes -name "*.html" | wc -l)
-        echo "✅ Found $NOTES_COUNT HTML files in notes directory"
-
-        if [ $NOTES_COUNT -lt 50 ]; then
-          echo "⚠️  Warning: Expected more HTML files in notes"
-        fi
-
     - name: Deploy Portfolio to Firebase
       if: steps.deploy_flags.outputs.portfolio == 'true'
       uses: FirebaseExtended/action-hosting-deploy@v0
@@ -189,12 +158,3 @@ jobs:
         channelId: live
         target: thamle-portfolio
 
-    - name: Deploy Notes to Subdomain
-      if: steps.deploy_flags.outputs.notes == 'true'
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: '${{ secrets.GITHUB_TOKEN }}'
-        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_THAMLE_PORTFOLIO }}'
-        projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
-        channelId: live
-        target: notes-tham

@@ -73,30 +73,3 @@ I also enjoy hackathons for the constraint of building something real in 48 hour
 **Contact:** <thamle.work@gmail.com>  
 **Code:** [github.com/tham-le](https://github.com/tham-le)  
 **LinkedIn:** [linkedin.com/in/tham42](https://www.linkedin.com/in/tham42)
-
-<style>
-.language-toggle {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.language-btn {
-    display: inline-block;
-    background: var(--card-background);
-    color: var(--card-text-color-main);
-    border: 2px solid var(--accent-color);
-    padding: 0.8rem 1.5rem;
-    border-radius: 25px;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.language-btn:hover {
-    background: var(--accent-color);
-    color: var(--accent-color-text);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-</style>

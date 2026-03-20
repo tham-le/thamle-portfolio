@@ -2,7 +2,7 @@ baseURL = "https://thamle.live/"
 languageCode = "en-us"
 theme = "hugo-theme-stack"
 title = "Tham Le - Learning Through Code"
-copyright = "© 2025 Tham Le. All rights reserved."
+copyright = "© 2026 Tham Le. All rights reserved."
 ignoreFiles = ["README.md"]
 
 # Enhanced metadata for better SEO
@@ -22,7 +22,7 @@ projects = "/projects/:slug/"
 
 # Main sections for homepage
 [params]
-mainSections = ["projects", "ctf"]  # notes moved to notes.thamle.live subdomain
+mainSections = ["projects"]  # notes moved to notes.thamle.live subdomain
 featuredImageField = "image"
 rssFullContent = true
 favicon = "/favicon.ico"
@@ -84,12 +84,6 @@ identifier = "projects"
 name = "Projects"
 url = "/projects/"
 weight = 30
-
-[[menu.main]]
-identifier = "ctf"
-name = "CTF Writeups"
-url = "/ctf/"
-weight = 40
 
 [[menu.main]]
 identifier = "notes"

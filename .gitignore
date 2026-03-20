@@ -36,3 +36,6 @@ __pycache__/
 
 # Generated Hugo content
 content/ctf/**/_index.md
+
+# Notes are deployed separately from ~/notes repo
+static/notes/

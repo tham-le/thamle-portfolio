@@ -31,21 +31,21 @@
         </div>
 
         <!-- Navigation Controls -->
-        <button class="carousel-btn carousel-prev" onclick="changeSlide('{{ $id }}', -1)">
+        <button class="carousel-btn carousel-prev" onclick="changeSlide('{{ $id }}', -1)" aria-label="Previous slide">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="15,18 9,12 15,6"></polyline>
             </svg>
         </button>
-        <button class="carousel-btn carousel-next" onclick="changeSlide('{{ $id }}', 1)">
+        <button class="carousel-btn carousel-next" onclick="changeSlide('{{ $id }}', 1)" aria-label="Next slide">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9,18 15,12 9,6"></polyline>
             </svg>
         </button>
 
         <!-- Dots Indicator -->
-        <div class="carousel-dots">
+        <div class="carousel-dots" role="tablist" aria-label="Slide navigation">
             {{- range $index, $image := $images -}}
-            <button class="carousel-dot{{ if eq $index 0 }} active{{ end }}" onclick="goToSlide('{{ $id }}', {{ $index }})" data-slide="{{ $index }}"></button>
+            <button class="carousel-dot{{ if eq $index 0 }} active{{ end }}" onclick="goToSlide('{{ $id }}', {{ $index }})" data-slide="{{ $index }}" role="tab" aria-label="Go to slide {{ add $index 1 }}" aria-selected="{{ if eq $index 0 }}true{{ else }}false{{ end }}"></button>
             {{- end -}}
         </div>
     </div>

@@ -280,3 +280,29 @@
 h1, h2, h3, h4, h5, h6 {
     color: var(--card-text-color-main);
 }
+
+/* Language toggle on about page */
+.language-toggle {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.language-btn {
+    display: inline-block;
+    background: var(--card-background);
+    color: var(--card-text-color-main);
+    border: 2px solid var(--accent-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: var(--accent-color);
+        color: var(--accent-color-text);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+}
